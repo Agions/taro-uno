@@ -1,0 +1,24 @@
+{
+  "extends": "stylelint-config-standard-scss",
+  "plugins": [
+    "stylelint-scss"
+  ],
+  "rules": {
+    "no-descending-specificity": null,
+    "selector-type-no-unknown": [
+      true,
+      {
+        "ignoreTypes": [
+          "/^taro-/"
+        ]
+      }
+    ],
+    "selector-class-pattern": null,
+    "keyframes-name-pattern": null,
+    "scss/at-import-partial-extension": null,
+    "scss/dollar-variable-pattern": null,
+    "scss/no-global-function-names": null,
+    "scss/dollar-variable-empty-line-before": null,
+    "scss/double-slash-comment-empty-line-before": null
+  }
+}

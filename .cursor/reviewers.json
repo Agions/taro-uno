@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "reviewers": [
+    {
+      "name": "UI组件审查",
+      "paths": [
+        "packages/basic/src/**",
+        "packages/form/src/**",
+        "packages/display/src/**"
+      ],
+      "reviewers": [
+        "UI团队负责人"
+      ]
+    },
+    {
+      "name": "主题和样式审查",
+      "paths": [
+        "packages/theme/**",
+        "**/*.scss"
+      ],
+      "reviewers": [
+        "设计系统负责人"
+      ]
+    },
+    {
+      "name": "核心功能审查",
+      "paths": [
+        "packages/core/**",
+        "packages/hooks/**"
+      ],
+      "reviewers": [
+        "架构师"
+      ]
+    },
+    {
+      "name": "文档审查",
+      "paths": [
+        "docs/**",
+        "README.md"
+      ],
+      "reviewers": [
+        "文档负责人"
+      ]
+    },
+    {
+      "name": "测试审查",
+      "paths": [
+        "**/*.test.{ts,tsx}"
+      ],
+      "reviewers": [
+        "QA负责人"
+      ]
+    },
+    {
+      "name": "构建和工具链审查",
+      "paths": [
+        "scripts/**",
+        "config/**",
+        "*.json"
+      ],
+      "reviewers": [
+        "DevOps负责人"
+      ]
+    }
+  ],
+  "defaultReviewers": [
+    "项目负责人"
+  ],
+  "ignoreFiles": [
+    "node_modules/**",
+    "dist/**",
+    "build/**",
+    ".git/**"
+  ]
+}

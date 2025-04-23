@@ -1,0 +1,36 @@
+{
+  "name": "@agions/taro-uno-core",
+  "version": "0.1.0",
+  "description": "Taro Uno UI核心工具包",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "dev": "tsc -w",
+    "build": "rollup -c",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@tarojs/components": "^3.6.0",
+    "@tarojs/helper": "^3.6.0",
+    "@tarojs/runtime": "^3.6.0",
+    "@tarojs/taro": "^3.6.0"
+  },
+  "peerDependencies": {
+    "react": ">=16.13.0",
+    "@tarojs/components": ">=3.0.0",
+    "@tarojs/taro": ">=3.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.33",
+    "rollup": "^3.20.2",
+    "rollup-plugin-typescript2": "^0.34.1",
+    "typescript": "^5.0.4"
+  },
+  "author": "Agions Team",
+  "license": "MIT"
+}

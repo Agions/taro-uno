@@ -1,0 +1,39 @@
+{
+  "name": "taro-uno-ui",
+  "private": true,
+  "version": "0.1.0",
+  "description": "基于Taro的多端UI组件库",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "dev": "lerna run --parallel dev",
+    "build": "lerna run build",
+    "test": "lerna run test",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "clean": "lerna clean",
+    "publish": "lerna publish"
+  },
+  "devDependencies": {
+    "@tarojs/cli": "^3.6.0",
+    "@types/node": "^18.15.11",
+    "@types/react": "^18.0.33",
+    "@typescript-eslint/eslint-plugin": "^5.57.1",
+    "@typescript-eslint/parser": "^5.57.1",
+    "eslint": "^8.38.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
+    "lerna": "^6.6.1",
+    "prettier": "^2.8.7",
+    "stylelint": "^15.4.0",
+    "stylelint-config-standard": "^32.0.0",
+    "typescript": "^5.0.4"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "author": "Agions Team",
+  "license": "MIT"
+}

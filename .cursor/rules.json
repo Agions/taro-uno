@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "name": "文件命名规范",
+      "pattern": "**/*",
+      "message": "文件命名应遵循kebab-case规范",
+      "excludes": [
+        "node_modules/**",
+        "dist/**",
+        "build/**"
+      ],
+      "enforcePattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*\\.(tsx?|scss|css|json|md)$"
+    },
+    {
+      "name": "组件命名规范",
+      "pattern": "packages/**/src/**/*.tsx",
+      "message": "组件名应使用PascalCase命名",
+      "code": "export (const|function) ([a-z]\\w*)",
+      "excludes": [
+        "**/index.tsx",
+        "**/hooks/**"
+      ]
+    },
+    {
+      "name": "钩子命名规范",
+      "pattern": "packages/**/hooks/**/*.{ts,tsx}",
+      "message": "钩子名称应以use开头",
+      "code": "export (const|function) (?!use\\w+)\\w+"
+    },
+    {
+      "name": "类型定义位置",
+      "pattern": "packages/**/src/**/*.tsx",
+      "message": "类型定义应在组件定义前",
+      "excludes": [
+        "**/*.d.ts",
+        "**/index.tsx"
+      ],
+      "code": "function\\s+\\w+\\s*\\(.*\\)\\s*{[\\s\\S]*?interface"
+    },
+    {
+      "name": "组件目录结构规范",
+      "pattern": "packages/**/src/**/*",
+      "message": "每个组件应有index.ts入口文件，组件实现文件和样式文件",
+      "onPattern": "function validateComponentStructure(files) {\n  const dirs = files.filter(f => f.isDirectory());\n  for (const dir of dirs) {\n    const children = dir.children || [];\n    const hasIndex = children.some(f => f.name === 'index.ts' || f.name === 'index.tsx');\n    const hasComponent = children.some(f => f.name.includes('.tsx') && f.name !== 'index.tsx');\n    const hasStyle = children.some(f => f.name.endsWith('.scss') || f.name.endsWith('.css'));\n    \n    if (!(hasIndex && (hasComponent || hasStyle))) {\n      return { valid: false, file: dir.path };\n    }\n  }\n  return { valid: true };\n}"
+    },
+    {
+      "name": "CSS变量命名规范",
+      "pattern": "**/*.scss",
+      "message": "CSS变量应使用--taro-前缀",
+      "code": "\\$[a-z-]+"
+    },
+    {
+      "name": "文档注释规范",
+      "pattern": "packages/**/src/**/*.{ts,tsx}",
+      "message": "组件、接口和类型应有JSDoc注释",
+      "excludes": [
+        "**/*.d.ts",
+        "**/index.ts"
+      ],
+      "code": "(export (interface|type|class|const|function) \\w+)[^\\*]"
+    },
+    {
+      "name": "导入路径规范",
+      "pattern": "packages/**/src/**/*.{ts,tsx}",
+      "message": "禁止使用相对路径的父级引用（../）超过两层",
+      "code": "from ['\"]\\.\\.(\\/\\.\\.)\\{3,\\}"
+    },
+    {
+      "name": "测试文件规范",
+      "pattern": "**/*.test.{ts,tsx}",
+      "message": "测试文件应包含describe和it/test块",
+      "code": "^((?!describe).)*$",
+      "onFile": "function validateTestFile(content) {\n  return content.includes('describe(') && (content.includes('it(') || content.includes('test('));\n}"
+    },
+    {
+      "name": "组件属性规范",
+      "pattern": "packages/**/src/**/*.tsx",
+      "message": "组件属性应按重要性排序：id/key, className, style, event handlers, other props",
+      "onFile": "function validatePropOrder(content) {\n  // 这里实现属性顺序检查的逻辑\n  // 为简化，可以检查常见模式，如className在onClick之前\n  const badPattern = /onClick=.*className=/s;\n  return !badPattern.test(content);\n}"
+    }
+  ],
+  "settings": {
+    "ignoredFiles": [
+      "node_modules/**",
+      "dist/**",
+      "build/**",
+      ".git/**"
+    ],
+    "feedback": {
+      "inline": true,
+      "summary": true
+    }
+  }
+}
