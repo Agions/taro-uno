@@ -1,4 +1,4 @@
-# Taro Uno UI
+# Taro Uno UI（未完成）
 
 基于 Taro 的多端 UI 组件库，支持小程序、H5、React Native 等多平台。通过 JSON 配置方式使用，实现更高效的开发体验。
 
