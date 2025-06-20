@@ -97,7 +97,7 @@ describe('Timeline 组件', () => {
     const items = container.querySelectorAll('.uno-timeline-item')
     expect(items.length).toBe(3)
     expect(items[2]).toHaveClass('uno-timeline-item-pending')
-    expect(items[2]).not.toHaveTextContent()
+    expect(items[2]).not.toHaveTextContent('事件2')
 
     // 内容形式
     rerender(

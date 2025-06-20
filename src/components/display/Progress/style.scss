@@ -1,0 +1,229 @@
+@import '@/styles/mixins.scss';
+@import '@/styles/variables.scss';
+
+.taro-uno-progress {
+  display: inline-block;
+  width: 100%;
+  box-sizing: border-box;
+
+  // 行式进度条
+  &--line {
+    position: relative;
+    width: 100%;
+    font-size: var(--taro-uno-font-size-sm);
+    line-height: 1.5;
+    
+    &-outer {
+      display: inline-block;
+      width: 100%;
+      margin-right: 8px;
+      margin-bottom: 0;
+    }
+
+    &-inner {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      vertical-align: middle;
+      background-color: var(--taro-uno-neutral-200);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    &-bg {
+      position: relative;
+      background-color: var(--taro-uno-primary-500);
+      transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+      border-radius: 100px;
+    }
+
+    &-success-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background-color: var(--taro-uno-success-500);
+      border-radius: 100px;
+    }
+
+    &-text {
+      display: inline-block;
+      width: 2em;
+      margin-left: 8px;
+      color: var(--taro-uno-neutral-900);
+      font-size: 1em;
+      line-height: 1;
+      white-space: nowrap;
+      text-align: left;
+      vertical-align: middle;
+      word-break: normal;
+    }
+
+    &-steps {
+      position: relative;
+      width: 100%;
+      display: flex;
+      
+      &-item {
+        background-color: var(--taro-uno-neutral-200);
+        border-radius: 1px;
+        margin-right: 2px;
+        transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+        
+        &-active {
+          background-color: var(--taro-uno-primary-500);
+        }
+      }
+    }
+  }
+
+  // 圆形进度条
+  &--circle, &--dashboard {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    display: inline-block;
+    vertical-align: middle;
+
+    &-trail {
+      stroke: var(--taro-uno-neutral-200);
+    }
+    
+    &-path {
+      stroke: var(--taro-uno-primary-500);
+      transition: stroke-dashoffset 0.3s ease 0s, stroke-dasharray 0.3s ease 0s, stroke 0.3s ease;
+    }
+
+    &-success-path {
+      stroke: var(--taro-uno-success-500);
+    }
+    
+    &-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      color: var(--taro-uno-neutral-900);
+      line-height: 1;
+      white-space: normal;
+      text-align: center;
+      transform: translate(-50%, -50%);
+      
+      .icon {
+        font-size: 1.5em;
+      }
+    }
+  }
+
+  // 尺寸变体
+  &--size-small {
+    font-size: var(--taro-uno-font-size-xs);
+    
+    &.taro-uno-progress--line {
+      .taro-uno-progress--line-inner {
+        height: 4px;
+      }
+    }
+    
+    &.taro-uno-progress--circle, &.taro-uno-progress--dashboard {
+      width: 80px;
+      height: 80px;
+    }
+  }
+  
+  &--size-medium {
+    font-size: var(--taro-uno-font-size-sm);
+    
+    &.taro-uno-progress--line {
+      .taro-uno-progress--line-inner {
+        height: 8px;
+      }
+    }
+    
+    &.taro-uno-progress--circle, &.taro-uno-progress--dashboard {
+      width: 120px;
+      height: 120px;
+    }
+  }
+  
+  &--size-large {
+    font-size: var(--taro-uno-font-size-base);
+    
+    &.taro-uno-progress--line {
+      .taro-uno-progress--line-inner {
+        height: 12px;
+      }
+    }
+    
+    &.taro-uno-progress--circle, &.taro-uno-progress--dashboard {
+      width: 160px;
+      height: 160px;
+    }
+  }
+
+  // 状态变体
+  &--status-success {
+    .taro-uno-progress--line-bg, .taro-uno-progress--circle-path, .taro-uno-progress--dashboard-path {
+      background-color: var(--taro-uno-success-500);
+      stroke: var(--taro-uno-success-500);
+    }
+    
+    .taro-uno-progress--line-text, .taro-uno-progress--circle-text, .taro-uno-progress--dashboard-text {
+      color: var(--taro-uno-success-500);
+    }
+  }
+  
+  &--status-exception {
+    .taro-uno-progress--line-bg, .taro-uno-progress--circle-path, .taro-uno-progress--dashboard-path {
+      background-color: var(--taro-uno-error-500);
+      stroke: var(--taro-uno-error-500);
+    }
+    
+    .taro-uno-progress--line-text, .taro-uno-progress--circle-text, .taro-uno-progress--dashboard-text {
+      color: var(--taro-uno-error-500);
+    }
+  }
+  
+  &--status-active {
+    .taro-uno-progress--line-bg {
+      position: relative;
+      z-index: 1;
+      
+      &:before {
+        content: "";
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--taro-uno-primary-200);
+        border-radius: 10px;
+        animation: taro-uno-progress-active 2.4s cubic-bezier(0.23, 1, 0.32, 1) infinite;
+      }
+    }
+  }
+
+  // 平台适配
+  @include harmony {
+    &--line-inner {
+      height: 6px;
+    }
+  }
+}
+
+@keyframes taro-uno-progress-active {
+  0% {
+    width: 0;
+    opacity: 0.1;
+  }
+  20% {
+    width: 0;
+    opacity: 0.5;
+  }
+  100% {
+    width: 100%;
+    opacity: 0;
+  }
+} 

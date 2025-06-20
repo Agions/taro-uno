@@ -1,0 +1,355 @@
+@import '../../../styles/variables.scss';
+@import '../../../styles/mixins.scss';
+
+$list-prefix-cls: 'taro-uno-list';
+
+.#{$list-prefix-cls} {
+  position: relative;
+  width: 100%;
+  color: $color-text-primary;
+  font-size: $font-size-md;
+  background-color: $color-bg-container;
+  border-radius: $border-radius-md;
+
+  &__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 0;
+    color: $color-text-secondary;
+  }
+
+  // 列表头部和底部
+  &__header {
+    padding: 16px 24px;
+    border-bottom: 1px solid $color-border;
+    font-weight: 500;
+  }
+
+  &__footer {
+    padding: 16px 24px;
+    border-top: 1px solid $color-border;
+  }
+
+  // 列表项容器
+  &__items {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  // 列表为空
+  &__empty {
+    padding: 32px 0;
+    text-align: center;
+    color: $color-text-secondary;
+  }
+
+  // 列表项
+  &__item {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    padding: 16px 24px;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid $color-border;
+    }
+
+    &-content {
+      flex: 1;
+    }
+
+    &-meta {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 8px;
+
+      &-avatar {
+        margin-right: 16px;
+      }
+
+      &-content {
+        flex: 1;
+        overflow: hidden;
+      }
+
+      &-title {
+        margin-bottom: 4px;
+        font-weight: 500;
+        color: $color-text-primary;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      &-description {
+        color: $color-text-secondary;
+        font-size: $font-size-sm;
+        line-height: 1.5;
+      }
+    }
+
+    &-action {
+      margin-top: 12px;
+
+      &-list {
+        display: flex;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        &-item {
+          position: relative;
+          margin-right: 16px;
+          color: $color-text-tertiary;
+          cursor: pointer;
+
+          &:hover {
+            color: $color-primary;
+          }
+
+          &:not(:last-child)::after {
+            content: '|';
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: $color-text-quaternary;
+          }
+        }
+      }
+    }
+
+    &-extra {
+      margin-left: 24px;
+    }
+
+    &--active {
+      background-color: $color-bg-active;
+    }
+
+    &--clickable {
+      cursor: pointer;
+
+      &:hover {
+        background-color: $color-bg-hover;
+      }
+    }
+
+    &--with-prefix {
+      .#{$list-prefix-cls}__item-prefix {
+        margin-right: 16px;
+      }
+    }
+
+    &--with-suffix {
+      .#{$list-prefix-cls}__item-suffix {
+        margin-left: 16px;
+      }
+    }
+  }
+
+  // 边框样式
+  &--bordered {
+    border: 1px solid $color-border;
+  }
+
+  // 尺寸变体
+  &--small {
+    font-size: $font-size-sm;
+
+    .#{$list-prefix-cls}__header,
+    .#{$list-prefix-cls}__footer {
+      padding: 8px 16px;
+    }
+
+    .#{$list-prefix-cls}__item {
+      padding: 8px 16px;
+    }
+
+    .#{$list-prefix-cls}__item-meta {
+      margin-bottom: 4px;
+
+      &-avatar {
+        margin-right: 12px;
+      }
+    }
+  }
+
+  &--large {
+    font-size: $font-size-lg;
+
+    .#{$list-prefix-cls}__header,
+    .#{$list-prefix-cls}__footer {
+      padding: 24px 32px;
+    }
+
+    .#{$list-prefix-cls}__item {
+      padding: 24px 32px;
+    }
+
+    .#{$list-prefix-cls}__item-meta {
+      margin-bottom: 12px;
+
+      &-avatar {
+        margin-right: 20px;
+      }
+    }
+  }
+
+  // 不同布局模式
+  &--horizontal {
+    .#{$list-prefix-cls}__items {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .#{$list-prefix-cls}__item {
+      flex-direction: column;
+      border-bottom: none;
+      border-right: 1px solid $color-border;
+      margin-bottom: 0;
+    }
+  }
+
+  &--grid {
+    .#{$list-prefix-cls}__items {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .#{$list-prefix-cls}__item {
+      display: block;
+      border-bottom: none;
+    }
+  }
+
+  // 分页样式
+  &__pagination {
+    margin-top: 16px;
+    text-align: right;
+  }
+
+  // 加载更多
+  &__load-more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 0;
+    color: $color-text-secondary;
+    cursor: pointer;
+
+    &--disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+
+  // 下拉刷新
+  &__pull-refresh {
+    position: relative;
+    overflow: hidden;
+  }
+
+  &__refresh-indicator {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(-100%);
+  }
+
+  // 虚拟滚动
+  &--virtualized {
+    overflow: hidden;
+  }
+
+  // 暗色主题适配
+  @include dark-mode {
+    color: $color-text-primary-dark;
+    background-color: $color-bg-container-dark;
+
+    &__header,
+    &__footer,
+    .#{$list-prefix-cls}__item:not(:last-child) {
+      border-color: $color-border-dark;
+    }
+
+    &__empty,
+    &__loading,
+    &__load-more {
+      color: $color-text-secondary-dark;
+    }
+
+    .#{$list-prefix-cls}__item {
+      &-meta {
+        &-title {
+          color: $color-text-primary-dark;
+        }
+
+        &-description {
+          color: $color-text-secondary-dark;
+        }
+      }
+
+      &-action-list-item {
+        color: $color-text-tertiary-dark;
+
+        &:hover {
+          color: $color-primary-dark;
+        }
+
+        &:not(:last-child)::after {
+          color: $color-text-quaternary-dark;
+        }
+      }
+
+      &--active {
+        background-color: $color-bg-active-dark;
+      }
+
+      &--clickable:hover {
+        background-color: $color-bg-hover-dark;
+      }
+    }
+
+    &--bordered {
+      border-color: $color-border-dark;
+    }
+
+    &--horizontal {
+      .#{$list-prefix-cls}__item {
+        border-color: $color-border-dark;
+      }
+    }
+  }
+
+  // 响应式设计
+  @media (max-width: $breakpoint-sm) {
+    font-size: $font-size-sm;
+
+    &__header,
+    &__footer,
+    .#{$list-prefix-cls}__item {
+      padding: 12px 16px;
+    }
+
+    .#{$list-prefix-cls}__item-meta-avatar {
+      margin-right: 12px;
+    }
+
+    .#{$list-prefix-cls}__item-extra {
+      margin-left: 12px;
+    }
+
+    &__pagination {
+      text-align: center;
+    }
+  }
+} 
