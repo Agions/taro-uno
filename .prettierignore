@@ -1,0 +1,99 @@
+# 依赖
+node_modules/
+.pnp/
+.pnp.js
+
+# 构建产物
+dist/
+build/
+coverage/
+
+# 测试覆盖率报告
+coverage/
+
+# 日志文件
+*.log
+logs/
+
+# 环境变量
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 包管理器锁文件
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# 操作系统生成的文件
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE配置
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 缓存
+.cache/
+.temp/
+.tmp/
+
+# 文档生成
+docs/.docusaurus
+docs/build/
+
+# 示例和演示
+examples/
+demo/
+
+# 包配置
+lerna.json
+
+# TypeScript类型声明
+*.d.ts
+
+# 测试文件
+**/*.test.js
+**/*.test.ts
+**/*.test.jsx
+**/*.test.tsx
+**/*.spec.js
+**/*.spec.ts
+**/*.spec.jsx
+**/*.spec.tsx
+
+# 配置文件
+**/*.config.js
+**/*.config.ts
+**/.*rc.js
+**/.*rc.ts
+
+# Markdown文件
+*.md
+
+# JSON文件
+*.json
+
+# YAML文件
+*.yml
+*.yaml
+
+# 图片和媒体文件
+**/*.png
+**/*.jpg
+**/*.jpeg
+**/*.gif
+**/*.svg
+**/*.ico
+**/*.mp4
+**/*.mp3
+**/*.wav

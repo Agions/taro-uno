@@ -1,508 +1,412 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, {
-  useState,
-  useEffect,
-  useMemo,
-  useCallback,
-  useRef,
-  forwardRef,
-  useImperativeHandle,
-} from 'react'
-import classNames from 'classnames'
-import {
+import React, { forwardRef, useRef, useState, useCallback, useMemo } from 'react';
+import { View, Text, ScrollView } from '@tarojs/components';
+import { tableStyles } from './Table.styles';
+import type {
   TableProps,
+  TableRef,
   TableColumn,
+  TableSortOrder,
+  TableRowSelection,
   TablePagination,
-  TableSorter,
-  TableFilterValue,
-  TableInstance,
-} from './types'
-import './style.scss'
+  TableExpandable,
+} from './Table.types';
 
-// 工具函数：获取行键
-const getRowKey = <T extends any>(
-  record: T,
-  rowKey: TableProps<T>['rowKey'],
-  index: number
-): React.Key => {
-  if (typeof rowKey === 'function') {
-    return rowKey(record)
-  }
-  if (typeof rowKey === 'string' && record && typeof record === 'object') {
-    return (record as any)[rowKey] || index
-  }
-  return index
-}
-
-// 工具函数：获取单元格数据
-const getCellValue = <T extends any>(record: T, dataIndex?: string): any => {
-  if (!dataIndex || !record || typeof record !== 'object') {
-    return undefined
-  }
-
-  const keys = dataIndex.split('.')
-  let value = record as any
-
-  for (const key of keys) {
-    value = value?.[key]
-    if (value === undefined) {
-      break
-    }
-  }
-
-  return value
-}
-
-// 表格组件
-const Table = <T extends any>(
-  {
-    dataSource = [],
+/** 表格组件 */
+export const TableComponent = forwardRef<TableRef, TableProps>((props, ref) => {
+  const {
     columns = [],
-    loading = false,
-    size = 'middle',
-    title,
-    footer,
-    pagination,
-    bordered = false,
-    rowSelection,
+    dataSource = [],
     rowKey = 'key',
+    size = 'medium',
+    bordered = false,
+    striped = false,
+    hoverable = true,
+    loading = false,
+    emptyText = '暂无数据',
+    showHeader = true,
+    pagination = false,
+    rowSelection,
+    expandable,
+    scroll,
     onChange,
-    rowClassName,
     onRow,
     onHeaderRow,
-    virtualized = false,
-    virtualThreshold = 100,
-    emptyText = '暂无数据',
     className,
     style,
-    showHeader = true,
-    scroll,
-  }: TableProps<T>,
-  ref: React.Ref<TableInstance>
-) => {
-  // 前缀类名
-  const prefixCls = 'taro-uno-table'
+    ...restProps
+  } = props;
 
-  // 状态管理
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>(
-    rowSelection?.selectedRowKeys || []
-  )
-  const [currentPagination, setCurrentPagination] = useState<TablePagination | false>(
-    pagination === false
-      ? false
-      : {
-          current: 1,
-          pageSize: 10,
-          total: dataSource.length,
-          ...pagination,
-        }
-  )
-  const [currentSorter, setCurrentSorter] = useState<TableSorter<T> | null>(null)
-  const [currentFilters, setCurrentFilters] = useState<TableFilterValue>({})
+  const tableRef = useRef<HTMLDivElement>(null);
+  const [sortField, setSortField] = useState<string>('');
+  const [sortOrder, setSortOrder] = useState<TableSortOrder>(null);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
+  const [expandedRowKeys, setExpandedRowKeys] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
-  // 虚拟滚动相关
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [scrollTop, setScrollTop] = useState(0)
-  const [clientHeight, setClientHeight] = useState(0)
-
-  // 暴露实例方法
-  useImperativeHandle(ref, () => ({
-    reload: () => {
-      // 重新加载逻辑
+  // 处理排序
+  const handleSort = useCallback(
+    (field: string, order: TableSortOrder) => {
+      setSortField(field);
+      setSortOrder(order);
+      onChange?.({
+        pagination: { current: currentPage, pageSize },
+        filters: {},
+        sorter: { field, order },
+      });
     },
-    clearFilters: () => {
-      setCurrentFilters({})
-    },
-    clearSelection: () => {
-      setSelectedRowKeys([])
-      rowSelection?.onChange?.([], [])
-    },
-    scrollToRow: (rowIndex: number) => {
-      if (containerRef.current) {
-        // 滚动到指定行逻辑
-      }
-    },
-  }))
-
-  // 当rowSelection.selectedRowKeys更新时同步内部状态
-  useEffect(() => {
-    if (rowSelection?.selectedRowKeys !== undefined) {
-      setSelectedRowKeys(rowSelection.selectedRowKeys)
-    }
-  }, [rowSelection?.selectedRowKeys])
+    [currentPage, pageSize, onChange],
+  );
 
   // 处理行选择
   const handleRowSelect = useCallback(
-    (record: T, index: number, selected: boolean) => {
-      const key = getRowKey(record, rowKey, index)
-      const newSelectedRowKeys = selected
-        ? [...selectedRowKeys, key]
-        : selectedRowKeys.filter(k => k !== key)
+    (key: string, selected: boolean) => {
+      const newSelectedKeys = selected ? [...selectedRowKeys, key] : selectedRowKeys.filter((k) => k !== key);
 
-      setSelectedRowKeys(newSelectedRowKeys)
+      setSelectedRowKeys(newSelectedKeys);
       rowSelection?.onChange?.(
-        newSelectedRowKeys,
-        dataSource.filter((item, idx) => newSelectedRowKeys.includes(getRowKey(item, rowKey, idx)))
-      )
+        newSelectedKeys,
+        dataSource.filter((item) => newSelectedKeys.includes(item[rowKey as keyof typeof item])),
+      );
     },
-    [dataSource, rowKey, rowSelection, selectedRowKeys]
-  )
+    [selectedRowKeys, dataSource, rowKey, rowSelection],
+  );
 
   // 处理全选
   const handleSelectAll = useCallback(
     (selected: boolean) => {
-      const newSelectedRowKeys = selected
-        ? dataSource.map((record, index) => getRowKey(record, rowKey, index))
-        : []
+      const newSelectedKeys = selected ? dataSource.map((item) => String(item[rowKey as keyof typeof item])) : [];
 
-      setSelectedRowKeys(newSelectedRowKeys)
-      rowSelection?.onChange?.(newSelectedRowKeys, selected ? [...dataSource] : [])
+      setSelectedRowKeys(newSelectedKeys);
+      rowSelection?.onChange?.(
+        newSelectedKeys,
+        dataSource.filter((item) => newSelectedKeys.includes(String(item[rowKey as keyof typeof item]))),
+      );
     },
-    [dataSource, rowKey, rowSelection]
-  )
+    [dataSource, rowKey, rowSelection],
+  );
 
-  // 处理排序
-  const handleSort = useCallback(
-    (column: TableColumn<T>) => {
-      if (!column.sorter) return
+  // 处理展开
+  const handleExpand = useCallback(
+    (key: string, expanded: boolean) => {
+      const newExpandedKeys = expanded ? [...expandedRowKeys, key] : expandedRowKeys.filter((k) => k !== key);
 
-      const order =
-        column.sortOrder === 'ascend' ? 'descend' : column.sortOrder === 'descend' ? null : 'ascend'
+      setExpandedRowKeys(newExpandedKeys);
+    },
+    [expandedRowKeys],
+  );
 
-      const newSorter: TableSorter<T> = {
-        column,
-        columnKey: column.key as React.Key,
-        field: column.dataIndex,
-        order,
-      }
-
-      setCurrentSorter(order === null ? null : newSorter)
-
+  // 处理分页
+  const handlePageChange = useCallback(
+    (page: number, size?: number) => {
+      setCurrentPage(page);
+      if (size) setPageSize(size);
       onChange?.({
-        pagination: currentPagination === false ? undefined : currentPagination,
-        filters: currentFilters,
-        sorter: order === null ? ({} as TableSorter<T>) : newSorter,
-      })
+        pagination: { current: page, pageSize: size || pageSize },
+        filters: {},
+        sorter: { field: sortField, order: sortOrder },
+      });
     },
-    [currentFilters, currentPagination, onChange]
-  )
+    [pageSize, sortField, sortOrder, onChange],
+  );
 
-  // 处理分页变化
-  const handlePaginationChange = useCallback(
-    (page: number, pageSize: number) => {
-      if (currentPagination === false) return
-
-      const newPagination = {
-        ...currentPagination,
-        current: page,
-        pageSize,
-      }
-
-      setCurrentPagination(newPagination)
-
-      onChange?.({
-        pagination: newPagination,
-        filters: currentFilters,
-        sorter: currentSorter || {},
-      })
-
-      currentPagination.onChange?.(page, pageSize)
-    },
-    [currentFilters, currentPagination, currentSorter, onChange]
-  )
-
-  // 根据排序过滤等处理后的数据
+  // 排序和筛选后的数据
   const processedData = useMemo(() => {
-    let result = [...dataSource]
-
-    // 过滤处理
-    if (Object.keys(currentFilters).length > 0) {
-      Object.entries(currentFilters).forEach(([columnKey, filterValues]) => {
-        if (!filterValues || filterValues.length === 0) return
-
-        const column = columns.find(col => col.key === columnKey)
-        if (column?.onFilter) {
-          result = result.filter(record =>
-            filterValues.some(value => column.onFilter!(value, record))
-          )
-        }
-      })
-    }
+    const result = [...dataSource];
 
     // 排序处理
-    if (currentSorter && currentSorter.column) {
-      const { column, order } = currentSorter
+    if (sortField && sortOrder) {
+      result.sort((a, b) => {
+        const aValue = a[sortField as keyof typeof a];
+        const bValue = b[sortField as keyof typeof b];
 
-      if (typeof column.sorter === 'function') {
-        result.sort((a, b) => {
-          const sortResult = (column.sorter as (a: T, b: T) => number)(a, b)
-          return order === 'descend' ? -sortResult : sortResult
-        })
-      } else if (column.dataIndex) {
-        result.sort((a, b) => {
-          const aValue = getCellValue(a, column.dataIndex)
-          const bValue = getCellValue(b, column.dataIndex)
+        if (typeof aValue === 'number' && typeof bValue === 'number') {
+          return sortOrder === 'ascend' ? aValue - bValue : bValue - aValue;
+        }
 
-          if (aValue === bValue) return 0
-          if (aValue === null || aValue === undefined) return order === 'ascend' ? -1 : 1
-          if (bValue === null || bValue === undefined) return order === 'ascend' ? 1 : -1
+        const aStr = String(aValue || '');
+        const bStr = String(bValue || '');
 
-          return (order === 'ascend' ? 1 : -1) * (aValue > bValue ? 1 : -1)
-        })
-      }
+        return sortOrder === 'ascend' ? aStr.localeCompare(bStr) : bStr.localeCompare(aStr);
+      });
     }
 
-    // 分页处理
-    if (currentPagination !== false) {
-      const { current, pageSize } = currentPagination
-      const start = (current - 1) * pageSize
-      result = result.slice(start, start + pageSize)
-    }
+    return result;
+  }, [dataSource, sortField, sortOrder]);
 
-    return result
-  }, [dataSource, columns, currentFilters, currentSorter, currentPagination])
+  // 分页后的数据
+  const paginatedData = useMemo(() => {
+    if (!pagination) return processedData;
 
-  // 行列表渲染
-  const renderRows = () => {
-    if (processedData.length === 0) {
-      return (
-        <tr>
-          <td colSpan={columns.length + (rowSelection ? 1 : 0)} className={`${prefixCls}__empty`}>
-            {emptyText}
-          </td>
-        </tr>
-      )
-    }
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    return processedData.slice(startIndex, endIndex);
+  }, [processedData, currentPage, pageSize, pagination]);
 
-    return processedData.map((record, index) => {
-      const key = getRowKey(record, rowKey, index)
-      const isSelected = selectedRowKeys.includes(key)
+  // 渲染表头
+  const renderHeader = () => {
+    if (!showHeader) return null;
 
-      const rowClass = classNames(
-        `${prefixCls}__row`,
-        {
-          [`${prefixCls}__row--selected`]: isSelected,
-        },
-        rowClassName?.(record, index)
-      )
+    const headerProps = onHeaderRow?.(columns) || {};
 
-      const rowProps = onRow?.(record, index) || {}
-
-      return (
-        <tr key={key.toString()} className={rowClass} {...rowProps}>
+    return (
+      <View className="taro-uno-table__header" {...headerProps}>
+        <View className="taro-uno-table__row">
+          {/* 选择列 */}
           {rowSelection && (
-            <td className={`${prefixCls}__cell ${prefixCls}__cell--selection`}>
-              <div className={`${prefixCls}__selection`}>
-                {rowSelection.type === 'radio' ? (
-                  <input
-                    type='radio'
-                    checked={isSelected}
-                    onChange={e => handleRowSelect(record, index, e.target.checked)}
-                  />
-                ) : (
-                  <input
-                    type='checkbox'
-                    checked={isSelected}
-                    onChange={e => handleRowSelect(record, index, e.target.checked)}
-                  />
-                )}
-              </div>
-            </td>
+            <View className="taro-uno-table__cell taro-uno-table__cell--selection">
+              <input
+                type="checkbox"
+                checked={selectedRowKeys.length > 0 && selectedRowKeys.length === dataSource.length}
+                onChange={(e) => handleSelectAll(e.target.checked)}
+                disabled={dataSource.length === 0}
+              />
+            </View>
           )}
 
-          {columns.map(column => {
-            const cellValue = getCellValue(record, column.dataIndex)
-            const cellContent = column.render ? column.render(cellValue, record, index) : cellValue
+          {/* 展开列 */}
+          {expandable && <View className="taro-uno-table__cell taro-uno-table__cell--expand" />}
 
-            const cellClass = classNames(
-              `${prefixCls}__cell`,
-              {
-                [`${prefixCls}__cell--align-${column.align}`]: column.align,
-                [`${prefixCls}__cell--fixed-left`]: column.fixed === 'left',
-                [`${prefixCls}__cell--fixed-right`]: column.fixed === 'right',
-              },
-              column.className
-            )
+          {/* 数据列 */}
+          {columns.map((column, index) => {
+            const isSortable = column.sortable || column.onSort;
+            const currentSort = sortField === column.dataIndex ? sortOrder : null;
 
             return (
-              <td
-                key={column.key}
-                className={cellClass}
-                style={{
-                  width: column.width,
-                  ...column.style,
-                }}
+              <View
+                key={column.key || column.dataIndex || index}
+                className={`taro-uno-table__cell taro-uno-table__cell--header ${
+                  column.align ? `taro-uno-table__cell--${column.align}` : ''
+                }`}
+                style={{ width: column.width }}
               >
-                {cellContent}
-              </td>
-            )
+                <View className="taro-uno-table__cell-content">
+                  {column.title}
+                  {isSortable && (
+                    <View
+                      className={`taro-uno-table__sorter ${
+                        currentSort ? `taro-uno-table__sorter--${currentSort}` : ''
+                      }`}
+                      onClick={() => {
+                        const newOrder = currentSort === 'ascend' ? 'descend' : 'ascend';
+                        handleSort(column.dataIndex, newOrder);
+                      }}
+                    >
+                      <View className="taro-uno-table__sorter-up" />
+                      <View className="taro-uno-table__sorter-down" />
+                    </View>
+                  )}
+                </View>
+              </View>
+            );
           })}
-        </tr>
-      )
-    })
-  }
+        </View>
+      </View>
+    );
+  };
 
-  // 列头渲染
-  const renderColumnHeaders = () => {
+  // 渲染表格行
+  const renderRow = (record: any, rowIndex: number) => {
+    const key = String(record[rowKey as keyof typeof record]);
+    const isSelected = selectedRowKeys.includes(key);
+    const isExpanded = expandedRowKeys.includes(key);
+
+    const rowProps = onRow?.(record, rowIndex) || {};
+
     return (
-      <tr>
-        {rowSelection && (
-          <th className={`${prefixCls}__cell`}>
-            {rowSelection.showSelectAll !== false && rowSelection.type !== 'radio' && (
-              <div className={`${prefixCls}__selection`}>
-                <input
-                  type='checkbox'
-                  checked={dataSource.length > 0 && selectedRowKeys.length === dataSource.length}
-                  onChange={e => handleSelectAll(e.target.checked)}
+      <View key={key} className="taro-uno-table__body">
+        <View
+          className={`taro-uno-table__row ${isSelected ? 'taro-uno-table__row--selected' : ''} ${
+            striped && rowIndex % 2 === 1 ? 'taro-uno-table__row--striped' : ''
+          }`}
+          {...rowProps}
+        >
+          {/* 选择列 */}
+          {rowSelection && (
+            <View className="taro-uno-table__cell taro-uno-table__cell--selection">
+              <input
+                type="checkbox"
+                checked={isSelected}
+                onChange={(e) => handleRowSelect(key, e.target.checked)}
+                disabled={rowSelection.getCheckboxProps?.(record)?.disabled}
+              />
+            </View>
+          )}
+
+          {/* 展开列 */}
+          {expandable && (
+            <View className="taro-uno-table__cell taro-uno-table__cell--expand">
+              {expandable.rowExpandable?.(record) && (
+                <View
+                  className={`taro-uno-table__expand-icon ${isExpanded ? 'taro-uno-table__expand-icon--expanded' : ''}`}
+                  onClick={() => handleExpand(key, !isExpanded)}
                 />
-              </div>
-            )}
-          </th>
+              )}
+            </View>
+          )}
+
+          {/* 数据列 */}
+          {columns.map((column, colIndex) => {
+            const value = record[column.dataIndex as keyof typeof record];
+            const render = column.render;
+            const cellContent = render ? render(value, record, rowIndex) : String(value || '');
+
+            return (
+              <View
+                key={column.key || column.dataIndex || colIndex}
+                className={`taro-uno-table__cell ${column.align ? `taro-uno-table__cell--${column.align}` : ''}`}
+                style={{ width: column.width }}
+              >
+                <View className="taro-uno-table__cell-content">{cellContent}</View>
+              </View>
+            );
+          })}
+        </View>
+
+        {/* 展开内容 */}
+        {expandable && isExpanded && expandable.rowExpandable?.(record) && (
+          <View className="taro-uno-table__expanded-row">
+            <View className="taro-uno-table__expanded-cell" colSpan={columns.length + 2}>
+              {expandable.expandedRowRender?.(record, rowIndex)}
+            </View>
+          </View>
         )}
+      </View>
+    );
+  };
 
-        {columns.map((column, index) => {
-          const headerCellProps = onHeaderRow?.(columns, index) || {}
-
-          const headerClass = classNames(
-            `${prefixCls}__cell`,
-            {
-              [`${prefixCls}__cell--sortable`]: column.sorter,
-              [`${prefixCls}__cell--align-${column.align}`]: column.align,
-              [`${prefixCls}__cell--fixed-left`]: column.fixed === 'left',
-              [`${prefixCls}__cell--fixed-right`]: column.fixed === 'right',
-            },
-            column.className
-          )
-
-          return (
-            <th
-              key={column.key}
-              className={headerClass}
-              style={{
-                width: column.width,
-                ...column.style,
-              }}
-              onClick={() => column.sorter && handleSort(column)}
-              {...headerCellProps}
-            >
-              <span>{column.title}</span>
-
-              {column.sorter && (
-                <span className={`${prefixCls}__sorter`}>
-                  <span
-                    className={`${prefixCls}__sorter-icon ${
-                      column.sortOrder === 'ascend' ? `${prefixCls}__sorter-icon--active` : ''
-                    }`}
-                  >
-                    ▲
-                  </span>
-                  <span
-                    className={`${prefixCls}__sorter-icon ${
-                      column.sortOrder === 'descend' ? `${prefixCls}__sorter-icon--active` : ''
-                    }`}
-                  >
-                    ▼
-                  </span>
-                </span>
-              )}
-
-              {column.filters && column.filters.length > 0 && (
-                <span className={`${prefixCls}__filter`}>
-                  {/* 筛选图标 */}
-                  ⚙️
-                </span>
-              )}
-            </th>
-          )
-        })}
-      </tr>
-    )
-  }
-
-  // 分页器渲染
+  // 渲染分页
   const renderPagination = () => {
-    if (currentPagination === false) return null
+    if (!pagination) return null;
 
-    const { current, pageSize, total } = currentPagination
+    const total = dataSource.length;
+    const totalPages = Math.ceil(total / pageSize);
 
     return (
-      <div className={`${prefixCls}__pagination`}>
-        <button
-          disabled={current <= 1}
-          onClick={() => handlePaginationChange(current - 1, pageSize)}
-        >
-          上一页
-        </button>
-        <span>
-          {current} / {Math.ceil(total / pageSize)}
-        </span>
-        <button
-          disabled={current >= Math.ceil(total / pageSize)}
-          onClick={() => handlePaginationChange(current + 1, pageSize)}
-        >
-          下一页
-        </button>
-      </div>
-    )
-  }
+      <View className="taro-uno-table__pagination">
+        <View className="taro-uno-table__pagination-info">共 {total} 条记录</View>
+        <View className="taro-uno-table__pagination-controls">
+          <button
+            className="taro-uno-table__pagination-btn"
+            disabled={currentPage === 1}
+            onClick={() => handlePageChange(currentPage - 1)}
+          >
+            上一页
+          </button>
+          <View className="taro-uno-table__pagination-current">
+            {currentPage} / {totalPages}
+          </View>
+          <button
+            className="taro-uno-table__pagination-btn"
+            disabled={currentPage === totalPages}
+            onClick={() => handlePageChange(currentPage + 1)}
+          >
+            下一页
+          </button>
+        </View>
+      </View>
+    );
+  };
 
-  // 组件类名
-  const tableClassName = classNames(
-    prefixCls,
-    {
-      [`${prefixCls}--bordered`]: bordered,
-      [`${prefixCls}--${size}`]: size !== 'middle',
-      [`${prefixCls}--loading`]: loading,
-      [`${prefixCls}--virtualized`]: virtualized && dataSource.length > virtualThreshold,
-    },
-    className
-  )
+  // 渲染空状态
+  const renderEmpty = () => {
+    if (dataSource.length > 0) return null;
+
+    return (
+      <View className="taro-uno-table__empty">
+        <Text className="taro-uno-table__empty-text">{emptyText}</Text>
+      </View>
+    );
+  };
+
+  // 渲染加载状态
+  const renderLoading = () => {
+    if (!loading) return null;
+
+    return (
+      <View className="taro-uno-table__loading">
+        <View className="taro-uno-table__loading-spinner" />
+        <Text className="taro-uno-table__loading-text">加载中...</Text>
+      </View>
+    );
+  };
+
+  // 暴露给外部的引用方法
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      element: tableRef.current,
+      getSelectedRowKeys: () => selectedRowKeys,
+      setSelectedRowKeys: (keys) => setSelectedRowKeys(keys),
+      getExpandedRowKeys: () => expandedRowKeys,
+      setExpandedRowKeys: (keys) => setExpandedRowKeys(keys),
+      getSortField: () => sortField,
+      getSortOrder: () => sortOrder,
+      setSort: (field, order) => {
+        setSortField(field);
+        setSortOrder(order);
+      },
+      refresh: () => {
+        // 重新加载数据的逻辑
+        handlePageChange(currentPage, pageSize);
+      },
+      scrollTo: (options) => {
+        tableRef.current?.scrollTo(options);
+      },
+    }),
+    [selectedRowKeys, expandedRowKeys, sortField, sortOrder, currentPage, pageSize],
+  );
+
+  // 生成样式
+  const tableStyle = tableStyles.getStyle({
+    size,
+    bordered,
+    striped,
+    hoverable,
+    scroll,
+    style: style || {},
+  });
+
+  // 生成类名
+  const tableClassName = tableStyles.getClassName({
+    size,
+    bordered,
+    striped,
+    hoverable,
+    loading,
+    className: className || '',
+  });
 
   return (
-    <div className={tableClassName} style={style}>
-      {title && (
-        <div className={`${prefixCls}__title`}>
-          {typeof title === 'function' ? title(dataSource) : title}
-        </div>
-      )}
+    <View ref={tableRef} className={tableClassName} style={tableStyle} {...restProps}>
+      {renderLoading()}
 
-      <div
-        className={`${prefixCls}__container`}
-        ref={containerRef}
-        style={
-          scroll
-            ? {
-                overflowX: scroll.x ? 'auto' : undefined,
-                overflowY: scroll.y ? 'auto' : undefined,
-                maxHeight: scroll.y,
-              }
-            : undefined
-        }
+      <ScrollView
+        className="taro-uno-table__scroll"
+        scrollX={scroll?.x !== undefined}
+        scrollY={scroll?.y !== undefined}
+        style={{
+          maxHeight: scroll?.y,
+          maxWidth: scroll?.x,
+        }}
       >
-        {loading && <div className={`${prefixCls}__loading`}>加载中...</div>}
+        <View className="taro-uno-table__container">
+          {renderHeader()}
 
-        <table
-          className={`${prefixCls}__table`}
-          style={scroll?.x ? { width: scroll.x === true ? '100%' : scroll.x } : undefined}
-        >
-          {showHeader && <thead className={`${prefixCls}__thead`}>{renderColumnHeaders()}</thead>}
+          <View className="taro-uno-table__body">
+            {paginatedData.map((record, index) => renderRow(record, index))}
+            {renderEmpty()}
+          </View>
+        </View>
+      </ScrollView>
 
-          <tbody className={`${prefixCls}__tbody`}>{renderRows()}</tbody>
-        </table>
-      </div>
+      {renderPagination()}
+    </View>
+  );
+});
 
-      {currentPagination !== false && renderPagination()}
+/** 表格组件显示名称 */
+TableComponent.displayName = 'Table';
 
-      {footer && (
-        <div className={`${prefixCls}__footer`}>
-          {typeof footer === 'function' ? footer(dataSource) : footer}
-        </div>
-      )}
-    </div>
-  )
-}
-
-export default forwardRef(Table)
+/** 导出表格组件 */
+export default TableComponent;

@@ -1,247 +1,146 @@
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
-import '@testing-library/jest-dom'
-import Card from './index'
+import { render, screen, fireEvent } from '@testing-library/react'
+import { Card } from './Card'
 
-describe('Card 组件', () => {
-  // 基础渲染测试
-  it('应该正确渲染基础Card组件', () => {
-    const { container } = render(
-      <Card title='卡片标题'>
-        <div>卡片内容</div>
+describe('Card Component', () => {
+  const mockOnPress = vi.fn()
+
+  beforeEach(() => {
+    mockOnPress.mockClear()
+  })
+
+  test('renders basic card', () => {
+    render(<Card>Card Content</Card>)
+    expect(screen.getByText('Card Content')).toBeInTheDocument()
+  })
+
+  test('renders card with title', () => {
+    render(<Card title="Card Title">Content</Card>)
+    expect(screen.getByText('Card Title')).toBeInTheDocument()
+    expect(screen.getByText('Content')).toBeInTheDocument()
+  })
+
+  test('renders card with title and subtitle', () => {
+    render(
+      <Card title="Card Title" subtitle="Card Subtitle">
+        Content
       </Card>
     )
-    
-    const card = container.querySelector('.taro-uno-card')
-    expect(card).toBeInTheDocument()
-    expect(card).toHaveClass('taro-uno-card--size-md')
-    expect(card).toHaveClass('taro-uno-card--shadow-md')
-    expect(card).toHaveClass('taro-uno-card--bordered')
-    
-    const title = container.querySelector('.taro-uno-card__title')
-    expect(title).toBeInTheDocument()
-    expect(title).toHaveTextContent('卡片标题')
-    
-    const body = container.querySelector('.taro-uno-card__body')
-    expect(body).toBeInTheDocument()
-    expect(body).toHaveTextContent('卡片内容')
+    expect(screen.getByText('Card Title')).toBeInTheDocument()
+    expect(screen.getByText('Card Subtitle')).toBeInTheDocument()
+    expect(screen.getByText('Content')).toBeInTheDocument()
   })
 
-  // 测试不同尺寸
-  it('应该正确应用不同尺寸', () => {
-    const sizes: ('sm' | 'md' | 'lg')[] = ['sm', 'md', 'lg']
-    
-    sizes.forEach(size => {
-      const { container, unmount } = render(<Card size={size} />)
-      expect(container.querySelector(`.taro-uno-card--size-${size}`)).toBeInTheDocument()
-      unmount()
-    })
+  test('renders card with extra content', () => {
+    render(
+      <Card title="Card Title" extra={<button>Extra</button>}>
+        Content
+      </Card>
+    )
+    expect(screen.getByText('Card Title')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Extra' })).toBeInTheDocument()
   })
 
-  // 测试不同阴影
-  it('应该正确应用不同阴影级别', () => {
-    const shadows: ('none' | 'sm' | 'md' | 'lg' | 'xl')[] = ['none', 'sm', 'md', 'lg', 'xl']
-    
-    shadows.forEach(shadow => {
-      const { container, unmount } = render(<Card shadow={shadow} />)
-      expect(container.querySelector(`.taro-uno-card--shadow-${shadow}`)).toBeInTheDocument()
-      unmount()
-    })
+  test('renders card with cover', () => {
+    render(
+      <Card cover={<div data-testid="cover">Cover</div>}>
+        Content
+      </Card>
+    )
+    expect(screen.getByTestId('cover')).toBeInTheDocument()
   })
 
-  // 测试边框设置
-  it('应该根据bordered属性控制边框显示', () => {
-    const { container, rerender } = render(<Card bordered={true} />)
-    expect(container.querySelector('.taro-uno-card')).toHaveClass('taro-uno-card--bordered')
-    
-    rerender(<Card bordered={false} />)
-    expect(container.querySelector('.taro-uno-card')).not.toHaveClass('taro-uno-card--bordered')
+  test('renders card with actions', () => {
+    const actions = [
+      <button key="1">Action 1</button>,
+      <button key="2">Action 2</button>
+    ]
+    render(
+      <Card actions={actions}>
+        Content
+      </Card>
+    )
+    expect(screen.getByText('Action 1')).toBeInTheDocument()
+    expect(screen.getByText('Action 2')).toBeInTheDocument()
   })
 
-  // 测试悬停效果
-  it('应该根据hoverable属性控制悬停效果', () => {
-    const { container, rerender } = render(<Card hoverable={true} />)
-    expect(container.querySelector('.taro-uno-card')).toHaveClass('taro-uno-card--hoverable')
-    
-    rerender(<Card hoverable={false} />)
-    expect(container.querySelector('.taro-uno-card')).not.toHaveClass('taro-uno-card--hoverable')
-  })
-
-  // 测试可点击状态
-  it('应该根据clickable属性控制点击状态', () => {
-    const handleClick = jest.fn()
-    const { container, rerender } = render(<Card clickable={true} onClick={handleClick} />)
-    
-    const card = container.querySelector('.taro-uno-card')
-    expect(card).toHaveClass('taro-uno-card--clickable')
-    
+  test('handles press event when hoverable', () => {
+    render(
+      <Card hoverable onPress={mockOnPress}>
+        Content
+      </Card>
+    )
+    const card = screen.getByText('Content').closest('div')
     fireEvent.click(card!)
-    expect(handleClick).toHaveBeenCalledTimes(1)
-    
-    rerender(<Card clickable={false} onClick={handleClick} />)
-    expect(container.querySelector('.taro-uno-card')).not.toHaveClass('taro-uno-card--clickable')
-    
+    expect(mockOnPress).toHaveBeenCalledTimes(1)
+  })
+
+  test('does not handle press event when not hoverable', () => {
+    render(
+      <Card onPress={mockOnPress}>
+        Content
+      </Card>
+    )
+    const card = screen.getByText('Content').closest('div')
     fireEvent.click(card!)
-    // 点击次数应该仍为1，因为clickable设为false
-    expect(handleClick).toHaveBeenCalledTimes(1)
+    expect(mockOnPress).not.toHaveBeenCalled()
   })
 
-  // 测试加载状态
-  it('应该正确渲染加载状态', () => {
-    const { container } = render(
-      <Card loading>
-        <div>卡片内容</div>
-      </Card>
-    )
-    
-    expect(container.querySelector('.taro-uno-card')).toHaveClass('taro-uno-card--loading')
-    
-    const loadingContent = container.querySelector('.taro-uno-card__loading')
-    expect(loadingContent).toBeInTheDocument()
-    
-    // 加载状态下不应显示实际内容
-    expect(container.querySelector('.taro-uno-card__body')).not.toHaveTextContent('卡片内容')
+  test('shows loading state', () => {
+    render(<Card loading>Content</Card>)
+    const card = screen.getByText('Content').closest('div')
+    expect(card).toHaveClass('opacity-70')
+    expect(card).toHaveClass('pointer-events-none')
   })
 
-  // 测试卡片头部
-  it('应该正确渲染卡片标题和额外内容', () => {
-    const { container } = render(
-      <Card 
-        title='卡片标题' 
-        subtitle='副标题' 
-        titleIcon={<div className='title-icon'>图标</div>}
-        extra={<div className='extra-content'>额外内容</div>}
-      />
-    )
-    
-    expect(container.querySelector('.taro-uno-card__title')).toHaveTextContent('卡片标题')
-    expect(container.querySelector('.taro-uno-card__subtitle')).toHaveTextContent('副标题')
-    expect(container.querySelector('.title-icon')).toBeInTheDocument()
-    expect(container.querySelector('.extra-content')).toBeInTheDocument()
+  test('applies border when bordered', () => {
+    render(<Card bordered>Content</Card>)
+    const card = screen.getByText('Content').closest('div')
+    expect(card).toHaveClass('border')
   })
 
-  // 测试自定义头部
-  it('应该正确渲染自定义头部', () => {
-    const { container } = render(
-      <Card header={<div className='custom-header'>自定义头部</div>} title='卡片标题' />
-    )
-    
-    // 自定义头部应该覆盖标题
-    expect(container.querySelector('.custom-header')).toBeInTheDocument()
-    expect(container.querySelector('.taro-uno-card__title')).not.toBeInTheDocument()
+  test('does not apply border when not bordered', () => {
+    render(<Card bordered={false}>Content</Card>)
+    const card = screen.getByText('Content').closest('div')
+    expect(card).not.toHaveClass('border')
   })
 
-  // 测试封面
-  it('应该正确渲染封面内容', () => {
-    const { container } = render(<Card cover={<div className='custom-cover'>封面内容</div>} />)
-    
-    expect(container.querySelector('.taro-uno-card__cover')).toBeInTheDocument()
-    expect(container.querySelector('.custom-cover')).toBeInTheDocument()
+  test('applies shadow based on shadow prop', () => {
+    const { rerender } = render(<Card shadow="none">Content</Card>)
+    let card = screen.getByText('Content').closest('div')
+    expect(card).not.toHaveClass('shadow-sm')
+    expect(card).not.toHaveClass('shadow-md')
+    expect(card).not.toHaveClass('shadow-lg')
+
+    rerender(<Card shadow="small">Content</Card>)
+    card = screen.getByText('Content').closest('div')
+    expect(card).toHaveClass('shadow-sm')
+
+    rerender(<Card shadow="default">Content</Card>)
+    card = screen.getByText('Content').closest('div')
+    expect(card).toHaveClass('shadow-md')
+
+    rerender(<Card shadow="large">Content</Card>)
+    card = screen.getByText('Content').closest('div')
+    expect(card).toHaveClass('shadow-lg')
   })
 
-  // 测试操作区
-  it('应该正确渲染操作区域', () => {
-    const { container } = render(
-      <Card 
-        actions={[
-          <div key='action1' className='action-1'>
-            操作1
-          </div>,
-          <div key='action2' className='action-2'>
-            操作2
-          </div>,
-        ]}
-      />
-    )
-    
-    expect(container.querySelector('.taro-uno-card__actions')).toBeInTheDocument()
-    expect(container.querySelectorAll('.taro-uno-card__action').length).toBe(2)
-    expect(container.querySelector('.action-1')).toBeInTheDocument()
-    expect(container.querySelector('.action-2')).toBeInTheDocument()
+  test('applies custom className', () => {
+    render(<Card className="custom-class">Content</Card>)
+    const card = screen.getByText('Content').closest('div')
+    expect(card).toHaveClass('custom-class')
   })
 
-  // 测试底部
-  it('应该正确渲染底部内容', () => {
-    const { container } = render(<Card footer={<div className='custom-footer'>底部内容</div>} />)
-    
-    expect(container.querySelector('.taro-uno-card__footer')).toBeInTheDocument()
-    expect(container.querySelector('.custom-footer')).toBeInTheDocument()
+  test('applies custom style', () => {
+    const customStyle = { backgroundColor: 'red' }
+    render(<Card style={customStyle}>Content</Card>)
+    const card = screen.getByText('Content').closest('div')
+    expect(card).toHaveStyle({ backgroundColor: 'red' })
   })
 
-  // 测试自定义样式
-  it('应该应用自定义样式', () => {
-    const { container } = render(
-      <Card 
-        className='custom-card'
-        style={{ margin: '10px' }}
-        headerStyle={{ padding: '5px' }}
-        bodyStyle={{ background: '#f5f5f5' }}
-        footerStyle={{ borderTop: '1px solid #eee' }}
-        header='头部'
-        footer='底部'
-      >
-        内容
-      </Card>
-    )
-    
-    const card = container.querySelector('.taro-uno-card')
-    expect(card).toHaveClass('custom-card')
-    expect(card).toHaveStyle('margin: 10px')
-    
-    expect(container.querySelector('.taro-uno-card__header')).toHaveStyle('padding: 5px')
-    expect(container.querySelector('.taro-uno-card__body')).toHaveStyle('background: #f5f5f5')
-    expect(container.querySelector('.taro-uno-card__footer')).toHaveStyle(
-      'border-top: 1px solid #eee'
-    )
+  test('forwards ref correctly', () => {
+    const ref = React.createRef<HTMLDivElement>()
+    render(<Card ref={ref}>Content</Card>)
+    expect(ref.current).toBeInTheDocument()
   })
 })
-
-describe('Card.Meta 组件', () => {
-  // 基础渲染测试
-  it('应该正确渲染Card.Meta组件', () => {
-    const { container } = render(
-      <Card>
-        <Card.Meta
-          avatar={<div className='meta-avatar'>头像</div>}
-          title='元信息标题'
-          description='元信息描述'
-        />
-      </Card>
-    )
-    
-    const meta = container.querySelector('.taro-uno-card-meta')
-    expect(meta).toBeInTheDocument()
-    
-    expect(container.querySelector('.meta-avatar')).toBeInTheDocument()
-    expect(container.querySelector('.taro-uno-card-meta__title')).toHaveTextContent('元信息标题')
-    expect(container.querySelector('.taro-uno-card-meta__description')).toHaveTextContent(
-      '元信息描述'
-    )
-  })
-
-  // 测试部分属性
-  it('应该正确渲染部分属性的Card.Meta', () => {
-    const { container } = render(
-      <Card>
-        <Card.Meta title='仅标题' />
-      </Card>
-    )
-    
-    expect(container.querySelector('.taro-uno-card-meta__title')).toHaveTextContent('仅标题')
-    expect(container.querySelector('.taro-uno-card-meta__avatar')).not.toBeInTheDocument()
-    expect(container.querySelector('.taro-uno-card-meta__description')).not.toBeInTheDocument()
-  })
-
-  // 测试自定义样式
-  it('应该应用Card.Meta的自定义样式', () => {
-    const { container } = render(
-      <Card>
-        <Card.Meta className='custom-meta' style={{ padding: '10px' }} title='标题' />
-      </Card>
-    )
-    
-    const meta = container.querySelector('.taro-uno-card-meta')
-    expect(meta).toHaveClass('custom-meta')
-    expect(meta).toHaveStyle('padding: 10px')
-  })
-}) 

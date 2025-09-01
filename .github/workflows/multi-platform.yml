@@ -1,0 +1,173 @@
+name: Multi-Platform Testing
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  test-matrix:
+    name: 多平台测试矩阵
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: [18, 20]
+        exclude:
+          # 排除一些组合以减少构建时间
+          - os: windows-latest
+            node-version: 20
+          - os: macos-latest
+            node-version: 20
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: 安装 pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: '8'
+
+      - name: 获取 pnpm store 目录
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: 设置 pnpm 缓存
+        if: runner.os != 'Windows'
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+
+      - name: 运行类型检查
+        run: pnpm run type-check
+
+      - name: 运行代码检查
+        run: pnpm run lint
+
+      - name: 运行单元测试
+        run: pnpm run test:run
+
+      - name: 运行构建测试
+        run: pnpm run build
+
+  browser-testing:
+    name: 浏览器兼容性测试
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        browser: [chrome, firefox, webkit]
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: 安装 pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: '8'
+
+      - name: 获取 pnpm store 目录
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: 设置 pnpm 缓存
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+
+      - name: 安装 Playwright 浏览器
+        run: pnpm exec playwright install --with-deps
+
+      - name: 运行浏览器测试
+        run: pnpm exec playwright test --project=${{ matrix.browser }}
+
+      - name: 上传测试结果
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-results-${{ matrix.browser }}
+          path: playwright-report/
+          retention-days: 30
+
+  mobile-testing:
+    name: 移动端兼容性测试
+    runs-on: macos-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: 安装 pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: '8'
+
+      - name: 获取 pnpm store 目录
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: 设置 pnpm 缓存
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+
+      - name: 设置 iOS 模拟器
+        uses: futureware-tech/simulator-action@v3
+        with:
+          model: 'iPhone 14'
+
+      - name: 设置 Android 模拟器
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 33
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+
+      - name: 运行移动端测试
+        run: |
+          # 这里可以添加具体的移动端测试命令
+          echo "Running mobile compatibility tests..."
+
+      - name: 上传测试结果
+        uses: actions/upload-artifact@v4
+        with:
+          name: mobile-test-results
+          path: mobile-test-results/
+          retention-days: 30

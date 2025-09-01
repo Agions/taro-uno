@@ -40,6 +40,8 @@ lerna-debug.log*
 .rn_temp/
 .swc/
 .eslintcache
+.taro/
+.taro-temp/
 
 # Bundle analyzer output
 stats.html
@@ -52,9 +54,37 @@ report.html
 .pnpm/
 .yarn/
 
-# Docs build output
-packages/docs/dist/
+# TypeScript build info
+*.tsbuildinfo
+
+# Taro build outputs
+dist_weapp/
+dist_alipay/
+dist_swan/
+dist_tt/
+dist_qq/
+dist_h5/
+dist_rn/
+dist_jd/
 
 # Test coverage
 coverage/
-.nyc_output/ 
+.nyc_output/
+
+# Development tools
+.vscode/
+.idea/
+*.suo
+# Package manager artifacts
+pnpm-lock.yaml
+yarn.lock
+package-lock.json
+
+# Temporary files
+*.tmp
+*.temp
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini

@@ -1,0 +1,358 @@
+/**
+ * 虚拟滚动列表组件
+ * 用于优化长列表渲染性能
+ */
+
+import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import { useVirtualScroll, VirtualScrollItem, VirtualScrollOptions } from '@/hooks/useVirtualScroll';
+import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor';
+import classNames from 'classnames';
+
+export interface VirtualListProps<T = any> {
+  // 列表数据
+  data: T[];
+  // 项目渲染函数
+  renderItem: (item: T, index: number) => React.ReactNode;
+  // 项目高度（固定高度）
+  itemHeight?: number;
+  // 容器高度
+  height: number;
+  // 项目 key
+  itemKey?: (item: T, index: number) => string | number;
+  // 预渲染的项目数量
+  overscanCount?: number;
+  // 是否启用动态高度
+  dynamicHeight?: boolean;
+  // 空状态显示
+  emptyText?: React.ReactNode;
+  // 加载状态显示
+  loading?: boolean;
+  // 加载更多
+  loadMore?: () => Promise<void> | void;
+  // 是否有更多数据
+  hasMore?: boolean;
+  // 滚动事件
+  onScroll?: (scrollTop: number) => void;
+  // 渲染事件
+  onRender?: (visibleItems: VirtualScrollItem[]) => void;
+  // 容器样式
+  className?: string;
+  // 项目样式
+  itemClassName?: string;
+  // 启用性能监控
+  enablePerformanceMonitor?: boolean;
+}
+
+export interface VirtualListRef {
+  // 滚动到指定位置
+  scrollToIndex: (index: number) => void;
+  // 滚动到指定位置
+  scrollToPosition: (position: number) => void;
+  // 获取滚动位置
+  getScrollTop: () => number;
+  // 获取可见项目
+  getVisibleItems: () => VirtualScrollItem[];
+  // 重新计算布局
+  recalculateLayout: () => void;
+}
+
+const VirtualList = React.forwardRef<VirtualListRef, VirtualListProps>(
+  (
+    {
+      data,
+      renderItem,
+      itemHeight = 50,
+      height,
+      itemKey = (item, index) => index,
+      overscanCount = 3,
+      dynamicHeight = false,
+      emptyText = '暂无数据',
+      loading = false,
+      loadMore,
+      hasMore = false,
+      onScroll,
+      onRender,
+      className,
+      itemClassName,
+      enablePerformanceMonitor = true,
+      ...props
+    },
+    ref,
+  ) => {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [loadingMore, setLoadingMore] = useState(false);
+    const [itemElements, setItemElements] = useState<Record<number, HTMLDivElement>>({});
+
+    // 性能监控
+    const { recordCustomMetric, monitorRenderPerformance, completeRenderMonitoring } = usePerformanceMonitor({
+      enableRenderMonitor: enablePerformanceMonitor,
+      enableMemoryMonitor: enablePerformanceMonitor,
+      thresholds: {
+        renderTime: 16, // 60fps
+        memoryUsage: 50,
+      },
+      onPerformanceWarning: (metrics) => {
+        console.warn('虚拟列表性能警告:', metrics);
+      },
+    });
+
+    // 准备虚拟滚动数据
+    const virtualItems: VirtualScrollItem[] = useMemo(() => {
+      return data.map((item, index) => ({
+        id: itemKey(item, index),
+        height: itemHeight,
+        data: item,
+      }));
+    }, [data, itemHeight, itemKey]);
+
+    // 虚拟滚动配置
+    const virtualScrollOptions: VirtualScrollOptions = useMemo(
+      () => ({
+        containerHeight: height,
+        itemHeight,
+        overscanCount,
+        scrollElement: containerRef.current,
+        dynamicHeight,
+        bufferSize: 5,
+        onScroll,
+        onRender,
+      }),
+      [height, itemHeight, overscanCount, dynamicHeight, onScroll, onRender],
+    );
+
+    // 使用虚拟滚动
+    const {
+      visibleItems,
+      scrollTop,
+      totalHeight,
+      startIndex,
+      endIndex,
+      scrollToIndex: virtualScrollToIndex,
+      scrollToPosition: virtualScrollToPosition,
+      updateItemHeight,
+      getItemPosition,
+      recalculateLayout,
+    } = useVirtualScroll(virtualItems, virtualScrollOptions);
+
+    // 处理项目高度测量
+    const measureItemHeight = useCallback(
+      (index: number, element: HTMLDivElement) => {
+        if (!dynamicHeight || !element) return;
+
+        const height = element.offsetHeight;
+        if (height !== itemHeight) {
+          updateItemHeight(index, height);
+        }
+      },
+      [dynamicHeight, itemHeight, updateItemHeight],
+    );
+
+    // 处理滚动到底部加载更多
+    const handleScroll = useCallback(
+      (scrollTop: number) => {
+        onScroll?.(scrollTop);
+
+
+    // 检查是否需要加载更多
+        if (loadMore && hasMore && !loadingMore && !loading) {
+          const container = containerRef.current;
+          if (container) {
+            const scrollBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
+            if (scrollBottom < itemHeight * 2) {
+              // 距离底部2个项目高度时加载
+              loadMoreItems();
+            }
+          }
+        }
+      },
+      [loadMore, hasMore, loadingMore, loading, itemHeight, onScroll],
+    );
+
+    // 加载更多数据
+    const loadMoreItems = useCallback(async () => {
+      if (!loadMore || loadingMore || !hasMore) return;
+
+      setLoadingMore(true);
+      recordCustomMetric('loadMoreStart', Date.now());
+
+
+    try {
+        await loadMore();
+        recordCustomMetric('loadMoreSuccess', 1);
+      } catch (error) {
+        console.error('加载更多失败:', error);
+        recordCustomMetric('loadMoreError', 1);
+      } finally {
+        setLoadingMore(false);
+        recordCustomMetric('loadMoreEnd', Date.now());
+      }
+    }, [loadMore, hasMore, loadingMore, recordCustomMetric]);
+
+    // 滚动到指定位置
+    const scrollToIndex = useCallback(
+      (index: number) => {
+        virtualScrollToIndex(index);
+      },
+      [virtualScrollToIndex],
+    );
+
+    // 滚动到指定位置
+    const scrollToPosition = useCallback(
+      (position: number) => {
+        virtualScrollToPosition(position);
+      },
+      [virtualScrollToPosition],
+    );
+
+    // 获取滚动位置
+    const getScrollTop = useCallback(() => {
+      return containerRef.current?.scrollTop || 0;
+    }, []);
+
+    // 获取可见项目
+    const getVisibleItems = useCallback(() => {
+      return visibleItems;
+    }, [visibleItems]);
+
+    // 暴露方法给 ref
+    React.useImperativeHandle(
+      ref,
+      () => ({
+        scrollToIndex,
+        scrollToPosition,
+        getScrollTop,
+        getVisibleItems,
+        recalculateLayout,
+      }),
+      [scrollToIndex, scrollToPosition, getScrollTop, getVisibleItems, recalculateLayout],
+    );
+
+    // 渲染项目
+    const renderItems = () => {
+      monitorRenderPerformance();
+
+    try {
+        const items = visibleItems.map((virtualItem, index) => {
+          const dataIndex = startIndex + index;
+          const dataItem = data[dataIndex];
+          const position = getItemPosition(dataIndex);
+
+        return (
+            <div
+              key={virtualItem.id}
+              ref={(element) => {
+                if (element) {
+                  itemElements[dataIndex] = element;
+                  measureItemHeight(dataIndex, element);
+                }
+              }}
+              className={classNames('virtual-list-item', itemClassName)}
+              style={{
+                position: 'absolute',
+                top: position.top,
+                left: 0,
+                right: 0,
+                height: position.height,
+                transition: dynamicHeight ? 'height 0.2s ease' : 'none',
+              }}
+            >
+              {renderItem(dataItem, dataIndex)}
+            </div>
+          );
+        });
+
+        completeRenderMonitoring();
+        return items;
+      } catch (error) {
+        console.error('渲染虚拟列表项目失败:', error);
+        completeRenderMonitoring();
+        return [];
+      }
+    };
+
+    // 渲染加载状态
+    const renderLoading = () => {
+      if (!loading && !loadingMore) return null;
+
+
+    return (
+        <div className="virtual-list-loading">
+          <div className="loading-spinner">
+            <div className="spinner"></div>
+          </div>
+          <div className="loading-text">{loading ? '加载中...' : '加载更多...'}</div>
+        </div>
+      );
+    };
+
+    // 渲染空状态
+    const renderEmpty = () => {
+      if (data.length > 0 || loading) return null;
+
+    return (
+      <div className="virtual-list-empty">
+        {emptyText}
+      </div>
+    };
+
+    // 监听滚动事件
+    useEffect(() => {
+      const container = containerRef.current;
+      if (!container) return;
+
+      const handleScrollEvent = () => {
+        const scrollTop = container.scrollTop;
+        handleScroll(scrollTop);
+      };
+
+      container.addEventListener('scroll', handleScrollEvent, { passive: true });
+
+
+    return () => {
+        container.removeEventListener('scroll', handleScrollEvent);
+      };
+    }, [handleScroll]);
+
+    // 记录渲染性能
+    useEffect(() => {
+      recordCustomMetric('virtualListItems', data.length);
+      recordCustomMetric('virtualListVisibleItems', visibleItems.length);
+      recordCustomMetric('virtualListTotalHeight', totalHeight);
+    }, [data.length, visibleItems.length, totalHeight, recordCustomMetric]);
+
+    return (
+      <div
+        ref={containerRef}
+        className={classNames('virtual-list', className)}
+        style={{
+          height: `${height}px`,
+          overflow: 'auto',
+          position: 'relative',
+        }}
+        {...props}
+      >
+        {/* 总高度容器 */}
+        <div
+          className="virtual-list-spacer"
+          style={{
+            height: `${totalHeight}px`,
+            position: 'relative',
+          }}
+        >
+          {/* 可见项目 */}
+          {renderItems()}
+        </div>
+
+      {/* 空状态 */}
+        {renderEmpty()}
+
+      {/* 加载状态 */}
+        {renderLoading()}
+      </div>
+    );
+  },
+);
+
+VirtualList.displayName = 'VirtualList';
+
+export default VirtualList;

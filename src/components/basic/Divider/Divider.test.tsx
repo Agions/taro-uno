@@ -1,173 +1,521 @@
 import React from 'react'
-import { render, screen } from '@testing-library/react'
-import '@testing-library/jest-dom'
-import Divider from './index'
+import { render, screen, fireEvent } from '@testing-library/react'
+import { vi } from 'vitest'
+import { Divider } from './Divider'
+import type { DividerProps } from './Divider.types'
 
-describe('Divider 组件', () => {
-  // 基本渲染测试
-  it('应该正确渲染基本分割线', () => {
-    const { container } = render(<Divider />)
-    expect(container.firstChild).toHaveClass('uno-divider')
-    expect(container.firstChild).toHaveClass('uno-divider--direction-horizontal')
-    expect(container.firstChild).toHaveClass('uno-divider--type-solid')
-    expect(container.firstChild).toHaveClass('uno-divider--thickness-normal')
+describe('Divider Component', () => {
+  const defaultProps: DividerProps = {}
+
+  beforeEach(() => {
+    jest.clearAllMocks()
   })
 
-  // 方向测试
-  it('应该正确渲染水平分割线', () => {
-    const { container } = render(<Divider direction='horizontal' />)
-    expect(container.firstChild).toHaveClass('uno-divider--direction-horizontal')
-  })
+  describe('Rendering', () => {
+    it('renders divider with default props', () => {
+      render(<Divider {...defaultProps} />)
 
-  it('应该正确渲染垂直分割线', () => {
-    const { container } = render(<Divider direction='vertical' />)
-    expect(container.firstChild).toHaveClass('uno-divider--direction-vertical')
-  })
-
-  // 类型测试
-  it('应该正确渲染实线分割线', () => {
-    const { container } = render(<Divider type='solid' />)
-    expect(container.firstChild).toHaveClass('uno-divider--type-solid')
-  })
-
-  it('应该正确渲染虚线分割线', () => {
-    const { container } = render(<Divider type='dashed' />)
-    expect(container.firstChild).toHaveClass('uno-divider--type-dashed')
-  })
-
-  it('应该正确渲染点线分割线', () => {
-    const { container } = render(<Divider type='dotted' />)
-    expect(container.firstChild).toHaveClass('uno-divider--type-dotted')
-  })
-
-  // 颜色测试
-  it('应该正确应用自定义颜色', () => {
-    const { container } = render(<Divider color='#ff0000' />)
-    expect(container.firstChild).toHaveStyle('border-color: #ff0000')
-  })
-
-  // 粗细测试
-  it('应该正确应用细分割线', () => {
-    const { container } = render(<Divider thickness='thin' />)
-    expect(container.firstChild).toHaveClass('uno-divider--thickness-thin')
-    expect(container.firstChild).toHaveStyle('border-top-width: 1px')
-  })
-
-  it('应该正确应用正常分割线', () => {
-    const { container } = render(<Divider thickness='normal' />)
-    expect(container.firstChild).toHaveClass('uno-divider--thickness-normal')
-    expect(container.firstChild).toHaveStyle('border-top-width: 2px')
-  })
-
-  it('应该正确应用粗分割线', () => {
-    const { container } = render(<Divider thickness='thick' />)
-    expect(container.firstChild).toHaveClass('uno-divider--thickness-thick')
-    expect(container.firstChild).toHaveStyle('border-top-width: 4px')
-  })
-
-  it('应该正确应用自定义粗细', () => {
-    const { container } = render(<Divider thickness={6} />)
-    expect(container.firstChild).toHaveClass('uno-divider--thickness-custom')
-    expect(container.firstChild).toHaveStyle('border-top-width: 6px')
-  })
-
-  // 尺寸测试
-  it('应该正确应用水平分割线宽度', () => {
-    const { container } = render(<Divider width={200} />)
-    expect(container.firstChild).toHaveStyle('width: 200px')
-  })
-
-  it('应该正确应用垂直分割线高度', () => {
-    const { container } = render(<Divider direction='vertical' height={100} />)
-    expect(container.firstChild).toHaveStyle('height: 100px')
-  })
-
-  // 间距测试
-  it('应该正确应用水平分割线间距', () => {
-    const { container } = render(<Divider margin={20} />)
-    expect(container.firstChild).toHaveStyle('margin: 20px 0')
-  })
-
-  it('应该正确应用垂直分割线间距', () => {
-    const { container } = render(<Divider direction='vertical' margin={10} />)
-    expect(container.firstChild).toHaveStyle('margin: 0 10px')
-  })
-
-  it('应该正确应用自定义间距字符串', () => {
-    const { container } = render(<Divider margin='30px 10px' />)
-    expect(container.firstChild).toHaveStyle('margin: 30px 10px')
-  })
-
-  // 文本测试
-  it('应该正确渲染带文本的分割线', () => {
-    const { container } = render(<Divider hasText>分割文本</Divider>)
-    expect(container.firstChild).toHaveClass('uno-divider--with-text')
-    expect(container.firstChild).toHaveClass('uno-divider--text-center')
-    expect(screen.getByText('分割文本')).toBeInTheDocument()
-  })
-
-  it('应该正确渲染左对齐文本的分割线', () => {
-    const { container } = render(
-      <Divider hasText textPosition='left'>
-        左侧文本
-      </Divider>
-    )
-    expect(container.firstChild).toHaveClass('uno-divider--with-text')
-    expect(container.firstChild).toHaveClass('uno-divider--text-left')
-    expect(screen.getByText('左侧文本')).toBeInTheDocument()
-  })
-
-  it('应该正确渲染右对齐文本的分割线', () => {
-    const { container } = render(
-      <Divider hasText textPosition='right'>
-        右侧文本
-      </Divider>
-    )
-    expect(container.firstChild).toHaveClass('uno-divider--with-text')
-    expect(container.firstChild).toHaveClass('uno-divider--text-right')
-    expect(screen.getByText('右侧文本')).toBeInTheDocument()
-  })
-
-  // 样式组合测试
-  it('应该正确组合多个样式属性', () => {
-    const { container } = render(
-      <Divider
-        direction='horizontal'
-        type='dashed'
-        color='#0000ff'
-        thickness='thick'
-        width={300}
-        margin='20px 0'
-        hasText
-        textPosition='center'
-      >
-        组合样式
-      </Divider>
-    )
-    expect(container.firstChild).toHaveClass('uno-divider--direction-horizontal')
-    expect(container.firstChild).toHaveClass('uno-divider--type-dashed')
-    expect(container.firstChild).toHaveClass('uno-divider--thickness-thick')
-    expect(container.firstChild).toHaveClass('uno-divider--with-text')
-    expect(container.firstChild).toHaveClass('uno-divider--text-center')
-    expect(container.firstChild).toHaveStyle({
-      borderColor: '#0000ff',
-      color: '#0000ff',
-      borderTopWidth: '4px',
-      width: '300px',
-      margin: '20px 0',
+      const divider = screen.getByRole('separator')
+      expect(divider).toBeInTheDocument()
     })
-    expect(screen.getByText('组合样式')).toBeInTheDocument()
+
+    it('renders divider with different orientations', () => {
+      const orientations: Array<DividerProps['orientation']> = ['horizontal', 'vertical']
+
+      orientations.forEach(orientation => {
+        const { container } = render(<Divider {...defaultProps} orientation={orientation} />)
+        const divider = container.querySelector('.taro-uno-h5-divider')
+        expect(divider).toHaveClass(`taro-uno-h5-divider--${orientation}`)
+      })
+    })
+
+    it('renders divider with different types', () => {
+      const types: Array<DividerProps['type']> = ['solid', 'dashed', 'dotted', 'double', 'groove', 'ridge', 'inset', 'outset']
+
+      types.forEach(type => {
+        const { container } = render(<Divider {...defaultProps} type={type} />)
+        const divider = container.querySelector('.taro-uno-h5-divider')
+        expect(divider).toHaveClass(`taro-uno-h5-divider--${type}`)
+      })
+    })
+
+    it('renders divider with different positions', () => {
+      const positions: Array<DividerProps['position']> = ['left', 'center', 'right']
+
+      positions.forEach(position => {
+        const { container } = render(<Divider {...defaultProps} position={position} />)
+        const divider = container.querySelector('.taro-uno-h5-divider')
+        expect(divider).toHaveClass(`taro-uno-h5-divider--${position}`)
+      })
+    })
+
+    it('renders divider with different sizes', () => {
+      const sizes: Array<DividerProps['size']> = ['xs', 'sm', 'md', 'lg', 'xl']
+
+      sizes.forEach(size => {
+        const { container } = render(<Divider {...defaultProps} size={size} />)
+        const divider = container.querySelector('.taro-uno-h5-divider')
+        expect(divider).toHaveClass(`taro-uno-h5-divider--${size}`)
+      })
+    })
+
+    it('renders divider with different colors', () => {
+      const colors: Array<DividerProps['color']> = ['primary', 'secondary', 'success', 'warning', 'error', 'info', 'light', 'dark', 'border']
+
+      colors.forEach(color => {
+        const { container } = render(<Divider {...defaultProps} color={color} />)
+        const divider = container.querySelector('.taro-uno-h5-divider')
+        expect(divider).toHaveClass(`taro-uno-h5-divider--${color}`)
+      })
+    })
+
+    it('renders divider with different variants', () => {
+      const variants: Array<DividerProps['variant']> = ['default', 'inset', 'middle']
+
+      variants.forEach(variant => {
+        const { container } = render(<Divider {...defaultProps} variant={variant} />)
+        const divider = container.querySelector('.taro-uno-h5-divider')
+        expect(divider).toHaveClass(`taro-uno-h5-divider--${variant}`)
+      })
+    })
+
+    it('renders inset divider', () => {
+      const { container } = render(<Divider {...defaultProps} inset />)
+      const divider = container.querySelector('.taro-uno-h5-divider')
+      expect(divider).toHaveClass('taro-uno-h5-divider--inset')
+    })
+
+    it('renders centered divider', () => {
+      const { container } = render(<Divider {...defaultProps} centered />)
+      const divider = container.querySelector('.taro-uno-h5-divider')
+      expect(divider).toHaveClass('taro-uno-h5-divider--centered')
+    })
+
+    it('renders animated divider', () => {
+      const { container } = render(<Divider {...defaultProps} animated />)
+      const divider = container.querySelector('.taro-uno-h5-divider')
+      expect(divider).toHaveClass('taro-uno-h5-divider--animated')
+    })
+
+    it('renders shadow divider', () => {
+      const { container } = render(<Divider {...defaultProps} shadow />)
+      const divider = container.querySelector('.taro-uno-h5-divider')
+      expect(divider).toHaveClass('taro-uno-h5-divider--shadow')
+    })
+
+    it('renders clickable divider', () => {
+      const { container } = render(<Divider {...defaultProps} clickable />)
+      const divider = container.querySelector('.taro-uno-h5-divider')
+      expect(divider).toHaveClass('taro-uno-h5-divider--clickable')
+    })
+
+    it('renders responsive divider', () => {
+      const { container } = render(<Divider {...defaultProps} responsive />)
+      const divider = container.querySelector('.taro-uno-h5-divider')
+      expect(divider).toHaveClass('taro-uno-h5-divider--responsive')
+    })
+
+    it('renders divider with custom className', () => {
+      const { container } = render(<Divider {...defaultProps} className="custom-divider" />)
+      const divider = container.querySelector('.taro-uno-h5-divider')
+      expect(divider).toHaveClass('custom-divider')
+    })
   })
 
-  // 自定义类名和样式测试
-  it('应该正确应用自定义类名和样式', () => {
-    const { container } = render(
-      <Divider className='custom-divider' style={{ opacity: 0.5 }}>
-        自定义样式
-      </Divider>
-    )
-    expect(container.firstChild).toHaveClass('uno-divider')
-    expect(container.firstChild).toHaveClass('custom-divider')
-    expect(container.firstChild).toHaveStyle('opacity: 0.5')
+  describe('Text Divider', () => {
+    it('renders text divider', () => {
+      render(<Divider {...defaultProps}>Text Content</Divider>)
+
+      const divider = screen.getByRole('separator')
+      const text = screen.getByText('Text Content')
+
+      expect(divider).toBeInTheDocument()
+      expect(text).toBeInTheDocument()
+      expect(divider).toHaveClass('taro-uno-h5-divider--text')
+    })
+
+    it('renders text divider with custom text styles', () => {
+      render(
+        <Divider
+          {...defaultProps}
+          textStyle={{ color: '#ff0000', fontSize: '16px' }}
+          textBackground="#f0f0f0"
+          textPadding="8px 16px"
+        >
+          Text Content
+        </Divider>
+      )
+
+      const text = screen.getByText('Text Content')
+      expect(text).toHaveStyle({ color: '#ff0000', fontSize: '16px' })
+    })
+
+    it('renders text divider with icon', () => {
+      render(
+        <Divider {...defaultProps} icon={<span data-testid="icon">🔥</span>}>
+          Text Content
+        </Divider>
+      )
+
+      const icon = screen.getByTestId('icon')
+      expect(icon).toBeInTheDocument()
+    })
+
+    it('renders text divider with icon position', () => {
+      render(
+        <Divider {...defaultProps} icon={<span>🔥</span>} iconPosition="start">
+          Text Content
+        </Divider>
+      )
+
+      const divider = screen.getByRole('separator')
+      expect(divider).toHaveClass('taro-uno-h5-divider--with-icon')
+    })
+  })
+
+  describe('Icon Divider', () => {
+    it('renders icon divider', () => {
+      render(<Divider {...defaultProps} icon={<span data-testid="icon">🔥</span>} />)
+
+      const divider = screen.getByRole('separator')
+      const icon = screen.getByTestId('icon')
+
+      expect(divider).toBeInTheDocument()
+      expect(icon).toBeInTheDocument()
+      expect(divider).toHaveClass('taro-uno-h5-divider--with-icon')
+    })
+
+    it('renders icon divider with different icon positions', () => {
+      const positions: Array<DividerProps['iconPosition']> = ['start', 'center', 'end']
+
+      positions.forEach(position => {
+        render(<Divider {...defaultProps} icon={<span>🔥</span>} iconPosition={position} />)
+        const divider = screen.getByRole('separator')
+        expect(divider).toBeInTheDocument()
+      })
+    })
+  })
+
+  describe('Event Handling', () => {
+    it('handles click event', () => {
+      const onClick = jest.fn()
+      render(<Divider {...defaultProps} clickable onClick={onClick} />)
+
+      const divider = screen.getByRole('separator')
+      fireEvent.click(divider)
+
+      expect(onClick).toHaveBeenCalledTimes(1)
+    })
+
+    it('does not handle click when not clickable', () => {
+      const onClick = jest.fn()
+      render(<Divider {...defaultProps} onClick={onClick} />)
+
+      const divider = screen.getByRole('separator')
+      fireEvent.click(divider)
+
+      expect(onClick).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('Custom Styles', () => {
+    it('applies custom width', () => {
+      const { container } = render(<Divider {...defaultProps} width={200} />)
+      const divider = container.querySelector('.taro-uno-h5-divider')
+      expect(divider).toHaveStyle({ width: '200px' })
+    })
+
+    it('applies custom height', () => {
+      const { container } = render(<Divider {...defaultProps} height={4} />)
+      const divider = container.querySelector('.taro-uno-h5-divider')
+      expect(divider).toHaveStyle({ height: '4px' })
+    })
+
+    it('applies custom margin', () => {
+      const { container } = render(<Divider {...defaultProps} margin={20} />)
+      const divider = container.querySelector('.taro-uno-h5-divider')
+      expect(divider).toHaveStyle({ margin: '20px 0' })
+    })
+
+    it('applies custom padding', () => {
+      const { container } = render(<Divider {...defaultProps} padding={10} />)
+      const divider = container.querySelector('.taro-uno-h5-divider')
+      expect(divider).toHaveStyle({ padding: '10px' })
+    })
+
+    it('applies custom opacity', () => {
+      const { container } = render(<Divider {...defaultProps} opacity={0.5} />)
+      const divider = container.querySelector('.taro-uno-h5-divider')
+      expect(divider).toHaveStyle({ opacity: 0.5 })
+    })
+
+    it('applies custom border radius', () => {
+      const { container } = render(<Divider {...defaultProps} borderRadius={8} />)
+      const divider = container.querySelector('.taro-uno-h5-divider')
+      expect(divider).toHaveStyle({ borderRadius: '8px' })
+    })
+
+    it('applies gradient background', () => {
+      const { container } = render(
+        <Divider {...defaultProps} gradient={{ start: '#ff0000', end: '#0000ff' }} />
+      )
+      const divider = container.querySelector('.taro-uno-h5-divider')
+      expect(divider).toHaveStyle({
+        backgroundImage: 'linear-gradient(to right, #ff0000, #0000ff)'
+      })
+    })
+
+    it('applies custom spacing', () => {
+      const { container } = render(<Divider {...defaultProps} spacing={24} />)
+      const divider = container.querySelector('.taro-uno-h5-divider')
+      expect(divider).toHaveStyle({ gap: '24px' })
+    })
+
+    it('applies custom alignment', () => {
+      const { container } = render(<Divider {...defaultProps} align="start" />)
+      const divider = container.querySelector('.taro-uno-h5-divider')
+      expect(divider).toHaveStyle({ justifyContent: 'flex-start' })
+    })
+
+    it('applies custom vertical alignment', () => {
+      const { container } = render(<Divider {...defaultProps} verticalAlign="top" />)
+      const divider = container.querySelector('.taro-uno-h5-divider')
+      expect(divider).toHaveStyle({ alignItems: 'flex-start' })
+    })
+  })
+
+  describe('Accessibility', () => {
+    it('has proper accessibility attributes', () => {
+      render(<Divider {...defaultProps} accessibilityLabel="Section divider" />)
+
+      const divider = screen.getByRole('separator')
+      expect(divider).toHaveAttribute('aria-label', 'Section divider')
+    })
+
+    it('has correct accessibility role', () => {
+      render(<Divider {...defaultProps} />)
+
+      const divider = screen.getByRole('separator')
+      expect(divider).toHaveAttribute('aria-role', 'separator')
+    })
+  })
+
+  describe('Ref API', () => {
+    it('exposes ref methods', () => {
+      const ref = React.createRef<any>()
+      render(<Divider {...defaultProps} ref={ref} />)
+
+      expect(ref.current).toBeTruthy()
+      expect(ref.current.element).toBeTruthy()
+      expect(typeof ref.current.getOrientation).toBe('function')
+      expect(typeof ref.current.getType).toBe('function')
+      expect(typeof ref.current.getPosition).toBe('function')
+      expect(typeof ref.current.getSize).toBe('function')
+      expect(typeof ref.current.getColor).toBe('function')
+      expect(typeof ref.current.setOrientation).toBe('function')
+      expect(typeof ref.current.setType).toBe('function')
+      expect(typeof ref.current.setPosition).toBe('function')
+      expect(typeof ref.current.setSize).toBe('function')
+      expect(typeof ref.current.setColor).toBe('function')
+      expect(typeof ref.current.scrollIntoView).toBe('function')
+    })
+
+    it('can get orientation via ref', () => {
+      const ref = React.createRef<any>()
+      render(<Divider {...defaultProps} ref={ref} />)
+
+      expect(ref.current.getOrientation()).toBe('horizontal')
+    })
+
+    it('can get type via ref', () => {
+      const ref = React.createRef<any>()
+      render(<Divider {...defaultProps} ref={ref} />)
+
+      expect(ref.current.getType()).toBe('solid')
+    })
+
+    it('can get position via ref', () => {
+      const ref = React.createRef<any>()
+      render(<Divider {...defaultProps} ref={ref} />)
+
+      expect(ref.current.getPosition()).toBe('center')
+    })
+
+    it('can get size via ref', () => {
+      const ref = React.createRef<any>()
+      render(<Divider {...defaultProps} ref={ref} />)
+
+      expect(ref.current.getSize()).toBe('md')
+    })
+
+    it('can get color via ref', () => {
+      const ref = React.createRef<any>()
+      render(<Divider {...defaultProps} ref={ref} />)
+
+      expect(ref.current.getColor()).toBe('#e5e7eb')
+    })
+
+    it('can set orientation via ref', () => {
+      const ref = React.createRef<any>()
+      render(<Divider {...defaultProps} ref={ref} />)
+
+      ref.current.setOrientation('vertical')
+      expect(ref.current.element.getAttribute('data-orientation')).toBe('vertical')
+    })
+
+    it('can set type via ref', () => {
+      const ref = React.createRef<any>()
+      render(<Divider {...defaultProps} ref={ref} />)
+
+      ref.current.setType('dashed')
+      expect(ref.current.element.getAttribute('data-type')).toBe('dashed')
+    })
+
+    it('can set position via ref', () => {
+      const ref = React.createRef<any>()
+      render(<Divider {...defaultProps} ref={ref} />)
+
+      ref.current.setPosition('left')
+      expect(ref.current.element.getAttribute('data-position')).toBe('left')
+    })
+
+    it('can set size via ref', () => {
+      const ref = React.createRef<any>()
+      render(<Divider {...defaultProps} ref={ref} />)
+
+      ref.current.setSize('lg')
+      expect(ref.current.element.style.width).toBe('100%')
+    })
+
+    it('can set color via ref', () => {
+      const ref = React.createRef<any>()
+      render(<Divider {...defaultProps} ref={ref} />)
+
+      ref.current.setColor('#ff0000')
+      expect(ref.current.element.style.borderColor).toBe('#ff0000')
+    })
+
+    it('can scroll into view via ref', () => {
+      const ref = React.createRef<any>()
+      render(<Divider {...defaultProps} ref={ref} />)
+
+      const mockScrollIntoView = jest.fn()
+      ref.current.element = { scrollIntoView: mockScrollIntoView }
+
+      ref.current.scrollIntoView({ behavior: 'smooth' })
+      expect(mockScrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth' })
+    })
+  })
+
+  describe('Edge Cases', () => {
+    it('renders without any props', () => {
+      const { container } = render(<Divider />)
+      const divider = container.querySelector('.taro-uno-h5-divider')
+      expect(divider).toBeInTheDocument()
+    })
+
+    it('renders with empty children', () => {
+      render(<Divider {...defaultProps}>{''}</Divider>)
+
+      const divider = screen.getByRole('separator')
+      expect(divider).toBeInTheDocument()
+    })
+
+    it('renders with null children', () => {
+      render(<Divider {...defaultProps}>{null}</Divider>)
+
+      const divider = screen.getByRole('separator')
+      expect(divider).toBeInTheDocument()
+    })
+
+    it('handles custom color string', () => {
+      const { container } = render(<Divider {...defaultProps} color="#ff0000" />)
+      const divider = container.querySelector('.taro-uno-h5-divider')
+      expect(divider).toHaveStyle({ borderColor: '#ff0000' })
+    })
+
+    it('handles responsive breakpoints', () => {
+      const breakpoints: Array<DividerProps['breakpoint']> = ['xs', 'sm', 'md', 'lg', 'xl']
+
+      breakpoints.forEach(breakpoint => {
+        render(<Divider {...defaultProps} responsive breakpoint={breakpoint} />)
+        const divider = screen.getByRole('separator')
+        expect(divider).toBeInTheDocument()
+      })
+    })
+
+    it('handles different animation durations', () => {
+      const { container } = render(<Divider {...defaultProps} animated animationDuration={500} />)
+      const divider = container.querySelector('.taro-uno-h5-divider')
+      expect(divider).toHaveStyle({ transition: 'all 500ms ease-in-out' })
+    })
+
+    it('handles custom spacing values', () => {
+      const { container } = render(<Divider {...defaultProps} spacing="2rem" />)
+      const divider = container.querySelector('.taro-uno-h5-divider')
+      expect(divider).toHaveStyle({ gap: '2rem' })
+    })
+
+    it('handles custom text spacing', () => {
+      render(
+        <Divider {...defaultProps} textSpacing={24}>
+          Text Content
+        </Divider>
+      )
+
+      const text = screen.getByText('Text Content')
+      expect(text).toHaveStyle({ margin: '0 24px' })
+    })
+
+    it('handles custom text padding', () => {
+      render(
+        <Divider {...defaultProps} textPadding="12px 24px">
+          Text Content
+        </Divider>
+      )
+
+      const text = screen.getByText('Text Content')
+      expect(text).toHaveStyle({ padding: '12px 24px' })
+    })
+
+    it('handles custom text border radius', () => {
+      render(
+        <Divider {...defaultProps} textBorderRadius={8}>
+          Text Content
+        </Divider>
+      )
+
+      const text = screen.getByText('Text Content')
+      expect(text).toHaveStyle({ borderRadius: '8px' })
+    })
+
+    it('handles vertical orientation with text', () => {
+      render(
+        <Divider {...defaultProps} orientation="vertical">
+          Text Content
+        </Divider>
+      )
+
+      const divider = screen.getByRole('separator')
+      const text = screen.getByText('Text Content')
+
+      expect(divider).toBeInTheDocument()
+      expect(text).toBeInTheDocument()
+      expect(divider).toHaveClass('taro-uno-h5-divider--vertical')
+      expect(divider).toHaveClass('taro-uno-h5-divider--text')
+    })
+
+    it('handles vertical orientation with icon', () => {
+      render(
+        <Divider {...defaultProps} orientation="vertical" icon={<span>🔥</span>}>
+          Text Content
+        </Divider>
+      )
+
+      const divider = screen.getByRole('separator')
+      expect(divider).toBeInTheDocument()
+      expect(divider).toHaveClass('taro-uno-h5-divider--vertical')
+      expect(divider).toHaveClass('taro-uno-h5-divider--with-icon')
+    })
   })
 })

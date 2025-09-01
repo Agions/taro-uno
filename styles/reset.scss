@@ -1,0 +1,824 @@
+// ===========================================
+// Taro Uno UI - 样式重置
+// ===========================================
+
+@import './variables';
+
+// 现代化CSS重置
+// 基于 https://github.com/elad2412/the-new-css-reset
+
+// 移除所有元素的默认边距和内边距
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+// 重置字体大小
+html {
+  font-size: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+// 重置字体样式
+body {
+  font-family: $font-family-base;
+  line-height: $line-height-base;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// 重置标题样式
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  margin: 0;
+}
+
+// 重置段落样式
+p {
+  margin: 0;
+}
+
+// 重置列表样式
+ul,
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+// 重置表格样式
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+// 重置表单元素样式
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  resize: none;
+}
+
+// 重置按钮样式
+button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+// 重置链接样式
+a {
+  color: inherit;
+  text-decoration: none;
+  background: none;
+  
+  &:hover,
+  &:focus {
+    text-decoration: none;
+  }
+}
+
+// 重置图片样式
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border: none;
+}
+
+// 重置iframe样式
+iframe {
+  border: none;
+}
+
+// 重置字段集样式
+fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+// 重置图例样式
+legend {
+  padding: 0;
+}
+
+// 重置HR样式
+hr {
+  border: none;
+  margin: 0;
+}
+
+// 重置引用样式
+blockquote {
+  margin: 0;
+  padding: 0;
+  quotes: none;
+  
+  &::before,
+  &::after {
+    content: '';
+    content: none;
+  }
+}
+
+// 重置代码样式
+code,
+pre {
+  font-family: $font-family-mono;
+  font-size: 1em;
+}
+
+// 重置变量样式
+var {
+  font-style: normal;
+}
+
+// 重置缩写样式
+abbr[title] {
+  text-decoration: none;
+  border-bottom: none;
+}
+
+// 重置地址样式
+address {
+  font-style: normal;
+}
+
+// 重置小字体样式
+small {
+  font-size: 100%;
+}
+
+// 重置下标和上标样式
+sub,
+sup {
+  font-size: 100%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sub {
+  bottom: -0.25em;
+}
+
+sup {
+  top: -0.5em;
+}
+
+// 重置输入框样式
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="tel"],
+input[type="url"],
+input[type="search"],
+input[type="number"],
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+input[type="month"],
+input[type="week"],
+textarea {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  resize: none;
+  
+  &::placeholder {
+    color: $text-color-disabled;
+  }
+  
+  &:focus {
+    outline: none;
+  }
+}
+
+// 重置选择框样式
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  cursor: pointer;
+  
+  &:focus {
+    outline: none;
+  }
+}
+
+// 重置复选框和单选框样式
+input[type="checkbox"],
+input[type="radio"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  cursor: pointer;
+  
+  &:focus {
+    outline: none;
+  }
+}
+
+// 重置文件输入样式
+input[type="file"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  cursor: pointer;
+}
+
+// 重置范围输入样式
+input[type="range"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  cursor: pointer;
+  
+  &::-webkit-slider-runnable-track {
+    background: none;
+    border: none;
+  }
+  
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  &::-moz-range-track {
+    background: none;
+    border: none;
+  }
+  
+  &::-moz-range-thumb {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  &:focus {
+    outline: none;
+  }
+}
+
+// 重置颜色输入样式
+input[type="color"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  cursor: pointer;
+  
+  &::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+  
+  &::-webkit-color-swatch {
+    border: none;
+    padding: 0;
+  }
+  
+  &:focus {
+    outline: none;
+  }
+}
+
+// 重置进度条样式
+progress {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  
+  &::-webkit-progress-bar {
+    background: none;
+  }
+  
+  &::-webkit-progress-value {
+    background: none;
+  }
+  
+  &::-moz-progress-bar {
+    background: none;
+  }
+  
+  &:focus {
+    outline: none;
+  }
+}
+
+// 重置详情摘要样式
+details {
+  display: block;
+}
+
+summary {
+  display: list-item;
+  cursor: pointer;
+}
+
+// 重置模板样式
+template {
+  display: none;
+}
+
+// 重置对话框样式
+dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  
+  &::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+  }
+}
+
+// 重置画布样式
+canvas {
+  display: block;
+}
+
+// 重置SVG样式
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+// 重置视频样式
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+// 重置音频样式
+audio {
+  display: block;
+  width: 100%;
+}
+
+// 重置object样式
+object {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+// 重置embed样式
+embed {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+// 重置meter样式
+meter {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  
+  &:focus {
+    outline: none;
+  }
+}
+
+// 重置输出样式
+output {
+  display: inline;
+}
+
+// 重置数据样式
+data {
+  font-style: normal;
+}
+
+// 重置时间样式
+time {
+  font-style: normal;
+}
+
+// 重置标记样式
+mark {
+  background: none;
+  color: inherit;
+}
+
+// 重置删除样式
+del {
+  text-decoration: line-through;
+}
+
+// 重置插入样式
+ins {
+  text-decoration: underline;
+}
+
+// 重置下划线样式
+u {
+  text-decoration: underline;
+}
+
+// 重置强调样式
+em {
+  font-style: italic;
+}
+
+// 重置强强调样式
+strong {
+  font-weight: bold;
+}
+
+// 重置键盘样式
+kbd {
+  font-family: $font-family-mono;
+  font-size: 1em;
+}
+
+// 重置示例样式
+samp {
+  font-family: $font-family-mono;
+  font-size: 1em;
+}
+
+// 重置变量样式
+var {
+  font-style: normal;
+}
+
+// 重置定义样式
+dfn {
+  font-style: italic;
+}
+
+// 重置引用样式
+cite {
+  font-style: normal;
+}
+
+// 重置Q样式
+q {
+  quotes: none;
+  
+  &::before,
+  &::after {
+    content: '';
+    content: none;
+  }
+}
+
+// 重置Ruby样式
+ruby {
+  display: inline;
+}
+
+rt {
+  display: inline;
+  font-size: 0.6em;
+  line-height: 1;
+}
+
+rp {
+  display: none;
+}
+
+// 重置BDO样式
+bdo {
+  unicode-bidi: bidi-override;
+}
+
+// 重置图片样式
+picture {
+  display: block;
+}
+
+// 重置源样式
+source {
+  display: none;
+}
+
+// 重置轨道样式
+track {
+  display: none;
+}
+
+// 重置菜单样式
+menu {
+  display: block;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// 重置菜单项样式
+menuitem {
+  display: block;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  
+  &:hover {
+    background: none;
+  }
+  
+  &:focus {
+    outline: none;
+  }
+}
+
+// 重置搜索样式
+search {
+  display: block;
+}
+
+// 重置内容样式
+content {
+  display: none;
+}
+
+// 重置阴影样式
+shadow {
+  display: none;
+}
+
+// 重置插槽样式
+slot {
+  display: contents;
+}
+
+// 重置部分样式
+part {
+  display: block;
+}
+
+// 重置主题样式
+theme {
+  display: none;
+}
+
+// 重置自定义元素样式
+:defined {
+  display: block;
+}
+
+// 重置焦点样式
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+// 重置焦点可见样式
+:focus-visible {
+  outline: 2px solid rgba($primary-color, 0.2);
+  outline-offset: 2px;
+}
+
+// 重置选择样式
+::selection {
+  background-color: rgba($primary-color, 0.2);
+  color: inherit;
+}
+
+// 重置占位符样式
+::placeholder {
+  color: $text-color-disabled;
+  opacity: 1;
+}
+
+// 重置文件选择按钮样式
+::-webkit-file-upload-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+}
+
+// 重置内部阴影样式
+::-webkit-inner-spin-button,
+::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+// 重置搜索取消按钮样式
+::-webkit-search-cancel-button,
+::-webkit-search-decoration {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+// 重置Webkit滚动条样式
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: $background-color-tertiary;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $text-color-disabled;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: $text-color-secondary;
+}
+
+// 重置Firefox滚动条样式
+scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+scrollbar-track {
+  background: $background-color-tertiary;
+}
+
+scrollbar-thumb {
+  background: $text-color-disabled;
+  border-radius: 3px;
+}
+
+scrollbar-thumb:hover {
+  background: $text-color-secondary;
+}
+
+// 重置输入框自动填充样式
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: $text-color;
+  -webkit-box-shadow: 0 0 0 1000px $background-color-input inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+// 重置输入框自动填充暗色主题样式
+[data-theme="dark"] {
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill,
+  textarea:-webkit-autofill:hover,
+  textarea:-webkit-autofill:focus,
+  select:-webkit-autofill,
+  select:-webkit-autofill:hover,
+  select:-webkit-autofill:focus {
+    -webkit-text-fill-color: $dark-text-color;
+    -webkit-box-shadow: 0 0 0 1000px $dark-background-color-input inset;
+  }
+}
+
+// 重置触摸高亮样式
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+// 重置打印样式
+@media print {
+  * {
+    background: transparent !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+  
+  abbr[title]::after {
+    content: " (" attr(title) ")";
+  }
+  
+  pre,
+  blockquote {
+    border: 1px solid #999;
+    page-break-inside: avoid;
+  }
+  
+  thead {
+    display: table-header-group;
+  }
+  
+  tr,
+  img {
+    page-break-inside: avoid;
+  }
+  
+  img {
+    max-width: 100% !important;
+  }
+  
+  p,
+  h2,
+  h3 {
+    orphans: 3;
+    widows: 3;
+  }
+  
+  h2,
+  h3 {
+    page-break-after: avoid;
+  }
+}

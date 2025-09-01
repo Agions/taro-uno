@@ -1,213 +1,217 @@
 import React from 'react'
-import { render, screen, fireEvent } from '@testing-library/react'
-import '@testing-library/jest-dom'
-import Text, { TextProps } from './index'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { vi } from 'vitest'
+import TextComponent from './Text'
+import type { TextProps } from './Text.types'
 
-// 模拟剪贴板API
-Object.assign(navigator, {
-  clipboard: {
-    writeText: jest.fn().mockImplementation(() => Promise.resolve()),
-  },
-})
+// 使用实际的组件
+const Text = TextComponent
 
-// 模拟console
-console.log = jest.fn()
-console.error = jest.fn()
+describe('Text Component', () => {
+  const defaultProps: TextProps = {
+    children: 'Hello World',
+    onClick: vi.fn()
+  }
 
-describe('Text 组件', () => {
-  // 基本渲染测试
-  it('应该正确渲染文本内容', () => {
-    render(<Text>测试文本</Text>)
-    expect(screen.getByText('测试文本')).toBeInTheDocument()
+  beforeEach(() => {
+    vi.clearAllMocks()
   })
 
-  // 尺寸测试
-  it('应该应用正确的尺寸', () => {
-    const { rerender } = render(<Text size='xs'>小号文本</Text>)
-    expect(screen.getByText('小号文本')).toHaveStyle('font-size: 12px')
+  describe('Rendering', () => {
+    it('renders text with default props', () => {
+      render(<Text {...defaultProps} />)
 
-    rerender(<Text size='md'>中号文本</Text>)
-    expect(screen.getByText('中号文本')).toHaveStyle('font-size: 16px')
+      const text = screen.getByText('Hello World')
+      expect(text).toBeInTheDocument()
+    })
 
-    rerender(<Text size='xl'>大号文本</Text>)
-    expect(screen.getByText('大号文本')).toHaveStyle('font-size: 20px')
+    it('renders text with different sizes', () => {
+      const sizes: Array<TextProps['size']> = ['xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl', '4xl']
 
-    rerender(<Text size={24}>自定义尺寸</Text>)
-    expect(screen.getByText('自定义尺寸')).toHaveStyle('font-size: 24px')
-  })
+      sizes.forEach(size => {
+        const { container } = render(<Text {...defaultProps} size={size} />)
+        const text = container.querySelector('.taro-uno-text')
+        expect(text).toHaveClass(`taro-uno-text--${size}`)
+      })
+    })
 
-  // 类型测试
-  it('应该应用正确的类型样式', () => {
-    const types: Array<TextProps['type']> = [
-      'primary',
-      'secondary',
-      'success',
-      'warning',
-      'danger',
-      'info',
-    ]
+    it('renders text with different colors', () => {
+      const colors: Array<TextProps['color']> = ['primary', 'secondary', 'success', 'warning', 'error', 'info']
 
-    types.forEach(type => {
-      const { container } = render(<Text type={type}>类型文本</Text>)
-      expect(container.firstChild).toHaveClass(`uno-text--type-${type}`)
+      colors.forEach(color => {
+        const { container } = render(<Text {...defaultProps} color={color} />)
+        const text = container.querySelector('.taro-uno-text')
+        expect(text).toHaveClass(`taro-uno-text--${color}`)
+      })
+    })
+
+    it('renders clickable text', () => {
+      const { container } = render(<Text {...defaultProps} clickable />)
+      const text = container.querySelector('.taro-uno-text')
+      expect(text).toHaveClass('taro-uno-text--clickable')
+    })
+
+    it('renders loading text', () => {
+      const { container } = render(<Text {...defaultProps} loading />)
+      const text = container.querySelector('.taro-uno-text')
+      expect(text).toHaveClass('taro-uno-text--loading')
+    })
+
+    it('renders disabled text', () => {
+      const { container } = render(<Text {...defaultProps} disabled />)
+      const text = container.querySelector('.taro-uno-text')
+      expect(text).toHaveClass('taro-uno-text--disabled')
+    })
+
+    it('renders with custom className', () => {
+      const { container } = render(<Text {...defaultProps} className="custom-text" />)
+      const text = container.querySelector('.taro-uno-text')
+      expect(text).toHaveClass('custom-text')
     })
   })
 
-  // 对齐方式测试
-  it('应该应用正确的对齐方式', () => {
-    const alignments: Array<TextProps['align']> = ['left', 'center', 'right', 'justify']
+  describe('Event Handling', () => {
+    it('handles click event', () => {
+      render(<Text {...defaultProps} clickable />)
 
-    alignments.forEach(align => {
-      const { container } = render(<Text align={align}>对齐文本</Text>)
-      expect(container.firstChild).toHaveClass(`uno-text--align-${align}`)
+      const text = screen.getByText('Hello World')
+      fireEvent.click(text)
+
+      expect(defaultProps.onClick).toHaveBeenCalledTimes(1)
+    })
+
+    it('does not handle click when disabled', () => {
+      render(<Text {...defaultProps} disabled />)
+
+      const text = screen.getByText('Hello World')
+      fireEvent.click(text)
+
+      expect(defaultProps.onClick).not.toHaveBeenCalled()
+    })
+
+    it('does not handle click when loading', () => {
+      render(<Text {...defaultProps} loading />)
+
+      const text = screen.getByText('Hello World')
+      fireEvent.click(text)
+
+      expect(defaultProps.onClick).not.toHaveBeenCalled()
     })
   })
 
-  // 颜色测试
-  it('应该应用正确的颜色', () => {
-    render(<Text color='#ff0000'>彩色文本</Text>)
-    expect(screen.getByText('彩色文本')).toHaveStyle('color: #ff0000')
-  })
+  describe('Copy Functionality', () => {
+    it('copies text when copyable', async () => {
+      const mockWriteText = vi.fn().mockResolvedValue(undefined)
+      Object.assign(navigator, {
+        clipboard: {
+          writeText: mockWriteText
+        }
+      })
 
-  // 加粗测试
-  it('应该正确应用加粗样式', () => {
-    const { container, rerender } = render(<Text bold>加粗文本</Text>)
-    expect(container.firstChild).toHaveClass('uno-text--bold')
-    expect(screen.getByText('加粗文本')).toHaveStyle('font-weight: bold')
+      const onCopy = vi.fn()
+      render(<Text {...defaultProps} copyable onCopy={onCopy} />)
 
-    rerender(<Text fontWeight={700}>自定义粗细</Text>)
-    expect(screen.getByText('自定义粗细')).toHaveStyle('font-weight: 700')
-  })
+      const copyButton = screen.getByText('📋')
+      fireEvent.click(copyButton)
 
-  // 文本装饰测试
-  it('应该应用正确的文本装饰', () => {
-    const { container: container1 } = render(<Text underline>下划线文本</Text>)
-    expect(container1.firstChild).toHaveClass('uno-text--underline')
-
-    const { container: container2 } = render(<Text decoration='line-through'>删除线文本</Text>)
-    expect(container2.firstChild).toHaveClass('uno-text--line-through')
-
-    const { container: container3 } = render(<Text decoration='overline'>上划线文本</Text>)
-    expect(container3.firstChild).toHaveClass('uno-text--overline')
-  })
-
-  // 块级元素测试
-  it('应该正确应用块级元素样式', () => {
-    const { container } = render(<Text block>块级文本</Text>)
-    expect(container.firstChild).toHaveClass('uno-text--block')
-  })
-
-  // 文本截断测试
-  it('应该应用正确的文本截断样式', () => {
-    render(<Text truncate='ellipsis'>截断文本</Text>)
-    expect(screen.getByText('截断文本')).toHaveStyle({
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-      whiteSpace: 'nowrap',
-    })
-
-    render(<Text truncate={2}>多行截断</Text>)
-    expect(screen.getByText('多行截断')).toHaveStyle({
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-      display: '-webkit-box',
-      WebkitLineClamp: 2,
-      WebkitBoxOrient: 'vertical',
-    })
-
-    render(<Text truncate='clip'>裁剪文本</Text>)
-    expect(screen.getByText('裁剪文本')).toHaveStyle({
-      overflow: 'hidden',
-      textOverflow: 'clip',
-      whiteSpace: 'nowrap',
-    })
-  })
-
-  // 可选择测试
-  it('应该正确应用可选择属性', () => {
-    const { container } = render(<Text selectable>可选择文本</Text>)
-    expect(container.firstChild).toHaveClass('uno-text--selectable')
-    expect(container.firstChild).toHaveAttribute('selectable', 'true')
-  })
-
-  // 禁用测试
-  it('应该正确应用禁用样式', () => {
-    const { container } = render(<Text disabled>禁用文本</Text>)
-    expect(container.firstChild).toHaveClass('uno-text--disabled')
-  })
-
-  // 可复制测试
-  it('应该正确处理可复制功能', () => {
-    const { container } = render(<Text copyable>可复制文本</Text>)
-    expect(container.firstChild).toHaveClass('uno-text--copyable')
-
-    fireEvent.click(screen.getByText('可复制文本'))
-    expect(navigator.clipboard.writeText).toHaveBeenCalledWith('可复制文本')
-    expect(console.log).toHaveBeenCalledWith('文本已复制到剪贴板')
-  })
-
-  // 点击事件测试
-  it('应该正确处理点击事件', () => {
-    const handleClick = jest.fn()
-    render(<Text onClick={handleClick}>可点击文本</Text>)
-
-    fireEvent.click(screen.getByText('可点击文本'))
-    expect(handleClick).toHaveBeenCalledTimes(1)
-  })
-
-  // 禁用状态下的点击事件测试
-  it('禁用状态下不应触发点击事件', () => {
-    const handleClick = jest.fn()
-    render(
-      <Text disabled onClick={handleClick}>
-        禁用文本
-      </Text>
-    )
-
-    fireEvent.click(screen.getByText('禁用文本'))
-    expect(handleClick).not.toHaveBeenCalled()
-  })
-
-  // 特殊样式测试
-  it('应该应用特殊文本样式', () => {
-    const { container: container1 } = render(<Text code>代码文本</Text>)
-    expect(container1.firstChild).toHaveClass('uno-text--code')
-
-    const { container: container2 } = render(<Text deleted>删除文本</Text>)
-    expect(container2.firstChild).toHaveClass('uno-text--deleted')
-
-    const { container: container3 } = render(<Text italic>斜体文本</Text>)
-    expect(container3.firstChild).toHaveClass('uno-text--italic')
-
-    const { container: container4 } = render(<Text mark>标记文本</Text>)
-    expect(container4.firstChild).toHaveClass('uno-text--mark')
-
-    const { container: container5 } = render(<Text strong>强调文本</Text>)
-    expect(container5.firstChild).toHaveClass('uno-text--bold')
-  })
-
-  // 行高和字符间距测试
-  it('应该应用正确的行高和字符间距', () => {
-    render(
-      <Text lineHeight={1.5} spacing={2}>
-        格式文本
-      </Text>
-    )
-    expect(screen.getByText('格式文本')).toHaveStyle({
-      lineHeight: 1.5,
-      letterSpacing: 2,
-    })
-  })
-
-  // 文本变换测试
-  it('应该应用正确的文本变换', () => {
-    const transforms: Array<TextProps['transform']> = ['capitalize', 'uppercase', 'lowercase']
-
-    transforms.forEach(transform => {
-      render(<Text transform={transform}>变换文本</Text>)
-      expect(screen.getByText('变换文本')).toHaveStyle({
-        textTransform: transform,
+      await waitFor(() => {
+        expect(mockWriteText).toHaveBeenCalledWith('Hello World')
+        expect(onCopy).toHaveBeenCalledTimes(1)
       })
     })
   })
-}) 
+
+  describe('Accessibility', () => {
+    it('has proper accessibility attributes', () => {
+      render(<Text {...defaultProps} accessibilityLabel="Greeting text" />)
+
+      const text = screen.getByText('Hello World')
+      expect(text).toHaveAttribute('accessibility-label', 'Greeting text')
+    })
+
+    it('updates accessibility state when disabled', () => {
+      render(<Text {...defaultProps} disabled />)
+
+      const text = screen.getByText('Hello World')
+      expect(text).toHaveAttribute('accessibility-state', JSON.stringify({ disabled: true }))
+    })
+
+    it('updates accessibility state when loading', () => {
+      render(<Text {...defaultProps} loading />)
+
+      const text = screen.getByText('Hello World')
+      expect(text).toHaveAttribute('accessibility-state', JSON.stringify({ busy: true }))
+    })
+  })
+
+  describe('Ref API', () => {
+    it('exposes ref methods', () => {
+      const ref = React.createRef<any>()
+      render(<Text {...defaultProps} ref={ref} />)
+
+      expect(ref.current).toBeTruthy()
+      expect(ref.current.element).toBeTruthy()
+      expect(typeof ref.current.getText).toBe('function')
+      expect(typeof ref.current.setText).toBe('function')
+      expect(typeof ref.current.copy).toBe('function')
+      expect(typeof ref.current.setDisabled).toBe('function')
+      expect(typeof ref.current.setLoading).toBe('function')
+    })
+
+    it('can get text content via ref', () => {
+      const ref = React.createRef<any>()
+      render(<Text {...defaultProps} ref={ref} />)
+
+      expect(ref.current.getText()).toBe('Hello World')
+    })
+
+    it('can set text content via ref', () => {
+      const ref = React.createRef<any>()
+      render(<Text {...defaultProps} ref={ref} />)
+
+      ref.current.setText('New Text')
+      expect(ref.current.getText()).toBe('New Text')
+    })
+
+    it('can set disabled state via ref', () => {
+      const ref = React.createRef<any>()
+      render(<Text {...defaultProps} ref={ref} />)
+
+      ref.current.setDisabled(true)
+
+      const text = screen.getByText('Hello World')
+      expect(text).toHaveClass('taro-uno-text--disabled')
+    })
+
+    it('can set loading state via ref', () => {
+      const ref = React.createRef<any>()
+      render(<Text {...defaultProps} ref={ref} />)
+
+      ref.current.setLoading(true)
+
+      const text = screen.getByText('Hello World')
+      expect(text).toHaveClass('taro-uno-text--loading')
+    })
+  })
+
+  describe('Edge Cases', () => {
+    it('renders without children', () => {
+      const { container } = render(<Text {...defaultProps} children={undefined} />)
+      const text = container.querySelector('.taro-uno-text')
+      expect(text).toBeInTheDocument()
+    })
+
+    it('renders with empty string children', () => {
+      render(<Text {...defaultProps} children="" />)
+
+      const text = screen.getByText('')
+      expect(text).toBeInTheDocument()
+    })
+
+    it('renders with null children', () => {
+      const { container } = render(<Text {...defaultProps} children={null} />)
+      const text = container.querySelector('.taro-uno-text')
+      expect(text).toBeInTheDocument()
+    })
+  })
+})

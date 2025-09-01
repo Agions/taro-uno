@@ -1,0 +1,339 @@
+// ===========================================
+// Taro Uno UI - SCSS 变量定义
+// ===========================================
+
+// 主题颜色
+// ===========================================
+$primary-color: #0ea5e9 !default;
+$secondary-color: #6b7280 !default;
+$success-color: #22c55e !default;
+$warning-color: #f59e0b !default;
+$error-color: #ef4444 !default;
+$info-color: #3b82f6 !default;
+
+// 中性颜色
+// ===========================================
+$gray-50: #f9fafb !default;
+$gray-100: #f3f4f6 !default;
+$gray-200: #e5e7eb !default;
+$gray-300: #d1d5db !default;
+$gray-400: #9ca3af !default;
+$gray-500: #6b7280 !default;
+$gray-600: #4b5563 !default;
+$gray-700: #374151 !default;
+$gray-800: #1f2937 !default;
+$gray-900: #111827 !default;
+
+// 文本颜色
+// ===========================================
+$text-color: $gray-900 !default;
+$text-color-secondary: $gray-500 !default;
+$text-color-disabled: $gray-400 !default;
+$text-color-inverse: #ffffff !default;
+$text-color-link: $primary-color !default;
+
+// 背景颜色
+// ===========================================
+$background-color: #ffffff !default;
+$background-color-secondary: $gray-50 !default;
+$background-color-tertiary: $gray-100 !default;
+$background-color-card: #ffffff !default;
+$background-color-input: $gray-50 !default;
+$background-color-mask: rgba(0, 0, 0, 0.5) !default;
+
+// 边框颜色
+// ===========================================
+$border-color: $gray-200 !default;
+$border-color-light: $gray-100 !default;
+$border-color-focus: $primary-color !default;
+$border-color-error: $error-color !default;
+
+// 阴影颜色
+// ===========================================
+$shadow-color: rgba(0, 0, 0, 0.1) !default;
+$shadow-color-light: rgba(0, 0, 0, 0.05) !default;
+$shadow-color-dark: rgba(0, 0, 0, 0.2) !default;
+
+// 特殊颜色
+// ===========================================
+$brand-color: $primary-color !default;
+$accent-color: $warning-color !default;
+$divider-color: $border-color !default;
+$overlay-color: rgba(0, 0, 0, 0.45) !default;
+
+// 暗色主题颜色
+// ===========================================
+$dark-background-color: $gray-900 !default;
+$dark-background-color-secondary: $gray-800 !default;
+$dark-background-color-tertiary: $gray-700 !default;
+$dark-background-color-card: $gray-800 !default;
+$dark-background-color-input: $gray-700 !default;
+$dark-background-color-mask: rgba(0, 0, 0, 0.8) !default;
+
+$dark-text-color: $gray-100 !default;
+$dark-text-color-secondary: $gray-300 !default;
+$dark-text-color-disabled: $gray-500 !default;
+$dark-text-color-inverse: $gray-900 !default;
+
+$dark-border-color: $gray-700 !default;
+$dark-border-color-light: $gray-600 !default;
+$dark-border-color-focus: $primary-color !default;
+$dark-border-color-error: $error-color !default;
+
+$dark-shadow-color: rgba(0, 0, 0, 0.3) !default;
+$dark-shadow-color-light: rgba(0, 0, 0, 0.1) !default;
+$dark-divider-color: $gray-700 !default;
+
+// 间距系统
+// ===========================================
+$spacing-xs: 4px !default;
+$spacing-sm: 8px !default;
+$spacing-md: 16px !default;
+$spacing-lg: 24px !default;
+$spacing-xl: 32px !default;
+$spacing-xxl: 48px !default;
+$spacing-xxxl: 64px !default;
+
+// 组件间距
+// ===========================================
+$component-padding: $spacing-md !default;
+$component-margin: $spacing-md !default;
+$component-gap: $spacing-md !default;
+
+// 字体系统
+// ===========================================
+$font-family-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif !default;
+$font-family-serif: Georgia, Cambria, 'Times New Roman', Times, serif !default;
+$font-family-mono: Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace !default;
+$font-family-heading: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif !default;
+
+$font-family-base: $font-family-sans !default;
+$font-family-heading: $font-family-heading !default;
+$font-family-mono: $font-family-mono !default;
+
+// 字体大小
+// ===========================================
+$font-size-xs: 20px !default;
+$font-size-sm: 24px !default;
+$font-size-base: 28px !default;
+$font-size-lg: 32px !default;
+$font-size-xl: 36px !default;
+$font-size-2xl: 40px !default;
+$font-size-3xl: 48px !default;
+$font-size-4xl: 56px !default;
+$font-size-5xl: 64px !default;
+
+// 字体粗细
+// ===========================================
+$font-weight-light: 300 !default;
+$font-weight-normal: 400 !default;
+$font-weight-medium: 500 !default;
+$font-weight-semibold: 600 !default;
+$font-weight-bold: 700 !default;
+
+// 行高
+// ===========================================
+$line-height-tight: 1.25 !default;
+$line-height-normal: 1.5 !default;
+$line-height-relaxed: 1.75 !default;
+$line-height-loose: 2.0 !default;
+
+$line-height-base: $line-height-normal !default;
+
+// 字母间距
+// ===========================================
+$letter-spacing-tight: -0.025em !default;
+$letter-spacing-normal: 0 !default;
+$letter-spacing-wide: 0.025em !default;
+
+// 圆角系统
+// ===========================================
+$border-radius-none: 0 !default;
+$border-radius-sm: 4px !default;
+$border-radius-md: 8px !default;
+$border-radius-lg: 12px !default;
+$border-radius-xl: 16px !default;
+$border-radius-2xl: 20px !default;
+$border-radius-full: 9999px !default;
+$border-radius-circle: 50% !default;
+
+// 阴影系统
+// ===========================================
+$shadow-none: none !default;
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !default;
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !default;
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !default;
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !default;
+$shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !default;
+$shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06) !default;
+
+// Z-index 层级
+// ===========================================
+$z-index-modal: 1000 !default;
+$z-index-drawer: 900 !default;
+$z-index-popover: 800 !default;
+$z-index-tooltip: 700 !default;
+$z-index-dropdown: 600 !default;
+$z-index-sticky: 500 !default;
+$z-index-header: 400 !default;
+$z-index-footer: 300 !default;
+$z-index-default: 100 !default;
+$z-index-below: -1 !default;
+
+// 动画系统
+// ===========================================
+$animation-duration-fast: 150ms !default;
+$animation-duration-normal: 300ms !default;
+$animation-duration-slow: 500ms !default;
+
+$animation-easing-linear: linear !default;
+$animation-easing-ease: ease !default;
+$animation-easing-ease-in: ease-in !default;
+$animation-easing-ease-out: ease-out !default;
+$animation-easing-ease-in-out: ease-in-out !default;
+
+// 过渡动画
+// ===========================================
+$transition-base: $animation-duration-normal $animation-easing-ease-in-out !default;
+$transition-fast: $animation-duration-fast $animation-easing-ease-in-out !default;
+$transition-slow: $animation-duration-slow $animation-easing-ease-in-out !default;
+
+// 响应式断点
+// ===========================================
+$breakpoint-xs: 0 !default;
+$breakpoint-sm: 640px !default;
+$breakpoint-md: 768px !default;
+$breakpoint-lg: 1024px !default;
+$breakpoint-xl: 1280px !default;
+$breakpoint-xxl: 1536px !default;
+
+// 栅格系统
+// ===========================================
+$grid-columns: 12 !default;
+$grid-gap: $spacing-md !default;
+$grid-container-max-width: 1200px !default;
+
+// 边框
+// ===========================================
+$border-width-base: 1px !default;
+$border-width-sm: 1px !default;
+$border-width-md: 2px !default;
+$border-width-lg: 3px !default;
+
+$border-style-base: solid !default;
+$border-style-dashed: dashed !default;
+$border-style-dotted: dotted !default;
+
+// 按钮系统
+// ===========================================
+$button-height-base: 88px !default;
+$button-height-sm: 64px !default;
+$button-height-lg: 104px !default;
+
+$button-padding-x-base: $spacing-lg !default;
+$button-padding-x-sm: $spacing-md !default;
+$button-padding-x-lg: $spacing-xl !default;
+
+$button-font-size-base: $font-size-base !default;
+$button-font-size-sm: $font-size-sm !default;
+$button-font-size-lg: $font-size-lg !default;
+
+$button-border-radius-base: $border-radius-md !default;
+$button-border-radius-sm: $border-radius-sm !default;
+$button-border-radius-lg: $border-radius-lg !default;
+
+// 输入框系统
+// ===========================================
+$input-height-base: 88px !default;
+$input-height-sm: 64px !default;
+$input-height-lg: 104px !default;
+
+$input-padding-x-base: $spacing-md !default;
+$input-padding-x-sm: $spacing-sm !default;
+$input-padding-x-lg: $spacing-lg !default;
+
+$input-border-radius-base: $border-radius-md !default;
+$input-border-radius-sm: $border-radius-sm !default;
+$input-border-radius-lg: $border-radius-lg !default;
+
+// 卡片系统
+// ===========================================
+$card-padding-base: $spacing-lg !default;
+$card-padding-sm: $spacing-md !default;
+$card-padding-lg: $spacing-xl !default;
+
+$card-border-radius-base: $border-radius-lg !default;
+$card-border-radius-sm: $border-radius-md !default;
+$card-border-radius-lg: $border-radius-xl !default;
+
+// 间距比例
+// ===========================================
+$spacing-scale: (
+  '0': 0,
+  'xs': $spacing-xs,
+  'sm': $spacing-sm,
+  'md': $spacing-md,
+  'lg': $spacing-lg,
+  'xl': $spacing-xl,
+  'xxl': $spacing-xxl,
+  'xxxl': $spacing-xxxl
+) !default;
+
+// 字体大小比例
+// ===========================================
+$font-size-scale: (
+  'xs': $font-size-xs,
+  'sm': $font-size-sm,
+  'base': $font-size-base,
+  'lg': $font-size-lg,
+  'xl': $font-size-xl,
+  '2xl': $font-size-2xl,
+  '3xl': $font-size-3xl,
+  '4xl': $font-size-4xl,
+  '5xl': $font-size-5xl
+) !default;
+
+// 圆角比例
+// ===========================================
+$border-radius-scale: (
+  'none': $border-radius-none,
+  'sm': $border-radius-sm,
+  'md': $border-radius-md,
+  'lg': $border-radius-lg,
+  'xl': $border-radius-xl,
+  '2xl': $border-radius-2xl,
+  'full': $border-radius-full,
+  'circle': $border-radius-circle
+) !default;
+
+// Z-index 比例
+// ===========================================
+$z-index-scale: (
+  'below': $z-index-below,
+  'default': $z-index-default,
+  'footer': $z-index-footer,
+  'header': $z-index-header,
+  'sticky': $z-index-sticky,
+  'dropdown': $z-index-dropdown,
+  'tooltip': $z-index-tooltip,
+  'popover': $z-index-popover,
+  'drawer': $z-index-drawer,
+  'modal': $z-index-modal
+) !default;
+
+// 平台特定变量
+// ===========================================
+$platform-weapp: true !default;
+$platform-alipay: false !default;
+$platform-swan: false !default;
+$platform-tt: false !default;
+$platform-qq: false !default;
+$platform-h5: false !default;
+$platform-rn: false !default;
+
+// 安全区域适配
+// ===========================================
+$safe-area-inset-top: env(safe-area-inset-top) !default;
+$safe-area-inset-right: env(safe-area-inset-right) !default;
+$safe-area-inset-bottom: env(safe-area-inset-bottom) !default;
+$safe-area-inset-left: env(safe-area-inset-left) !default;

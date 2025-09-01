@@ -1,0 +1,536 @@
+import React, { forwardRef, useRef, useState, useEffect, useCallback } from 'react';
+import { View, Text, Input, ScrollView } from '@tarojs/components';
+import { datePickerStyles } from './DatePicker.styles';
+import type {
+  DatePickerProps,
+  DatePickerRef,
+  DatePickerSize,
+  DatePickerVariant,
+  DatePickerStatus,
+  DatePickerFormat,
+  DateRange,
+} from './DatePicker.types';
+
+/** 日期选择器组件 */
+export const DatePickerComponent = forwardRef<DatePickerRef, DatePickerProps>((props, ref) => {
+  const {
+    value,
+    defaultValue,
+    onChange,
+    range = false,
+    valueRange,
+    defaultRangeValue,
+    onRangeChange,
+    format = 'YYYY-MM-DD',
+    placeholder,
+    rangePlaceholder = ['开始日期', '结束日期'],
+    disabledDate,
+    disabledTime,
+    size = 'md',
+    variant = 'outlined',
+    status = 'normal',
+    allowClear = true,
+    readOnly = false,
+    disabled = false,
+    className,
+    style,
+    onFocus,
+    onBlur,
+    onClick,
+    onOpenChange,
+    minDate,
+    maxDate,
+    showTime = false,
+    timeFormat = 'HH:mm:ss',
+    dateRender,
+    renderExtraFooter,
+    accessible = true,
+    accessibilityLabel,
+    accessibilityRole = 'combobox',
+    ...restProps
+  } = props;
+
+  const pickerRef = useRef<HTMLDivElement>(null);
+  const [internalValue, setInternalValue] = useState<Date | null>(defaultValue || null);
+  const [internalRangeValue, setInternalRangeValue] = useState<DateRange | null>(defaultRangeValue || null);
+  const [isOpened, setIsOpened] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [hoveredDate, setHoveredDate] = useState<Date | null>(null);
+
+  // 同步外部值
+  useEffect(() => {
+    if (value !== undefined) {
+      setInternalValue(value);
+    }
+  }, [value]);
+
+  useEffect(() => {
+    if (valueRange !== undefined) {
+      setInternalRangeValue(valueRange);
+    }
+  }, [valueRange]);
+
+  // 格式化日期
+  const formatDate = useCallback(
+    (date: Date | null): string => {
+      if (!date) return '';
+
+
+    const year = date.getFullYear()
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+
+
+    switch (format) {
+        case 'YYYY-MM-DD':
+          return `${year}-${month}-${day}`;
+        case 'YYYY/MM/DD':
+          return `${year}/${month}/${day}`;
+        case 'DD/MM/YYYY':
+          return `${day}/${month}/${year}`;
+        case 'MM/DD/YYYY':
+          return `${month}/${day}/${year}`;
+        case 'YYYY年MM月DD日':
+          return `${year}年${month}月${day}日`;
+        default:
+          return `${year}-${month}-${day}`;
+      }
+    },
+    [format],
+  );
+
+  // 解析日期字符串
+  const parseDate = useCallback((dateString: string): Date | null => {
+    try {
+      const date = new Date(dateString);
+      return isNaN(date.getTime()) ? null : date;
+    } catch {
+      return null;
+    }
+  }, []);
+
+  // 日期是否在范围内
+  const isDateInRange = useCallback(
+    (date: Date): boolean => {
+      const timestamp = date.getTime();
+
+    if (minDate && timestamp < minDate.getTime()) return false
+      if (maxDate && timestamp > maxDate.getTime()) return false;
+
+
+    if (disabledDate && disabledDate(date)) return false
+
+    return true
+    },
+    [minDate, maxDate, disabledDate],
+  );
+
+  // 日期是否相等
+  const isSameDate = useCallback((date1: Date, date2: Date): boolean => {
+    return (
+      date1.getFullYear() === date2.getFullYear() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getDate() === date2.getDate()
+    );
+  }, []);
+
+  // 获取月份信息
+  const getMonthInfo = useCallback((year: number, month: number) => {
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const days = lastDay.getDate();
+    const startDay = firstDay.getDay();
+
+    return { firstDay, lastDay, days, startDay };
+  }, []);
+
+  // 获取月份日期数组
+  const getMonthDays = useCallback(
+    (year: number, month: number): (Date | null)[] => {
+      const { firstDay, days, startDay } = getMonthInfo(year, month);
+      const daysArray: (Date | null)[] = [];
+
+
+    // 上月日期
+      const prevMonth = month === 0 ? 11 : month - 1;
+      const prevYear = month === 0 ? year - 1 : year;
+      const prevMonthDays = getMonthInfo(prevYear, prevMonth).days;
+
+
+    for (let i = startDay - 1; i >= 0; i--) {
+        daysArray.push(new Date(prevYear, prevMonth, prevMonthDays - i));
+      }
+
+    // 当月日期
+      for (let i = 1; i <= days; i++) {
+        daysArray.push(new Date(year, month, i));
+      }
+
+      // 下月日期
+      const nextMonth = month === 11 ? 0 : month + 1;
+      const nextYear = month === 11 ? year + 1 : year;
+      const remainingDays = 42 - daysArray.length;
+
+
+    for (let i = 1; i <= remainingDays; i++) {
+        daysArray.push(new Date(nextYear, nextMonth, i));
+      }
+
+
+    return daysArray
+    },
+    [getMonthInfo],
+  );
+
+  // 处理日期点击
+  const handleDateClick = useCallback(
+    (date: Date) => {
+      if (!isDateInRange(date)) return;
+
+
+    if (range) {
+        if (!internalRangeValue) {
+          setInternalRangeValue({ start: date, end: date });
+        } else {
+          const newRange = {
+            start: date.getTime() < internalRangeValue.start.getTime() ? date : internalRangeValue.start,
+            end: date.getTime() >= internalRangeValue.start.getTime() ? date : internalRangeValue.start,
+          };
+          setInternalRangeValue(newRange);
+          onRangeChange?.(newRange, [formatDate(newRange.start), formatDate(newRange.end)]);
+        }
+      } else {
+        setInternalValue(date);
+        onChange?.(date, formatDate(date));
+        setIsOpened(false);
+      }
+    },
+    [range, internalRangeValue, isDateInRange, formatDate, onChange, onRangeChange],
+  );
+
+  // 处理输入框点击
+  const handleInputClick = useCallback(
+    (event: ITouchEvent) => {
+      if (disabled || readOnly) return;
+
+
+    setIsOpened(!isOpened)
+      onClick?.(event);
+      onOpenChange?.(!isOpened);
+    },
+    [disabled, readOnly, isOpened, onClick, onOpenChange],
+  );
+
+  // 处理清除按钮点击
+  const handleClearClick = useCallback(
+    (event: ITouchEvent) => {
+      event.stopPropagation();
+
+
+    if (range) {
+        setInternalRangeValue(null);
+        onRangeChange?.(null, ['', '']);
+      } else {
+        setInternalValue(null);
+        onChange?.(null, '');
+      }
+    },
+    [range, onChange, onRangeChange],
+  );
+
+  // 处理月份切换
+  const handleMonthChange = useCallback(
+    (direction: 'prev' | 'next') => {
+      const newMonth = new Date(currentMonth);
+      if (direction === 'prev') {
+        newMonth.setMonth(newMonth.getMonth() - 1);
+      } else {
+        newMonth.setMonth(newMonth.getMonth() + 1);
+      }
+      setCurrentMonth(newMonth);
+    },
+    [currentMonth],
+  );
+
+  // 渲染日历头部
+  const renderCalendarHeader = () => {
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
+    const monthNames = [
+      '一月',
+      '二月',
+      '三月',
+      '四月',
+      '五月',
+      '六月',
+      '七月',
+      '八月',
+      '九月',
+      '十月',
+      '十一月',
+      '十二月'
+    ];
+
+    return (
+      <View className="taro-uno-datepicker__calendar-header">
+        <View
+          className="taro-uno-datepicker__calendar-nav taro-uno-datepicker__calendar-nav--prev"
+          onClick={() => handleMonthChange('prev')}
+        >
+          &lt;
+        </View>
+        <View className="taro-uno-datepicker__calendar-title">
+          {year}年 {monthNames[month]}
+        </View>
+        <View
+          className="taro-uno-datepicker__calendar-nav taro-uno-datepicker__calendar-nav--next"
+          onClick={() => handleMonthChange('next')}
+        >
+          &gt;
+        </View>
+      </View>
+    );
+  };
+
+  // 渲染星期标题
+  const renderWeekHeaders = () => {
+    const weekDays = ['日', '一', '二', '三', '四', '五', '六'];
+
+    return (
+      <View className="taro-uno-datepicker__calendar-weekdays">
+        {weekDays.map((day, index) => (
+          <View key={index} className="taro-uno-datepicker__calendar-weekday">
+            {day}
+          </View>
+        ))}
+      </View>
+    );
+  };
+
+  // 渲染日期单元格
+  const renderDateCell = (date: Date | null, index: number) => {
+    if (!date) {
+      return (
+        <View
+          key={`empty-${index}`}
+          className="taro-uno-datepicker__calendar-cell taro-uno-datepicker__calendar-cell--empty"
+        />
+      );
+
+    const isCurrentMonth = date.getMonth() === currentMonth.getMonth();
+    const isToday = isSameDate(date, new Date());
+    const isSelected = range
+      ? internalRangeValue &&
+        (isSameDate(date, internalRangeValue.start) ||
+          isSameDate(date, internalRangeValue.end) ||
+          (date.getTime() > internalRangeValue.start.getTime() && date.getTime() < internalRangeValue.end.getTime()))
+      : internalValue && isSameDate(date, internalValue);
+    const isDisabled = !isDateInRange(date);
+    const isHovered = hoveredDate && isSameDate(date, hoveredDate);
+
+    const cellClassName = [
+      'taro-uno-datepicker__calendar-cell',
+      !isCurrentMonth && 'taro-uno-datepicker__calendar-cell--other-month',
+      isToday && 'taro-uno-datepicker__calendar-cell--today',
+      isSelected && 'taro-uno-datepicker__calendar-cell--selected',
+      isDisabled && 'taro-uno-datepicker__calendar-cell--disabled',
+      isHovered && 'taro-uno-datepicker__calendar-cell--hovered',
+    ]
+      .filter(Boolean)
+      .join(' ');
+
+    return (
+      <View
+        key={date.getTime()}
+        className={cellClassName}
+        onClick={() => !isDisabled && handleDateClick(date)}
+        onMouseEnter={() => setHoveredDate(date)}
+        onMouseLeave={() => setHoveredDate(null)}
+      >
+        {dateRender ? dateRender(date) : date.getDate()}
+      </View>
+    );
+  };
+
+  // 渲染日历
+  const renderCalendar = () => {
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
+    const days = getMonthDays(year, month);
+
+    return (
+      <View className="taro-uno-datepicker__calendar">
+        {renderCalendarHeader()}
+        {renderWeekHeaders()}
+        <View className="taro-uno-datepicker__calendar-days">
+          {days.map((date, index) => renderDateCell(date, index))}
+        </View>
+        {renderExtraFooter && <View className="taro-uno-datepicker__calendar-footer">{renderExtraFooter()}</View>}
+      </View>
+    );
+  };
+
+  // 渲染输入框
+  const renderInput = () => {
+    const displayValue = range
+      ? internalRangeValue
+        ? `${formatDate(internalRangeValue.start)} - ${formatDate(internalRangeValue.end)}`
+        : ''
+      : formatDate(internalValue);
+
+    return (
+      <View
+        className={`taro-uno-datepicker__input-wrapper ${
+          isFocused ? 'taro-uno-datepicker__input-wrapper--focused' : ''
+        }`}
+        onClick={handleInputClick}
+      >
+        {range ? (
+          <View className="taro-uno-datepicker__range-inputs">
+            <Input
+              className="taro-uno-datepicker__input"
+              value={internalRangeValue ? formatDate(internalRangeValue.start) : ''}
+              placeholder={rangePlaceholder[0]}
+              disabled={disabled}
+              readOnly={readOnly}
+            />
+            <Text className="taro-uno-datepicker__range-separator">-</Text>
+            <Input
+              className="taro-uno-datepicker__input"
+              value={internalRangeValue ? formatDate(internalRangeValue.end) : ''}
+              placeholder={rangePlaceholder[1]}
+              disabled={disabled}
+              readOnly={readOnly}
+            />
+          </View>
+        ) : (
+          <Input
+            className="taro-uno-datepicker__input"
+            value={displayValue}
+            placeholder={placeholder || '请选择日期'}
+            disabled={disabled}
+            readOnly={readOnly}
+          />
+        )}
+
+        {allowClear && displayValue && !disabled && !readOnly && (
+          <View
+            className="taro-uno-datepicker__clear-button"
+            onClick={handleClearClick}
+          >
+            ×
+          </View>
+        )}
+
+        <View className="taro-uno-datepicker__calendar-icon">📅</View>
+      </View>
+    );
+  };
+
+  // 生成样式
+  const pickerStyle = datePickerStyles.getStyle({
+    size,
+    variant,
+    status,
+    disabled,
+    readOnly,
+    style: style || {},
+  });
+
+  // 生成类名
+  const pickerClassName = datePickerStyles.getClassName({
+    size,
+    variant,
+    status,
+    disabled,
+    readOnly,
+    opened: isOpened,
+    focused: isFocused,
+    className: className || '',
+  });
+
+  // 暴露给外部的引用方法
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      element: pickerRef.current,
+      getValue: () => internalValue,
+      setValue: (value) => {
+        setInternalValue(value);
+        onChange?.(value, formatDate(value));
+      },
+      getRangeValue: () => internalRangeValue,
+      setRangeValue: (value) => {
+        setInternalRangeValue(value);
+        if (value) {
+          onRangeChange?.(value, [formatDate(value.start), formatDate(value.end)]);
+        } else {
+          onRangeChange?.(null, ['', '']);
+        }
+      },
+      getDateString: () => formatDate(internalValue),
+      getRangeDateString: () =>
+        internalRangeValue ? [formatDate(internalRangeValue.start), formatDate(internalRangeValue.end)] : null,
+      focus: () => {
+        // 聚焦逻辑
+      },
+      blur: () => {
+        // 失焦逻辑
+      },
+      open: () => {
+        setIsOpened(true);
+        onOpenChange?.(true);
+      },
+      close: () => {
+        setIsOpened(false);
+        onOpenChange?.(false);
+      },
+      clear: () => {
+        if (range) {
+          setInternalRangeValue(null);
+          onRangeChange?.(null, ['', '']);
+        } else {
+          setInternalValue(null);
+          onChange?.(null, '');
+        }
+      },
+      disable: () => {
+        // 禁用逻辑
+      },
+      enable: () => {
+        // 启用逻辑
+      },
+      isOpen: () => isOpened,
+      isDisabled: () => disabled,
+      isReadOnly: () => readOnly,
+    }),
+    [internalValue, internalRangeValue, formatDate, onChange, onRangeChange, onOpenChange, disabled, range, isOpened],
+  );
+
+  return (
+    <View
+      ref={pickerRef}
+      className={pickerClassName}
+      style={pickerStyle}
+      accessible={accessible}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityRole={accessibilityRole}
+      {...restProps}
+    >
+      {renderInput()}
+
+      {isOpened && !disabled && !readOnly && (
+        <View className="taro-uno-datepicker__panel">
+          <ScrollView className="taro-uno-datepicker__panel-content">{renderCalendar()}</ScrollView>
+        </View>
+      )}
+    </View>
+  );
+});
+
+/** 日期选择器组件显示名称 */
+DatePickerComponent.displayName = 'DatePicker';
+
+/** 导出日期选择器组件 */
+export default DatePickerComponent;

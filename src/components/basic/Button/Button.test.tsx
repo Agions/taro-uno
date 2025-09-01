@@ -1,244 +1,184 @@
 import React from 'react'
-import { render, screen, fireEvent } from '@testing-library/react'
-import '@testing-library/jest-dom'
-import Button from './index'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { vi } from 'vitest'
+import ButtonComponent from './Button'
+import type { ButtonProps } from './Button.types'
 
-describe('Button组件', () => {
-  test('渲染基础按钮', () => {
-    render(<Button>按钮</Button>)
+// 使用实际的组件
+const Button = ButtonComponent
 
-    const button = screen.getByText('按钮')
-    expect(button).toBeInTheDocument()
-    expect(button.parentElement).toHaveClass('uno-button')
-    expect(button.parentElement).toHaveClass('uno-button-type-default')
+describe('Button Component', () => {
+  const defaultProps: ButtonProps = {
+    children: 'Click me',
+    onClick: vi.fn()
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks()
   })
 
-  test('不同类型的按钮', () => {
-    const { rerender } = render(<Button type='primary'>主要按钮</Button>)
+  describe('Rendering', () => {
+    it('renders button with default props', () => {
+      render(<Button {...defaultProps} />)
 
-    let button = screen.getByText('主要按钮')
-    expect(button.parentElement).toHaveClass('uno-button-type-primary')
+      const button = screen.getByRole('button')
+      expect(button).toBeInTheDocument()
+      expect(button).toHaveTextContent('Click me')
+    })
 
-    rerender(<Button type='success'>成功按钮</Button>)
-    button = screen.getByText('成功按钮')
-    expect(button.parentElement).toHaveClass('uno-button-type-success')
+    it('renders button with different variants', () => {
+      const variants: Array<ButtonProps['variant']> = ['primary', 'secondary', 'danger', 'warning', 'success', 'info', 'light', 'dark', 'ghost', 'link']
 
-    rerender(<Button type='warning'>警告按钮</Button>)
-    button = screen.getByText('警告按钮')
-    expect(button.parentElement).toHaveClass('uno-button-type-warning')
+      variants.forEach(variant => {
+        const { container } = render(<Button {...defaultProps} variant={variant} />)
+        const button = container.querySelector('.taro-uno-button')
+        expect(button).toHaveClass(`taro-uno-button--${variant}`)
+      })
+    })
 
-    rerender(<Button type='danger'>危险按钮</Button>)
-    button = screen.getByText('危险按钮')
-    expect(button.parentElement).toHaveClass('uno-button-type-danger')
+    it('renders button with different sizes', () => {
+      const sizes: Array<ButtonProps['size']> = ['xs', 'sm', 'md', 'lg', 'xl']
 
-    rerender(<Button type='info'>信息按钮</Button>)
-    button = screen.getByText('信息按钮')
-    expect(button.parentElement).toHaveClass('uno-button-type-info')
+      sizes.forEach(size => {
+        const { container } = render(<Button {...defaultProps} size={size} />)
+        const button = container.querySelector('.taro-uno-button')
+        expect(button).toHaveClass(`taro-uno-button--${size}`)
+      })
+    })
+
+    it('renders disabled button', () => {
+      const { container } = render(<Button {...defaultProps} disabled />)
+      const button = container.querySelector('.taro-uno-button')
+      expect(button).toHaveClass('taro-uno-button--disabled')
+    })
+
+    it('renders loading button', () => {
+      const { container } = render(<Button {...defaultProps} loading />)
+      const button = container.querySelector('.taro-uno-button')
+      expect(button).toHaveClass('taro-uno-button--loading')
+    })
+
+    it('renders with custom className', () => {
+      const { container } = render(<Button {...defaultProps} className="custom-button" />)
+      const button = container.querySelector('.taro-uno-button')
+      expect(button).toHaveClass('custom-button')
+    })
   })
 
-  test('不同尺寸的按钮', () => {
-    const { rerender } = render(<Button size='xs'>超小按钮</Button>)
+  describe('Event Handling', () => {
+    it('handles click event', () => {
+      render(<Button {...defaultProps} />)
 
-    let button = screen.getByText('超小按钮')
-    expect(button.parentElement).toHaveClass('uno-button-size-xs')
+      const button = screen.getByRole('button')
+      fireEvent.click(button)
 
-    rerender(<Button size='sm'>小按钮</Button>)
-    button = screen.getByText('小按钮')
-    expect(button.parentElement).toHaveClass('uno-button-size-sm')
+      expect(defaultProps.onClick).toHaveBeenCalledTimes(1)
+    })
 
-    rerender(<Button size='md'>中等按钮</Button>)
-    button = screen.getByText('中等按钮')
-    expect(button.parentElement).toHaveClass('uno-button-size-md')
+    it('does not handle click when disabled', () => {
+      render(<Button {...defaultProps} disabled />)
 
-    rerender(<Button size='lg'>大按钮</Button>)
-    button = screen.getByText('大按钮')
-    expect(button.parentElement).toHaveClass('uno-button-size-lg')
+      const button = screen.getByRole('button')
+      fireEvent.click(button)
 
-    rerender(<Button size='xl'>超大按钮</Button>)
-    button = screen.getByText('超大按钮')
-    expect(button.parentElement).toHaveClass('uno-button-size-xl')
+      expect(defaultProps.onClick).not.toHaveBeenCalled()
+    })
+
+    it('does not handle click when loading', () => {
+      render(<Button {...defaultProps} loading />)
+
+      const button = screen.getByRole('button')
+      fireEvent.click(button)
+
+      expect(defaultProps.onClick).not.toHaveBeenCalled()
+    })
+
+    it('handles key press events', () => {
+      render(<Button {...defaultProps} />)
+
+      const button = screen.getByRole('button')
+      fireEvent.keyDown(button, { key: 'Enter' })
+      fireEvent.keyDown(button, { key: ' ' })
+
+      expect(defaultProps.onClick).toHaveBeenCalledTimes(2)
+    })
   })
 
-  test('不同形状的按钮', () => {
-    const { rerender } = render(<Button shape='square'>方形按钮</Button>)
+  describe('Accessibility', () => {
+    it('has proper accessibility attributes', () => {
+      render(<Button {...defaultProps} accessibilityLabel="Submit button" />)
 
-    let button = screen.getByText('方形按钮')
-    expect(button.parentElement).toHaveClass('uno-button-shape-square')
+      const button = screen.getByRole('button')
+      expect(button).toHaveAttribute('accessibility-label', 'Submit button')
+    })
 
-    rerender(<Button shape='round'>圆角按钮</Button>)
-    button = screen.getByText('圆角按钮')
-    expect(button.parentElement).toHaveClass('uno-button-shape-round')
+    it('updates accessibility state when disabled', () => {
+      render(<Button {...defaultProps} disabled />)
 
-    rerender(<Button shape='circle'>圆形按钮</Button>)
-    button = screen.getByText('圆形按钮')
-    expect(button.parentElement).toHaveClass('uno-button-shape-circle')
+      const button = screen.getByRole('button')
+      expect(button).toHaveAttribute('accessibility-state', JSON.stringify({ disabled: true }))
+    })
+
+    it('updates accessibility state when loading', () => {
+      render(<Button {...defaultProps} loading />)
+
+      const button = screen.getByRole('button')
+      expect(button).toHaveAttribute('accessibility-state', JSON.stringify({ busy: true }))
+    })
   })
 
-  test('块级按钮', () => {
-    render(<Button block>块级按钮</Button>)
+  describe('Ref API', () => {
+    it('exposes ref methods', () => {
+      const ref = React.createRef<any>()
+      render(<Button {...defaultProps} ref={ref} />)
 
-    const button = screen.getByText('块级按钮')
-    expect(button.parentElement).toHaveClass('uno-button-block')
+      expect(ref.current).toBeTruthy()
+      expect(ref.current.element).toBeTruthy()
+      expect(typeof ref.current.setDisabled).toBe('function')
+      expect(typeof ref.current.setLoading).toBe('function')
+      expect(typeof ref.current.focus).toBe('function')
+      expect(typeof ref.current.blur).toBe('function')
+    })
+
+    it('can set disabled state via ref', () => {
+      const ref = React.createRef<any>()
+      render(<Button {...defaultProps} ref={ref} />)
+
+      ref.current.setDisabled(true)
+
+      const button = screen.getByRole('button')
+      expect(button).toHaveClass('taro-uno-button--disabled')
+    })
+
+    it('can set loading state via ref', () => {
+      const ref = React.createRef<any>()
+      render(<Button {...defaultProps} ref={ref} />)
+
+      ref.current.setLoading(true)
+
+      const button = screen.getByRole('button')
+      expect(button).toHaveClass('taro-uno-button--loading')
+    })
   })
 
-  test('轮廓按钮', () => {
-    render(<Button outline>轮廓按钮</Button>)
+  describe('Edge Cases', () => {
+    it('renders without children', () => {
+      const { container } = render(<Button {...defaultProps} children={undefined} />)
+      const button = container.querySelector('.taro-uno-button')
+      expect(button).toBeInTheDocument()
+    })
 
-    const button = screen.getByText('轮廓按钮')
-    expect(button.parentElement).toHaveClass('uno-button-outline')
+    it('renders with empty string children', () => {
+      render(<Button {...defaultProps} children="" />)
+
+      const button = screen.getByRole('button')
+      expect(button).toBeInTheDocument()
+    })
+
+    it('renders with null children', () => {
+      const { container } = render(<Button {...defaultProps} children={null} />)
+      const button = container.querySelector('.taro-uno-button')
+      expect(button).toBeInTheDocument()
+    })
   })
-
-  test('幽灵按钮', () => {
-    render(<Button ghost>幽灵按钮</Button>)
-
-    const button = screen.getByText('幽灵按钮')
-    expect(button.parentElement).toHaveClass('uno-button-ghost')
-  })
-
-  test('虚线按钮', () => {
-    render(<Button dashed>虚线按钮</Button>)
-
-    const button = screen.getByText('虚线按钮')
-    expect(button.parentElement).toHaveClass('uno-button-dashed')
-  })
-
-  test('文本按钮', () => {
-    render(<Button text>文本按钮</Button>)
-
-    const button = screen.getByText('文本按钮')
-    expect(button.parentElement).toHaveClass('uno-button-text')
-  })
-
-  test('链接按钮', () => {
-    render(<Button link>链接按钮</Button>)
-
-    const button = screen.getByText('链接按钮')
-    expect(button.parentElement).toHaveClass('uno-button-link')
-  })
-
-  test('禁用状态', () => {
-    const handleClick = jest.fn()
-    render(
-      <Button disabled onClick={handleClick}>
-        禁用按钮
-      </Button>
-    )
-
-    const button = screen.getByText('禁用按钮')
-    expect(button.parentElement).toHaveClass('uno-button-disabled')
-
-    // 点击禁用按钮不应触发点击事件
-    fireEvent.click(button)
-    expect(handleClick).not.toHaveBeenCalled()
-  })
-
-  test('加载状态', () => {
-    const handleClick = jest.fn()
-    render(
-      <Button loading onClick={handleClick}>
-        加载中
-      </Button>
-    )
-
-    const button = screen.getByText('加载中')
-    expect(button.parentElement).toHaveClass('uno-button-loading')
-
-    // 加载状态下点击按钮不应触发点击事件
-    fireEvent.click(button)
-    expect(handleClick).not.toHaveBeenCalled()
-
-    // 应该渲染加载图标
-    const loadingIcon = button.parentElement?.querySelector('.uno-button-loading-icon')
-    expect(loadingIcon).toBeInTheDocument()
-  })
-
-  test('加载状态显示自定义文本', () => {
-    render(
-      <Button loading loadingText='处理中...'>
-        提交
-      </Button>
-    )
-
-    // 应该显示加载文本而不是原始文本
-    expect(screen.getByText('处理中...')).toBeInTheDocument()
-    expect(screen.queryByText('提交')).not.toBeInTheDocument()
-  })
-
-  test('带图标的按钮', () => {
-    render(<Button icon='star'>星标</Button>)
-
-    const button = screen.getByText('星标')
-    expect(button.parentElement).toHaveClass('uno-button-with-icon')
-    expect(button.parentElement).toHaveClass('uno-button-icon-left')
-
-    // 应该渲染图标
-    const icon = button.parentElement?.querySelector('.uno-button-icon')
-    expect(icon).toBeInTheDocument()
-  })
-
-  test('图标位置', () => {
-    const { rerender } = render(
-      <Button icon='star' iconPosition='left'>
-        左侧图标
-      </Button>
-    )
-
-    let button = screen.getByText('左侧图标')
-    expect(button.parentElement).toHaveClass('uno-button-icon-left')
-
-    rerender(
-      <Button icon='star' iconPosition='right'>
-        右侧图标
-      </Button>
-    )
-    button = screen.getByText('右侧图标')
-    expect(button.parentElement).toHaveClass('uno-button-icon-right')
-  })
-
-  test('点击事件', () => {
-    const handleClick = jest.fn()
-    render(<Button onClick={handleClick}>点击按钮</Button>)
-
-    const button = screen.getByText('点击按钮')
-    fireEvent.click(button)
-    expect(handleClick).toHaveBeenCalledTimes(1)
-  })
-
-  test('自定义类名和样式', () => {
-    render(
-      <Button className='custom-button' style={{ backgroundColor: 'red' }}>
-        自定义按钮
-      </Button>
-    )
-
-    const button = screen.getByText('自定义按钮')
-    expect(button.parentElement).toHaveClass('custom-button')
-    expect(button.parentElement).toHaveStyle('background-color: red')
-  })
-
-  test('无障碍属性', () => {
-    render(
-      <Button ariaLabel='测试按钮' ariaDisabled={true} role='link'>
-        无障碍按钮
-      </Button>
-    )
-
-    const button = screen.getByText('无障碍按钮')
-    expect(button.parentElement).toHaveAttribute('aria-label', '测试按钮')
-    expect(button.parentElement).toHaveAttribute('aria-disabled', 'true')
-    expect(button.parentElement).toHaveAttribute('role', 'link')
-  })
-
-  test('原生按钮', () => {
-    render(
-      <Button native formType='submit'>
-        提交表单
-      </Button>
-    )
-
-    // 检查是否渲染为原生button元素
-    const button = screen.getByText('提交表单')
-    expect(button.parentElement?.tagName).toBe('BUTTON')
-    expect(button.parentElement).toHaveAttribute('type', 'submit')
-  })
-}) 
+})

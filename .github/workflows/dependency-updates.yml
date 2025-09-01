@@ -1,0 +1,115 @@
+name: Dependency Updates
+
+on:
+  schedule:
+    # 每周一早上8点检查依赖更新
+    - cron: '0 8 * * 1'
+  workflow_dispatch:
+
+jobs:
+  dependabot:
+    name: Dependabot 自动更新
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 设置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: 安装 pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: '8'
+
+      - name: 获取 pnpm store 目录
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: 设置 pnpm 缓存
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+
+      - name: 检查可更新的依赖
+        run: |
+          echo "## 可更新的依赖" > dependabot-report.md
+          pnpm outdated --format=table >> dependabot-report.md
+
+      - name: 创建 Dependabot Issue
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: '📦 依赖更新报告'
+          content-filepath: dependabot-report.md
+          labels: 'dependencies, automation'
+
+  security-update:
+    name: 安全依赖更新
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: 安装 pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: '8'
+
+      - name: 获取 pnpm store 目录
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: 设置 pnpm 缓存
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+
+      - name: 运行 npm audit
+        run: pnpm audit --audit-level=moderate --json > audit-report.json
+
+      - name: 解析安全报告
+        run: |
+          node -e "
+          const report = require('./audit-report.json');
+          const vulnerabilities = report.advisories || {};
+          const vulnCount = Object.keys(vulnerabilities).length;
+          
+          if (vulnCount > 0) {
+            console.log('发现安全漏洞:', vulnCount);
+            Object.values(vulnerabilities).forEach(vuln => {
+              console.log(\`- \${vuln.module_name}: \${vuln.severity}\`);
+            });
+          } else {
+            console.log('未发现安全漏洞');
+          }
+          "
+
+      - name: 上传安全报告
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-audit-report
+          path: audit-report.json
+          retention-days: 30

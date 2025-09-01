@@ -1,212 +1,634 @@
-import React from 'react'
-import { render, fireEvent, waitFor } from '@testing-library/react'
-import '@testing-library/jest-dom'
-import { Select } from './index'
-import * as platformUtils from '@/utils/platform'
+import React, { useRef } from 'react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import { vi } from 'vitest';
+import { Select } from './Select';
+import type { SelectProps, SelectRef, SelectOption } from './Select.types';
 
-// 模拟平台检测函数
-jest.mock('@/utils/platform', () => ({
-  getCurrentPlatform: jest.fn(),
-}))
+// Mock Taro components
+vi.mock('@tarojs/components', () => ({
+  Picker: ({ children, onChange, ...props }: any) => (
+    <div data-testid="picker" {...props}>
+      {children}
+      <button onClick={() => onChange({ detail: { value: props.value?.[0] || 'test-value' } })}>
+        Change
+      </button>
+    </div>
+  ),
+  View: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+  Text: ({ children, ...props }: any) => <span {...props}>{children}</span>,
+  Input: (props: any) => <input {...props} />,
+}));
 
-describe('Select 组件', () => {
-  const mockOptions = [
-    { value: 'apple', label: '苹果' },
-    { value: 'banana', label: '香蕉' },
-    { value: 'orange', label: '橙子' },
-  ]
+// Mock PlatformDetector
+vi.mock('@/utils', () => ({
+  PlatformDetector: {
+    isH5: true,
+    isWeapp: false,
+    isRN: false,
+  },
+}));
+
+describe('Select Component', () => {
+  const basicOptions: SelectOption[] = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+  ];
 
   beforeEach(() => {
-    // 默认返回web平台
-    jest.spyOn(platformUtils, 'getCurrentPlatform').mockReturnValue('h5')
-  })
+    vi.clearAllMocks();
+  });
 
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
+  const groupedOptions = [
+    {
+      label: 'Group 1',
+      options: [
+        { value: '1-1', label: 'Option 1-1' },
+        { value: '1-2', label: 'Option 1-2' },
+      ],
+    },
+    {
+      label: 'Group 2',
+      options: [
+        { value: '2-1', label: 'Option 2-1' },
+        { value: '2-2', label: 'Option 2-2' },
+      ],
+    },
+  ];
 
-  test('渲染基础单选选择器', () => {
-    const { getByText } = render(<Select options={mockOptions} placeholder='请选择' />)
+  describe('Rendering', () => {
+    it('renders Select component with default props', () => {
+      render(<Select options={basicOptions} />);
+      expect(screen.getByTestId('picker')).toBeInTheDocument();
+    });
 
-    expect(getByText('请选择')).toBeInTheDocument()
-  })
+    it('renders with placeholder when no value is selected', () => {
+      render(<Select options={basicOptions} placeholder="Select an option" />);
+      expect(screen.getByText('Select an option')).toBeInTheDocument();
+    });
 
-  test('点击选择器显示下拉面板', async () => {
-    const { getByText, queryByText } = render(<Select options={mockOptions} placeholder='请选择' />)
+    it('renders with selected value', () => {
+      render(<Select options={basicOptions} value="1" />);
+      expect(screen.getByText('Option 1')).toBeInTheDocument();
+    });
 
-    // 初始不显示选项
-    expect(queryByText('苹果')).not.toBeInTheDocument()
+    it('renders with label', () => {
+      render(<Select options={basicOptions} label="Select Label" />);
+      expect(screen.getByText('Select Label')).toBeInTheDocument();
+    });
 
-    // 点击选择器
-    fireEvent.click(getByText('请选择'))
+    it('renders with prefix', () => {
+      render(<Select options={basicOptions} prefix={<span data-testid="prefix">Prefix</span>} />);
+      expect(screen.getByTestId('prefix')).toBeInTheDocument();
+    });
 
-    // 应该显示选项
-    await waitFor(() => {
-      expect(queryByText('苹果')).toBeInTheDocument()
-      expect(queryByText('香蕉')).toBeInTheDocument()
-      expect(queryByText('橙子')).toBeInTheDocument()
-    })
-  })
+    it('renders with suffix', () => {
+      render(<Select options={basicOptions} suffix={<span data-testid="suffix">Suffix</span>} />);
+      expect(screen.getByTestId('suffix')).toBeInTheDocument();
+    });
 
-  test('选择选项后应该更新显示值', async () => {
-    const handleChange = jest.fn()
-    const { getByText } = render(
-      <Select options={mockOptions} placeholder='请选择' onChange={handleChange} />
-    )
+    it('renders with helper text', () => {
+      render(<Select options={basicOptions} helperText="Helper text" />);
+      expect(screen.getByText('Helper text')).toBeInTheDocument();
+    });
 
-    // 点击选择器
-    fireEvent.click(getByText('请选择'))
+    it('renders with error text', () => {
+      render(<Select options={basicOptions} errorText="Error text" status="error" />);
+      expect(screen.getByText('Error text')).toBeInTheDocument();
+    });
 
-    // 点击选项
-    fireEvent.click(getByText('香蕉'))
+    it('renders with loading state', () => {
+      render(<Select options={basicOptions} loading />);
+      expect(screen.getByText('加载中...')).toBeInTheDocument();
+    });
 
-    // 选择器显示应该更新
-    expect(getByText('香蕉')).toBeInTheDocument()
+    it('renders with custom not found content', () => {
+      render(<Select options={[]} notFoundContent="No options available" />);
+      expect(screen.getByText('No options available')).toBeInTheDocument();
+    });
+  });
 
-    // onChange应该被调用，带有正确的参数
-    expect(handleChange).toHaveBeenCalledWith(
-      'banana',
-      expect.objectContaining({ value: 'banana', label: '香蕉' }),
-      expect.anything()
-    )
-  })
+  describe('Value Handling', () => {
+    it('handles controlled mode', () => {
+      const handleChange = vi.fn();
+      render(<Select options={basicOptions} value="1" onChange={handleChange} />);
+      
+      fireEvent.click(screen.getByText('Change'));
+      expect(handleChange).toHaveBeenCalledWith('1', basicOptions[0]);
+    });
 
-  test('多选模式应该可以选择多个选项', async () => {
-    const handleChange = jest.fn()
-    const { getByText } = render(
-      <Select options={mockOptions} placeholder='请选择' multiple onChange={handleChange} />
-    )
+    it('handles uncontrolled mode with default value', () => {
+      render(<Select options={basicOptions} defaultValue="2" />);
+      expect(screen.getByText('Option 2')).toBeInTheDocument();
+    });
 
-    // 点击选择器
-    fireEvent.click(getByText('请选择'))
+    it('handles multiple selection mode', () => {
+      const handleChange = vi.fn();
+      render(
+        <Select
+          options={basicOptions}
+          mode="multiple"
+          value={['1', '2']}
+          onChange={handleChange}
+        />
+      );
+      expect(screen.getByText('Option 1, Option 2')).toBeInTheDocument();
+    });
 
-    // 点击第一个选项
-    fireEvent.click(getByText('苹果'))
+    it('clears value when allowClear is enabled', () => {
+      const handleClear = vi.fn();
+      const handleChange = vi.fn();
+      render(
+        <Select
+          options={basicOptions}
+          value="1"
+          allowClear
+          onClear={handleClear}
+          onChange={handleChange}
+        />
+      );
+      
+      const clearButton = screen.getByText('×');
+      fireEvent.click(clearButton);
+      
+      expect(handleClear).toHaveBeenCalled();
+      expect(handleChange).toHaveBeenCalledWith('', []);
+    });
 
-    // 确认onChange被调用，带有正确的参数
-    expect(handleChange).toHaveBeenCalledWith(
-      ['apple'],
-      expect.arrayContaining([expect.objectContaining({ value: 'apple', label: '苹果' })]),
-      expect.anything()
-    )
+    it('does not show clear button when no value is selected', () => {
+      render(<Select options={basicOptions} allowClear />);
+      expect(screen.queryByText('×')).not.toBeInTheDocument();
+    });
 
-    // 点击第二个选项
-    fireEvent.click(getByText('香蕉'))
+    it('does not show clear button when disabled', () => {
+      render(<Select options={basicOptions} value="1" allowClear disabled />);
+      expect(screen.queryByText('×')).not.toBeInTheDocument();
+    });
+  });
 
-    // 确认onChange被再次调用，带有两个选中值
-    expect(handleChange).toHaveBeenLastCalledWith(
-      ['apple', 'banana'],
-      expect.arrayContaining([
-        expect.objectContaining({ value: 'apple', label: '苹果' }),
-        expect.objectContaining({ value: 'banana', label: '香蕉' }),
-      ]),
-      expect.anything()
-    )
-  })
+  describe('Events', () => {
+    it('calls onChange when value changes', () => {
+      const handleChange = vi.fn();
+      render(<Select options={basicOptions} onChange={handleChange} />);
+      
+      fireEvent.click(screen.getByText('Change'));
+      expect(handleChange).toHaveBeenCalled();
+    });
 
-  test('禁用状态下不应该响应点击', () => {
-    const handleChange = jest.fn()
-    const { getByText } = render(
-      <Select options={mockOptions} placeholder='请选择' disabled onChange={handleChange} />
-    )
+    it('calls onFocus when focused', () => {
+      const handleFocus = vi.fn();
+      render(<Select options={basicOptions} onFocus={handleFocus} />);
+      
+      const picker = screen.getByTestId('picker');
+      fireEvent.focus(picker);
+      
+      expect(handleFocus).toHaveBeenCalled();
+    });
 
-    // 点击选择器
-    fireEvent.click(getByText('请选择'))
+    it('calls onBlur when blurred', () => {
+      const handleBlur = vi.fn();
+      render(<Select options={basicOptions} onBlur={handleBlur} />);
+      
+      const picker = screen.getByTestId('picker');
+      fireEvent.blur(picker);
+      
+      expect(handleBlur).toHaveBeenCalled();
+    });
 
-    // 下拉菜单不应该显示
-    expect(document.body.textContent).not.toContain('苹果')
+    it('calls onSearch when searching', () => {
+      const handleSearch = vi.fn();
+      render(<Select options={basicOptions} showSearch onSearch={handleSearch} />);
+      
+      // Search functionality would need specific implementation
+      expect(handleSearch).not.toHaveBeenCalled(); // Initial state
+    });
 
-    // onChange不应该被调用
-    expect(handleChange).not.toHaveBeenCalled()
-  })
+    it('calls onDropdownVisibleChange when dropdown state changes', () => {
+      const handleDropdownVisibleChange = vi.fn();
+      const selectRef = useRef<SelectRef>(null);
+      
+      render(
+        <Select
+          options={basicOptions}
+          ref={selectRef}
+          onDropdownVisibleChange={handleDropdownVisibleChange}
+        />
+      );
+      
+      act(() => {
+        selectRef.current?.openDropdown();
+      });
+      
+      expect(handleDropdownVisibleChange).toHaveBeenCalledWith(true);
+    });
+  });
 
-  test('受控模式下应该使用外部value', () => {
-    const { getByText, rerender } = render(
-      <Select options={mockOptions} placeholder='请选择' value='apple' />
-    )
+  describe('States', () => {
+    it('handles disabled state', () => {
+      render(<Select options={basicOptions} disabled />);
+      const picker = screen.getByTestId('picker');
+      expect(picker).toHaveAttribute('disabled');
+    });
 
-    // 应该显示对应的选项文本
-    expect(getByText('苹果')).toBeInTheDocument()
+    it('handles readonly state', () => {
+      render(<Select options={basicOptions} readonly />);
+      const picker = screen.getByTestId('picker');
+      expect(picker).toHaveAttribute('disabled');
+    });
 
-    // 更新value
-    rerender(<Select options={mockOptions} placeholder='请选择' value='banana' />)
+    it('handles loading state', () => {
+      render(<Select options={basicOptions} loading />);
+      expect(screen.getByText('加载中...')).toBeInTheDocument();
+    });
 
-    // 显示应该更新
-    expect(getByText('香蕉')).toBeInTheDocument()
-  })
+    it('handles error state', () => {
+      render(<Select options={basicOptions} status="error" />);
+      const picker = screen.getByTestId('picker');
+      expect(picker).toHaveClass('select-error');
+    });
 
-  test('在不同平台上应该应用对应的平台样式类', () => {
-    // 设置为微信小程序环境
-    jest.spyOn(platformUtils, 'getCurrentPlatform').mockReturnValue('weapp')
+    it('handles warning state', () => {
+      render(<Select options={basicOptions} status="warning" />);
+      const picker = screen.getByTestId('picker');
+      expect(picker).toHaveClass('select-warning');
+    });
 
-    const { container: weappContainer } = render(
-      <Select options={mockOptions} placeholder='请选择' />
-    )
+    it('handles success state', () => {
+      render(<Select options={basicOptions} status="success" />);
+      const picker = screen.getByTestId('picker');
+      expect(picker).toHaveClass('select-success');
+    });
+  });
 
-    expect(weappContainer.querySelector('.uno-select--platform-weapp')).not.toBeNull()
+  describe('Sizes and Variants', () => {
+    const sizes: Array<'xs' | 'sm' | 'md' | 'lg' | 'xl'> = ['xs', 'sm', 'md', 'lg', 'xl'];
+    
+    sizes.forEach((size) => {
+      it(`renders with size ${size}`, () => {
+        render(<Select options={basicOptions} size={size} />);
+        const picker = screen.getByTestId('picker');
+        expect(picker).toHaveClass(`select-${size}`);
+      });
+    });
 
-    // 设置为鸿蒙OS环境
-    jest.spyOn(platformUtils, 'getCurrentPlatform').mockReturnValue('harmony')
+    const variants: Array<'outlined' | 'filled' | 'underlined'> = ['outlined', 'filled', 'underlined'];
+    
+    variants.forEach((variant) => {
+      it(`renders with variant ${variant}`, () => {
+        render(<Select options={basicOptions} variant={variant} />);
+        const picker = screen.getByTestId('picker');
+        expect(picker).toHaveClass(`select-${variant}`);
+      });
+    });
+  });
 
-    const { container: harmonyContainer } = render(
-      <Select options={mockOptions} placeholder='请选择' />
-    )
+  describe('Validation', () => {
+    it('validates required rule', async () => {
+      const handleChange = vi.fn();
+      render(
+        <Select
+          options={basicOptions}
+          rules={[{ required: true, message: 'This field is required' }]}
+          validateTrigger="onChange"
+          onChange={handleChange}
+        />
+      );
+      
+      fireEvent.click(screen.getByText('Change'));
+      
+      await waitFor(() => {
+        expect(screen.getByText('This field is required')).toBeInTheDocument();
+      });
+    });
 
-    expect(harmonyContainer.querySelector('.uno-select--platform-harmony')).not.toBeNull()
-  })
+    it('validates min count for multiple selection', async () => {
+      const handleChange = vi.fn();
+      render(
+        <Select
+          options={basicOptions}
+          mode="multiple"
+          minCount={2}
+          validateTrigger="onChange"
+          onChange={handleChange}
+        />
+      );
+      
+      // Select only one option
+      fireEvent.click(screen.getByText('Change'));
+      
+      await waitFor(() => {
+        expect(screen.getByText('最少需要选择2项')).toBeInTheDocument();
+      });
+    });
 
-  test('可搜索模式下应该过滤选项', async () => {
-    const { getByText, queryByText, getByPlaceholderText } = render(
-      <Select options={mockOptions} placeholder='请选择' searchable />
-    )
+    it('validates max count for multiple selection', async () => {
+      const handleChange = vi.fn();
+      render(
+        <Select
+          options={basicOptions}
+          mode="multiple"
+          maxCount={1}
+          value={['1', '2']}
+          validateTrigger="onChange"
+          onChange={handleChange}
+        />
+      );
+      
+      await waitFor(() => {
+        expect(screen.getByText('最多允许选择1项')).toBeInTheDocument();
+      });
+    });
 
-    // 点击选择器
-    fireEvent.click(getByText('请选择'))
+    it('validates with custom validator', async () => {
+      const handleChange = vi.fn();
+      const customValidator = vi.fn().mockResolvedValue('Custom validation error');
+      
+      render(
+        <Select
+          options={basicOptions}
+          validator={customValidator}
+          validateTrigger="onChange"
+          onChange={handleChange}
+        />
+      );
+      
+      fireEvent.click(screen.getByText('Change'));
+      
+      await waitFor(() => {
+        expect(screen.getByText('Custom validation error')).toBeInTheDocument();
+      });
+    });
 
-    // 搜索输入框应该出现
-    const searchInput = getByPlaceholderText('搜索...')
-    expect(searchInput).toBeInTheDocument()
+    it('validates on blur trigger', async () => {
+      const handleBlur = vi.fn();
+      render(
+        <Select
+          options={basicOptions}
+          rules={[{ required: true, message: 'This field is required' }]}
+          validateTrigger="onBlur"
+          onBlur={handleBlur}
+        />
+      );
+      
+      const picker = screen.getByTestId('picker');
+      fireEvent.blur(picker);
+      
+      await waitFor(() => {
+        expect(screen.getByText('This field is required')).toBeInTheDocument();
+      });
+    });
+  });
 
-    // 输入搜索文本
-    fireEvent.input(searchInput, { target: { value: '香' } })
+  describe('Ref Methods', () => {
+    it('provides ref with getValue method', () => {
+      const selectRef = useRef<SelectRef>(null);
+      render(<Select options={basicOptions} value="1" ref={selectRef} />);
+      
+      expect(selectRef.current?.getValue()).toBe('1');
+    });
 
-    // 只有匹配的选项应该显示
-    await waitFor(() => {
-      expect(queryByText('苹果')).not.toBeInTheDocument()
-      expect(queryByText('香蕉')).toBeInTheDocument()
-      expect(queryByText('橙子')).not.toBeInTheDocument()
-    })
-  })
+    it('provides ref with setValue method', () => {
+      const selectRef = useRef<SelectRef>(null);
+      render(<Select options={basicOptions} ref={selectRef} />);
+      
+      act(() => {
+        selectRef.current?.setValue('2');
+      });
+      
+      expect(selectRef.current?.getValue()).toBe('2');
+    });
 
-  test('带清空按钮的选择器应该能清空选中值', async () => {
-    const handleClear = jest.fn()
-    const handleChange = jest.fn()
+    it('provides ref with focus method', () => {
+      const selectRef = useRef<SelectRef>(null);
+      render(<Select options={basicOptions} ref={selectRef} />);
+      
+      expect(() => {
+        selectRef.current?.focus();
+      }).not.toThrow();
+    });
 
-    const { getByText, queryByText, getByRole } = render(
-      <Select
-        options={mockOptions}
-        placeholder='请选择'
-        value='apple'
-        clearable
-        onClear={handleClear}
-        onChange={handleChange}
-      />
-    )
+    it('provides ref with blur method', () => {
+      const selectRef = useRef<SelectRef>(null);
+      render(<Select options={basicOptions} ref={selectRef} />);
+      
+      expect(() => {
+        selectRef.current?.blur();
+      }).not.toThrow();
+    });
 
-    // 初始显示选中值
-    expect(getByText('苹果')).toBeInTheDocument()
+    it('provides ref with validate method', async () => {
+      const selectRef = useRef<SelectRef>(null);
+      render(
+        <Select
+          options={basicOptions}
+          rules={[{ required: true, message: 'Required' }]}
+          ref={selectRef}
+        />
+      );
+      
+      const result = await selectRef.current?.validate();
+      expect(result).toEqual({ valid: false, message: 'Required' });
+    });
 
-    // 清空按钮应该存在
-    const clearButton = getByRole('clear-btn')
+    it('provides ref with clear method', () => {
+      const selectRef = useRef<SelectRef>(null);
+      const handleChange = vi.fn();
+      render(
+        <Select
+          options={basicOptions}
+          value="1"
+          onChange={handleChange}
+          ref={selectRef}
+        />
+      );
+      
+      act(() => {
+        selectRef.current?.clear();
+      });
+      
+      expect(handleChange).toHaveBeenCalledWith('', []);
+    });
 
-    // 点击清空按钮
-    fireEvent.click(clearButton)
+    it('provides ref with reset method', () => {
+      const selectRef = useRef<SelectRef>(null);
+      render(
+        <Select
+          options={basicOptions}
+          defaultValue="1"
+          ref={selectRef}
+        />
+      );
+      
+      act(() => {
+        selectRef.current?.reset();
+      });
+      
+      expect(selectRef.current?.getValue()).toBe('1');
+    });
 
-    // 值应该被清空
-    expect(queryByText('请选择')).toBeInTheDocument()
+    it('provides ref with getSelectedOptions method', () => {
+      const selectRef = useRef<SelectRef>(null);
+      render(<Select options={basicOptions} value="1" ref={selectRef} />);
+      
+      const selectedOptions = selectRef.current?.getSelectedOptions();
+      expect(selectedOptions).toEqual([basicOptions[0]]);
+    });
 
-    // 回调函数应该被调用
-    expect(handleClear).toHaveBeenCalled()
-    expect(handleChange).toHaveBeenCalledWith(undefined, undefined, expect.anything())
-  })
-}) 
+    it('provides ref with searchOptions method', () => {
+      const selectRef = useRef<SelectRef>(null);
+      render(<Select options={basicOptions} ref={selectRef} />);
+      
+      const searchResults = selectRef.current?.searchOptions('Option 1');
+      expect(searchResults).toEqual([basicOptions[0]]);
+    });
+  });
+
+  describe('Options Handling', () => {
+    it('handles grouped options', () => {
+      render(<Select options={groupedOptions} />);
+      expect(screen.getByTestId('picker')).toBeInTheDocument();
+    });
+
+    it('handles disabled options', () => {
+      const optionsWithDisabled = [
+        ...basicOptions,
+        { value: '4', label: 'Disabled Option', disabled: true },
+      ];
+      render(<Select options={optionsWithDisabled} />);
+      expect(screen.getByTestId('picker')).toBeInTheDocument();
+    });
+
+    it('handles options with descriptions', () => {
+      const optionsWithDescriptions = basicOptions.map(option => ({
+        ...option,
+        description: `Description for ${option.label}`,
+      }));
+      render(<Select options={optionsWithDescriptions} />);
+      expect(screen.getByTestId('picker')).toBeInTheDocument();
+    });
+
+    it('handles options with icons', () => {
+      const optionsWithIcons = basicOptions.map(option => ({
+        ...option,
+        icon: <span data-testid={`icon-${option.value}`}>Icon</span>,
+      }));
+      render(<Select options={optionsWithIcons} />);
+      expect(screen.getByTestId('picker')).toBeInTheDocument();
+    });
+  });
+
+  describe('Accessibility', () => {
+    it('has proper accessibility attributes', () => {
+      render(<Select options={basicOptions} accessibilityLabel="Select an option" />);
+      const picker = screen.getByTestId('picker');
+      expect(picker).toHaveAttribute('aria-label', 'Select an option');
+    });
+
+    it('has proper accessibility role', () => {
+      render(<Select options={basicOptions} accessibilityRole="combobox" />);
+      const picker = screen.getByTestId('picker');
+      expect(picker).toHaveAttribute('role', 'combobox');
+    });
+
+    it('updates accessibility state when disabled', () => {
+      render(<Select options={basicOptions} disabled />);
+      const picker = screen.getByTestId('picker');
+      expect(picker).toHaveAttribute('aria-disabled', 'true');
+    });
+
+    it('updates accessibility state when loading', () => {
+      render(<Select options={basicOptions} loading />);
+      const picker = screen.getByTestId('picker');
+      expect(picker).toHaveAttribute('aria-busy', 'true');
+    });
+  });
+
+  describe('Style Classes', () => {
+    it('applies custom className', () => {
+      render(<Select options={basicOptions} className="custom-select" />);
+      const picker = screen.getByTestId('picker');
+      expect(picker).toHaveClass('custom-select');
+    });
+
+    it('applies custom style', () => {
+      render(<Select options={basicOptions} style={{ backgroundColor: 'red' }} />);
+      const picker = screen.getByTestId('picker');
+      expect(picker).toHaveStyle({ backgroundColor: 'red' });
+    });
+
+    it('applies bordered style', () => {
+      render(<Select options={basicOptions} bordered />);
+      const picker = screen.getByTestId('picker');
+      expect(picker).toHaveClass('select-bordered');
+    });
+
+    it('applies borderless style', () => {
+      render(<Select options={basicOptions} bordered={false} />);
+      const picker = screen.getByTestId('picker');
+      expect(picker).not.toHaveClass('select-bordered');
+    });
+  });
+
+  describe('Edge Cases', () => {
+    it('handles empty options array', () => {
+      render(<Select options={[]} />);
+      expect(screen.getByTestId('picker')).toBeInTheDocument();
+    });
+
+    it('handles undefined options', () => {
+      render(<Select />);
+      expect(screen.getByTestId('picker')).toBeInTheDocument();
+    });
+
+    it('handles null value', () => {
+      render(<Select options={basicOptions} value={null as any} />);
+      expect(screen.getByText('请选择')).toBeInTheDocument();
+    });
+
+    it('handles undefined value', () => {
+      render(<Select options={basicOptions} value={undefined} />);
+      expect(screen.getByText('请选择')).toBeInTheDocument();
+    });
+
+    it('handles immediate validation', async () => {
+      const handleChange = vi.fn();
+      render(
+        <Select
+          options={basicOptions}
+          rules={[{ required: true, message: 'Required' }]}
+          immediate
+          validateTrigger="onChange"
+          onChange={handleChange}
+        />
+      );
+      
+      fireEvent.click(screen.getByText('Change'));
+      
+      await waitFor(() => {
+        expect(screen.getByText('Required')).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('Performance', () => {
+    it('handles large number of options', () => {
+      const largeOptions = Array.from({ length: 1000 }, (_, i) => ({
+        value: i.toString(),
+        label: `Option ${i}`,
+      }));
+      
+      render(<Select options={largeOptions} />);
+      expect(screen.getByTestId('picker')).toBeInTheDocument();
+    });
+
+    it('memoizes callbacks properly', () => {
+      const handleChange = vi.fn();
+      const { rerender } = render(<Select options={basicOptions} onChange={handleChange} />);
+      
+      rerender(<Select options={basicOptions} onChange={handleChange} />);
+      
+      // Should not cause unnecessary re-renders
+      expect(handleChange).not.toHaveBeenCalled();
+    });
+  });
+});

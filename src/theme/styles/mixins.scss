@@ -1,0 +1,612 @@
+/**
+ * Taro-Uno UI 样式混合器
+ * 提供常用的样式混合器
+ */
+
+// ==================== 响应式混合器 ====================
+
+/**
+ * 生成响应式样式
+ * @param $property CSS属性名
+ * @param $value CSS属性值
+ * @param $breakpoints 断点映射
+ */
+@mixin responsive($property, $value, $breakpoints: ()) {
+  @each $breakpoint, $breakpoint-value in $breakpoints {
+    @media (min-width: $breakpoint-value) {
+      #{$property}: $value;
+    }
+  }
+}
+
+/**
+ * 移动端优先的响应式样式
+ * @param $property CSS属性名
+ * @param $values 值映射
+ */
+@mixin mobile-first($property, $values: ()) {
+  @each $breakpoint, $value in $values {
+    @if $breakpoint == 'xs' {
+      #{$property}: $value;
+    } @else {
+      @media (min-width: map-get($breakpoints, $breakpoint)) {
+        #{$property}: $value;
+      }
+    }
+  }
+}
+
+// ==================== Flexbox 混合器 ====================
+
+/**
+ * Flex 容器
+ * @param $direction 方向
+ * @param $justify 主轴对齐
+ * @param $align 交叉轴对齐
+ * @param $wrap 换行
+ */
+@mixin flex($direction: row, $justify: flex-start, $align: stretch, $wrap: nowrap) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+  flex-wrap: $wrap;
+}
+
+/**
+ * Flex 居中
+ */
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/**
+ * Flex 垂直居中
+ */
+@mixin flex-center-vertical {
+  display: flex;
+  align-items: center;
+}
+
+/**
+ * Flex 水平居中
+ */
+@mixin flex-center-horizontal {
+  display: flex;
+  justify-content: center;
+}
+
+/**
+ * Flex 等分
+ */
+@mixin flex-evenly {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+// ==================== 布局混合器 ====================
+
+/**
+ * 绝对定位居中
+ */
+@mixin absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/**
+ * 固定定位居中
+ */
+@mixin fixed-center {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/**
+ * 全屏覆盖
+ */
+@mixin fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/**
+ * 清除浮动
+ */
+@mixin clearfix {
+  &::after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+
+// ==================== 文本混合器 ====================
+
+/**
+ * 文本截断
+ * @param $lines 行数
+ */
+@mixin text-truncate($lines: 1) {
+  @if $lines == 1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  } @else {
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/**
+ * 文本省略
+ */
+@mixin text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/**
+ * 文本换行
+ */
+@mixin text-wrap {
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+/**
+ * 文本不换行
+ */
+@mixin text-no-wrap {
+  white-space: nowrap;
+}
+
+// ==================== 按钮混合器 ====================
+
+/**
+ * 按钮基础样式
+ * @param $size 尺寸
+ * @param $variant 类型
+ * @param $color 颜色
+ */
+@mixin button-base($size: md, $variant: solid, $color: primary) {
+  // 尺寸映射
+  $sizes: (
+    xs: (
+      height: $button-height-xs,
+      font-size: $button-font-size-xs,
+      padding: $button-padding-xs,
+      border-radius: $button-border-radius-xs
+    ),
+    sm: (
+      height: $button-height-sm,
+      font-size: $button-font-size-sm,
+      padding: $button-padding-sm,
+      border-radius: $button-border-radius-sm
+    ),
+    md: (
+      height: $button-height-md,
+      font-size: $button-font-size-md,
+      padding: $button-padding-md,
+      border-radius: $button-border-radius-md
+    ),
+    lg: (
+      height: $button-height-lg,
+      font-size: $button-font-size-lg,
+      padding: $button-padding-lg,
+      border-radius: $button-border-radius-lg
+    ),
+    xl: (
+      height: $button-height-xl,
+      font-size: $button-font-size-xl,
+      padding: $button-padding-xl,
+      border-radius: $button-border-radius-xl
+    )
+  );
+  
+  $size-config: map-get($sizes, $size);
+  
+  height: map-get($size-config, height);
+  font-size: map-get($size-config, font-size);
+  padding: map-get($size-config, padding);
+  border-radius: map-get($size-config, border-radius);
+  
+  // 类型样式
+  @if $variant == solid {
+    background-color: var(--#{$color}-color);
+    color: var(--text-color-inverse);
+    border: 1px solid var(--#{$color}-color);
+  } @else if $variant == outline {
+    background-color: transparent;
+    color: var(--#{$color}-color);
+    border: 1px solid var(--#{$color}-color);
+  } @else if $variant == ghost {
+    background-color: transparent;
+    color: var(--#{$color}-color);
+    border: 1px solid transparent;
+  } @else if $variant == text {
+    background-color: transparent;
+    color: var(--#{$color}-color);
+    border: none;
+  }
+  
+  // 基础样式
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  transition: var(--transition-base);
+  font-weight: $font-weight-medium;
+  line-height: 1;
+  
+  // 禁用状态
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  
+  // 悬停状态
+  &:not(:disabled):hover {
+    @if $variant == solid {
+      background-color: darken(var(--#{$color}-color), 10%);
+      border-color: darken(var(--#{$color}-color), 10%);
+    } @else if $variant == outline or $variant == ghost {
+      background-color: var(--#{$color}-color);
+      color: var(--text-color-inverse);
+    } @else if $variant == text {
+      background-color: var(--#{$color}-color);
+      color: var(--text-color-inverse);
+    }
+  }
+  
+  // 激活状态
+  &:not(:disabled):active {
+    transform: scale(0.95);
+  }
+}
+
+// ==================== 输入框混合器 ====================
+
+/**
+ * 输入框基础样式
+ */
+@mixin input-base {
+  width: 100%;
+  height: $input-height;
+  padding: $input-padding;
+  font-size: $input-font-size;
+  border: $input-border-width solid var(--border-color);
+  border-radius: $input-border-radius;
+  background-color: var(--background-input);
+  color: var(--text-color);
+  transition: var(--transition-base);
+  
+  &:focus {
+    outline: none;
+    border-color: var(--border-color-focus);
+    box-shadow: 0 0 0 2px rgba(var(--border-color-focus), 0.2);
+  }
+  
+  &::placeholder {
+    color: var(--text-color-disabled);
+  }
+  
+  &:disabled {
+    background-color: var(--background-color);
+    color: var(--text-color-disabled);
+    cursor: not-allowed;
+  }
+}
+
+// ==================== 卡片混合器 ====================
+
+/**
+ * 卡片基础样式
+ */
+@mixin card-base {
+  background-color: var(--background-card);
+  border-radius: $card-border-radius;
+  box-shadow: $card-shadow;
+  padding: $card-padding;
+  transition: var(--transition-base);
+  
+  &:hover {
+    box-shadow: $shadow-lg;
+  }
+}
+
+// ==================== 动画混合器 ====================
+
+/**
+ * 淡入动画
+ * @param $duration 时长
+ */
+@mixin fade-in($duration: $animation-duration-normal) {
+  animation: fadeIn $duration ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/**
+ * 淡出动画
+ * @param $duration 时长
+ */
+@mixin fade-out($duration: $animation-duration-normal) {
+  animation: fadeOut $duration ease-in-out;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/**
+ * 滑入动画
+ * @param $direction 方向
+ * @param $duration 时长
+ */
+@mixin slide-in($direction: up, $duration: $animation-duration-normal) {
+  @if $direction == up {
+    animation: slideInUp $duration ease-out;
+  } @else if $direction == down {
+    animation: slideInDown $duration ease-out;
+  } @else if $direction == left {
+    animation: slideInLeft $duration ease-out;
+  } @else if $direction == right {
+    animation: slideInRight $duration ease-out;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/**
+ * 缩放动画
+ * @param $type 类型
+ * @param $duration 时长
+ */
+@mixin scale($type: in, $duration: $animation-duration-normal) {
+  @if $type == in {
+    animation: scaleIn $duration ease-out;
+  } @else if $type == out {
+    animation: scaleOut $duration ease-out;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes scaleOut {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+// ==================== 工具类混合器 ====================
+
+/**
+ * 隐藏元素
+ */
+@mixin hidden {
+  display: none !important;
+}
+
+/**
+ * 显示元素
+ */
+@mixin visible {
+  display: block !important;
+}
+
+/**
+ * 不可见但保持布局
+ */
+@mixin invisible {
+  visibility: hidden !important;
+}
+
+/**
+ * 可见
+ */
+@mixin visible {
+  visibility: visible !important;
+}
+
+/**
+ * 清除列表样式
+ */
+@mixin list-unstyled {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/**
+ * 清除默认样式
+ */
+@mixin reset {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+// ==================== 阴影混合器 ====================
+
+/**
+ * 阴影
+ * @param $level 级别
+ */
+@mixin shadow($level: md) {
+  @if $level == none {
+    box-shadow: $shadow-none;
+  } @else if $level == sm {
+    box-shadow: $shadow-sm;
+  } @else if $level == md {
+    box-shadow: $shadow-md;
+  } @else if $level == lg {
+    box-shadow: $shadow-lg;
+  } @else if $level == xl {
+    box-shadow: $shadow-xl;
+  } @else if $level == 2xl {
+    box-shadow: $shadow-2xl;
+  }
+}
+
+// ==================== 渐变混合器 ====================
+
+/**
+ * 线性渐变
+ * @param $direction 方向
+ * @param $colors 颜色列表
+ */
+@mixin linear-gradient($direction: to right, $colors: ()) {
+  background: linear-gradient($direction, $colors);
+}
+
+/**
+ * 径向渐变
+ * @param $colors 颜色列表
+ */
+@mixin radial-gradient($colors: ()) {
+  background: radial-gradient(circle, $colors);
+}
+
+// ==================== 边框混合器 ====================
+
+/**
+ * 边框
+ * @param $width 宽度
+ * @param $color 颜色
+ * @param $style 样式
+ */
+@mixin border($width: 1px, $color: var(--border-color), $style: solid) {
+  border: $width $style $color;
+}
+
+/**
+ * 圆形边框
+ */
+@mixin circular {
+  border-radius: 50%;
+}
+
+// ==================== 变换混合器 ====================
+
+/**
+ * 旋转
+ * @param $angle 角度
+ */
+@mixin rotate($angle: 0deg) {
+  transform: rotate($angle);
+}
+
+/**
+ * 缩放
+ * @param $scale 缩放比例
+ */
+@mixin scale($scale: 1) {
+  transform: scale($scale);
+}
+
+/**
+ * 平移
+ * @param $x X轴平移
+ * @param $y Y轴平移
+ */
+@mixin translate($x: 0, $y: 0) {
+  transform: translate($x, $y);
+}
+
+// ==================== 过渡混合器 ====================
+
+/**
+ * 过渡
+ * @param $properties 属性列表
+ * @param $duration 时长
+ * @param $timing 缓动函数
+ */
+@mixin transition($properties: all, $duration: $animation-duration-normal, $timing: ease-in-out) {
+  transition: $properties $duration $timing;
+}

@@ -1,0 +1,624 @@
+// ===========================================
+// Taro Uno UI - SCSS 函数定义
+// ===========================================
+
+@import './variables';
+
+// 颜色函数
+// ===========================================
+
+// 将颜色转换为RGB
+@function hex-to-rgb($hex) {
+  @if type-of($hex) == color {
+    @return red($hex), green($hex), blue($hex);
+  }
+  
+  @if str-index($hex, '#') == 1 {
+    $hex: str-slice($hex, 2);
+  }
+  
+  @if str-length($hex) == 3 {
+    $hex: str-slice($hex, 1, 1) + str-slice($hex, 1, 1) +
+           str-slice($hex, 2, 2) + str-slice($hex, 2, 2) +
+           str-slice($hex, 3, 3) + str-slice($hex, 3, 3);
+  }
+  
+  $r: hex-to-decimal(str-slice($hex, 1, 2));
+  $g: hex-to-decimal(str-slice($hex, 3, 4));
+  $b: hex-to-decimal(str-slice($hex, 5, 6));
+  
+  @return $r, $g, $b;
+}
+
+// 十六进制转十进制
+@function hex-to-decimal($hex) {
+  @return (
+    hex-to-decimal-digit(str-slice($hex, 1, 1)) * 16 +
+    hex-to-decimal-digit(str-slice($hex, 2, 2))
+  );
+}
+
+// 十六进制数字转十进制
+@function hex-to-decimal-digit($digit) {
+  $digits: (
+    '0': 0, '1': 1, '2': 2, '3': 3, '4': 4,
+    '5': 5, '6': 6, '7': 7, '8': 8, '9': 9,
+    'a': 10, 'b': 11, 'c': 12, 'd': 13, 'e': 14, 'f': 15,
+    'A': 10, 'B': 11, 'C': 12, 'D': 13, 'E': 14, 'F': 15
+  );
+  
+  @return map-get($digits, $digit);
+}
+
+// 颜色透明度
+@function rgba-color($color, $alpha) {
+  @if type-of($color) == color {
+    @return rgba($color, $alpha);
+  }
+  
+  @if str-index($color, '#') == 1 {
+    $rgb: hex-to-rgb($color);
+    @return rgba($rgb, $alpha);
+  }
+  
+  @return $color;
+}
+
+// 颜色变亮
+@function lighten-color($color, $amount) {
+  @if type-of($color) == color {
+    @return lighten($color, $amount);
+  }
+  
+  @return $color;
+}
+
+// 颜色变暗
+@function darken-color($color, $amount) {
+  @if type-of($color) == color {
+    @return darken($color, $amount);
+  }
+  
+  @return $color;
+}
+
+// 颜色饱和度
+@function saturate-color($color, $amount) {
+  @if type-of($color) == color {
+    @return saturate($color, $amount);
+  }
+  
+  @return $color;
+}
+
+// 颜色去饱和
+@function desaturate-color($color, $amount) {
+  @if type-of($color) == color {
+    @return desaturate($color, $amount);
+  }
+  
+  @return $color;
+}
+
+// 颜色混合
+@function mix-color($color1, $color2, $weight: 50%) {
+  @if type-of($color1) == color and type-of($color2) == color {
+    @return mix($color1, $color2, $weight);
+  }
+  
+  @return $color1;
+}
+
+// 获取颜色对比度
+@function get-contrast-color($color) {
+  @if type-of($color) != color {
+    @return $text-color;
+  }
+  
+  $lightness: lightness($color);
+  
+  @if $lightness > 60 {
+    @return $text-color;
+  } @else {
+    @return $text-color-inverse;
+  }
+}
+
+// 获取主题颜色
+@function theme-color($name, $theme: 'light') {
+  $colors: (
+    'light': (
+      'primary': $primary-color,
+      'secondary': $secondary-color,
+      'success': $success-color,
+      'warning': $warning-color,
+      'error': $error-color,
+      'info': $info-color,
+      'text': $text-color,
+      'text-secondary': $text-color-secondary,
+      'text-disabled': $text-color-disabled,
+      'text-inverse': $text-color-inverse,
+      'background': $background-color,
+      'background-secondary': $background-color-secondary,
+      'background-card': $background-color-card,
+      'background-input': $background-color-input,
+      'background-mask': $background-color-mask,
+      'border': $border-color,
+      'border-light': $border-color-light,
+      'border-focus': $border-color-focus,
+      'border-error': $border-color-error,
+      'shadow': $shadow-color,
+      'shadow-light': $shadow-color-light,
+      'brand': $brand-color,
+      'accent': $accent-color,
+      'link': $text-color-link,
+      'divider': $divider-color
+    ),
+    'dark': (
+      'primary': $primary-color,
+      'secondary': $secondary-color,
+      'success': $success-color,
+      'warning': $warning-color,
+      'error': $error-color,
+      'info': $info-color,
+      'text': $dark-text-color,
+      'text-secondary': $dark-text-color-secondary,
+      'text-disabled': $dark-text-color-disabled,
+      'text-inverse': $dark-text-color-inverse,
+      'background': $dark-background-color,
+      'background-secondary': $dark-background-color-secondary,
+      'background-card': $dark-background-color-card,
+      'background-input': $dark-background-color-input,
+      'background-mask': $dark-background-color-mask,
+      'border': $dark-border-color,
+      'border-light': $dark-border-color-light,
+      'border-focus': $dark-border-color-focus,
+      'border-error': $dark-border-color-error,
+      'shadow': $dark-shadow-color,
+      'shadow-light': $dark-shadow-color-light,
+      'brand': $brand-color,
+      'accent': $accent-color,
+      'link': $primary-color,
+      'divider': $dark-divider-color
+    )
+  );
+  
+  @return map-get(map-get($colors, $theme), $name);
+}
+
+// 间距函数
+// ===========================================
+
+// 获取间距值
+@function spacing($key) {
+  $spacing-scale: (
+    '0': 0,
+    'xs': $spacing-xs,
+    'sm': $spacing-sm,
+    'md': $spacing-md,
+    'lg': $spacing-lg,
+    'xl': $spacing-xl,
+    'xxl': $spacing-xxl,
+    'xxxl': $spacing-xxxl
+  );
+  
+  @return map-get($spacing-scale, $key);
+}
+
+// 间距转换
+@function spacing-rem($key) {
+  $value: spacing($key);
+  @if $value != null {
+    @return $value / 16 * 1rem;
+  }
+  @return 0;
+}
+
+// 间距转换em
+@function spacing-em($key, $base: 16) {
+  $value: spacing($key);
+  @if $value != null {
+    @return $value / $base * 1em;
+  }
+  @return 0;
+}
+
+// 字体函数
+// ===========================================
+
+// 获取字体大小
+@function font-size($key) {
+  $font-size-scale: (
+    'xs': $font-size-xs,
+    'sm': $font-size-sm,
+    'base': $font-size-base,
+    'lg': $font-size-lg,
+    'xl': $font-size-xl,
+    '2xl': $font-size-2xl,
+    '3xl': $font-size-3xl,
+    '4xl': $font-size-4xl,
+    '5xl': $font-size-5xl
+  );
+  
+  @return map-get($font-size-scale, $key);
+}
+
+// 获取字体粗细
+@function font-weight($key) {
+  $font-weight-scale: (
+    'light': $font-weight-light,
+    'normal': $font-weight-normal,
+    'medium': $font-weight-medium,
+    'semibold': $font-weight-semibold,
+    'bold': $font-weight-bold
+  );
+  
+  @return map-get($font-weight-scale, $key);
+}
+
+// 获取行高
+@function line-height($key) {
+  $line-height-scale: (
+    'tight': $line-height-tight,
+    'normal': $line-height-normal,
+    'relaxed': $line-height-relaxed,
+    'loose': $line-height-loose
+  );
+  
+  @return map-get($line-height-scale, $key);
+}
+
+// 获取字母间距
+@function letter-spacing($key) {
+  $letter-spacing-scale: (
+    'tight': $letter-spacing-tight,
+    'normal': $letter-spacing-normal,
+    'wide': $letter-spacing-wide
+  );
+  
+  @return map-get($letter-spacing-scale, $key);
+}
+
+// 边框函数
+// ===========================================
+
+// 获取圆角
+@function border-radius($key) {
+  $border-radius-scale: (
+    'none': $border-radius-none,
+    'sm': $border-radius-sm,
+    'md': $border-radius-md,
+    'lg': $border-radius-lg,
+    'xl': $border-radius-xl,
+    '2xl': $border-radius-2xl,
+    'full': $border-radius-full,
+    'circle': $border-radius-circle
+  );
+  
+  @return map-get($border-radius-scale, $key);
+}
+
+// 获取阴影
+@function box-shadow($key) {
+  $shadow-scale: (
+    'none': $shadow-none,
+    'sm': $shadow-sm,
+    'md': $shadow-md,
+    'lg': $shadow-lg,
+    'xl': $shadow-xl,
+    '2xl': $shadow-2xl,
+    'inner': $shadow-inner
+  );
+  
+  @return map-get($shadow-scale, $key);
+}
+
+// Z-index函数
+// ===========================================
+
+// 获取Z-index
+@function z-index($key) {
+  $z-index-scale: (
+    'below': $z-index-below,
+    'default': $z-index-default,
+    'footer': $z-index-footer,
+    'header': $z-index-header,
+    'sticky': $z-index-sticky,
+    'dropdown': $z-index-dropdown,
+    'tooltip': $z-index-tooltip,
+    'popover': $z-index-popover,
+    'drawer': $z-index-drawer,
+    'modal': $z-index-modal
+  );
+  
+  @return map-get($z-index-scale, $key);
+}
+
+// 响应式函数
+// ===========================================
+
+// 获取断点
+@function breakpoint($key) {
+  $breakpoint-scale: (
+    'xs': $breakpoint-xs,
+    'sm': $breakpoint-sm,
+    'md': $breakpoint-md,
+    'lg': $breakpoint-lg,
+    'xl': $breakpoint-xl,
+    'xxl': $breakpoint-xxl
+  );
+  
+  @return map-get($breakpoint-scale, $key);
+}
+
+// 响应式值
+@function responsive-value($values) {
+  $result: null;
+  
+  @if map-has-key($values, 'base') {
+    $result: map-get($values, 'base');
+  }
+  
+  @if map-has-key($values, 'sm') {
+    $result: append($result, unquote('(min-width: #{$breakpoint-sm}) #{map-get($values, 'sm')}'), comma);
+  }
+  
+  @if map-has-key($values, 'md') {
+    $result: append($result, unquote('(min-width: #{$breakpoint-md}) #{map-get($values, 'md')}'), comma);
+  }
+  
+  @if map-has-key($values, 'lg') {
+    $result: append($result, unquote('(min-width: #{$breakpoint-lg}) #{map-get($values, 'lg')}'), comma);
+  }
+  
+  @if map-has-key($values, 'xl') {
+    $result: append($result, unquote('(min-width: #{$breakpoint-xl}) #{map-get($values, 'xl')}'), comma);
+  }
+  
+  @return $result;
+}
+
+// 动画函数
+// ===========================================
+
+// 获取动画时长
+@function animation-duration($key) {
+  $duration-scale: (
+    'fast': $animation-duration-fast,
+    'normal': $animation-duration-normal,
+    'slow': $animation-duration-slow
+  );
+  
+  @return map-get($duration-scale, $key);
+}
+
+// 获取动画缓动
+@function animation-easing($key) {
+  $easing-scale: (
+    'linear': $animation-easing-linear,
+    'ease': $animation-easing-ease,
+    'ease-in': $animation-easing-ease-in,
+    'ease-out': $animation-easing-ease-out,
+    'ease-in-out': $animation-easing-ease-in-out
+  );
+  
+  @return map-get($easing-scale, $key);
+}
+
+// 数学函数
+// ===========================================
+
+// 计算百分比
+@function percentage($value) {
+  @return $value * 100%;
+}
+
+// 计算比值
+@function ratio($numerator, $denominator) {
+  @return $numerator / $denominator;
+}
+
+// 计算最大值
+@function max($numbers...) {
+  $max: null;
+  
+  @each $number in $numbers {
+    @if $max == null or $number > $max {
+      $max: $number;
+    }
+  }
+  
+  @return $max;
+}
+
+// 计算最小值
+@function min($numbers...) {
+  $min: null;
+  
+  @each $number in $numbers {
+    @if $min == null or $number < $min {
+      $min: $number;
+    }
+  }
+  
+  @return $min;
+}
+
+// 计算绝对值
+@function abs($value) {
+  @if $value < 0 {
+    @return -$value;
+  }
+  @return $value;
+}
+
+// 字符串函数
+// ===========================================
+
+// 字符串替换
+@function str-replace($string, $search, $replace: '') {
+  $index: str-index($string, $search);
+  
+  @if $index {
+    @return str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+  }
+  
+  @return $string;
+}
+
+// 单位转换函数
+// ===========================================
+
+// 转换为rem
+@function to-rem($value, $base: 16) {
+  @if unit($value) == 'px' {
+    @return $value / $base * 1rem;
+  }
+  @return $value;
+}
+
+// 转换为em
+@function to-em($value, $base: 16) {
+  @if unit($value) == 'px' {
+    @return $value / $base * 1em;
+  }
+  @return $value;
+}
+
+// 移除单位
+@function strip-unit($value) {
+  @return $value / ($value * 0 + 1);
+}
+
+// 工具函数
+// ===========================================
+
+// 获取地图值
+@function map-get-deep($map, $keys...) {
+  $result: $map;
+  
+  @each $key in $keys {
+    @if type-of($result) == map {
+      $result: map-get($result, $key);
+    } @else {
+      @return null;
+    }
+  }
+  
+  @return $result;
+}
+
+// 检查值是否存在
+@function has-value($value) {
+  @return $value != null and $value != '' and $value != false;
+}
+
+// 获取默认值
+@function default-value($value, $default) {
+  @if has-value($value) {
+    @return $value;
+  }
+  @return $default;
+}
+
+// 平台检测函数
+// ===========================================
+
+// 检查是否为微信小程序
+@function is-weapp() {
+  @return $platform-weapp;
+}
+
+// 检查是否为支付宝小程序
+@function is-alipay() {
+  @return $platform-alipay;
+}
+
+// 检查是否为H5
+@function is-h5() {
+  @return $platform-h5;
+}
+
+// 检查是否为React Native
+@function is-rn() {
+  @return $platform-rn;
+}
+
+// 样式生成函数
+// ===========================================
+
+// 生成CSS变量
+@function css-variable($name, $value) {
+  @return var(--#{$name}, #{$value});
+}
+
+// 生成响应式CSS
+@function responsive-css($property, $values) {
+  $result: null;
+  
+  @each $breakpoint, $value in $values {
+    @if $breakpoint == 'base' {
+      $result: '#{$property}: #{$value};';
+    } @else {
+      $result: $result + ' @media (min-width: #{breakpoint($breakpoint)}) { #{$property}: #{$value}; }';
+    }
+  }
+  
+  @return $result;
+}
+
+// 颜色变体生成器
+@function color-variants($base-color, $variants: 5) {
+  $result: ();
+  
+  @for $i from 1 through $variants {
+    $lightness: lightness($base-color);
+    $adjustment: ($i - 3) * 10%;
+    
+    @if $i < 3 {
+      $result: map-merge($result, (
+        'lighter-#{$i}': lighten($base-color, abs($adjustment))
+      ));
+    } @else if $i > 3 {
+      $result: map-merge($result, (
+        'darker-#{$i - 2}': darken($base-color, abs($adjustment))
+      ));
+    } @else {
+      $result: map-merge($result, (
+        'base': $base-color
+      ));
+    }
+  }
+  
+  @return $result;
+}
+
+// 渐变生成器
+@function gradient($direction, $colors) {
+  $gradient: 'linear-gradient(#{$direction}';
+  
+  @each $color in $colors {
+    $gradient: $gradient + ', #{$color}';
+  }
+  
+  @return $gradient + ')';
+}
+
+// 网格生成器
+@function grid-template($columns, $gap: null) {
+  $template: 'repeat(#{$columns}, 1fr)';
+  
+  @if $gap {
+    $template: $template + ' / #{$gap}';
+  }
+  
+  @return $template;
+}
+
+// 阴影生成器
+@function shadow-generator($x, $y, $blur, $color, $spread: null) {
+  @if $spread {
+    @return #{$x} #{$y} #{$blur} #{$spread} #{$color};
+  }
+  @return #{$x} #{$y} #{$blur} #{$color};
+}

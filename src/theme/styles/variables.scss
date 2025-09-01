@@ -1,0 +1,287 @@
+/**
+ * Taro-Uno UI 样式变量
+ * 定义全局样式变量和常量
+ */
+
+// ==================== 颜色变量 ====================
+
+// 主色调
+$primary-color: #0ea5e9;
+$secondary-color: #6b7280;
+$success-color: #22c55e;
+$warning-color: #f59e0b;
+$error-color: #ef4444;
+$info-color: #3b82f6;
+
+// 文本颜色
+$text-color: #111827;
+$text-color-secondary: #6b7280;
+$text-color-disabled: #9ca3af;
+$text-color-inverse: #ffffff;
+
+// 背景颜色
+$background-color: #ffffff;
+$background-card: #ffffff;
+$background-input: #f9fafb;
+$background-mask: rgba(0, 0, 0, 0.5);
+
+// 边框颜色
+$border-color: #e5e7eb;
+$border-color-light: #f3f4f6;
+$border-color-focus: #0ea5e9;
+
+// 阴影颜色
+$shadow-color: rgba(0, 0, 0, 0.1);
+$shadow-color-light: rgba(0, 0, 0, 0.05);
+
+// 特殊颜色
+$brand-color: #0ea5e9;
+$accent-color: #f59e0b;
+$link-color: #0ea5e9;
+$divider-color: #e5e7eb;
+
+// ==================== 间距变量 ====================
+
+// 基础间距
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+$spacing-xxl: 48px;
+
+// 组件间距
+$padding: $spacing-md;
+$margin: $spacing-md;
+$gap: $spacing-md;
+
+// ==================== 字体变量 ====================
+
+// 字体族
+$font-family-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+$font-family-serif: 'Georgia', 'Cambria', 'Times New Roman', 'Times', serif;
+$font-family-mono: 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
+$font-family-heading: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', sans-serif;
+
+// 字体大小
+$font-size-xs: 20px;
+$font-size-sm: 24px;
+$font-size-base: 28px;
+$font-size-lg: 32px;
+$font-size-xl: 36px;
+$font-size-2xl: 40px;
+$font-size-3xl: 48px;
+$font-size-4xl: 56px;
+$font-size-5xl: 64px;
+
+// 字体粗细
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+// 行高
+$line-height-tight: 1.25;
+$line-height-normal: 1.5;
+$line-height-relaxed: 1.75;
+$line-height-loose: 2.0;
+
+// 字母间距
+$letter-spacing-tight: -0.025em;
+$letter-spacing-normal: 0;
+$letter-spacing-wide: 0.025em;
+
+// ==================== 边框圆角变量 ====================
+
+$border-radius-none: 0;
+$border-radius-sm: 4px;
+$border-radius-md: 8px;
+$border-radius-lg: 12px;
+$border-radius-xl: 16px;
+$border-radius-full: 9999px;
+$border-radius-circle: 50%;
+
+// ==================== 阴影变量 ====================
+
+$shadow-none: none;
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+$shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+$shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+
+// ==================== 动画变量 ====================
+
+// 动画时长
+$animation-duration-fast: 150ms;
+$animation-duration-normal: 300ms;
+$animation-duration-slow: 500ms;
+
+// 动画缓动函数
+$animation-easing-linear: linear;
+$animation-easing-ease: ease;
+$animation-easing-ease-in: ease-in;
+$animation-easing-ease-out: ease-out;
+$animation-easing-ease-in-out: ease-in-out;
+
+// ==================== 断点变量 ====================
+
+$breakpoint-xs: 0;
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;
+$breakpoint-xxl: 1536px;
+
+// ==================== 组件变量 ====================
+
+// 按钮变量
+$button-height-xs: 56px;
+$button-height-sm: 64px;
+$button-height-md: 72px;
+$button-height-lg: 80px;
+$button-height-xl: 88px;
+
+$button-font-size-xs: 20px;
+$button-font-size-sm: 24px;
+$button-font-size-md: 28px;
+$button-font-size-lg: 32px;
+$button-font-size-xl: 36px;
+
+$button-padding-xs: 8px 16px;
+$button-padding-sm: 12px 20px;
+$button-padding-md: 16px 24px;
+$button-padding-lg: 20px 32px;
+$button-padding-xl: 24px 40px;
+
+$button-border-radius-xs: 4px;
+$button-border-radius-sm: 6px;
+$button-border-radius-md: 8px;
+$button-border-radius-lg: 10px;
+$button-border-radius-xl: 12px;
+
+// 输入框变量
+$input-height: 72px;
+$input-padding: 16px;
+$input-border-width: 1px;
+$input-border-radius: 8px;
+$input-font-size: 28px;
+
+// 卡片变量
+$card-padding: 24px;
+$card-border-radius: 12px;
+$card-shadow: $shadow-md;
+$card-background: $background-card;
+
+// ==================== Z-index 变量 ====================
+
+$z-index-dropdown: 1000;
+$z-index-sticky: 1020;
+$z-index-fixed: 1030;
+$z-index-modal: 1040;
+$z-index-popover: 1050;
+$z-index-tooltip: 1060;
+
+// ==================== 过渡变量 ====================
+
+$transition-base: all 300ms ease-in-out;
+$transition-fast: all 150ms ease-in-out;
+$transition-slow: all 500ms ease-in-out;
+
+// ==================== CSS 自定义属性 ====================
+
+:root {
+  // 颜色
+  --primary-color: #{$primary-color};
+  --secondary-color: #{$secondary-color};
+  --success-color: #{$success-color};
+  --warning-color: #{$warning-color};
+  --error-color: #{$error-color};
+  --info-color: #{$info-color};
+  
+  --text-color: #{$text-color};
+  --text-color-secondary: #{$text-color-secondary};
+  --text-color-disabled: #{$text-color-disabled};
+  --text-color-inverse: #{$text-color-inverse};
+  
+  --background-color: #{$background-color};
+  --background-card: #{$background-card};
+  --background-input: #{$background-input};
+  --background-mask: #{$background-mask};
+  
+  --border-color: #{$border-color};
+  --border-color-light: #{$border-color-light};
+  --border-color-focus: #{$border-color-focus};
+  
+  --shadow-color: #{$shadow-color};
+  --shadow-color-light: #{$shadow-color-light};
+  
+  --brand-color: #{$brand-color};
+  --accent-color: #{$accent-color};
+  --link-color: #{$link-color};
+  --divider-color: #{$divider-color};
+  
+  // 间距
+  --spacing-xs: #{$spacing-xs};
+  --spacing-sm: #{$spacing-sm};
+  --spacing-md: #{$spacing-md};
+  --spacing-lg: #{$spacing-lg};
+  --spacing-xl: #{$spacing-xl};
+  --spacing-xxl: #{$spacing-xxl};
+  
+  // 字体
+  --font-size-xs: #{$font-size-xs};
+  --font-size-sm: #{$font-size-sm};
+  --font-size-base: #{$font-size-base};
+  --font-size-lg: #{$font-size-lg};
+  --font-size-xl: #{$font-size-xl};
+  --font-size-2xl: #{$font-size-2xl};
+  --font-size-3xl: #{$font-size-3xl};
+  --font-size-4xl: #{$font-size-4xl};
+  --font-size-5xl: #{$font-size-5xl};
+  
+  // 边框圆角
+  --border-radius-sm: #{$border-radius-sm};
+  --border-radius-md: #{$border-radius-md};
+  --border-radius-lg: #{$border-radius-lg};
+  --border-radius-xl: #{$border-radius-xl};
+  
+  // 阴影
+  --shadow-sm: #{$shadow-sm};
+  --shadow-md: #{$shadow-md};
+  --shadow-lg: #{$shadow-lg};
+  --shadow-xl: #{$shadow-xl};
+  
+  // 动画
+  --animation-duration-fast: #{$animation-duration-fast};
+  --animation-duration-normal: #{$animation-duration-normal};
+  --animation-duration-slow: #{$animation-duration-slow};
+  
+  // 过渡
+  --transition-base: #{$transition-base};
+  --transition-fast: #{$transition-fast};
+  --transition-slow: #{$transition-slow};
+}
+
+// 暗色主题
+[data-theme="dark"] {
+  --text-color: #f9fafb;
+  --text-color-secondary: #d1d5db;
+  --text-color-disabled: #6b7280;
+  --text-color-inverse: #111827;
+  
+  --background-color: #111827;
+  --background-card: #1f2937;
+  --background-input: #374151;
+  --background-mask: rgba(0, 0, 0, 0.8);
+  
+  --border-color: #374151;
+  --border-color-light: #4b5563;
+  
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --shadow-color-light: rgba(0, 0, 0, 0.1);
+  
+  --divider-color: #374151;
+}
