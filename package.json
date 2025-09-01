@@ -1,40 +1,115 @@
 {
   "name": "taro-uno-ui",
-  "private": true,
   "version": "0.1.0",
   "description": "基于Taro的多端UI组件库",
-  "workspaces": [
-    "packages/*"
+  "type": "module",
+  "main": "./dist/taro-uno-ui.cjs.js",
+  "module": "./dist/taro-uno-ui.es.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/taro-uno-ui.es.js",
+      "require": "./dist/taro-uno-ui.cjs.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
   ],
   "scripts": {
-    "bootstrap": "npm  run bootstrap",
-    "dev": "npm run --parallel dev",
-    "build": "npm run build",
-    "test": "npm run test",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "clean": "npm run clean",
-    "publish": "npm run publish",
+    "dev": "vite",
+    "build": "vite build",
+    "build:lib": "vite build --mode lib",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "test:ui": "vitest --ui",
+    "lint": "eslint . --ext .ts,.tsx --fix",
+    "lint:style": "stylelint \"src/**/*.scss\" --fix",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "clean": "rm -rf dist .vite coverage",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
-    "docs:serve": "vitepress serve docs"
+    "docs:serve": "vitepress serve docs",
+    "prepare": "husky install",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "changeset publish"
   },
-  "devDependencies": {
-    "@tarojs/cli": "^3.6.0",
+  "dependencies": {
     "@tarojs/components": "^3.6.0",
     "@tarojs/taro": "^3.6.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.21.8",
+    "@babel/preset-env": "^7.21.5",
+    "@babel/preset-react": "^7.18.6",
+    "@babel/preset-typescript": "^7.21.5",
+    "@changesets/cli": "^2.26.0",
+    "@playwright/test": "^1.33.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@tarojs/cli": "^3.6.0",
     "@types/node": "^18.15.11",
     "@types/react": "^18.0.33",
+    "@types/react-dom": "^18.0.11",
     "@typescript-eslint/eslint-plugin": "^5.57.1",
     "@typescript-eslint/parser": "^5.57.1",
+    "@vitejs/plugin-react": "^4.0.0",
+    "@vitest/coverage-v8": "^0.30.1",
+    "@vitest/ui": "^0.30.1",
+    "autoprefixer": "^10.4.14",
     "eslint": "^8.38.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "husky": "^8.0.3",
+    "jsdom": "^22.0.0",
+    "lint-staged": "^13.2.2",
+    "postcss": "^8.4.23",
     "prettier": "^2.8.7",
+    "rollup": "^3.20.2",
+    "rollup-plugin-dts": "^5.3.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-terser": "^7.0.2",
+    "sass": "^1.62.1",
     "stylelint": "^15.4.0",
     "stylelint-config-standard": "^32.0.0",
+    "tailwindcss": "^3.3.2",
     "typescript": "^5.0.4",
-    "vitepress": "^1.0.0-rc.44"
+    "vite": "^4.3.3",
+    "vite-plugin-dts": "^2.3.0",
+    "vitepress": "^1.0.0-rc.44",
+    "vitest": "^0.30.1"
+  },
+  "peerDependencies": {
+    "@tarojs/taro": ">=3.6.0",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ],
+    "*.{scss,css}": [
+      "stylelint --fix"
+    ]
   },
   "engines": {
     "node": ">=14.0.0"

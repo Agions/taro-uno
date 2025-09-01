@@ -342,13 +342,6 @@ const { metrics } = usePerformance()
 
 本项目采用 [MIT 许可证](./LICENSE)。
 
-## 📞 联系我们
-
-- **GitHub**: [github.com/taro-uno/ui](https://github.com/taro-uno/ui)
-- **Issues**: [提交问题](https://github.com/taro-uno/ui/issues)
-- **文档**: [taro-uno.com](https://taro-uno.com)
-- **邮箱**: [dev@taro-uno.com](mailto:dev@taro-uno.com)
-
 ---
 
 <div align="center">

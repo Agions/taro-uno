@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { resolve } from 'path'
+import dts from 'vite-plugin-dts'
+import { paths, aliases, buildConfig } from './configs/shared/config'
 
 export default defineConfig(({ mode }) => {
   const isProduction = mode === 'production'
@@ -9,44 +10,23 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react({
         jsxRuntime: 'automatic'
+      }),
+      dts({
+        insertTypesEntry: true,
+        copyDtsFiles: true,
+        tsconfigPath: './tsconfig.json',
       })
     ],
     resolve: {
-      alias: {
-        '@': resolve(__dirname, 'src'),
-        '@components': resolve(__dirname, 'src/components'),
-        '@utils': resolve(__dirname, 'src/utils'),
-        '@theme': resolve(__dirname, 'src/theme'),
-        '@types': resolve(__dirname, 'src/types'),
-        '@hooks': resolve(__dirname, 'src/hooks')
-      }
+      alias: aliases
     },
     build: {
       target: 'es2015',
-      lib: {
-        entry: resolve(__dirname, 'src/components/index.tsx'),
-        name: 'TaroUnoUI',
-        fileName: (format: 'es' | 'umd' | 'cjs') => `taro-uno-ui.${format}.js`,
-        formats: ['es', 'umd', 'cjs']
-      },
+      lib: buildConfig.lib,
       rollupOptions: {
-        external: [
-          'react',
-          'react-dom',
-          '@tarojs/taro',
-          '@tarojs/components',
-          '@tarojs/runtime',
-          '@tarojs/helper'
-        ],
+        external: buildConfig.external,
         output: {
-          globals: {
-            react: 'React',
-            'react-dom': 'ReactDOM',
-            '@tarojs/taro': 'Taro',
-            '@tarojs/components': 'TaroComponents',
-            '@tarojs/runtime': 'TaroRuntime',
-            '@tarojs/helper': 'TaroHelper'
-          }
+          globals: buildConfig.globals,
         }
       },
       sourcemap: isProduction ? 'hidden' : true,
@@ -60,14 +40,13 @@ export default defineConfig(({ mode }) => {
       chunkSizeWarningLimit: 1000
     },
     optimizeDeps: {
-      include: [
-        'react',
-        'react-dom',
-        '@tarojs/taro',
-        '@tarojs/components',
-        '@tarojs/runtime',
-        '@tarojs/helper'
-      ]
+      include: buildConfig.external
+    },
+    server: {
+      port: 3000,
+      host: true,
+      open: true,
+      cors: true,
     }
   }
 })
