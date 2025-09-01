@@ -55,7 +55,7 @@
 npm install -g pnpm
 
 # 克隆项目
-git clone https://github.com/taro-uno/ui.git
+git clone https://github.com/agions/taro-uno.git
 
 # 安装依赖
 cd taro-uno
@@ -353,8 +353,7 @@ const { metrics } = usePerformance()
 
 <div align="center">
 
-**让多端开发更简单** | [开始使用](#-快速开始) • [查看文档](https://taro-uno.com) • [加入社区](https://github.com/taro-uno/ui/discussions)
-
-Made with ❤️ by Taro Uno Team
+**让多端开发更简单** 
+Made with ❤️ by Agions
 
 </div>
