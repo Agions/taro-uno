@@ -6,8 +6,18 @@ import type { FormProps, FormRef, FormRule } from '../Form.types'
 // Mock styles
 vi.mock('../Form.styles', () => ({
   formStyles: {
-    getStyle: () => ({}),
-    getClassName: () => '',
+    getStyle: (props: any) => ({
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: '16px',
+      padding: '16px',
+      fontSize: '28px',
+      boxSizing: 'border-box',
+      width: '100%',
+      ...props.style
+    }),
+    getClassName: () => 'taro-uno-form taro-uno-form--horizontal taro-uno-form--md',
     getFormStyle: () => ({}),
     getFormItemStyle: () => ({}),
     getLabelStyle: () => ({}),
@@ -64,10 +74,10 @@ describe('Form Component', () => {
     render(<Form ref={formRef} />)
 
     await act(async () => {
-      formRef.current?.setFieldsValue({ username: 'testuser' })
+      formRef.current?.setValues({ username: 'testuser' })
     })
 
-    expect(formRef.current?.getFieldsValue()).toEqual(expect.objectContaining({
+    expect(formRef.current?.getValues()).toEqual(expect.objectContaining({
       username: 'testuser'
     }))
   })
@@ -86,7 +96,7 @@ describe('Form Component', () => {
     const { container } = render(<Form onSubmit={onSubmit} style={customStyle} />)
 
     const formElement = container.firstChild
-    expect(formElement).toHaveStyle({ backgroundColor: '#f0f0f0' })
+    expect((formElement as HTMLElement).style.backgroundColor).toBe('rgb(240, 240, 240)')
   })
 
   it('should support aria attributes', () => {

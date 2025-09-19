@@ -144,15 +144,15 @@
 @mixin flex($direction: row, $justify: null, $align: null, $wrap: null) {
   display: flex;
   flex-direction: $direction;
-  
+
   @if $justify {
     justify-content: $justify;
   }
-  
+
   @if $align {
     align-items: $align;
   }
-  
+
   @if $wrap {
     flex-wrap: $wrap;
   }
@@ -161,15 +161,15 @@
 // Grid 布局
 @mixin grid($columns: null, $gap: null, $rows: null) {
   display: grid;
-  
+
   @if $columns {
     grid-template-columns: $columns;
   }
-  
+
   @if $rows {
     grid-template-rows: $rows;
   }
-  
+
   @if $gap {
     gap: $gap;
   }
@@ -178,19 +178,19 @@
 // 定位混合宏
 @mixin position($type: relative, $top: null, $left: null, $right: null, $bottom: null) {
   position: $type;
-  
+
   @if $top {
     top: $top;
   }
-  
+
   @if $left {
     left: $left;
   }
-  
+
   @if $right {
     right: $right;
   }
-  
+
   @if $bottom {
     bottom: $bottom;
   }
@@ -256,15 +256,15 @@
   @if $size {
     font-size: $size;
   }
-  
+
   @if $weight {
     font-weight: $weight;
   }
-  
+
   @if $line-height {
     line-height: $line-height;
   }
-  
+
   @if $family {
     font-family: $family;
   }
@@ -303,15 +303,15 @@
   @if $width {
     border-width: $width;
   }
-  
+
   @if $style {
     border-style: $style;
   }
-  
+
   @if $color {
     border-color: $color;
   }
-  
+
   @if $radius {
     border-radius: $radius;
   }
@@ -395,7 +395,14 @@
 }
 
 // 动画应用
-@mixin animation($name, $duration: $animation-duration-normal, $easing: $animation-easing-ease, $delay: 0, $fill-mode: forwards, $iteration-count: 1) {
+@mixin animation(
+  $name,
+  $duration: $animation-duration-normal,
+  $easing: $animation-easing-ease,
+  $delay: 0,
+  $fill-mode: forwards,
+  $iteration-count: 1
+) {
   animation: $name $duration $easing $delay $fill-mode $iteration-count;
 }
 
@@ -429,7 +436,7 @@
   transition: $transition-base;
   user-select: none;
   white-space: nowrap;
-  
+
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -461,18 +468,18 @@
 @mixin button-variant($bg-color, $text-color: white, $border-color: null) {
   background-color: $bg-color;
   color: $text-color;
-  
+
   @if $border-color {
     border: 1px solid $border-color;
   }
-  
+
   &:hover {
     background-color: darken($bg-color, 10%);
     @if $border-color {
       border-color: darken($border-color, 10%);
     }
   }
-  
+
   &:active {
     background-color: darken($bg-color, 15%);
     @if $border-color {
@@ -495,17 +502,17 @@
   background-color: $background-color-input;
   color: $text-color;
   transition: $transition-base;
-  
+
   &:focus {
     outline: none;
     border-color: $border-color-focus;
     box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
   }
-  
+
   &::placeholder {
     color: $text-color-disabled;
   }
-  
+
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -542,7 +549,7 @@
   border-radius: $card-border-radius-base;
   border: 1px solid $border-color;
   overflow: hidden;
-  
+
   @include dark-theme {
     background-color: $dark-background-color-card;
     border-color: $dark-border-color;
@@ -676,11 +683,11 @@
   &--#{$state} {
     background-color: $bg-color;
     color: $text-color;
-    
+
     &:hover {
       background-color: darken($bg-color, 10%);
     }
-    
+
     &:active {
       background-color: darken($bg-color, 15%);
     }
@@ -692,7 +699,7 @@
   &--#{$size} {
     width: $width;
     height: $height;
-    
+
     @if $font-size {
       font-size: $font-size;
     }
@@ -739,7 +746,7 @@
   width: 0;
   height: 0;
   border: $size solid transparent;
-  
+
   @if $direction == up {
     border-bottom-color: $color;
   } @else if $direction == down {

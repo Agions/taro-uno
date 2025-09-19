@@ -47,7 +47,8 @@ export interface TextareaRule {
 }
 
 /** 文本域组件属性接口 */
-export interface TextareaProps extends Omit<TextareaNativeProps, 'size' | 'value' | 'onChange' | 'onFocus' | 'onBlur' | 'onInput'> {
+export interface TextareaProps
+  extends Omit<TextareaNativeProps, 'size' | 'onChange' | 'onFocus' | 'onBlur' | 'onInput' | 'dangerouslySetInnerHTML' | 'onTouchStart' | 'prefix'> {
   /** 文本域内容 */
   value?: string;
   /** 默认值（非受控模式） */
@@ -70,6 +71,8 @@ export interface TextareaProps extends Omit<TextareaNativeProps, 'size' | 'value
   clearTrigger?: ClearTrigger;
   /** 最大长度 */
   maxLength?: number;
+  /** 最大长度 (Taro原生属性) */
+  maxlength?: number;
   /** 最小长度 */
   minLength?: number;
   /** 行数 */
@@ -294,7 +297,13 @@ export interface TextareaUtils {
   /** 获取无障碍状态 */
   getAccessibilityState: (props: TextareaProps, status: TextareaStatus) => any;
   /** 调整文本域高度 */
-  adjustTextareaHeight: (element: HTMLTextAreaElement, strategy: AutoHeightStrategy, rows?: number, minRows?: number, maxRows?: number) => void;
+  adjustTextareaHeight: (
+    element: HTMLTextAreaElement,
+    strategy: AutoHeightStrategy,
+    rows?: number,
+    minRows?: number,
+    maxRows?: number,
+  ) => void;
 }
 
 /** 文本域事件接口 */

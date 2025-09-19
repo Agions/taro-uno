@@ -3,8 +3,8 @@
  * 统一配置测试环境和 Mock
  */
 
-import '@testing-library/jest-dom'
-import { vi } from 'vitest'
+import '@testing-library/jest-dom';
+import { vi } from 'vitest';
 
 // Mock Taro API
 const mockTaro = {
@@ -22,8 +22,8 @@ const mockTaro = {
       right: 375,
       bottom: 647,
       width: 375,
-      height: 627,
-    },
+      height: 627
+    }
   })),
   navigateTo: vi.fn(),
   navigateBack: vi.fn(),
@@ -53,15 +53,15 @@ const mockTaro = {
               top: 0,
               left: 0,
               right: 100,
-              bottom: 100,
-            },
-          ])
-        }),
-      })),
-    })),
+              bottom: 100
+            }
+          ]);
+        })
+      }))
+    }))
   })),
   nextTick: vi.fn((callback) => {
-    setTimeout(callback, 0)
+    setTimeout(callback, 0);
   }),
   ENV_TYPE: {
     WEAPP: 'WEAPP',
@@ -71,10 +71,10 @@ const mockTaro = {
     ALIPAY: 'ALIPAY',
     TT: 'TT',
     QQ: 'QQ',
-    JD: 'JD',
+    JD: 'JD'
   },
-  getEnv: vi.fn(() => 'WEB'),
-}
+  getEnv: vi.fn(() => 'WEB')
+};
 
 // Mock Taro components
 const mockTaroComponents = {
@@ -123,30 +123,30 @@ const mockTaroComponents = {
   AdContentPage: 'div',
   CustomWrapper: 'div',
   Embed: 'iframe',
-  ITouchEvent: {},
-}
+  ITouchEvent: {}
+};
 
 // 全局 Mock
-vi.mock('@tarojs/components', () => mockTaroComponents)
+vi.mock('@tarojs/components', () => mockTaroComponents);
 vi.mock('@tarojs/components/types/common', () => ({
-  ITouchEvent: {},
-}))
+  ITouchEvent: {}
+}));
 
-vi.mock('@tarojs/taro', () => mockTaro)
+vi.mock('@tarojs/taro', () => mockTaro);
 
 // Mock IntersectionObserver
 global.IntersectionObserver = vi.fn(() => ({
   observe: vi.fn(),
   unobserve: vi.fn(),
-  disconnect: vi.fn(),
-}))
+  disconnect: vi.fn()
+}));
 
 // Mock ResizeObserver
 global.ResizeObserver = vi.fn(() => ({
   observe: vi.fn(),
   unobserve: vi.fn(),
-  disconnect: vi.fn(),
-}))
+  disconnect: vi.fn()
+}));
 
 // Mock matchMedia
 Object.defineProperty(window, 'matchMedia', {
@@ -159,44 +159,44 @@ Object.defineProperty(window, 'matchMedia', {
     removeListener: vi.fn(),
     addEventListener: vi.fn(),
     removeEventListener: vi.fn(),
-    dispatchEvent: vi.fn(),
-  })),
-})
+    dispatchEvent: vi.fn()
+  }))
+});
 
 // Mock getComputedStyle
 Object.defineProperty(window, 'getComputedStyle', {
   value: vi.fn(() => ({
     getPropertyValue: vi.fn(() => ''),
     fontSize: '16px',
-    lineHeight: '1.5',
-  })),
-})
+    lineHeight: '1.5'
+  }))
+});
 
 // Mock scrollTo
 Object.defineProperty(window, 'scrollTo', {
-  value: vi.fn(),
-})
+  value: vi.fn()
+});
 
 // Mock requestAnimationFrame
 global.requestAnimationFrame = vi.fn((callback) => {
-  setTimeout(callback, 16)
-  return 1
-})
+  setTimeout(callback, 16);
+  return 1;
+});
 
-global.cancelAnimationFrame = vi.fn()
+global.cancelAnimationFrame = vi.fn();
 
 // Mock console methods in test environment
 if (process.env.NODE_ENV === 'test') {
   global.console = {
     ...console,
     warn: vi.fn(),
-    error: vi.fn(),
-  }
+    error: vi.fn()
+  };
 }
 
 // 设置全局测试环境变量
-process.env.NODE_ENV = 'test'
-process.env.TARO_ENV = 'h5'
+process.env.NODE_ENV = 'test';
+process.env.TARO_ENV = 'h5';
 
 // Mock @taro-uno/core package
 vi.mock('@taro-uno/core', () => ({
@@ -214,14 +214,14 @@ vi.mock('@taro-uno/core', () => ({
       border: '#d9d9d9',
       divider: '#f0f0f0',
       background: '#ffffff',
-      backgroundSecondary: '#fafafa',
+      backgroundSecondary: '#fafafa'
     },
     spacing: {
       xs: 4,
       sm: 8,
       md: 16,
       lg: 24,
-      xl: 32,
+      xl: 32
     },
     typography: {
       fontSize: {
@@ -232,13 +232,13 @@ vi.mock('@taro-uno/core', () => ({
         xl: 20,
         '2xl': 24,
         '3xl': 30,
-        '4xl': 36,
+        '4xl': 36
       },
       lineHeight: {
         tight: 1.25,
         normal: 1.5,
-        relaxed: 1.75,
-      },
+        relaxed: 1.75
+      }
     },
     borderRadius: {
       none: 0,
@@ -246,14 +246,14 @@ vi.mock('@taro-uno/core', () => ({
       md: 4,
       lg: 8,
       xl: 12,
-      full: 9999,
+      full: 9999
     },
     shadows: {
       sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
       md: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
       lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-      xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
-    },
+      xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1)'
+    }
   })),
   useThemeVariables: vi.fn(() => ({})),
   useThemeMode: vi.fn(() => 'light'),
@@ -262,7 +262,7 @@ vi.mock('@taro-uno/core', () => ({
   useThemeTypography: vi.fn(() => ({})),
   useThemeBorderRadius: vi.fn(() => ({})),
   useThemeShadows: vi.fn(() => ({})),
-  
+
   // 无障碍性相关 Hooks
   useFocusManager: vi.fn(() => ({
     focusedIndex: 0,
@@ -270,50 +270,50 @@ vi.mock('@taro-uno/core', () => ({
     focusNext: vi.fn(),
     focusPrevious: vi.fn(),
     focusFirst: vi.fn(),
-    focusLast: vi.fn(),
+    focusLast: vi.fn()
   })),
   useScreenReader: vi.fn(() => ({
     announce: vi.fn(),
-    isScreenReaderActive: false,
+    isScreenReaderActive: false
   })),
   useKeyboardNavigation: vi.fn(() => ({
     handleKeyDown: vi.fn(),
     focusedIndex: 0,
     setFocusedIndex: vi.fn(),
     navigateNext: vi.fn(),
-    navigatePrevious: vi.fn(),
+    navigatePrevious: vi.fn()
   })),
-  
+
   // 性能监控相关 Hooks
   usePerformanceMonitor: vi.fn(() => ({
     metrics: {},
     startMeasure: vi.fn(),
     endMeasure: vi.fn(),
-    getMetrics: vi.fn(() => ({})),
+    getMetrics: vi.fn(() => ({}))
   })),
   usePerformanceOptimizer: vi.fn(() => ({
     optimize: vi.fn(),
-    shouldOptimize: true,
+    shouldOptimize: true
   })),
   usePerformanceMark: vi.fn(() => ({
     mark: vi.fn(),
     measure: vi.fn(),
-    getMarks: vi.fn(() => []),
+    getMarks: vi.fn(() => [])
   })),
   useIntersectionObserver: vi.fn(() => ({
     isIntersecting: false,
     entry: null,
     observe: vi.fn(),
-    unobserve: vi.fn(),
+    unobserve: vi.fn()
   })),
-  
+
   // 无障碍性相关 Hooks
   useAccessibility: vi.fn(() => ({
     generateId: vi.fn((prefix) => `${prefix}-${Math.random().toString(36).substr(2, 9)}`),
     announce: vi.fn(),
-    isScreenReaderActive: false,
+    isScreenReaderActive: false
   })),
-  
+
   // 导出默认对象
   default: {
     useTheme: vi.fn(),
@@ -323,14 +323,14 @@ vi.mock('@taro-uno/core', () => ({
     usePerformanceMonitor: vi.fn(),
     usePerformanceOptimizer: vi.fn(),
     usePerformanceMark: vi.fn(),
-    useIntersectionObserver: vi.fn(),
-  },
-}))
+    useIntersectionObserver: vi.fn()
+  }
+}));
 
 // 清理函数
 afterEach(() => {
-  vi.clearAllMocks()
-})
+  vi.clearAllMocks();
+});
 
 // 全局测试超时
-jest.setTimeout(10000)
+jest.setTimeout(10000);

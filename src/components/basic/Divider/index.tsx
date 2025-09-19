@@ -1,4 +1,7 @@
-export { Divider } from './Divider';
+import { DividerComponent } from './Divider';
+
+// 导出组件
+export { DividerComponent, DividerComponent as Divider } from './Divider';
 export type {
   DividerProps,
   DividerRef,
@@ -19,4 +22,4 @@ export type {
 export { dividerStyles } from './Divider.styles';
 
 /** 分割线组件默认导出 */
-export default Divider;
+export default DividerComponent;

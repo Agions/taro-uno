@@ -1,4 +1,4 @@
-import { PlatformDetector } from '@/utils';
+import { PlatformDetector } from '../../../utils';
 import type { ReactNode } from 'react';
 import type { DividerProps, DividerOrientation, DividerType, DividerSize, DividerColor } from './Divider.types';
 
@@ -6,8 +6,8 @@ import type { DividerProps, DividerOrientation, DividerType, DividerSize, Divide
 export class DividerStyles {
   /** 获取平台前缀 */
   private static getPlatformPrefix(): string {
-    const platform = PlatformDetector.getPlatform();
-    return `taro-uno-${platform}-divider`;
+    const platformValue = PlatformDetector.getPlatform();
+    return `taro-uno-${platformValue}-divider`;
   }
 
   /** 尺寸映射 */
@@ -119,15 +119,15 @@ export class DividerStyles {
     const positionStyles = this.POSITION_MAP[position];
 
     // 计算尺寸
-    const calculatedWidth = width ?? (orientation === 'horizontal' ? sizeStyles.width : 'auto');
-    const calculatedHeight = height ?? (orientation === 'vertical' ? sizeStyles.height : 'auto');
-    const calculatedMargin = margin ?? sizeStyles.margin;
+    const calculatedWidth = width ?? (orientation === 'horizontal' ? sizeStyles['width'] : 'auto');
+    const calculatedHeight = height ?? (orientation === 'vertical' ? sizeStyles['height'] : 'auto');
+    const calculatedMargin = margin ?? sizeStyles['margin'];
 
     // 计算边框
     const borderStyle =
       orientation === 'horizontal'
-        ? { borderBottom: `${calculatedHeight}px ${typeStyles.borderStyle} ${colorStyles}` }
-        : { borderRight: `${calculatedWidth}px ${typeStyles.borderStyle} ${colorStyles}` };
+        ? { borderBottom: `${calculatedHeight}px ${typeStyles['borderStyle']} ${colorStyles}` }
+        : { borderRight: `${calculatedWidth}px ${typeStyles['borderStyle']} ${colorStyles}` };
 
     // 处理渐变背景
     const backgroundStyle = gradient
@@ -257,8 +257,8 @@ export class DividerStyles {
         iconPosition === 'center'
           ? `0 ${typeof iconSpacing === 'number' ? `${iconSpacing}px` : iconSpacing}`
           : iconPosition === 'start'
-          ? `0 ${typeof iconSpacing === 'number' ? `${iconSpacing}px` : iconSpacing} 0 0`
-          : `0 0 0 ${typeof iconSpacing === 'number' ? `${iconSpacing}px` : iconSpacing}`,
+            ? `0 ${typeof iconSpacing === 'number' ? `${iconSpacing}px` : iconSpacing} 0 0`
+            : `0 0 0 ${typeof iconSpacing === 'number' ? `${iconSpacing}px` : iconSpacing}`,
     };
 
     return {

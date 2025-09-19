@@ -1,12 +1,7 @@
 import React, { forwardRef, useRef, useState, useEffect, useCallback } from 'react';
 import { Textarea as TaroTextarea, View, Text } from '@tarojs/components';
 import { textareaStyles } from './Textarea.styles';
-import type { 
-  TextareaProps, 
-  TextareaRef, 
-  TextareaStatus,
-  TextareaValidationResult 
-} from './Textarea.types';
+import type { TextareaProps, TextareaRef, TextareaStatus, TextareaValidationResult, TextareaRule } from './Textarea.types';
 
 /** 文本域组件 */
 export const TextareaComponent = forwardRef<TextareaRef, TextareaProps>((props, ref) => {
@@ -119,32 +114,32 @@ export const TextareaComponent = forwardRef<TextareaRef, TextareaProps>((props, 
       }
 
       // 验证必填
-      if (rules?.some((rule) => rule.required && !inputValue.trim())) {
-        const requiredRule = rules.find((rule) => rule.required);
-        return { 
-          valid: false, 
-          message: requiredRule?.message || '此字段为必填项', 
-          value: inputValue, 
-          timestamp: Date.now() 
+      if (rules?.some((rule: TextareaRule) => rule.required && !inputValue.trim())) {
+        const requiredRule = rules.find((rule: TextareaRule) => rule.required);
+        return {
+          valid: false,
+          message: requiredRule?.message || '此字段为必填项',
+          value: inputValue,
+          timestamp: Date.now(),
         };
       }
 
       // 验证长度
       if (minLength !== undefined && inputValue.length < minLength) {
-        return { 
-          valid: false, 
-          message: `最少需要${minLength}个字符`, 
-          value: inputValue, 
-          timestamp: Date.now() 
+        return {
+          valid: false,
+          message: `最少需要${minLength}个字符`,
+          value: inputValue,
+          timestamp: Date.now(),
         };
       }
 
       if (maxLength !== undefined && inputValue.length > maxLength) {
-        return { 
-          valid: false, 
-          message: `最多允许${maxLength}个字符`, 
-          value: inputValue, 
-          timestamp: Date.now() 
+        return {
+          valid: false,
+          message: `最多允许${maxLength}个字符`,
+          value: inputValue,
+          timestamp: Date.now(),
         };
       }
 
@@ -153,32 +148,32 @@ export const TextareaComponent = forwardRef<TextareaRef, TextareaProps>((props, 
         for (let i = 0; i < rules.length; i++) {
           const rule = rules[i];
           if (rule.pattern && !rule.pattern.test(inputValue)) {
-            return { 
-              valid: false, 
-              message: rule.message || '输入格式不正确', 
+            return {
+              valid: false,
+              message: rule.message || '输入格式不正确',
               ruleIndex: i,
-              value: inputValue, 
-              timestamp: Date.now() 
+              value: inputValue,
+              timestamp: Date.now(),
             };
           }
           if (rule.validator) {
             const result = await rule.validator(inputValue);
             if (typeof result === 'string') {
-              return { 
-                valid: false, 
-                message: result, 
+              return {
+                valid: false,
+                message: result,
                 ruleIndex: i,
-                value: inputValue, 
-                timestamp: Date.now() 
+                value: inputValue,
+                timestamp: Date.now(),
               };
             }
             if (!result) {
-              return { 
-                valid: false, 
-                message: rule.message || '输入格式不正确', 
+              return {
+                valid: false,
+                message: rule.message || '输入格式不正确',
                 ruleIndex: i,
-                value: inputValue, 
-                timestamp: Date.now() 
+                value: inputValue,
+                timestamp: Date.now(),
               };
             }
           }
@@ -189,19 +184,19 @@ export const TextareaComponent = forwardRef<TextareaRef, TextareaProps>((props, 
       if (validator) {
         const result = await validator(inputValue);
         if (typeof result === 'string') {
-          return { 
-            valid: false, 
-            message: result, 
-            value: inputValue, 
-            timestamp: Date.now() 
+          return {
+            valid: false,
+            message: result,
+            value: inputValue,
+            timestamp: Date.now(),
           };
         }
         if (!result) {
-          return { 
-            valid: false, 
-            message: '验证失败', 
-            value: inputValue, 
-            timestamp: Date.now() 
+          return {
+            valid: false,
+            message: '验证失败',
+            value: inputValue,
+            timestamp: Date.now(),
           };
         }
       }
@@ -232,9 +227,9 @@ export const TextareaComponent = forwardRef<TextareaRef, TextareaProps>((props, 
 
     const element = nativeTextareaRef.current;
     const previousHeight = element.offsetHeight;
-    
-    textareaStyles.adjustTextareaHeight(element, autoHeightStrategy, rows, minRows, maxRows);
-    
+
+    textareaStyles['adjustTextareaHeight'](element, autoHeightStrategy, rows, minRows, maxRows);
+
     const newHeight = element.offsetHeight;
     if (previousHeight !== newHeight) {
       setCurrentHeight(newHeight);
@@ -454,11 +449,24 @@ export const TextareaComponent = forwardRef<TextareaRef, TextareaProps>((props, 
       },
       getValidationResult: () => validationResult,
     }),
-    [value, isControlled, internalDisabled, internalReadonly, validateInput, handleClear, defaultValue, finalStatus, adjustTextareaHeight, currentHeight, validationResult, onValidate],
+    [
+      value,
+      isControlled,
+      internalDisabled,
+      internalReadonly,
+      validateInput,
+      handleClear,
+      defaultValue,
+      finalStatus,
+      adjustTextareaHeight,
+      currentHeight,
+      validationResult,
+      onValidate,
+    ],
   );
 
   // 生成文本域样式
-  const textareaStyle = textareaStyles.getStyle({
+  const textareaStyle = textareaStyles['getStyle']({
     size,
     variant,
     status: finalStatus,
@@ -469,7 +477,7 @@ export const TextareaComponent = forwardRef<TextareaRef, TextareaProps>((props, 
   });
 
   // 生成文本域类名
-  const textareaClassName = textareaStyles.getClassName({
+  const textareaClassName = textareaStyles['getClassName']({
     size,
     variant,
     status: finalStatus,
@@ -484,7 +492,7 @@ export const TextareaComponent = forwardRef<TextareaRef, TextareaProps>((props, 
 
   // 生成自动调整高度样式
   const autoHeightStyle = autoHeight
-    ? textareaStyles.getAutoHeightStyle({
+    ? textareaStyles['getAutoHeightStyle']({
         size,
         minRows,
         maxRows,
@@ -492,26 +500,26 @@ export const TextareaComponent = forwardRef<TextareaRef, TextareaProps>((props, 
     : {};
 
   // 无障碍状态
-  const finalAccessibilityState = {
+  const finalAccessibilityState = JSON.stringify({
     disabled: internalDisabled,
     readonly: internalReadonly,
-    required: rules?.some((rule) => rule.required),
+    required: rules?.some((rule: TextareaRule) => rule.required),
     invalid: validationResult?.valid === false,
     multiline: true,
     ...accessibilityState,
-  };
+  });
 
   return (
-    <View 
+    <View
       className={containerClassName}
-      style={textareaStyles.getContainerStyle({ size, block, style: containerStyle })}
+      style={textareaStyles['getContainerStyle']({ size, block, style: containerStyle })}
     >
       {/* 标签 */}
-      {label && <Text style={textareaStyles.getLabelStyle({ size, disabled: internalDisabled })}>{label}</Text>}
+      {label && <Text style={textareaStyles['getLabelStyle']({ size, disabled: internalDisabled })}>{label}</Text>}
 
       {/* 文本域包装器 */}
       <View
-        style={textareaStyles.getWrapperStyle({
+        style={textareaStyles['getWrapperStyle']({
           size,
           status: finalStatus,
           disabled: internalDisabled,
@@ -522,7 +530,7 @@ export const TextareaComponent = forwardRef<TextareaRef, TextareaProps>((props, 
         })}
       >
         {/* 前缀 */}
-        {prefix && <View style={textareaStyles.getPrefixStyle({ size, disabled: internalDisabled })}>{prefix}</View>}
+        {prefix && <View style={textareaStyles['getPrefixStyle']({ size, disabled: internalDisabled })}>{prefix}</View>}
 
         {/* 文本域 */}
         <TaroTextarea
@@ -532,8 +540,8 @@ export const TextareaComponent = forwardRef<TextareaRef, TextareaProps>((props, 
           value={value}
           placeholder={placeholder}
           disabled={internalDisabled}
-          readonly={internalReadonly}
-          maxLength={maxLength}
+          readOnly={internalReadonly}
+          maxlength={maxLength}
           autoFocus={autoFocus}
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -544,49 +552,42 @@ export const TextareaComponent = forwardRef<TextareaRef, TextareaProps>((props, 
           aria-label={accessibilityLabel}
           aria-role={accessibilityRole}
           aria-state={finalAccessibilityState}
-          {...restProps}
+          {...(restProps as any)}
         />
 
         {/* 后缀 */}
-        {suffix && <View style={textareaStyles.getSuffixStyle({ size, disabled: internalDisabled })}>{suffix}</View>}
+        {suffix && <View style={textareaStyles['getSuffixStyle']({ size, disabled: internalDisabled })}>{suffix}</View>}
 
         {/* 清除按钮 */}
         {shouldShowClear() && (
-          <View 
-            style={textareaStyles.getClearButtonStyle({ size })} 
-            onClick={handleClear}
-          >
+          <View style={textareaStyles['getClearButtonStyle']({ size })} onClick={handleClear}>
             <Text>×</Text>
           </View>
         )}
 
         {/* 字符计数 */}
         {(showCount || showWordLimit) && maxLengthToShow && (
-          <View style={textareaStyles.getCounterStyle({ size, position: counterPosition })}>
-            <Text>{currentLength}/{maxLengthToShow}</Text>
+          <View style={textareaStyles['getCounterStyle']({ size, position: counterPosition })}>
+            <Text>
+              {currentLength}/{maxLengthToShow}
+            </Text>
           </View>
         )}
       </View>
 
       {/* 辅助文本 */}
       {helperText && finalStatus === 'normal' && (
-        <Text style={textareaStyles.getHelperTextStyle({ size, status: finalStatus })}>
-          {helperText}
-        </Text>
+        <Text style={textareaStyles['getHelperTextStyle']({ size, status: finalStatus })}>{helperText}</Text>
       )}
 
       {/* 错误文本 */}
       {errorText && finalStatus === 'error' && (
-        <Text style={textareaStyles.getErrorTextStyle({ size })}>
-          {errorText}
-        </Text>
+        <Text style={textareaStyles['getErrorTextStyle']({ size })}>{errorText}</Text>
       )}
 
       {/* 验证结果文本 */}
       {validationResult?.message && finalStatus === 'error' && (
-        <Text style={textareaStyles.getErrorTextStyle({ size })}>
-          {validationResult.message}
-        </Text>
+        <Text style={textareaStyles['getErrorTextStyle']({ size })}>{validationResult.message}</Text>
       )}
     </View>
   );

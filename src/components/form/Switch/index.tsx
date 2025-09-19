@@ -24,6 +24,3 @@ export type {
   SwitchGroupItemProps,
 } from './Switch.types';
 export { switchStyles } from './Switch.styles';
-
-// 默认导出
-export default Switch;

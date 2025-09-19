@@ -1,5 +1,5 @@
-import { useTheme as useThemeContext } from '../theme';
-import type { ThemeConfig, ThemeMode } from '../theme';
+import { useTheme as useThemeContext } from '../theme/ThemeProvider';
+import type { ThemeConfig, ThemeMode } from '../theme/types';
 
 /**
  * 主题管理Hook
@@ -25,7 +25,8 @@ export const useTheme = () => {
    * @returns 间距值(px)
    */
   const getSpacing = (key: keyof ThemeConfig['spacing']): number => {
-    return theme.spacing[key];
+    const value = theme.spacing[key];
+    return typeof value === 'number' ? value : value.md || 8;
   };
 
   /**
@@ -179,7 +180,7 @@ export const useTheme = () => {
   ): React.CSSProperties => {
     const value = typeof spacing === 'number' ? spacing : theme.spacing[spacing];
     return {
-      [property]: `${value}px`,
+      [property]: typeof value === 'number' ? `${value}px` : value,
     };
   };
 

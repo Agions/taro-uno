@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
  * @returns 当前平台类型
  */
 export const usePlatform = () => {
-  const [platform, setPlatform] = useState<string>('');
+  const [platform, setPlatform] = useState < string > ('');
 
   useEffect(() => {
     // @ts-ignore

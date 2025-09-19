@@ -1,7 +1,6 @@
-import { PlatformDetector } from '@/utils';
+import platform from '@/utils';
 import type {
   RadioProps,
-  RadioGroupProps,
   RadioSize,
   RadioStatus,
   RadioVariant,
@@ -13,8 +12,8 @@ import type {
 export class RadioStyles {
   /** 获取平台前缀 */
   private static getPlatformPrefix(): string {
-    const platform = PlatformDetector.getPlatform();
-    return `taro-uno-${platform}-radio`;
+    const platformName = platform.getPlatform();
+    return `taro-uno-${platformName}-radio`;
   }
 
   /** 尺寸映射 */
@@ -35,9 +34,9 @@ export class RadioStyles {
     {
       backgroundColor: string;
       borderColor: string;
-      dotColor: string;
-      checkedBorderColor: string;
-      checkedBackgroundColor: string;
+      '--radio-dot-color': string;
+      '--radio-checked-border-color': string;
+      '--radio-checked-background-color': string;
       textColor: string;
       icon: string;
     }
@@ -45,45 +44,45 @@ export class RadioStyles {
     normal: {
       backgroundColor: '#ffffff',
       borderColor: '#d1d5db',
-      dotColor: '#0ea5e9',
-      checkedBorderColor: '#0ea5e9',
-      checkedBackgroundColor: '#ffffff',
+      '--radio-dot-color': '#0ea5e9',
+      '--radio-checked-border-color': '#0ea5e9',
+      '--radio-checked-background-color': '#ffffff',
       textColor: '#374151',
       icon: '●',
     },
     error: {
       backgroundColor: '#fef2f2',
       borderColor: '#ef4444',
-      dotColor: '#ef4444',
-      checkedBorderColor: '#ef4444',
-      checkedBackgroundColor: '#ffffff',
+      '--radio-dot-color': '#ef4444',
+      '--radio-checked-border-color': '#ef4444',
+      '--radio-checked-background-color': '#ffffff',
       textColor: '#ef4444',
       icon: '●',
     },
     warning: {
       backgroundColor: '#fffbeb',
       borderColor: '#f59e0b',
-      dotColor: '#f59e0b',
-      checkedBorderColor: '#f59e0b',
-      checkedBackgroundColor: '#ffffff',
+      '--radio-dot-color': '#f59e0b',
+      '--radio-checked-border-color': '#f59e0b',
+      '--radio-checked-background-color': '#ffffff',
       textColor: '#f59e0b',
       icon: '●',
     },
     success: {
       backgroundColor: '#f0fdf4',
       borderColor: '#22c55e',
-      dotColor: '#22c55e',
-      checkedBorderColor: '#22c55e',
-      checkedBackgroundColor: '#ffffff',
+      '--radio-dot-color': '#22c55e',
+      '--radio-checked-border-color': '#22c55e',
+      '--radio-checked-background-color': '#ffffff',
       textColor: '#22c55e',
       icon: '●',
     },
     disabled: {
       backgroundColor: '#f9fafb',
       borderColor: '#e5e7eb',
-      dotColor: '#9ca3af',
-      checkedBorderColor: '#e5e7eb',
-      checkedBackgroundColor: '#f9fafb',
+      '--radio-dot-color': '#9ca3af',
+      '--radio-checked-border-color': '#e5e7eb',
+      '--radio-checked-background-color': '#f9fafb',
       textColor: '#9ca3af',
       icon: '●',
     },
@@ -182,12 +181,12 @@ export class RadioStyles {
     const sizeStyles = this.SIZE_MAP[size];
     const statusStyles = this.STATUS_COLORS[status];
 
-    return {
-      width: sizeStyles.size,
-      height: sizeStyles.size,
+    const baseStyle: React.CSSProperties = {
+      width: sizeStyles['size'],
+      height: sizeStyles['size'],
       borderRadius: '50%',
-      backgroundColor: checked ? statusStyles.checkedBackgroundColor : statusStyles.backgroundColor,
-      border: `2px solid ${checked ? statusStyles.checkedBorderColor : statusStyles.borderColor}`,
+      backgroundColor: checked ? statusStyles['--radio-checked-background-color'] : statusStyles['backgroundColor'],
+      border: `2px solid ${checked ? statusStyles['--radio-checked-border-color'] : statusStyles['borderColor']}`,
       opacity: disabled ? 0.5 : 1,
       cursor: disabled ? 'not-allowed' : readonly ? 'default' : 'pointer',
       transition: 'all 0.2s ease-in-out',
@@ -198,6 +197,15 @@ export class RadioStyles {
       boxSizing: 'border-box',
       ...style,
     };
+
+    // Add CSS custom properties using type assertion
+    const customProps: any = {
+      '--radio-dot-color': statusStyles['--radio-dot-color'],
+      '--radio-checked-border-color': statusStyles['--radio-checked-border-color'],
+      '--radio-checked-background-color': statusStyles['--radio-checked-background-color'],
+    };
+
+    return { ...baseStyle, ...customProps };
   }
 
   /** 生成容器样式 */
@@ -231,7 +239,7 @@ export class RadioStyles {
     const sizeStyles = this.SIZE_MAP[size];
 
     return {
-      fontSize: sizeStyles.fontSize,
+      fontSize: sizeStyles['fontSize'],
       color: disabled ? '#9ca3af' : '#374151',
       cursor: disabled ? 'not-allowed' : 'pointer',
       userSelect: 'none',
@@ -246,9 +254,9 @@ export class RadioStyles {
     const sizeStyles = this.SIZE_MAP[size];
 
     return {
-      fontSize: sizeStyles.fontSize * 0.85,
+      fontSize: sizeStyles['fontSize'] * 0.85,
       color: '#6b7280',
-      marginLeft: sizeStyles.size + 8,
+      marginLeft: sizeStyles['size'] + 8,
       ...style,
     };
   }
@@ -260,9 +268,9 @@ export class RadioStyles {
     const sizeStyles = this.SIZE_MAP[size];
 
     return {
-      fontSize: sizeStyles.fontSize * 0.85,
+      fontSize: sizeStyles['fontSize'] * 0.85,
       color: '#ef4444',
-      marginLeft: sizeStyles.size + 8,
+      marginLeft: sizeStyles['size'] + 8,
       ...style,
     };
   }
@@ -279,16 +287,23 @@ export class RadioStyles {
     const sizeStyles = this.SIZE_MAP[size];
     const statusStyles = this.STATUS_COLORS[status];
 
-    return {
-      width: checked ? sizeStyles.size * 0.4 : 0,
-      height: checked ? sizeStyles.size * 0.4 : 0,
+    const baseStyle: React.CSSProperties = {
+      width: checked ? sizeStyles['size'] * 0.4 : 0,
+      height: checked ? sizeStyles['size'] * 0.4 : 0,
       borderRadius: '50%',
-      backgroundColor: statusStyles.dotColor,
+      backgroundColor: statusStyles['--radio-dot-color'],
       opacity: checked ? 1 : 0,
       transform: checked ? 'scale(1)' : 'scale(0)',
       transition: 'all 0.2s ease-in-out',
       ...style,
     };
+
+    // Add CSS custom properties using type assertion
+    const customProps: any = {
+      '--radio-dot-color': statusStyles['--radio-dot-color'],
+    };
+
+    return { ...baseStyle, ...customProps };
   }
 
   /** 生成单选框样式配置 */
@@ -303,48 +318,61 @@ export class RadioStyles {
         transition: 'all 0.2s ease-in-out',
       },
       sizes: {
-        xs: { fontSize: 20, size: 16 },
-        sm: { fontSize: 24, size: 20 },
-        md: { fontSize: 28, size: 24 },
-        lg: { fontSize: 32, size: 28 },
-        xl: { fontSize: 36, size: 32 },
+        xs: { fontSize: 20, width: 16, height: 16 },
+        sm: { fontSize: 24, width: 20, height: 20 },
+        md: { fontSize: 28, width: 24, height: 24 },
+        lg: { fontSize: 32, width: 28, height: 28 },
+        xl: { fontSize: 36, width: 32, height: 32 },
       },
       statuses: {
         normal: {
           backgroundColor: '#ffffff',
           borderColor: '#d1d5db',
-          dotColor: '#0ea5e9',
-          checkedBorderColor: '#0ea5e9',
-          checkedBackgroundColor: '#ffffff',
-        },
+          '--radio-dot-color': '#0ea5e9',
+          '--radio-checked-border-color': '#0ea5e9',
+          '--radio-checked-background-color': '#ffffff',
+        } as React.CSSProperties,
         error: {
           backgroundColor: '#fef2f2',
           borderColor: '#ef4444',
-          dotColor: '#ef4444',
-          checkedBorderColor: '#ef4444',
-          checkedBackgroundColor: '#ffffff',
-        },
+          '--radio-dot-color': '#ef4444',
+          '--radio-checked-border-color': '#ef4444',
+          '--radio-checked-background-color': '#ffffff',
+        } as React.CSSProperties,
         warning: {
           backgroundColor: '#fffbeb',
           borderColor: '#f59e0b',
-          dotColor: '#f59e0b',
-          checkedBorderColor: '#f59e0b',
-          checkedBackgroundColor: '#ffffff',
-        },
+          '--radio-dot-color': '#f59e0b',
+          '--radio-checked-border-color': '#f59e0b',
+          '--radio-checked-background-color': '#ffffff',
+        } as React.CSSProperties,
         success: {
           backgroundColor: '#f0fdf4',
           borderColor: '#22c55e',
-          dotColor: '#22c55e',
-          checkedBorderColor: '#22c55e',
-          checkedBackgroundColor: '#ffffff',
-        },
+          '--radio-dot-color': '#22c55e',
+          '--radio-checked-border-color': '#22c55e',
+          '--radio-checked-background-color': '#ffffff',
+        } as React.CSSProperties,
         disabled: {
           backgroundColor: '#f9fafb',
           borderColor: '#e5e7eb',
-          dotColor: '#9ca3af',
-          checkedBorderColor: '#e5e7eb',
-          checkedBackgroundColor: '#f9fafb',
-        },
+          '--radio-dot-color': '#9ca3af',
+          '--radio-checked-border-color': '#e5e7eb',
+          '--radio-checked-background-color': '#f9fafb',
+        } as React.CSSProperties,
+      },
+      variants: {
+        default: { backgroundColor: '#ffffff', borderColor: '#d1d5db' },
+        filled: { backgroundColor: '#f3f4f6', borderColor: '#d1d5db' },
+        outlined: { backgroundColor: 'transparent', borderColor: '#d1d5db' },
+      },
+      colors: {
+        primary: { primary: '#0ea5e9', secondary: '#e0f2fe', background: '#ffffff' } as React.CSSProperties,
+        secondary: { primary: '#6b7280', secondary: '#f3f4f6', background: '#ffffff' } as React.CSSProperties,
+        success: { primary: '#22c55e', secondary: '#dcfce7', background: '#ffffff' } as React.CSSProperties,
+        warning: { primary: '#f59e0b', secondary: '#fef3c7', background: '#ffffff' } as React.CSSProperties,
+        error: { primary: '#ef4444', secondary: '#fee2e2', background: '#ffffff' } as React.CSSProperties,
+        info: { primary: '#3b82f6', secondary: '#dbeafe', background: '#ffffff' } as React.CSSProperties,
       },
       icon: {
         fontSize: 16,
@@ -366,6 +394,26 @@ export class RadioStyles {
         fontSize: 24,
         color: '#ef4444',
         marginLeft: 32,
+      },
+      group: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '8px',
+      },
+      groupItem: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+      },
+      ripple: {
+        position: 'absolute',
+        borderRadius: '50%',
+        transform: 'scale(0)',
+        animation: 'radioRipple 0.6s linear',
+      },
+      animation: {
+        animationDuration: '0.2s',
+        animationTimingFunction: 'ease-in-out',
       },
     };
   }

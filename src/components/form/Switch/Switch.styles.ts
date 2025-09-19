@@ -3,13 +3,12 @@
  * 开关组件样式
  */
 
-import type { 
-  SwitchSize, 
-  SwitchVariant, 
-  SwitchStatus, 
-  SwitchColor, 
-  SwitchShape,
-  SwitchStyleConfig 
+import type {
+  SwitchSize,
+  SwitchVariant,
+  SwitchStatus,
+  SwitchColor,
+  SwitchStyleConfig,
 } from './Switch.types';
 
 // 默认样式配置
@@ -102,13 +101,7 @@ export const switchStyles = {
   /**
    * 获取容器样式
    */
-  getContainerStyle: ({ 
-    block = false, 
-    style 
-  }: { 
-    block?: boolean; 
-    style?: any 
-  }) => {
+  getContainerStyle: ({ block = false, style }: { block?: boolean; style?: any }) => {
     return {
       display: block ? 'flex' : 'inline-flex',
       flexDirection: 'column',
@@ -121,19 +114,17 @@ export const switchStyles = {
   /**
    * 获取包装器样式
    */
-  getWrapperStyle: ({ 
-    size = 'md',
+  getWrapperStyle: ({
+    size: _size = 'md',
     disabled = false,
     readonly = false,
-    style 
-  }: { 
-    size: SwitchSize; 
-    disabled?: boolean; 
+    style,
+  }: {
+    size: SwitchSize;
+    disabled?: boolean;
     readonly?: boolean;
     style?: any;
   }) => {
-    const sizeConfig = defaultStyleConfig.sizes[size];
-    
     return {
       display: 'flex',
       alignItems: 'center',
@@ -147,22 +138,22 @@ export const switchStyles = {
   /**
    * 获取开关轨道样式
    */
-  getTrackStyle: ({ 
+  getTrackStyle: ({
     size = 'md',
     variant = 'solid',
     color = 'primary',
     checked = false,
     disabled = false,
     loading = false,
-    status = 'normal',
+    status: _status = 'normal',
     bordered = true,
-    style 
-  }: { 
-    size: SwitchSize; 
-    variant?: SwitchVariant; 
-    color?: SwitchColor; 
-    checked?: boolean; 
-    disabled?: boolean; 
+    style,
+  }: {
+    size: SwitchSize;
+    variant?: SwitchVariant;
+    color?: SwitchColor;
+    checked?: boolean;
+    disabled?: boolean;
     loading?: boolean;
     status?: SwitchStatus;
     bordered?: boolean;
@@ -170,7 +161,7 @@ export const switchStyles = {
   }) => {
     const sizeConfig = defaultStyleConfig.sizes[size];
     const colors = defaultStyleConfig.colors;
-    
+
     // 获取背景色
     let backgroundColor = colors.default;
     if (disabled) {
@@ -210,26 +201,24 @@ export const switchStyles = {
   /**
    * 获取开关滑块样式
    */
-  getThumbStyle: ({ 
+  getThumbStyle: ({
     size = 'md',
     checked = false,
     disabled = false,
-    loading = false,
-    style 
-  }: { 
-    size: SwitchSize; 
-    checked?: boolean; 
-    disabled?: boolean; 
+    loading: _loading = false,
+    style,
+  }: {
+    size: SwitchSize;
+    checked?: boolean;
+    disabled?: boolean;
     loading?: boolean;
     style?: any;
   }) => {
     const sizeConfig = defaultStyleConfig.sizes[size];
     const colors = defaultStyleConfig.colors;
-    
+
     // 计算滑块位置
-    const translateX = checked 
-      ? sizeConfig.width - sizeConfig.thumbSize - defaultStyleConfig.spacing.padding * 2
-      : 0;
+    const translateX = checked ? sizeConfig.width - sizeConfig.thumbSize - defaultStyleConfig.spacing.padding * 2 : 0;
 
     return {
       position: 'absolute',
@@ -252,18 +241,10 @@ export const switchStyles = {
   /**
    * 获取标签样式
    */
-  getLabelStyle: ({ 
-    size = 'md',
-    disabled = false,
-    style 
-  }: { 
-    size: SwitchSize; 
-    disabled?: boolean; 
-    style?: any;
-  }) => {
+  getLabelStyle: ({ size = 'md', disabled = false, style }: { size: SwitchSize; disabled?: boolean; style?: any }) => {
     const sizeConfig = defaultStyleConfig.sizes[size];
     const colors = defaultStyleConfig.colors;
-    
+
     return {
       fontSize: sizeConfig.fontSize,
       color: disabled ? colors.disabled : colors.text,
@@ -276,16 +257,10 @@ export const switchStyles = {
   /**
    * 获取辅助文本样式
    */
-  getHelperTextStyle: ({ 
-    size = 'md',
-    style 
-  }: { 
-    size: SwitchSize; 
-    style?: any;
-  }) => {
+  getHelperTextStyle: ({ size = 'md', style }: { size: SwitchSize; style?: any }) => {
     const sizeConfig = defaultStyleConfig.sizes[size];
     const colors = defaultStyleConfig.colors;
-    
+
     return {
       fontSize: sizeConfig.fontSize - 2,
       color: colors.text,
@@ -298,16 +273,10 @@ export const switchStyles = {
   /**
    * 获取错误文本样式
    */
-  getErrorTextStyle: ({ 
-    size = 'md',
-    style 
-  }: { 
-    size: SwitchSize; 
-    style?: any;
-  }) => {
+  getErrorTextStyle: ({ size = 'md', style }: { size: SwitchSize; style?: any }) => {
     const sizeConfig = defaultStyleConfig.sizes[size];
     const colors = defaultStyleConfig.colors;
-    
+
     return {
       fontSize: sizeConfig.fontSize - 2,
       color: colors.error,
@@ -319,15 +288,9 @@ export const switchStyles = {
   /**
    * 获取加载遮罩样式
    */
-  getLoadingMaskStyle: ({ 
-    size = 'md',
-    style 
-  }: { 
-    size: SwitchSize; 
-    style?: any;
-  }) => {
+  getLoadingMaskStyle: ({ size = 'md', style }: { size: SwitchSize; style?: any }) => {
     const sizeConfig = defaultStyleConfig.sizes[size];
-    
+
     return {
       position: 'absolute',
       top: 0,
@@ -346,15 +309,9 @@ export const switchStyles = {
   /**
    * 获取加载指示器样式
    */
-  getLoadingIndicatorStyle: ({ 
-    size = 'md',
-    style 
-  }: { 
-    size: SwitchSize; 
-    style?: any;
-  }) => {
+  getLoadingIndicatorStyle: ({ size = 'md', style }: { size: SwitchSize; style?: any }) => {
     const sizeConfig = defaultStyleConfig.sizes[size];
-    
+
     return {
       width: sizeConfig.thumbSize * 0.6,
       height: sizeConfig.thumbSize * 0.6,
@@ -371,13 +328,13 @@ export const switchStyles = {
   /**
    * 获取开关组容器样式
    */
-  getGroupContainerStyle: ({ 
+  getGroupContainerStyle: ({
     direction = 'horizontal',
     spacing = 8,
-    style 
-  }: { 
-    direction?: 'horizontal' | 'vertical'; 
-    spacing?: number; 
+    style,
+  }: {
+    direction?: 'horizontal' | 'vertical';
+    spacing?: number;
     style?: any;
   }) => {
     return {
@@ -391,11 +348,7 @@ export const switchStyles = {
   /**
    * 获取开关组项样式
    */
-  getGroupItemStyle: ({ 
-    style 
-  }: { 
-    style?: any;
-  }) => {
+  getGroupItemStyle: ({ style }: { style?: any }) => {
     return {
       display: 'flex',
       flexDirection: 'column',
@@ -406,7 +359,7 @@ export const switchStyles = {
   /**
    * 获取类名
    */
-  getClassName: ({ 
+  getClassName: ({
     size = 'md',
     variant = 'solid',
     color = 'primary',
@@ -416,17 +369,17 @@ export const switchStyles = {
     checked = false,
     bordered = true,
     block = false,
-    className 
-  }: { 
-    size?: SwitchSize; 
-    variant?: SwitchVariant; 
-    color?: SwitchColor; 
-    status?: SwitchStatus; 
-    disabled?: boolean; 
-    loading?: boolean; 
-    checked?: boolean; 
-    bordered?: boolean; 
-    block?: boolean; 
+    className,
+  }: {
+    size?: SwitchSize;
+    variant?: SwitchVariant;
+    color?: SwitchColor;
+    status?: SwitchStatus;
+    disabled?: boolean;
+    loading?: boolean;
+    checked?: boolean;
+    bordered?: boolean;
+    block?: boolean;
     className?: string;
   }) => {
     const baseClasses = [
@@ -467,7 +420,7 @@ export const switchStyles = {
   /**
    * 获取轨道类名
    */
-  getTrackClassName: ({ 
+  getTrackClassName: ({
     size = 'md',
     variant = 'solid',
     color = 'primary',
@@ -476,16 +429,16 @@ export const switchStyles = {
     loading = false,
     checked = false,
     bordered = true,
-    className 
-  }: { 
-    size?: SwitchSize; 
-    variant?: SwitchVariant; 
-    color?: SwitchColor; 
-    status?: SwitchStatus; 
-    disabled?: boolean; 
-    loading?: boolean; 
-    checked?: boolean; 
-    bordered?: boolean; 
+    className,
+  }: {
+    size?: SwitchSize;
+    variant?: SwitchVariant;
+    color?: SwitchColor;
+    status?: SwitchStatus;
+    disabled?: boolean;
+    loading?: boolean;
+    checked?: boolean;
+    bordered?: boolean;
     className?: string;
   }) => {
     const baseClasses = [
@@ -522,23 +475,20 @@ export const switchStyles = {
   /**
    * 获取滑块类名
    */
-  getThumbClassName: ({ 
+  getThumbClassName: ({
     size = 'md',
     disabled = false,
     loading = false,
     checked = false,
-    className 
-  }: { 
-    size?: SwitchSize; 
-    disabled?: boolean; 
-    loading?: boolean; 
-    checked?: boolean; 
+    className,
+  }: {
+    size?: SwitchSize;
+    disabled?: boolean;
+    loading?: boolean;
+    checked?: boolean;
     className?: string;
   }) => {
-    const baseClasses = [
-      'taro-uno-switch__thumb',
-      `taro-uno-switch__thumb--${size}`,
-    ];
+    const baseClasses = ['taro-uno-switch__thumb', `taro-uno-switch__thumb--${size}`];
 
     if (disabled) {
       baseClasses.push('taro-uno-switch__thumb--disabled');
@@ -562,25 +512,25 @@ export const switchStyles = {
   /**
    * 获取样式对象
    */
-  getStyle: ({ 
-    size = 'md',
-    variant = 'solid',
-    color = 'primary',
-    status = 'normal',
-    disabled = false,
-    loading = false,
-    checked = false,
-    bordered = true,
-    style 
-  }: { 
-    size?: SwitchSize; 
-    variant?: SwitchVariant; 
-    color?: SwitchColor; 
-    status?: SwitchStatus; 
-    disabled?: boolean; 
-    loading?: boolean; 
-    checked?: boolean; 
-    bordered?: boolean; 
+  getStyle: ({
+    size: _size = 'md',
+    variant: _variant = 'solid',
+    color: _color = 'primary',
+    status: _status = 'normal',
+    disabled: _disabled = false,
+    loading: _loading = false,
+    checked: _checked = false,
+    bordered: _bordered = true,
+    style,
+  }: {
+    size?: SwitchSize;
+    variant?: SwitchVariant;
+    color?: SwitchColor;
+    status?: SwitchStatus;
+    disabled?: boolean;
+    loading?: boolean;
+    checked?: boolean;
+    bordered?: boolean;
     style?: any;
   }) => {
     return {

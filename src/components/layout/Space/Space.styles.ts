@@ -1,5 +1,4 @@
-import { Platform } from '@tarojs/taro';
-import type { SpaceProps, SpaceDirection, SpaceAlign, SpaceWrap, SpaceSize, SpaceGap } from './Space.types';
+import type { SpaceProps, SpaceDirection, SpaceSize, SpaceGap } from './Space.types';
 
 /** Space组件样式管理器 */
 export const spaceStyles = {
@@ -35,7 +34,7 @@ export const spaceStyles = {
   /**
    * 解析尺寸值
    */
-  parseSize: (size: SpaceSize): number | string => {
+  parseSize: (size: SpaceSize): string => {
     if (typeof size === 'number') {
       return `${size}px`;
     }
@@ -56,9 +55,9 @@ export const spaceStyles = {
   parseGap: (gap: SpaceGap): string => {
     if (Array.isArray(gap)) {
       const [rowGap, columnGap] = gap;
-      return `${spaceStyles.parseSize(rowGap)} ${spaceStyles.parseSize(columnGap)}`;
+      return `${spaceStyles['parseSize'](rowGap)} ${spaceStyles['parseSize'](columnGap)}`;
     }
-    return spaceStyles.parseSize(gap);
+    return spaceStyles['parseSize'](gap);
   },
 
   /**
@@ -79,19 +78,19 @@ export const spaceStyles = {
     } = props;
 
     // 计算间距
-    const gapValue = gap ? spaceStyles.parseGap(gap) : spaceStyles.parseSize(size);
+    const gapValue = gap ? spaceStyles['parseGap'](gap) : spaceStyles['parseSize'](size);
 
     // 计算显示方式
     const display = block ? 'flex' : 'inline-flex';
 
     // 计算方向
-    const flexDirection = spaceStyles.DIRECTION_MAP[direction];
+    const flexDirection = spaceStyles['DIRECTION_MAP'][direction];
 
     // 计算对齐方式
-    const alignItems = spaceStyles.ALIGN_MAP[align];
+    const alignItems = spaceStyles['ALIGN_MAP'][align];
 
     // 计算换行方式
-    const flexWrap = maxCount ? 'wrap' : spaceStyles.WRAP_MAP[wrap];
+    const flexWrap = maxCount ? 'wrap' : spaceStyles['WRAP_MAP'][wrap];
 
     // 计算紧凑模式
     const compactStyle = compact
@@ -199,9 +198,8 @@ export const spaceStyles = {
 
     const responsiveStyle: React.CSSProperties = {};
 
-    Object.entries(responsive).forEach(([breakpoint, props]) => {
+    Object.entries(responsive).forEach(([_breakpoint, props]) => {
       if (props) {
-        const mediaQuery = `@media (min-width: ${spaceStyles.getBreakpointValue(breakpoint)}px)`;
         // 这里需要配合CSS-in-JS库来处理响应式样式
         // 暂时返回空对象
       }

@@ -1,5 +1,6 @@
 import React, { forwardRef, useRef, useState, useEffect, useCallback } from 'react';
 import { View } from '@tarojs/components';
+import type { ITouchEvent } from '@tarojs/components';
 import { gridStyles } from './Grid.styles';
 import type { GridProps, GridRef, GridAlign, GridJustify, GridGap, GridCols } from './Grid.types';
 
@@ -23,7 +24,7 @@ export const GridComponent = forwardRef<GridRef, GridProps>((props, ref) => {
     ...restProps
   } = props;
 
-  const gridRef = useRef<View>(null);
+  const gridRef = useRef<any>(null);
   const [internalCols, setInternalCols] = useState<GridCols>(cols);
   const [internalAlign, setInternalAlign] = useState<GridAlign>(align);
   const [internalJustify, setInternalJustify] = useState<GridJustify>(justify);
@@ -66,7 +67,7 @@ export const GridComponent = forwardRef<GridRef, GridProps>((props, ref) => {
 
   // 处理子元素点击事件
   const handleItemClick = useCallback(
-    (index: number, event: React.MouseEvent) => {
+    (index: number, event: ITouchEvent) => {
       onItemClick?.(index, event);
     },
     [onItemClick],
@@ -80,21 +81,21 @@ export const GridComponent = forwardRef<GridRef, GridProps>((props, ref) => {
     [onItemHover],
   );
 
+  
   // 渲染子元素
   const renderChildren = () => {
     if (!children) return null;
 
     const childrenArray = React.Children.toArray(children);
-    const colCount = typeof internalCols === 'number' ? internalCols : parseInt(internalCols);
 
     return childrenArray.map((child, index) => (
       <View
         key={index}
         className="taro-uno-grid__item"
-        style={gridStyles.getItemStyle(index, childrenArray.length, internalCols)}
-        onClick={(e) => handleItemClick(index, e)}
-        onMouseEnter={(e) => handleItemHover(index, e)}
-        onMouseLeave={(e) => handleItemHover(index, e)}
+        style={gridStyles['getItemStyle'](index, childrenArray.length, internalCols)}
+        onClick={(e: ITouchEvent) => handleItemClick(index, e)}
+        onMouseEnter={(e: React.MouseEvent) => handleItemHover(index, e)}
+        onMouseLeave={(e: React.MouseEvent) => handleItemHover(index, e)}
       >
         {child}
       </View>
@@ -102,7 +103,7 @@ export const GridComponent = forwardRef<GridRef, GridProps>((props, ref) => {
   };
 
   // 计算样式
-  const gridStyle = gridStyles.getBaseStyle({
+  const gridStyle = gridStyles['getBaseStyle']({
     cols: internalCols,
     rows,
     gap: internalGap,
@@ -114,10 +115,10 @@ export const GridComponent = forwardRef<GridRef, GridProps>((props, ref) => {
   });
 
   // 计算响应式样式
-  const responsiveStyle = responsive ? gridStyles.getResponsiveStyle(responsive) : {};
+  const responsiveStyle = responsive ? gridStyles['getResponsiveStyle'](responsive) : {};
 
   // 计算类名
-  const gridClassName = gridStyles.getClassName({
+  const gridClassName = gridStyles['getClassName']({
     cols: internalCols,
     align: internalAlign,
     justify: internalJustify,

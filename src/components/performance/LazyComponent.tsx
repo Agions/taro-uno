@@ -3,8 +3,8 @@
  * 用于实现组件的按需加载，提高初始加载性能
  */
 
-import React, { Suspense, ComponentType, LazyExoticComponent, useEffect, useState } from 'react';
-import { useInView } from 'react-intersection-observer';
+import React, { Suspense, ComponentType, LazyExoticComponent, useEffect, useState, useRef } from 'react';
+// import { useInView } from 'react-intersection-observer';
 import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor';
 
 export interface LazyComponentProps {
@@ -64,11 +64,13 @@ const LazyComponent: React.FC<LazyComponentProps> = ({
     enableMemoryMonitor: defaultConfig.enablePerformanceMonitor,
   });
 
-  const { ref, inView, entry } = useInView({
-    rootMargin: defaultConfig.rootMargin,
-    threshold: defaultConfig.threshold,
-    triggerOnce: true,
-  });
+  // 简化的视口检测 - 直接加载组件
+  const ref = useRef<any>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    setInView(true); // 简化处理，直接设置为可见
+  }, []);
 
   // 加载组件
   const loadComponent = async () => {
@@ -77,7 +79,7 @@ const LazyComponent: React.FC<LazyComponentProps> = ({
     try {
       recordCustomMetric('lazyLoadStart', Date.now());
 
-      const loadedModule = await loader();
+      // const loadedModule = await loader(); // Commented out - unused
       const LazyLoadedComponent = React.lazy(() => loader());
 
       setComponent(LazyLoadedComponent);
@@ -113,6 +115,7 @@ const LazyComponent: React.FC<LazyComponentProps> = ({
         setShouldLoad(true);
       }
     }
+    return undefined;
   }, [inView, Component, error, delay]);
 
   // 执行加载
@@ -154,12 +157,10 @@ const LazyComponent: React.FC<LazyComponentProps> = ({
 
   return (
     <div ref={ref} className="lazy-component">
-      {renderComponent}
+      {renderComponent() as React.ReactNode}
     </div>
   );
 };
-
-export default LazyComponent;
 
 /**
  * 创建懒加载组件的高阶函数

@@ -5,17 +5,26 @@
  */
 
 // 导出表单组件
-export * from './Form';
+export { Form } from './Form';
+export type { FormContext } from './Form';
 export * from './Input';
 export * from './Select';
-export * from './Checkbox';
-export * from './Radio';
-export * from './Switch';
 export * from './DatePicker';
+export * from './Radio';
+export * from './Checkbox';
+export * from './Switch';
+// export * from './Rate'; // 组件暂不存在
+export * from './Slider';
+export * from './Upload';
+// export * from './AutoComplete'; // 组件暂不存在
 export * from './Textarea';
+export * from './InputNumber';
+export * from './TimePicker';
+export * from './Cascader';
+export * from './Transfer';
 
 // 导出类型定义
-export type * from './Form/types';
+// export type * from './Form/types'; // 暂不存在
 
 // 导出样式工具
 export { formStyles } from './Form/Form.styles';
@@ -26,6 +35,10 @@ export { radioStyles } from './Radio/Radio.styles';
 export { switchStyles } from './Switch/Switch.styles';
 export { datePickerStyles } from './DatePicker/DatePicker.styles';
 export { textareaStyles } from './Textarea/Textarea.styles';
+export { inputNumberStyles } from './InputNumber/InputNumber.styles';
+export { timePickerStyles } from './TimePicker/TimePicker.styles';
+export { cascaderStyles } from './Cascader/Cascader.styles';
+export { transferStyles } from './Transfer/Transfer.styles';
 
 // 表单组件版本
 export const FORM_VERSION = '1.0.0';
@@ -38,11 +51,19 @@ export const FORM_CONFIG = {
     form: ['Form', 'FormItem'],
     input: ['Input'],
     select: ['Select'],
+    datePicker: ['DatePicker'],
     checkbox: ['Checkbox', 'CheckboxGroup'],
     radio: ['Radio', 'RadioGroup'],
     switch: ['Switch'],
-    datePicker: ['DatePicker'],
+    rate: ['Rate'],
+    slider: ['Slider'],
+    upload: ['Upload'],
+    autoComplete: ['AutoComplete'],
     textarea: ['Textarea'],
+    inputNumber: ['InputNumber'],
+    timePicker: ['TimePicker'],
+    cascader: ['Cascader'],
+    transfer: ['Transfer'],
   },
   features: {
     validation: true,
@@ -105,11 +126,19 @@ export default {
   Form: require('./Form').Form,
   Input: require('./Input').Input,
   Select: require('./Select').Select,
+  DatePicker: require('./DatePicker').DatePicker,
   Checkbox: require('./Checkbox').Checkbox,
   Radio: require('./Radio').Radio,
   Switch: require('./Switch').Switch,
-  DatePicker: require('./DatePicker').DatePicker,
+  Rate: require('./Rate').Rate,
+  Slider: require('./Slider').Slider,
+  Upload: require('./Upload').Upload,
+  AutoComplete: require('./AutoComplete').AutoComplete,
   Textarea: require('./Textarea').Textarea,
+  InputNumber: require('./InputNumber').InputNumber,
+  TimePicker: require('./TimePicker').TimePicker,
+  Cascader: require('./Cascader').Cascader,
+  Transfer: require('./Transfer').Transfer,
 
   // 工具函数
   Utils: FormLibraryUtils,

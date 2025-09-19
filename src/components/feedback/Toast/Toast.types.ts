@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
-import { View } from '@tarojs/components';
-import { BaseComponentProps, Size } from '../../../types';
+import { BaseComponentProps } from '../../../types';
 
 /** Toast类型 */
 export type ToastType = 'info' | 'success' | 'warning' | 'error' | 'loading';
@@ -11,7 +10,7 @@ export type ToastPosition = 'top' | 'center' | 'bottom';
 /** Toast引用 */
 export interface ToastRef {
   /** 获取元素引用 */
-  element: View | null;
+  element: any | null;
   /** 显示Toast */
   show: () => void;
   /** 隐藏Toast */

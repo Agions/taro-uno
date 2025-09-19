@@ -58,6 +58,10 @@ export const TextComponent = forwardRef<TextRef, TextProps>((props, ref) => {
     verticalAlign,
     writingMode,
     textRendering,
+    // 排除可能与Taro组件冲突的React属性
+    dangerouslySetInnerHTML,
+    suppressContentEditableWarning,
+    suppressHydrationWarning,
     ...restProps
   } = props;
 
@@ -129,7 +133,7 @@ export const TextComponent = forwardRef<TextRef, TextProps>((props, ref) => {
 
   // 渲染加载状态
   const renderLoading = () => {
-    return <View className="taro-uno-text__loading" style={textStyles.getLoadingStyle()} />;
+    return <View className="taro-uno-text__loading" style={textStyles['getLoadingStyle']()} />;
   };
 
   // 渲染复制按钮
@@ -153,7 +157,7 @@ export const TextComponent = forwardRef<TextRef, TextProps>((props, ref) => {
   };
 
   // 计算最终样式
-  const textStyle = textStyles.getStyle({
+  const textStyle = textStyles['getStyle']({
     size,
     weight,
     color,
@@ -193,7 +197,7 @@ export const TextComponent = forwardRef<TextRef, TextProps>((props, ref) => {
   });
 
   // 计算最终类名
-  const textClassName = textStyles.getClassName({
+  const textClassName = textStyles['getClassName']({
     size,
     weight,
     color,
@@ -248,17 +252,16 @@ export const TextComponent = forwardRef<TextRef, TextProps>((props, ref) => {
       select: handleSelect,
       setDisabled: (disabled: boolean) => {
         setInternalDisabled(disabled);
+        setInternalStatus(disabled ? 'disabled' : 'normal');
       },
       setLoading: (loading: boolean) => {
         setInternalLoading(loading);
+        setInternalStatus(loading ? 'loading' : 'normal');
       },
       getStatus: () => internalStatus,
       getSize: () => size,
       getColor: () => {
-        if (typeof color === 'string') {
-          return color;
-        }
-        return textStyles.COLOR_MAP[color];
+        return color || '';
       },
       setColor: (newColor: string) => {
         if (textRef.current) {
@@ -268,8 +271,8 @@ export const TextComponent = forwardRef<TextRef, TextProps>((props, ref) => {
       setSize: (newSize: typeof size) => {
         if (textRef.current) {
           const sizeStyles = textStyles.SIZE_MAP[newSize];
-          textRef.current.style.fontSize = `${sizeStyles.fontSize}px`;
-          textRef.current.style.lineHeight = `${sizeStyles.lineHeight}`;
+          textRef.current.style.fontSize = `${sizeStyles['fontSize']}px`;
+          textRef.current.style.lineHeight = `${sizeStyles._lineHeight}`;
         }
       },
       setWeight: (newWeight: typeof weight) => {
@@ -286,11 +289,11 @@ export const TextComponent = forwardRef<TextRef, TextProps>((props, ref) => {
   );
 
   // 无障碍状态
-  const finalAccessibilityState = {
+  const finalAccessibilityState = JSON.stringify({
     disabled: internalDisabled,
     busy: internalLoading,
     ...accessibilityState,
-  };
+  });
 
   // 处理链接属性
   const linkProps = href
@@ -300,6 +303,14 @@ export const TextComponent = forwardRef<TextRef, TextProps>((props, ref) => {
         rel: target === '_blank' ? 'noopener noreferrer' : undefined,
       }
     : {};
+
+  // 构建无障碍属性
+  const accessibilityProps = {
+    'aria-label': accessibilityLabel,
+    'aria-disabled': internalDisabled ? 'true' : 'false',
+    'aria-busy': internalLoading ? 'true' : 'false',
+    role: href ? 'link' : accessibilityRole,
+  };
 
   return (
     <View className="taro-uno-text-wrapper" style={{ display: 'flex', alignItems: 'center' }}>
@@ -316,7 +327,8 @@ export const TextComponent = forwardRef<TextRef, TextProps>((props, ref) => {
         accessibilityState={finalAccessibilityState}
         selectable={selectable}
         {...linkProps}
-        {...restProps}
+        {...accessibilityProps}
+        {...(restProps as any)}
       >
         {children}
       </TextElement>
@@ -331,3 +343,4 @@ TextComponent.displayName = 'Text';
 
 /** 导出文本组件 */
 export const Text = TextComponent;
+export default TextComponent;

@@ -12,41 +12,59 @@
   @if type-of($hex) == color {
     @return red($hex), green($hex), blue($hex);
   }
-  
+
   @if str-index($hex, '#') == 1 {
     $hex: str-slice($hex, 2);
   }
-  
+
   @if str-length($hex) == 3 {
-    $hex: str-slice($hex, 1, 1) + str-slice($hex, 1, 1) +
-           str-slice($hex, 2, 2) + str-slice($hex, 2, 2) +
-           str-slice($hex, 3, 3) + str-slice($hex, 3, 3);
+    $hex: str-slice($hex, 1, 1) +
+      str-slice($hex, 1, 1) +
+      str-slice($hex, 2, 2) +
+      str-slice($hex, 2, 2) +
+      str-slice($hex, 3, 3) +
+      str-slice($hex, 3, 3);
   }
-  
+
   $r: hex-to-decimal(str-slice($hex, 1, 2));
   $g: hex-to-decimal(str-slice($hex, 3, 4));
   $b: hex-to-decimal(str-slice($hex, 5, 6));
-  
+
   @return $r, $g, $b;
 }
 
 // 十六进制转十进制
 @function hex-to-decimal($hex) {
-  @return (
-    hex-to-decimal-digit(str-slice($hex, 1, 1)) * 16 +
-    hex-to-decimal-digit(str-slice($hex, 2, 2))
-  );
+  @return (hex-to-decimal-digit(str-slice($hex, 1, 1)) * 16 + hex-to-decimal-digit(str-slice($hex, 2, 2)));
 }
 
 // 十六进制数字转十进制
 @function hex-to-decimal-digit($digit) {
   $digits: (
-    '0': 0, '1': 1, '2': 2, '3': 3, '4': 4,
-    '5': 5, '6': 6, '7': 7, '8': 8, '9': 9,
-    'a': 10, 'b': 11, 'c': 12, 'd': 13, 'e': 14, 'f': 15,
-    'A': 10, 'B': 11, 'C': 12, 'D': 13, 'E': 14, 'F': 15
+    '0': 0,
+    '1': 1,
+    '2': 2,
+    '3': 3,
+    '4': 4,
+    '5': 5,
+    '6': 6,
+    '7': 7,
+    '8': 8,
+    '9': 9,
+    'a': 10,
+    'b': 11,
+    'c': 12,
+    'd': 13,
+    'e': 14,
+    'f': 15,
+    'A': 10,
+    'B': 11,
+    'C': 12,
+    'D': 13,
+    'E': 14,
+    'F': 15,
   );
-  
+
   @return map-get($digits, $digit);
 }
 
@@ -55,12 +73,12 @@
   @if type-of($color) == color {
     @return rgba($color, $alpha);
   }
-  
+
   @if str-index($color, '#') == 1 {
     $rgb: hex-to-rgb($color);
     @return rgba($rgb, $alpha);
   }
-  
+
   @return $color;
 }
 
@@ -69,7 +87,7 @@
   @if type-of($color) == color {
     @return lighten($color, $amount);
   }
-  
+
   @return $color;
 }
 
@@ -78,7 +96,7 @@
   @if type-of($color) == color {
     @return darken($color, $amount);
   }
-  
+
   @return $color;
 }
 
@@ -87,7 +105,7 @@
   @if type-of($color) == color {
     @return saturate($color, $amount);
   }
-  
+
   @return $color;
 }
 
@@ -96,7 +114,7 @@
   @if type-of($color) == color {
     @return desaturate($color, $amount);
   }
-  
+
   @return $color;
 }
 
@@ -105,7 +123,7 @@
   @if type-of($color1) == color and type-of($color2) == color {
     @return mix($color1, $color2, $weight);
   }
-  
+
   @return $color1;
 }
 
@@ -114,9 +132,9 @@
   @if type-of($color) != color {
     @return $text-color;
   }
-  
+
   $lightness: lightness($color);
-  
+
   @if $lightness > 60 {
     @return $text-color;
   } @else {
@@ -152,7 +170,7 @@
       'brand': $brand-color,
       'accent': $accent-color,
       'link': $text-color-link,
-      'divider': $divider-color
+      'divider': $divider-color,
     ),
     'dark': (
       'primary': $primary-color,
@@ -179,10 +197,10 @@
       'brand': $brand-color,
       'accent': $accent-color,
       'link': $primary-color,
-      'divider': $dark-divider-color
-    )
+      'divider': $dark-divider-color,
+    ),
   );
-  
+
   @return map-get(map-get($colors, $theme), $name);
 }
 
@@ -199,9 +217,9 @@
     'lg': $spacing-lg,
     'xl': $spacing-xl,
     'xxl': $spacing-xxl,
-    'xxxl': $spacing-xxxl
+    'xxxl': $spacing-xxxl,
   );
-  
+
   @return map-get($spacing-scale, $key);
 }
 
@@ -237,9 +255,9 @@
     '2xl': $font-size-2xl,
     '3xl': $font-size-3xl,
     '4xl': $font-size-4xl,
-    '5xl': $font-size-5xl
+    '5xl': $font-size-5xl,
   );
-  
+
   @return map-get($font-size-scale, $key);
 }
 
@@ -250,9 +268,9 @@
     'normal': $font-weight-normal,
     'medium': $font-weight-medium,
     'semibold': $font-weight-semibold,
-    'bold': $font-weight-bold
+    'bold': $font-weight-bold,
   );
-  
+
   @return map-get($font-weight-scale, $key);
 }
 
@@ -262,9 +280,9 @@
     'tight': $line-height-tight,
     'normal': $line-height-normal,
     'relaxed': $line-height-relaxed,
-    'loose': $line-height-loose
+    'loose': $line-height-loose,
   );
-  
+
   @return map-get($line-height-scale, $key);
 }
 
@@ -273,9 +291,9 @@
   $letter-spacing-scale: (
     'tight': $letter-spacing-tight,
     'normal': $letter-spacing-normal,
-    'wide': $letter-spacing-wide
+    'wide': $letter-spacing-wide,
   );
-  
+
   @return map-get($letter-spacing-scale, $key);
 }
 
@@ -292,9 +310,9 @@
     'xl': $border-radius-xl,
     '2xl': $border-radius-2xl,
     'full': $border-radius-full,
-    'circle': $border-radius-circle
+    'circle': $border-radius-circle,
   );
-  
+
   @return map-get($border-radius-scale, $key);
 }
 
@@ -307,9 +325,9 @@
     'lg': $shadow-lg,
     'xl': $shadow-xl,
     '2xl': $shadow-2xl,
-    'inner': $shadow-inner
+    'inner': $shadow-inner,
   );
-  
+
   @return map-get($shadow-scale, $key);
 }
 
@@ -328,9 +346,9 @@
     'tooltip': $z-index-tooltip,
     'popover': $z-index-popover,
     'drawer': $z-index-drawer,
-    'modal': $z-index-modal
+    'modal': $z-index-modal,
   );
-  
+
   @return map-get($z-index-scale, $key);
 }
 
@@ -345,36 +363,36 @@
     'md': $breakpoint-md,
     'lg': $breakpoint-lg,
     'xl': $breakpoint-xl,
-    'xxl': $breakpoint-xxl
+    'xxl': $breakpoint-xxl,
   );
-  
+
   @return map-get($breakpoint-scale, $key);
 }
 
 // 响应式值
 @function responsive-value($values) {
   $result: null;
-  
+
   @if map-has-key($values, 'base') {
     $result: map-get($values, 'base');
   }
-  
+
   @if map-has-key($values, 'sm') {
     $result: append($result, unquote('(min-width: #{$breakpoint-sm}) #{map-get($values, 'sm')}'), comma);
   }
-  
+
   @if map-has-key($values, 'md') {
     $result: append($result, unquote('(min-width: #{$breakpoint-md}) #{map-get($values, 'md')}'), comma);
   }
-  
+
   @if map-has-key($values, 'lg') {
     $result: append($result, unquote('(min-width: #{$breakpoint-lg}) #{map-get($values, 'lg')}'), comma);
   }
-  
+
   @if map-has-key($values, 'xl') {
     $result: append($result, unquote('(min-width: #{$breakpoint-xl}) #{map-get($values, 'xl')}'), comma);
   }
-  
+
   @return $result;
 }
 
@@ -386,9 +404,9 @@
   $duration-scale: (
     'fast': $animation-duration-fast,
     'normal': $animation-duration-normal,
-    'slow': $animation-duration-slow
+    'slow': $animation-duration-slow,
   );
-  
+
   @return map-get($duration-scale, $key);
 }
 
@@ -399,9 +417,9 @@
     'ease': $animation-easing-ease,
     'ease-in': $animation-easing-ease-in,
     'ease-out': $animation-easing-ease-out,
-    'ease-in-out': $animation-easing-ease-in-out
+    'ease-in-out': $animation-easing-ease-in-out,
   );
-  
+
   @return map-get($easing-scale, $key);
 }
 
@@ -421,26 +439,26 @@
 // 计算最大值
 @function max($numbers...) {
   $max: null;
-  
+
   @each $number in $numbers {
     @if $max == null or $number > $max {
       $max: $number;
     }
   }
-  
+
   @return $max;
 }
 
 // 计算最小值
 @function min($numbers...) {
   $min: null;
-  
+
   @each $number in $numbers {
     @if $min == null or $number < $min {
       $min: $number;
     }
   }
-  
+
   @return $min;
 }
 
@@ -458,11 +476,12 @@
 // 字符串替换
 @function str-replace($string, $search, $replace: '') {
   $index: str-index($string, $search);
-  
+
   @if $index {
-    @return str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+    @return str-slice($string, 1, $index - 1) + $replace +
+      str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
   }
-  
+
   @return $string;
 }
 
@@ -496,7 +515,7 @@
 // 获取地图值
 @function map-get-deep($map, $keys...) {
   $result: $map;
-  
+
   @each $key in $keys {
     @if type-of($result) == map {
       $result: map-get($result, $key);
@@ -504,7 +523,7 @@
       @return null;
     }
   }
-  
+
   @return $result;
 }
 
@@ -555,7 +574,7 @@
 // 生成响应式CSS
 @function responsive-css($property, $values) {
   $result: null;
-  
+
   @each $breakpoint, $value in $values {
     @if $breakpoint == 'base' {
       $result: '#{$property}: #{$value};';
@@ -563,55 +582,64 @@
       $result: $result + ' @media (min-width: #{breakpoint($breakpoint)}) { #{$property}: #{$value}; }';
     }
   }
-  
+
   @return $result;
 }
 
 // 颜色变体生成器
 @function color-variants($base-color, $variants: 5) {
   $result: ();
-  
+
   @for $i from 1 through $variants {
     $lightness: lightness($base-color);
     $adjustment: ($i - 3) * 10%;
-    
+
     @if $i < 3 {
-      $result: map-merge($result, (
-        'lighter-#{$i}': lighten($base-color, abs($adjustment))
-      ));
+      $result: map-merge(
+        $result,
+        (
+          'lighter-#{$i}': lighten($base-color, abs($adjustment)),
+        )
+      );
     } @else if $i > 3 {
-      $result: map-merge($result, (
-        'darker-#{$i - 2}': darken($base-color, abs($adjustment))
-      ));
+      $result: map-merge(
+        $result,
+        (
+          'darker-#{$i - 2}': darken($base-color, abs($adjustment)),
+        )
+      );
     } @else {
-      $result: map-merge($result, (
-        'base': $base-color
-      ));
+      $result: map-merge(
+        $result,
+        (
+          'base': $base-color,
+        )
+      );
     }
   }
-  
+
   @return $result;
 }
 
 // 渐变生成器
 @function gradient($direction, $colors) {
   $gradient: 'linear-gradient(#{$direction}';
-  
+
   @each $color in $colors {
     $gradient: $gradient + ', #{$color}';
   }
-  
+
   @return $gradient + ')';
 }
 
 // 网格生成器
 @function grid-template($columns, $gap: null) {
   $template: 'repeat(#{$columns}, 1fr)';
-  
+
   @if $gap {
     $template: $template + ' / #{$gap}';
   }
-  
+
   @return $template;
 }
 

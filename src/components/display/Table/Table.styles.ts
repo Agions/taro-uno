@@ -1,9 +1,16 @@
-import type { TableProps, TableSize } from './Table.types';
+import type { TableSize } from './Table.types';
 
 /** 表格样式类 */
 export class TableStyles {
   /** 尺寸映射 */
   static readonly SIZE_MAP: Record<TableSize, any> = {
+    default: {
+      fontSize: 14,
+      padding: 12,
+      headerHeight: 40,
+      rowHeight: 40,
+      borderRadius: 6,
+    },
     small: {
       fontSize: 12,
       padding: 8,
@@ -50,14 +57,14 @@ export class TableStyles {
     scroll?: { x?: number | string; y?: number | string };
     style?: React.CSSProperties;
   }): React.CSSProperties {
-    const { size = 'medium', bordered = false, striped = false, hoverable = true, scroll, style = {} } = props;
+    const { size = 'medium', bordered = false, style = {} } = props;
 
     const sizeStyles = this.SIZE_MAP[size];
 
     return {
       width: '100%',
       backgroundColor: this.COLOR_MAP.background,
-      borderRadius: sizeStyles.borderRadius,
+      borderRadius: sizeStyles['borderRadius'],
       border: bordered ? `1px solid ${this.COLOR_MAP.borderColor}` : 'none',
       boxShadow: this.COLOR_MAP.shadow,
       overflow: 'hidden',
@@ -104,7 +111,7 @@ export class TableStyles {
     return {
       backgroundColor: this.COLOR_MAP.headerBackground,
       borderBottom: `1px solid ${this.COLOR_MAP.borderColor}`,
-      minHeight: sizeStyles.headerHeight,
+      minHeight: sizeStyles['headerHeight'],
       position: 'sticky',
       top: 0,
       zIndex: 10,
@@ -122,13 +129,13 @@ export class TableStyles {
     const sizeStyles = this.SIZE_MAP[size];
 
     return {
-      minHeight: sizeStyles.rowHeight,
+      minHeight: sizeStyles['rowHeight'],
       borderBottom: `1px solid ${this.COLOR_MAP.borderColor}`,
       backgroundColor: selected
         ? this.COLOR_MAP.selectedBackground
         : striped && index % 2 === 1
-        ? this.COLOR_MAP.stripedBackground
-        : 'transparent',
+          ? this.COLOR_MAP.stripedBackground
+          : 'transparent',
       transition: 'background-color 0.2s ease',
     };
   }
@@ -145,11 +152,11 @@ export class TableStyles {
     const sizeStyles = this.SIZE_MAP[size];
 
     return {
-      padding: `${sizeStyles.padding}px`,
+      padding: `${sizeStyles['padding']}px`,
       textAlign: align,
       width: width || 'auto',
       minWidth: 80,
-      fontSize: sizeStyles.fontSize,
+      fontSize: sizeStyles['fontSize'],
       color: isHeader ? this.COLOR_MAP.headerTextColor : this.COLOR_MAP.textColor,
       fontWeight: isHeader ? 600 : 400,
       borderRight: isHeader ? `1px solid ${this.COLOR_MAP.borderColor}` : 'none',
@@ -210,7 +217,7 @@ export class TableStyles {
 
   /** 生成表格排序器样式 */
   static getSorterStyle(props: { active?: boolean; order?: 'ascend' | 'descend' }): React.CSSProperties {
-    const { active = false, order } = props;
+    const { active = false } = props;
 
     return {
       display: 'inline-flex',

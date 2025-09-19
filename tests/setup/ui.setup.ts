@@ -3,16 +3,15 @@
  * 为UI组件测试提供必要的环境配置
  */
 
-import '@testing-library/jest-dom'
-import React from 'react'
+import '@testing-library/jest-dom';
 
 // Mock @tarojs/components
 jest.mock('@tarojs/components', () => {
-  const React = require('react')
-  
+  const React = require('react');
+
   const createMockComponent = (name: string) => {
-    const MockComponent = React.forwardRef<any, any>((props, ref) => {
-      const { children, className, style, onClick, ...rest } = props
+    const MockComponent = React.forwardRef((props: any, ref: any) => {
+      const { children, className, style, onClick, ...rest } = props;
       return React.createElement(
         'div',
         {
@@ -21,14 +20,14 @@ jest.mock('@tarojs/components', () => {
           style,
           onClick,
           ref,
-          ...rest
+          ...rest,
         },
-        children
-      )
-    })
-    MockComponent.displayName = `Mock${name}`
-    return MockComponent
-  }
+        children,
+      );
+    });
+    MockComponent.displayName = `Mock${name}`;
+    return MockComponent;
+  };
 
   return {
     View: createMockComponent('View'),
@@ -64,8 +63,8 @@ jest.mock('@tarojs/components', () => {
     Radio: createMockComponent('Radio'),
     Form: createMockComponent('Form'),
     Label: createMockComponent('Label'),
-  }
-})
+  };
+});
 
 // Mock Taro API
 const mockTaro = {
@@ -81,20 +80,22 @@ const mockTaro = {
     select: () => ({
       boundingClientRect: () => ({
         exec: (callback: (result: any[]) => void) => {
-          callback([{
-            width: 100,
-            height: 50,
-            top: 0,
-            left: 0,
-            right: 100,
-            bottom: 50,
-          }])
+          callback([
+            {
+              width: 100,
+              height: 50,
+              top: 0,
+              left: 0,
+              right: 100,
+              bottom: 50,
+            },
+          ]);
         },
       }),
     }),
   }),
   nextTick: (callback: () => void) => {
-    setTimeout(callback, 0)
+    setTimeout(callback, 0);
   },
   showToast: jest.fn(),
   showModal: jest.fn(),
@@ -102,65 +103,65 @@ const mockTaro = {
   redirectTo: jest.fn(),
   switchTab: jest.fn(),
   navigateBack: jest.fn(),
-}
+};
 
-  // 全局Mock
-  ; (global as any).Taro = mockTaro
-  ; (global as any).wx = mockTaro
-  ; (global as any).my = mockTaro
-  ; (global as any).swan = mockTaro
-  ; (global as any).tt = mockTaro
+// 全局Mock
+(global as any).Taro = mockTaro;
+(global as any).wx = mockTaro;
+(global as any).my = mockTaro;
+(global as any).swan = mockTaro;
+(global as any).tt = mockTaro;
 
-  // Mock IntersectionObserver
-  ; (global as any).IntersectionObserver = class MockIntersectionObserver {
-    root: Element | null = null
-    rootMargin: string = '0px'
-    thresholds: ReadonlyArray<number> = []
+// Mock IntersectionObserver
+(global as any).IntersectionObserver = class MockIntersectionObserver {
+  root: Element | null = null;
+  rootMargin: string = '0px';
+  thresholds: ReadonlyArray<number> = [];
 
-    constructor() {
-      // Mock constructor
-    }
-
-    observe() {
-      // Mock observe
-    }
-
-    unobserve() {
-      // Mock unobserve
-    }
-
-    disconnect() {
-      // Mock disconnect
-    }
-
-    takeRecords(): IntersectionObserverEntry[] {
-      return []
-    }
+  constructor() {
+    // Mock constructor
   }
 
-  // Mock ResizeObserver
-  ; (global as any).ResizeObserver = class MockResizeObserver {
-    constructor() {
-      // Mock constructor
-    }
-
-    observe() {
-      // Mock observe
-    }
-
-    unobserve() {
-      // Mock unobserve
-    }
-
-    disconnect() {
-      // Mock disconnect
-    }
+  observe() {
+    // Mock observe
   }
+
+  unobserve() {
+    // Mock unobserve
+  }
+
+  disconnect() {
+    // Mock disconnect
+  }
+
+  takeRecords(): IntersectionObserverEntry[] {
+    return [];
+  }
+};
+
+// Mock ResizeObserver
+(global as any).ResizeObserver = class MockResizeObserver {
+  constructor() {
+    // Mock constructor
+  }
+
+  observe() {
+    // Mock observe
+  }
+
+  unobserve() {
+    // Mock unobserve
+  }
+
+  disconnect() {
+    // Mock disconnect
+  }
+};
 
 // Mock matchMedia
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: jest.fn().mockImplementation(query => ({
+  value: jest.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -170,16 +171,16 @@ Object.defineProperty(window, 'matchMedia', {
     removeEventListener: jest.fn(),
     dispatchEvent: jest.fn(),
   })),
-})
+});
 
 // Mock getComputedStyle
 Object.defineProperty(window, 'getComputedStyle', {
   value: () => ({
     getPropertyValue: () => '',
   }),
-})
+});
 
 // 清理函数
 afterEach(() => {
-  jest.clearAllMocks()
-})
+  jest.clearAllMocks();
+});

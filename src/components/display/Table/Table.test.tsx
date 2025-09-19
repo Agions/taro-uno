@@ -77,7 +77,7 @@ describe('Table Component', () => {
   })
 
   test('handles sorting', () => {
-    const handleChange = jest.fn()
+    const handleChange = vi.fn()
     const { container } = render(
       <Table
         columns={mockColumns}
@@ -94,7 +94,7 @@ describe('Table Component', () => {
   })
 
   test('handles row selection', () => {
-    const handleSelectionChange = jest.fn()
+    const handleSelectionChange = vi.fn()
     const { container } = render(
       <Table
         columns={mockColumns}
@@ -113,7 +113,7 @@ describe('Table Component', () => {
   })
 
   test('handles pagination', () => {
-    const handleChange = jest.fn()
+    const handleChange = vi.fn()
     const largeData = Array.from({ length: 25 }, (_, i) => ({
       key: String(i + 1),
       name: `用户${i + 1}`,
@@ -210,14 +210,15 @@ describe('Table Component', () => {
   })
 
   test('handles expandable rows', () => {
-    const handleExpand = jest.fn()
+    const handleExpand = vi.fn()
     const { container } = render(
       <Table
         columns={mockColumns}
         dataSource={mockData}
         expandable={{
           expandedRowRender: (record) => <div>展开内容: {record.name}</div>,
-          rowExpandable: (record) => record.age > 30
+          rowExpandable: (record) => record.age > 30,
+          onExpand: handleExpand
         }}
       />
     )

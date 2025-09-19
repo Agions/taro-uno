@@ -17,7 +17,7 @@ export type RadioColor = 'primary' | 'secondary' | 'success' | 'warning' | 'erro
 export type RadioNativeProps = InputHTMLAttributes<HTMLInputElement>;
 
 /** 单选框组件属性接口 */
-export interface RadioProps extends Omit<RadioNativeProps, 'size' | 'checked' | 'onChange'> {
+export interface RadioProps extends Omit<RadioNativeProps, 'size' | 'onChange' | 'checked' | 'onClick' | 'dangerouslySetInnerHTML' | 'onTouchStart'> {
   /** 单选框值 */
   value: string | number;
   /** 是否选中 */
@@ -102,6 +102,16 @@ export interface RadioProps extends Omit<RadioNativeProps, 'size' | 'checked' | 
   tabIndex?: number;
   /** 数据属性 */
   data?: Record<string, any>;
+  /** 容器样式 */
+  containerStyle?: React.CSSProperties;
+  /** 包装器样式 */
+  wrapperStyle?: React.CSSProperties;
+  /** 标签样式 */
+  labelStyle?: React.CSSProperties;
+  /** 错误文本样式 */
+  errorTextStyle?: React.CSSProperties;
+  /** 辅助文本样式 */
+  helperTextStyle?: React.CSSProperties;
 }
 
 /** 单选框组件引用类型 */

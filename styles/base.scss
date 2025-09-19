@@ -42,7 +42,7 @@ page {
   background-color: $background-color;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  
+
   @include dark-theme {
     color: $dark-text-color;
     background-color: $dark-background-color;
@@ -55,7 +55,7 @@ page {
 }
 
 // 暗色主题
-[data-theme="dark"] {
+[data-theme='dark'] {
   @include theme-variables('dark');
 }
 
@@ -74,16 +74,16 @@ a {
   color: $text-color-link;
   text-decoration: none;
   transition: $transition-base;
-  
+
   &:hover {
     color: lighten-color($text-color-link, 10%);
     text-decoration: underline;
   }
-  
+
   &:active {
     color: darken-color($text-color-link, 10%);
   }
-  
+
   &:focus {
     outline: 2px solid rgba($primary-color, 0.2);
     outline-offset: 2px;
@@ -99,12 +99,12 @@ button {
   font: inherit;
   color: inherit;
   cursor: pointer;
-  
+
   &:focus {
     outline: 2px solid rgba($primary-color, 0.2);
     outline-offset: 2px;
   }
-  
+
   &:disabled {
     cursor: not-allowed;
     opacity: 0.5;
@@ -122,17 +122,17 @@ select {
   border-radius: $border-radius-md;
   padding: $spacing-sm $spacing-md;
   transition: $transition-base;
-  
+
   &:focus {
     outline: none;
     border-color: $border-color-focus;
     box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
   }
-  
+
   &::placeholder {
     color: $text-color-disabled;
   }
-  
+
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -196,7 +196,7 @@ pre {
   padding: $spacing-md;
   overflow-x: auto;
   line-height: $line-height-relaxed;
-  
+
   code {
     padding: 0;
     background: none;
@@ -225,7 +225,7 @@ h6 {
   line-height: $line-height-tight;
   color: $text-color;
   margin-bottom: $spacing-md;
-  
+
   @include dark-theme {
     color: $dark-text-color;
   }
@@ -259,7 +259,7 @@ h6 {
 p {
   margin-bottom: $spacing-md;
   line-height: $line-height-base;
-  
+
   &:last-child {
     margin-bottom: 0;
   }
@@ -390,7 +390,7 @@ p {
   max-width: $grid-container-max-width;
   margin: 0 auto;
   padding: 0 $spacing-md;
-  
+
   @include mobile {
     padding: 0 $spacing-sm;
   }
@@ -594,39 +594,39 @@ p {
   .m-#{$key} {
     margin: $value;
   }
-  
+
   .p-#{$key} {
     padding: $value;
   }
-  
+
   .mt-#{$key} {
     margin-top: $value;
   }
-  
+
   .mr-#{$key} {
     margin-right: $value;
   }
-  
+
   .mb-#{$key} {
     margin-bottom: $value;
   }
-  
+
   .ml-#{$key} {
     margin-left: $value;
   }
-  
+
   .pt-#{$key} {
     padding-top: $value;
   }
-  
+
   .pr-#{$key} {
     padding-right: $value;
   }
-  
+
   .pb-#{$key} {
     padding-bottom: $value;
   }
-  
+
   .pl-#{$key} {
     padding-left: $value;
   }
@@ -940,7 +940,7 @@ p {
   .mobile\:hidden {
     display: none;
   }
-  
+
   .mobile\:block {
     display: block;
   }
@@ -950,7 +950,7 @@ p {
   .tablet\:hidden {
     display: none;
   }
-  
+
   .tablet\:block {
     display: block;
   }
@@ -960,7 +960,7 @@ p {
   .desktop\:hidden {
     display: none;
   }
-  
+
   .desktop\:block {
     display: block;
   }

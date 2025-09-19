@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { View } from '@tarojs/components';
+// import { View } from '@tarojs/components'; // Commented out - unused
 import { BaseComponentProps, Size } from '../../../types';
 
 /** 分页尺寸 */
@@ -14,7 +14,7 @@ export type PaginationAlign = 'left' | 'center' | 'right';
 /** 分页引用 */
 export interface PaginationRef {
   /** 获取元素引用 */
-  element: View | null;
+  element: any | null;
   /** 获取当前页码 */
   getCurrent: () => number;
   /** 获取每页条数 */

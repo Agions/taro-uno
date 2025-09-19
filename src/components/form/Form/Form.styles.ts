@@ -56,11 +56,11 @@ export class FormStyles {
 
     return {
       display: 'flex',
-      flexDirection: layoutStyles.flexDirection as 'row' | 'column',
-      alignItems: layoutStyles.alignItems,
-      gap: layoutStyles.gap,
-      padding: sizeStyles.padding,
-      fontSize: sizeStyles.fontSize,
+      flexDirection: layoutStyles['flexDirection'] as 'row' | 'column',
+      alignItems: layoutStyles['alignItems'],
+      gap: layoutStyles['gap'],
+      padding: sizeStyles['padding'],
+      fontSize: sizeStyles['fontSize'],
       boxSizing: 'border-box',
       width: '100%',
       ...style,
@@ -101,10 +101,10 @@ export class FormStyles {
 
     const baseStyle: React.CSSProperties = {
       display: 'flex',
-      flexDirection: layoutStyles.flexDirection as 'row' | 'column',
-      alignItems: layoutStyles.alignItems,
-      gap: layoutStyles.gap,
-      marginBottom: sizeStyles.spacing,
+      flexDirection: layoutStyles['flexDirection'] as 'row' | 'column',
+      alignItems: layoutStyles['alignItems'],
+      gap: layoutStyles['gap'],
+      marginBottom: sizeStyles['spacing'],
       width: '100%',
       boxSizing: 'border-box',
     };
@@ -131,7 +131,7 @@ export class FormStyles {
       size = 'md',
       labelAlign = 'right',
       labelWidth,
-      required = false,
+      required: _required = false,
       style = {},
     } = props;
 
@@ -139,10 +139,10 @@ export class FormStyles {
     const labelAlignStyles = this.LABEL_ALIGN_MAP[labelAlign];
 
     const baseStyle: React.CSSProperties = {
-      fontSize: sizeStyles.fontSize,
+      fontSize: sizeStyles['fontSize'],
       fontWeight: 500,
       color: '#374151',
-      textAlign: labelAlignStyles.textAlign as 'left' | 'right' | 'center',
+      textAlign: labelAlignStyles['textAlign'] as 'left' | 'right' | 'center',
       boxSizing: 'border-box',
       display: 'flex',
       alignItems: 'center',
@@ -168,7 +168,7 @@ export class FormStyles {
     size?: FormSize;
     style?: React.CSSProperties;
   }): React.CSSProperties {
-    const { layout = 'horizontal', size = 'md', style = {} } = props;
+    const { layout = 'horizontal', size: _size = 'md', style = {} } = props;
 
     const baseStyle: React.CSSProperties = {
       flex: 1,
@@ -192,7 +192,7 @@ export class FormStyles {
     const sizeStyles = this.SIZE_MAP[size];
 
     return {
-      fontSize: sizeStyles.fontSize * 0.85,
+      fontSize: sizeStyles['fontSize'] * 0.85,
       color: '#6b7280',
       marginTop: '4px',
       ...style,
@@ -206,7 +206,7 @@ export class FormStyles {
     const sizeStyles = this.SIZE_MAP[size];
 
     return {
-      fontSize: sizeStyles.fontSize * 0.85,
+      fontSize: sizeStyles['fontSize'] * 0.85,
       color: '#ef4444',
       marginTop: '4px',
       ...style,
@@ -221,7 +221,7 @@ export class FormStyles {
 
     return {
       color: '#ef4444',
-      fontSize: sizeStyles.fontSize,
+      fontSize: sizeStyles['fontSize'],
       marginLeft: '4px',
       ...style,
     };
@@ -237,11 +237,11 @@ export class FormStyles {
         width: '100%',
       },
       sizes: {
-        xs: { fontSize: 20, padding: '8px', spacing: 12, borderRadius: 4 },
-        sm: { fontSize: 24, padding: '12px', spacing: 16, borderRadius: 6 },
-        md: { fontSize: 28, padding: '16px', spacing: 20, borderRadius: 8 },
-        lg: { fontSize: 32, padding: '20px', spacing: 24, borderRadius: 10 },
-        xl: { fontSize: 36, padding: '24px', spacing: 32, borderRadius: 12 },
+        xs: { fontSize: 20, padding: '8px', gap: 12, borderRadius: 4 },
+        sm: { fontSize: 24, padding: '12px', gap: 16, borderRadius: 6 },
+        md: { fontSize: 28, padding: '16px', gap: 20, borderRadius: 8 },
+        lg: { fontSize: 32, padding: '20px', gap: 24, borderRadius: 10 },
+        xl: { fontSize: 36, padding: '24px', gap: 32, borderRadius: 12 },
       },
       layouts: {
         horizontal: { flexDirection: 'row', alignItems: 'center', gap: '16px' },

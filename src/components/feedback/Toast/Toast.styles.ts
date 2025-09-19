@@ -13,4 +13,5 @@ export const toastStyles = {
   error: 'bg-red-500/90',
   warning: 'bg-yellow-500/90',
   info: 'bg-blue-500/90',
+  loading: 'bg-gray-500/90'
 };

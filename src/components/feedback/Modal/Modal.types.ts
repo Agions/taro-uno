@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-import { View } from '@tarojs/components';
 import { BaseComponentProps, Size } from '../../../types';
 
 /** Modal尺寸 */
@@ -30,7 +29,7 @@ export interface ModalButton {
 /** Modal引用 */
 export interface ModalRef {
   /** 获取元素引用 */
-  element: View | null;
+  element: any | null;
   /** 显示Modal */
   show: () => void;
   /** 隐藏Modal */

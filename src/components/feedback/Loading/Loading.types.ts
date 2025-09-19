@@ -1,10 +1,16 @@
 import React from 'react';
 
+/** 加载类型 */
+export type LoadingType = 'spinner' | 'dots' | 'pulse' | 'bars';
+
+/** 加载尺寸 */
+export type LoadingSize = 'xs' | 'sm' | 'default' | 'lg' | 'xl';
+
 export interface LoadingProps {
   /** 加载类型 */
-  type?: 'spinner' | 'dots' | 'pulse' | 'bars';
+  type?: LoadingType;
   /** 尺寸 */
-  size?: 'xs' | 'sm' | 'default' | 'lg' | 'xl';
+  size?: LoadingSize;
   /** 颜色 */
   color?: string;
   /** 文本内容 */

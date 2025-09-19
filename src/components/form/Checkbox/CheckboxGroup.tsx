@@ -5,11 +5,7 @@ import { checkboxStyles } from './Checkbox.styles';
 import type {
   CheckboxGroupProps,
   CheckboxGroupRef,
-  CheckboxSize,
   CheckboxStatus,
-  CheckboxVariant,
-  CheckboxColor,
-  CheckboxOption,
 } from './Checkbox.types';
 import { Checkbox } from './Checkbox';
 
@@ -36,7 +32,7 @@ export const CheckboxGroupComponent = forwardRef<CheckboxGroupRef, CheckboxGroup
     showSelectAll = false,
     selectAllText = '全选',
     showCount = false,
-    countText = (selected, total) => `已选择 ${selected} 项`,
+    countText = (_selected, _total) => `已选择 ${_selected} 项`,
     allowDeselectAll = true,
     compact = false,
     block = false,
@@ -75,9 +71,9 @@ export const CheckboxGroupComponent = forwardRef<CheckboxGroupRef, CheckboxGroup
 
   // 计算组状态
   const groupState = useCallback(() => {
-    const availableOptions = options?.filter(opt => !opt.disabled) || [];
-    const selectedValues = value.filter(val => availableOptions.some(opt => opt.value === val));
-    
+    const availableOptions = options?.filter((opt) => !opt.disabled) || [];
+    const selectedValues = value.filter((val) => availableOptions.some((opt) => opt.value === val));
+
     return {
       allSelected: availableOptions.length > 0 && selectedValues.length === availableOptions.length,
       indeterminate: selectedValues.length > 0 && selectedValues.length < availableOptions.length,
@@ -88,23 +84,23 @@ export const CheckboxGroupComponent = forwardRef<CheckboxGroupRef, CheckboxGroup
 
   // 处理单个复选框变化
   const handleCheckboxChange = useCallback(
-    (checked: boolean, checkboxValue: string | number, event: ITouchEvent) => {
+    (checked: boolean, checkboxValue: string | number, _event: ITouchEvent) => {
       if (internalDisabled || internalReadonly) return;
 
       let newValue: Array<string | number>;
-      
+
       if (checked) {
         // 添加选中值
         newValue = [...value, checkboxValue];
-        
+
         // 检查最大选择数量
         if (maxCount !== undefined && newValue.length > maxCount) {
           return;
         }
       } else {
         // 移除选中值
-        newValue = value.filter(val => val !== checkboxValue);
-        
+        newValue = value.filter((val) => val !== checkboxValue);
+
         // 检查最小选择数量
         if (minCount !== undefined && newValue.length < minCount) {
           return;
@@ -115,7 +111,7 @@ export const CheckboxGroupComponent = forwardRef<CheckboxGroupRef, CheckboxGroup
         setInternalValue(newValue);
       }
 
-      // 触发变化事件
+      // 触发变化事件 - 传递正确的值
       onChange?.(newValue);
     },
     [internalDisabled, internalReadonly, value, isControlled, maxCount, minCount, onChange],
@@ -123,20 +119,23 @@ export const CheckboxGroupComponent = forwardRef<CheckboxGroupRef, CheckboxGroup
 
   // 处理全选
   const handleSelectAll = useCallback(
-    (event: ITouchEvent) => {
+    (_event: ITouchEvent) => {
       if (internalDisabled || internalReadonly) return;
 
-      const { allSelected, selectedCount } = groupState();
-      const availableOptions = options?.filter(opt => !opt.disabled) || [];
-      
+      const { allSelected } = groupState();
+      const availableOptions = options?.filter((opt) => !opt.disabled) || [];
+
       let newValue: Array<string | number>;
-      
+
       if (allSelected && allowDeselectAll) {
         // 取消全选
         newValue = [];
-      } else {
+      } else if (!allSelected) {
         // 全选
-        newValue = availableOptions.map(opt => opt.value);
+        newValue = availableOptions.map((opt) => opt.value);
+      } else {
+        // 已经全选且不允许取消选择，不做任何操作
+        return;
       }
 
       if (!isControlled) {
@@ -145,7 +144,7 @@ export const CheckboxGroupComponent = forwardRef<CheckboxGroupRef, CheckboxGroup
 
       // 触发变化事件
       onChange?.(newValue);
-      
+
       // 触发全选变化事件
       onAllChange?.(!allSelected);
     },
@@ -163,10 +162,18 @@ export const CheckboxGroupComponent = forwardRef<CheckboxGroupRef, CheckboxGroup
   // 获取选项是否禁用
   const isOptionDisabled = useCallback(
     (optionValue: string | number) => {
-      const option = options?.find(opt => opt.value === optionValue);
-      return internalDisabled || internalReadonly || option?.disabled || false;
+      const option = options?.find((opt) => opt.value === optionValue);
+      return internalDisabled || option?.disabled || false;
     },
-    [internalDisabled, internalReadonly, options],
+    [internalDisabled, options],
+  );
+
+  // 获取选项是否只读
+  const isOptionReadonly = useCallback(
+    (_optionValue: string | number) => {
+      return internalReadonly;
+    },
+    [internalReadonly],
   );
 
   // 渲染选项
@@ -174,14 +181,12 @@ export const CheckboxGroupComponent = forwardRef<CheckboxGroupRef, CheckboxGroup
     if (!options) return null;
 
     return options.map((option) => (
-      <View
-        key={option.value}
-        style={checkboxStyles.getGroupItemStyle({ direction, compact })}
-      >
+      <View key={option.value} style={checkboxStyles['getGroupItemStyle']({ direction, compact })}>
         <Checkbox
           value={option.value}
           checked={isOptionSelected(option.value)}
           disabled={isOptionDisabled(option.value)}
+          readonly={isOptionReadonly(option.value)}
           size={size}
           status={internalStatus}
           variant={variant}
@@ -206,7 +211,19 @@ export const CheckboxGroupComponent = forwardRef<CheckboxGroupRef, CheckboxGroup
         )}
       </View>
     ));
-  }, [options, size, internalStatus, variant, color, isOptionSelected, isOptionDisabled, handleCheckboxChange, direction, compact]);
+  }, [
+    options,
+    size,
+    internalStatus,
+    variant,
+    color,
+    isOptionSelected,
+    isOptionDisabled,
+    isOptionReadonly,
+    handleCheckboxChange,
+    direction,
+    compact,
+  ]);
 
   // 暴露给外部的引用方法
   React.useImperativeHandle(
@@ -219,9 +236,9 @@ export const CheckboxGroupComponent = forwardRef<CheckboxGroupRef, CheckboxGroup
         }
       },
       selectAll: () => {
-        const availableOptions = options?.filter(opt => !opt.disabled) || [];
-        const newValue = availableOptions.map(opt => opt.value);
-        
+        const availableOptions = options?.filter((opt) => !opt.disabled) || [];
+        const newValue: Array<string | number> = availableOptions.map((opt) => opt.value);
+
         if (!isControlled) {
           setInternalValue(newValue);
         }
@@ -239,9 +256,8 @@ export const CheckboxGroupComponent = forwardRef<CheckboxGroupRef, CheckboxGroup
         const { allSelected } = groupState();
         if (allSelected) {
           // 取消全选
-          const availableOptions = options?.filter(opt => !opt.disabled) || [];
-          const newValue = [];
-          
+          const newValue: Array<string | number> = [];
+
           if (!isControlled) {
             setInternalValue(newValue);
           }
@@ -249,9 +265,9 @@ export const CheckboxGroupComponent = forwardRef<CheckboxGroupRef, CheckboxGroup
           onAllChange?.(false);
         } else {
           // 全选
-          const availableOptions = options?.filter(opt => !opt.disabled) || [];
-          const newValue = availableOptions.map(opt => opt.value);
-          
+          const availableOptions = options?.filter((opt) => !opt.disabled) || [];
+          const newValue: Array<string | number> = availableOptions.map((opt) => opt.value);
+
           if (!isControlled) {
             setInternalValue(newValue);
           }
@@ -274,7 +290,7 @@ export const CheckboxGroupComponent = forwardRef<CheckboxGroupRef, CheckboxGroup
       },
       validate: async () => {
         const { selectedCount } = groupState();
-        
+
         // 检查最小选择数量
         if (minCount !== undefined && selectedCount < minCount) {
           return {
@@ -282,7 +298,7 @@ export const CheckboxGroupComponent = forwardRef<CheckboxGroupRef, CheckboxGroup
             message: `最少需要选择 ${minCount} 项`,
           };
         }
-        
+
         // 检查最大选择数量
         if (maxCount !== undefined && selectedCount > maxCount) {
           return {
@@ -290,7 +306,7 @@ export const CheckboxGroupComponent = forwardRef<CheckboxGroupRef, CheckboxGroup
             message: `最多允许选择 ${maxCount} 项`,
           };
         }
-        
+
         return { valid: true };
       },
       reset: () => {
@@ -300,18 +316,18 @@ export const CheckboxGroupComponent = forwardRef<CheckboxGroupRef, CheckboxGroup
         setInternalStatus('normal');
       },
       getSelectedOptions: () => {
-        return options?.filter(opt => value.includes(opt.value)) || [];
+        return options?.filter((opt) => value.includes(opt.value)) || [];
       },
       getOptionByValue: (optionValue) => {
-        return options?.find(opt => opt.value === optionValue);
+        return options?.find((opt) => opt.value === optionValue);
       },
-      setOptionDisabled: (optionValue, optionDisabled) => {
+      setOptionDisabled: (_optionValue, _optionDisabled) => {
         // 设置选项禁用状态
-        console.log('Set option disabled:', optionValue, optionDisabled);
+        // Set option disabled: optionValue, optionDisabled
       },
-      setOptionsDisabled: (optionValues, optionDisabled) => {
+      setOptionsDisabled: (_optionValues, _optionDisabled) => {
         // 批量设置选项禁用状态
-        console.log('Set options disabled:', optionValues, optionDisabled);
+        // Set options disabled: optionValues, optionDisabled
       },
       focus: () => {
         if (groupRef.current) {
@@ -324,17 +340,7 @@ export const CheckboxGroupComponent = forwardRef<CheckboxGroupRef, CheckboxGroup
         }
       },
     }),
-    [
-      value,
-      isControlled,
-      options,
-      groupState,
-      minCount,
-      maxCount,
-      defaultValue,
-      onChange,
-      onAllChange,
-    ],
+    [value, isControlled, options, groupState, minCount, maxCount, defaultValue, onChange, onAllChange],
   );
 
   const { allSelected, indeterminate, selectedCount, totalCount } = groupState();
@@ -352,7 +358,7 @@ export const CheckboxGroupComponent = forwardRef<CheckboxGroupRef, CheckboxGroup
     <View
       ref={groupRef}
       style={{
-        ...checkboxStyles.getGroupStyle({
+        ...checkboxStyles['getGroupStyle']({
           direction,
           align,
           spacing,
@@ -366,6 +372,7 @@ export const CheckboxGroupComponent = forwardRef<CheckboxGroupRef, CheckboxGroup
       accessible={accessible}
       aria-label={accessibilityLabel}
       aria-role={accessibilityRole}
+      role={accessibilityRole}
       aria-state={finalAccessibilityState}
     >
       {/* 分组标题 */}
@@ -398,7 +405,7 @@ export const CheckboxGroupComponent = forwardRef<CheckboxGroupRef, CheckboxGroup
       {/* 全选按钮 */}
       {showSelectAll && options && options.length > 0 && (
         <View
-          style={checkboxStyles.getSelectAllStyle({
+          style={checkboxStyles['getSelectAllStyle']({
             size,
             disabled: internalDisabled || internalReadonly,
           })}
@@ -411,23 +418,21 @@ export const CheckboxGroupComponent = forwardRef<CheckboxGroupRef, CheckboxGroup
             size={size}
             onChange={() => {}}
           />
-          <Text style={{ marginLeft: 8 }}>
-            {selectAllText}
-          </Text>
+          <Text style={{ marginLeft: 8 }}>{selectAllText}</Text>
         </View>
       )}
 
       {/* 复选框组内容 */}
-      <View style={{ display: 'flex', flexDirection: direction === 'horizontal' ? 'row' : 'column', flexWrap: 'wrap' }}>
-        {options ? renderOptions() : children}
-      </View>
+      {options && options.length > 0 ? (
+        <View style={{ display: 'flex', flexDirection: direction === 'horizontal' ? 'row' : 'column', flexWrap: 'wrap' }}>
+          {renderOptions()}
+        </View>
+      ) : (
+        children
+      )}
 
       {/* 计数显示 */}
-      {showCount && (
-        <Text style={checkboxStyles.getCountStyle({ size })}>
-          {countText(selectedCount, totalCount)}
-        </Text>
-      )}
+      {showCount && <Text style={checkboxStyles['getCountStyle']({ size })}>{countText(selectedCount, totalCount)}</Text>}
     </View>
   );
 });

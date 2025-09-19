@@ -112,7 +112,7 @@ export function useVirtualScroll(items: VirtualScrollItem[], options: VirtualScr
       Math.ceil((scrollTop + config.containerHeight) / itemHeight) + config.overscanCount,
     );
 
-    const visibleItems = items.slice(startIndex, endIndex + 1).map((item, index) => ({
+    const visibleItems = items.slice(startIndex, endIndex + 1).map((item, _index) => ({
       ...item,
       height: itemHeight,
       data: item.data,

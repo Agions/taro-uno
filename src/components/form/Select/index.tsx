@@ -27,4 +27,4 @@ export type {
 export { selectStyles } from './Select.styles';
 
 // 默认导出
-export default Select;
+export { SelectComponent as default } from './Select';

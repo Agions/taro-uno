@@ -13,17 +13,10 @@ export type SwitchSize = 'sm' | 'md' | 'lg';
 export type SwitchVariant = 'solid' | 'outline' | 'ghost';
 
 // 开关状态
-export type SwitchStatus = 'normal' | 'checked' | 'unchecked' | 'disabled' | 'loading';
+export type SwitchStatus = 'normal' | 'checked' | 'unchecked' | 'disabled' | 'loading' | 'error';
 
 // 开关颜色
-export type SwitchColor = 
-  | 'primary' 
-  | 'secondary' 
-  | 'success' 
-  | 'warning' 
-  | 'error' 
-  | 'info' 
-  | 'default';
+export type SwitchColor = 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'default';
 
 // 开关形状
 export type SwitchShape = 'rounded' | 'square';

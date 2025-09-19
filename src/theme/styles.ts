@@ -1,4 +1,4 @@
-import { ThemeConfig } from './index';
+import { ThemeConfig } from './types';
 
 // 样式工具类型定义
 export interface StyleUtils {
@@ -87,9 +87,9 @@ const colorUtils = {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
       ? {
-          r: parseInt(result[1], 16),
-          g: parseInt(result[2], 16),
-          b: parseInt(result[3], 16),
+          r: parseInt(result[1] || '0', 16),
+          g: parseInt(result[2] || '0', 16),
+          b: parseInt(result[3] || '0', 16),
         }
       : null;
   },
@@ -153,8 +153,12 @@ export const createStyleUtils = (theme: ThemeConfig): StyleUtils => {
     rem: (value: number): string => `${value / 16}rem`,
     em: (value: number): string => `${value}em`,
     get: (key: keyof ThemeConfig['spacing']): string => {
-      const value = theme.spacing[key];
-      return typeof value === 'number' ? `${value}px` : String(value);
+      const value = (theme.spacing as any)[key];
+      if (typeof value === 'number') return `${value}px`;
+      if (key === 'breakpoints' && typeof value === 'object') {
+        return JSON.stringify(value);
+      }
+      return String(value);
     },
   };
 
@@ -168,7 +172,7 @@ export const createStyleUtils = (theme: ThemeConfig): StyleUtils => {
 
   const typography = {
     get: (key: keyof ThemeConfig['typography']): string => {
-      const value = theme.typography[key];
+      const value = (theme.typography as any)[key];
       if (typeof value === 'number') return `${value}px`;
       if (Array.isArray(value)) return value.join(', ');
       return String(value);
@@ -284,7 +288,7 @@ export const createStyleUtils = (theme: ThemeConfig): StyleUtils => {
   };
 };
 
-// 样式生成器
+// 样式生成器 - 生成基础的CSS变量
 export const generateStyles = (theme: ThemeConfig): string => {
   const utils = createStyleUtils(theme);
 
@@ -314,7 +318,7 @@ export const generateStyles = (theme: ThemeConfig): string => {
       --accent-color: ${theme.colors.accent};
       --link-color: ${theme.colors.link};
       --divider-color: ${theme.colors.divider};
-      
+
       /* 间距变量 */
       --spacing-xs: ${utils.spacing.get('xs')};
       --spacing-sm: ${utils.spacing.get('sm')};
@@ -322,18 +326,18 @@ export const generateStyles = (theme: ThemeConfig): string => {
       --spacing-lg: ${utils.spacing.get('lg')};
       --spacing-xl: ${utils.spacing.get('xl')};
       --spacing-xxl: ${utils.spacing.get('xxl')};
-      
+
       /* 字体变量 */
-      --font-size-xs: ${utils.typography.get('fontSize')};
-      --font-size-sm: ${utils.typography.get('fontSize')};
-      --font-size-base: ${utils.typography.get('fontSize')};
-      --font-size-lg: ${utils.typography.get('fontSize')};
-      --font-size-xl: ${utils.typography.get('fontSize')};
-      --font-size-2xl: ${utils.typography.get('fontSize')};
-      --font-size-3xl: ${utils.typography.get('fontSize')};
-      --font-size-4xl: ${utils.typography.get('fontSize')};
-      --font-size-5xl: ${utils.typography.get('fontSize')};
-      
+      --font-size-xs: ${theme.typography.fontSize.xs}px;
+      --font-size-sm: ${theme.typography.fontSize.sm}px;
+      --font-size-base: ${theme.typography.fontSize.base}px;
+      --font-size-lg: ${theme.typography.fontSize.lg}px;
+      --font-size-xl: ${theme.typography.fontSize.xl}px;
+      --font-size-2xl: ${theme.typography.fontSize['2xl']}px;
+      --font-size-3xl: ${theme.typography.fontSize['3xl']}px;
+      --font-size-4xl: ${theme.typography.fontSize['4xl']}px;
+      --font-size-5xl: ${theme.typography.fontSize['5xl']}px;
+
       /* 圆角变量 */
       --radius-none: ${utils.border.radius('none')};
       --radius-sm: ${utils.border.radius('sm')};
@@ -341,7 +345,7 @@ export const generateStyles = (theme: ThemeConfig): string => {
       --radius-lg: ${utils.border.radius('lg')};
       --radius-xl: ${utils.border.radius('xl')};
       --radius-full: ${utils.border.radius('full')};
-      
+
       /* 阴影变量 */
       --shadow-none: ${utils.shadow.get('none')};
       --shadow-sm: ${utils.shadow.get('sm')};
@@ -349,27 +353,21 @@ export const generateStyles = (theme: ThemeConfig): string => {
       --shadow-lg: ${utils.shadow.get('lg')};
       --shadow-xl: ${utils.shadow.get('xl')};
       --shadow-2xl: ${utils.shadow.get('2xl')};
-      
+
       /* 动画变量 */
       --duration-fast: ${theme.animation.duration.fast};
       --duration-normal: ${theme.animation.duration.normal};
       --duration-slow: ${theme.animation.duration.slow};
-      
+
       --easing-linear: ${theme.animation.easing.linear};
       --easing-ease: ${theme.animation.easing.ease};
       --easing-ease-in: ${theme.animation.easing.easeIn};
       --easing-ease-out: ${theme.animation.easing.easeOut};
       --easing-ease-in-out: ${theme.animation.easing.easeInOut};
     }
-    
+
     /* 暗色主题 */
     [data-theme="dark"] {
-      --primary-color: ${theme.colors.primary};
-      --secondary-color: ${theme.colors.secondary};
-      --success-color: ${theme.colors.success};
-      --warning-color: ${theme.colors.warning};
-      --error-color: ${theme.colors.error};
-      --info-color: ${theme.colors.info};
       --text-color: ${theme.colors.text};
       --text-color-secondary: ${theme.colors.textSecondary};
       --text-color-disabled: ${theme.colors.textDisabled};
@@ -380,29 +378,9 @@ export const generateStyles = (theme: ThemeConfig): string => {
       --background-mask: ${theme.colors.backgroundMask};
       --border-color: ${theme.colors.border};
       --border-light: ${theme.colors.borderLight};
-      --border-focus: ${theme.colors.borderFocus};
       --shadow-color: ${theme.colors.shadow};
       --shadow-light: ${theme.colors.shadowLight};
-      --brand-color: ${theme.colors.brand};
-      --accent-color: ${theme.colors.accent};
-      --link-color: ${theme.colors.link};
       --divider-color: ${theme.colors.divider};
-    }
-    
-    /* 响应式断点 */
-    @media (max-width: ${theme.spacing.breakpoints.sm}px) {
-      :root {
-        --font-size-base: ${theme.typography.fontSize.base - 4}px;
-        --spacing-md: ${theme.spacing.md - 4}px;
-        --spacing-lg: ${theme.spacing.lg - 8}px;
-      }
-    }
-    
-    @media (max-width: ${theme.spacing.breakpoints.md}px) {
-      :root {
-        --font-size-lg: ${theme.typography.fontSize.lg - 4}px;
-        --font-size-xl: ${theme.typography.fontSize.xl - 8}px;
-      }
     }
   `;
 };
@@ -412,7 +390,14 @@ export const createStyles = (styles: Record<string, any>) => {
   return styles;
 };
 
-// 默认样式工具导出
-export const styleUtils = createStyleUtils(require('./index').defaultTheme);
+// 默认样式工具导出（延迟初始化，避免循环导入）
+let _defaultStyleUtils: StyleUtils | null = null;
+export const styleUtils = (theme?: ThemeConfig): StyleUtils => {
+  if (!theme && !_defaultStyleUtils) {
+    const { defaultTheme } = require('./defaults');
+    _defaultStyleUtils = createStyleUtils(defaultTheme);
+  }
+  return theme ? createStyleUtils(theme) : (_defaultStyleUtils!);
+};
 
 export default createStyleUtils;

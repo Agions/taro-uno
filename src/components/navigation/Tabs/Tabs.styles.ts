@@ -1,4 +1,4 @@
-import { Platform } from '@tarojs/taro';
+// import { Platform } from '@tarojs/taro';
 import type { TabsProps, TabPosition, TabType, TabSize } from './Tabs.types';
 
 /** Tabs组件样式管理器 */
@@ -23,10 +23,10 @@ export const tabsStyles = {
    * 获取基础样式
    */
   getBaseStyle: (props: TabsProps): React.CSSProperties => {
-    const { position = 'top', type = 'line', size = 'default', centered = false, style = {} } = props;
+    const { position = 'top', centered = false, style = {} } = props;
 
     // 计算方向
-    const flexDirection = tabsStyles.POSITION_MAP[position];
+    const flexDirection = tabsStyles['POSITION_MAP'][position];
 
     // 计算对齐方式
     const alignItems = centered ? 'center' : 'flex-start';
@@ -115,8 +115,8 @@ export const tabsStyles = {
   /**
    * 获取内容区域样式
    */
-  getContentStyle: (position: TabPosition, animated: boolean): React.CSSProperties => {
-    const isVertical = position === 'left' || position === 'right';
+  getContentStyle: (_position: TabPosition, animated: boolean): React.CSSProperties => {
+    // const isVertical = position === 'left' || position === 'right'; // Commented out - unused
 
     return {
       flex: 1,

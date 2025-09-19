@@ -1,7 +1,7 @@
 import React, { forwardRef, useRef, useState, useEffect, useCallback } from 'react';
 import { View, Text } from '@tarojs/components';
 import { toastStyles } from './Toast.styles';
-import type { ToastProps, ToastRef, ToastType } from './Toast.types';
+import type { ToastProps, ToastRef } from './Toast.types';
 
 /** Toast组件 */
 export const ToastComponent = forwardRef<ToastRef, ToastProps>((props, ref) => {
@@ -27,7 +27,7 @@ export const ToastComponent = forwardRef<ToastRef, ToastProps>((props, ref) => {
     ...restProps
   } = props;
 
-  const toastRef = useRef<View>(null);
+  const toastRef = useRef<any>(null);
   const [internalVisible, setInternalVisible] = useState(defaultVisible);
   const [internalMessage, setInternalMessage] = useState(message);
   const [internalType, setInternalType] = useState(type);
@@ -110,25 +110,35 @@ export const ToastComponent = forwardRef<ToastRef, ToastProps>((props, ref) => {
   const getIcon = () => {
     if (icon) return icon;
     if (!showIcon) return null;
-    return toastStyles.TYPE_ICON_MAP[internalType];
+
+    const iconMap: Record<string, string> = {
+      success: '✓',
+      error: '✗',
+      warning: '⚠',
+      info: 'ℹ',
+    };
+
+    return iconMap[internalType] || 'ℹ';
   };
 
   // 计算样式
-  const toastStyle = toastStyles.getBaseStyle({
-    type: internalType,
-    position: internalPosition,
-    style: {
-      ...toastStyles.getAnimationStyle(internalVisible, animationDuration),
-      ...style,
-    },
-  });
+  const toastStyle = {
+    position: 'fixed' as const,
+    zIndex: 1000,
+    display: internalVisible ? 'flex' : 'none',
+    alignItems: 'center',
+    justifyContent: 'center',
+    top: internalPosition === 'top' ? '20px' : internalPosition === 'center' ? '50%' : 'auto',
+    bottom: internalPosition === 'bottom' ? '20px' : 'auto',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    opacity: internalVisible ? 1 : 0,
+    transition: `opacity ${animationDuration}ms ease-in-out`,
+    ...style,
+  };
 
   // 计算类名
-  const toastClassName = toastStyles.getClassName({
-    type: internalType,
-    position: internalPosition,
-    className,
-  });
+  const toastClassName = `${toastStyles.container} ${toastStyles[internalType] || toastStyles.info} ${className || ''}`;
 
   // 暴露给外部的引用方法
   React.useImperativeHandle(
@@ -170,15 +180,15 @@ export const ToastComponent = forwardRef<ToastRef, ToastProps>((props, ref) => {
   return (
     <View ref={toastRef} className={toastClassName} style={toastStyle} onClick={handleClick} {...restProps}>
       {getIcon() && (
-        <View className="taro-uno-toast__icon" style={toastStyles.getIconStyle(internalType)}>
+        <View className="taro-uno-toast__icon" style={{ marginRight: '8px', fontSize: '16px' }}>
           {getIcon()}
         </View>
       )}
-      <View className="taro-uno-toast__message" style={toastStyles.getMessageStyle()}>
+      <View className="taro-uno-toast__message" style={{ flex: 1, color: 'white' }}>
         <Text>{internalMessage}</Text>
       </View>
       {(closable || closeable) && (
-        <View className="taro-uno-toast__close" style={toastStyles.getCloseButtonStyle()} onClick={handleClose}>
+        <View className="taro-uno-toast__close" style={{ marginLeft: '8px', fontSize: '16px', color: 'white' }} onClick={handleClose}>
           ×
         </View>
       )}
@@ -190,41 +200,43 @@ export const ToastComponent = forwardRef<ToastRef, ToastProps>((props, ref) => {
 ToastComponent.displayName = 'Toast';
 
 /** 导出Toast组件 */
-export const Toast = ToastComponent;
+export const Toast = ToastComponent as any;
 
-/** 静态方法 */
-Toast.show = (config: ToastProps) => {
+// 添加静态方法
+(Toast as any).show = (config: ToastProps) => {
   // 这里可以实现一个全局的Toast显示方法
   // 需要配合全局状态管理或Portal实现
   console.log('Toast.show', config);
 };
 
-Toast.info = (config: ToastProps) => {
+(Toast as any).info = (config: ToastProps) => {
   // 信息提示
   console.log('Toast.info', config);
 };
 
-Toast.success = (config: ToastProps) => {
+(Toast as any).success = (config: ToastProps) => {
   // 成功提示
   console.log('Toast.success', config);
 };
 
-Toast.warning = (config: ToastProps) => {
+(Toast as any).warning = (config: ToastProps) => {
   // 警告提示
   console.log('Toast.warning', config);
 };
 
-Toast.error = (config: ToastProps) => {
+(Toast as any).error = (config: ToastProps) => {
   // 错误提示
   console.log('Toast.error', config);
 };
 
-Toast.loading = (config: ToastProps) => {
+(Toast as any).loading = (config: ToastProps) => {
   // 加载提示
   console.log('Toast.loading', config);
 };
 
-Toast.hide = () => {
+(Toast as any).hide = () => {
   // 隐藏Toast
   console.log('Toast.hide');
 };
+
+export default ToastComponent;

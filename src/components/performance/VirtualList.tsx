@@ -63,7 +63,7 @@ const VirtualList = React.forwardRef<VirtualListRef, VirtualListProps>(
       renderItem,
       itemHeight = 50,
       height,
-      itemKey = (item, index) => index,
+      itemKey = (_item, index) => index,
       overscanCount = 3,
       dynamicHeight = false,
       emptyText = '暂无数据',
@@ -81,7 +81,7 @@ const VirtualList = React.forwardRef<VirtualListRef, VirtualListProps>(
   ) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [loadingMore, setLoadingMore] = useState(false);
-    const [itemElements, setItemElements] = useState<Record<number, HTMLDivElement>>({});
+    // const [itemElements, setItemElements] = useState<Record<number, any>>({});
 
     // 性能监控
     const { recordCustomMetric, monitorRenderPerformance, completeRenderMonitoring } = usePerformanceMonitor({
@@ -123,10 +123,10 @@ const VirtualList = React.forwardRef<VirtualListRef, VirtualListProps>(
     // 使用虚拟滚动
     const {
       visibleItems,
-      scrollTop,
+      // scrollTop, // Commented out - unused
       totalHeight,
       startIndex,
-      endIndex,
+      // endIndex, // Commented out - unused
       scrollToIndex: virtualScrollToIndex,
       scrollToPosition: virtualScrollToPosition,
       updateItemHeight,
@@ -152,8 +152,7 @@ const VirtualList = React.forwardRef<VirtualListRef, VirtualListProps>(
       (scrollTop: number) => {
         onScroll?.(scrollTop);
 
-
-    // 检查是否需要加载更多
+        // 检查是否需要加载更多
         if (loadMore && hasMore && !loadingMore && !loading) {
           const container = containerRef.current;
           if (container) {
@@ -175,8 +174,7 @@ const VirtualList = React.forwardRef<VirtualListRef, VirtualListProps>(
       setLoadingMore(true);
       recordCustomMetric('loadMoreStart', Date.now());
 
-
-    try {
+      try {
         await loadMore();
         recordCustomMetric('loadMoreSuccess', 1);
       } catch (error) {
@@ -231,18 +229,18 @@ const VirtualList = React.forwardRef<VirtualListRef, VirtualListProps>(
     const renderItems = () => {
       monitorRenderPerformance();
 
-    try {
+      try {
         const items = visibleItems.map((virtualItem, index) => {
           const dataIndex = startIndex + index;
           const dataItem = data[dataIndex];
           const position = getItemPosition(dataIndex);
 
-        return (
+          return (
             <div
               key={virtualItem.id}
               ref={(element) => {
                 if (element) {
-                  itemElements[dataIndex] = element;
+                  // itemElements[dataIndex] = element;
                   measureItemHeight(dataIndex, element);
                 }
               }}
@@ -274,8 +272,7 @@ const VirtualList = React.forwardRef<VirtualListRef, VirtualListProps>(
     const renderLoading = () => {
       if (!loading && !loadingMore) return null;
 
-
-    return (
+      return (
         <div className="virtual-list-loading">
           <div className="loading-spinner">
             <div className="spinner"></div>
@@ -289,11 +286,7 @@ const VirtualList = React.forwardRef<VirtualListRef, VirtualListProps>(
     const renderEmpty = () => {
       if (data.length > 0 || loading) return null;
 
-      return (
-        <div className="virtual-list-empty">
-          {emptyText}
-        </div>
-      );
+      return <div className="virtual-list-empty">{emptyText}</div>;
     };
 
     // 监听滚动事件
@@ -308,8 +301,7 @@ const VirtualList = React.forwardRef<VirtualListRef, VirtualListProps>(
 
       container.addEventListener('scroll', handleScrollEvent, { passive: true });
 
-
-    return () => {
+      return () => {
         container.removeEventListener('scroll', handleScrollEvent);
       };
     }, [handleScroll]);
@@ -344,10 +336,10 @@ const VirtualList = React.forwardRef<VirtualListRef, VirtualListProps>(
           {renderItems()}
         </div>
 
-      {/* 空状态 */}
+        {/* 空状态 */}
         {renderEmpty()}
 
-      {/* 加载状态 */}
+        {/* 加载状态 */}
         {renderLoading()}
       </div>
     );

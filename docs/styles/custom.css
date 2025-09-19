@@ -6,10 +6,10 @@
   --vp-c-brand-light: #60a5fa;
   --vp-c-brand-dark: #2563eb;
   --vp-c-brand-darker: #1e40af;
-  
+
   /* 自定义间距 */
   --vp-custom-spacing: 16px;
-  
+
   /* 自定义圆角 */
   --vp-custom-radius: 8px;
 }
@@ -125,7 +125,7 @@
   .vp-doc {
     padding: 0 1rem;
   }
-  
+
   .content {
     padding: 1rem;
   }
@@ -138,7 +138,7 @@
   .VPFooter {
     display: none;
   }
-  
+
   .content {
     padding: 0;
     margin: 0;

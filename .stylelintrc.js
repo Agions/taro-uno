@@ -193,14 +193,14 @@ module.exports = {
       'transform',
       'transform-origin',
       'animation',
-      'transition',
+      'transition'
     ],
 
     // 禁用的规则
     'at-rule-no-unknown': null,
     'no-descending-specificity': null,
-    'declaration-empty-line-before': null,
+    'declaration-empty-line-before': null
   },
 
-  ignoreFiles: ['dist/**/*', 'build/**/*', 'node_modules/**/*', 'coverage/**/*'],
-}
+  ignoreFiles: ['dist/**/*', 'build/**/*', 'node_modules/**/*', 'coverage/**/*']
+};

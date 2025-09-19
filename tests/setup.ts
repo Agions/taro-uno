@@ -1,5 +1,5 @@
-import '@testing-library/jest-dom'
-import { vi } from 'vitest'
+import '@testing-library/jest-dom';
+import { vi } from 'vitest';
 
 // Mock Taro API
 const mockTaro = {
@@ -17,8 +17,8 @@ const mockTaro = {
       right: 375,
       bottom: 647,
       width: 375,
-      height: 627,
-    },
+      height: 627
+    }
   })),
   navigateTo: vi.fn(),
   navigateBack: vi.fn(),
@@ -48,15 +48,15 @@ const mockTaro = {
               top: 0,
               left: 0,
               right: 100,
-              bottom: 100,
-            },
-          ])
-        }),
-      })),
-    })),
+              bottom: 100
+            }
+          ]);
+        })
+      }))
+    }))
   })),
   nextTick: vi.fn((callback) => {
-    setTimeout(callback, 0)
+    setTimeout(callback, 0);
   }),
   ENV_TYPE: {
     WEAPP: 'WEAPP',
@@ -66,10 +66,10 @@ const mockTaro = {
     ALIPAY: 'ALIPAY',
     TT: 'TT',
     QQ: 'QQ',
-    JD: 'JD',
+    JD: 'JD'
   },
-  getEnv: vi.fn(() => 'WEB'),
-}
+  getEnv: vi.fn(() => 'WEB')
+};
 
 // Mock Taro components
 const mockTaroComponents = {
@@ -118,30 +118,30 @@ const mockTaroComponents = {
   AdContentPage: 'div',
   CustomWrapper: 'div',
   Embed: 'iframe',
-  ITouchEvent: {},
-}
+  ITouchEvent: {}
+};
 
-vi.mock('@tarojs/components', () => mockTaroComponents)
+vi.mock('@tarojs/components', () => mockTaroComponents);
 vi.mock('@tarojs/components/types/common', () => ({
-  ITouchEvent: {},
-}))
+  ITouchEvent: {}
+}));
 
 // 全局 Mock
-vi.mock('@tarojs/taro', () => mockTaro)
+vi.mock('@tarojs/taro', () => mockTaro);
 
 // Mock IntersectionObserver
-global.IntersectionObserver = vi.fn(() => ({
+global.IntersectionObserver = vi.fn().mockImplementation(() => ({
   observe: vi.fn(),
   unobserve: vi.fn(),
-  disconnect: vi.fn(),
-}))
+  disconnect: vi.fn()
+}));
 
 // Mock ResizeObserver
 global.ResizeObserver = vi.fn(() => ({
   observe: vi.fn(),
   unobserve: vi.fn(),
-  disconnect: vi.fn(),
-}))
+  disconnect: vi.fn()
+}));
 
 // Mock matchMedia
 Object.defineProperty(window, 'matchMedia', {
@@ -154,76 +154,83 @@ Object.defineProperty(window, 'matchMedia', {
     removeListener: vi.fn(),
     addEventListener: vi.fn(),
     removeEventListener: vi.fn(),
-    dispatchEvent: vi.fn(),
-  })),
-})
+    dispatchEvent: vi.fn()
+  }))
+});
 
 // Mock getComputedStyle
 Object.defineProperty(window, 'getComputedStyle', {
   value: vi.fn(() => ({
     getPropertyValue: vi.fn(() => ''),
     fontSize: '16px',
-    lineHeight: '1.5',
-  })),
-})
+    lineHeight: '1.5'
+  }))
+});
 
 // Mock scrollTo
 Object.defineProperty(window, 'scrollTo', {
-  value: vi.fn(),
-})
+  value: vi.fn()
+});
 
 // Mock requestAnimationFrame
 global.requestAnimationFrame = vi.fn((callback) => {
-  setTimeout(callback, 16)
-  return 1
-})
+  setTimeout(callback, 16);
+  return 1;
+});
 
-global.cancelAnimationFrame = vi.fn()
+global.cancelAnimationFrame = vi.fn();
 
 // Mock console methods in test environment
-if (process.env.NODE_ENV === 'test') {
+if (process.env['NODE_ENV'] === 'test') {
   global.console = {
     ...console,
     warn: vi.fn(),
-    error: vi.fn(),
-  }
+    error: vi.fn()
+  };
 }
 
 // 设置全局测试环境变量
-process.env.NODE_ENV = 'test'
-process.env.TARO_ENV = 'h5'
+process.env['NODE_ENV'] = 'test';
+process.env['TARO_ENV'] = 'h5';
 
 // Mock @taro-uno/core package
 vi.mock('@/utils', () => ({
   PlatformDetector: {
-    isH5: true,
-    isWeapp: false,
-    isRN: false,
-    getPlatform: () => 'h5',
-  },
-}))
+    isH5: () => true,
+    isWeapp: () => false,
+    isRN: () => false,
+    getPlatform: vi.fn(() => 'h5'),
+    getPlatformInfo: vi.fn(() => ({
+      platform: 'h5',
+      isMiniProgram: false,
+      isH5: true,
+      isRN: false,
+      system: { platform: 'h5' }
+    }))
+  }
+}));
 
 // Mock clipboard API
 Object.assign(navigator, {
   clipboard: {
     writeText: vi.fn().mockResolvedValue(undefined),
-    readText: vi.fn().mockResolvedValue(''),
-  },
-})
+    readText: vi.fn().mockResolvedValue('')
+  }
+});
 
 // Mock window.open
 Object.assign(window, {
-  open: vi.fn(),
-})
+  open: vi.fn()
+});
 
 // Mock window.location
 Object.assign(window, {
   location: {
-    href: '',
-  },
-})
+    href: ''
+  }
+});
 
 // 清理函数
 afterEach(() => {
-  vi.clearAllMocks()
-})
+  vi.clearAllMocks();
+});

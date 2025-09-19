@@ -1,6 +1,6 @@
-import { Platform } from '@tarojs/taro';
-import type { ColProps, ColSpan, ColOffset, ColOrder } from './Col.types';
+import type { ColProps } from './Col.types';
 import type { RowGutter } from '../Row/Row.types';
+import type { Size, CSSUnit } from '../../../types';
 
 /** Col组件样式管理器 */
 export const colStyles = {
@@ -15,7 +15,7 @@ export const colStyles = {
   /**
    * 解析尺寸值
    */
-  parseSize: (size: Size | number | `${number}${CSSUnit}`): number | string => {
+  parseSize: (size: any): number | string => {
     if (typeof size === 'number') {
       return `${size}px`;
     }
@@ -31,14 +31,53 @@ export const colStyles = {
   },
 
   /**
+   * 提取数值部分（用于计算）
+   */
+  extractNumericValue: (value: string | number): number => {
+    if (typeof value === 'number') {
+      return value;
+    }
+    // 提取数字部分，支持各种CSS单位
+    const match = value.match(/^(-?\d*\.?\d+)/);
+    return match && match[1] ? parseFloat(match[1]) : 0;
+  },
+
+  /**
+   * 分割数值和单位
+   */
+  splitValueAndUnit: (value: string | number): { value: number; unit: string } => {
+    if (typeof value === 'number') {
+      return { value, unit: 'px' };
+    }
+    const match = value.match(/^(-?\d*\.?\d+)(.*)$/);
+    if (match && match[1]) {
+      return { value: parseFloat(match[1]), unit: match[2] || 'px' };
+    }
+    return { value: 0, unit: 'px' };
+  },
+
+  /**
+   * 解析尺寸值并除以2（用于间距计算）
+   */
+  parseSizeHalf: (size: Size | number | `${number}${CSSUnit}`): string => {
+    const parsedSize = colStyles['parseSize'](size);
+    if (typeof parsedSize === 'number') {
+      return `${parsedSize / 2}px`;
+    }
+
+    const { value, unit } = colStyles['splitValueAndUnit'](parsedSize);
+    return `${value / 2}${unit}`;
+  },
+
+  /**
    * 解析间距值
    */
   parseGutter: (gutter: RowGutter): string => {
     if (Array.isArray(gutter)) {
       const [rowGutter, colGutter] = gutter;
-      return `${colStyles.parseSize(rowGutter)} ${colStyles.parseSize(colGutter)}`;
+      return `${colStyles['parseSize'](rowGutter)} ${colStyles['parseSize'](colGutter)}`;
     }
-    return colStyles.parseSize(gutter);
+    return colStyles['parseSize'](gutter) as string;
   },
 
   /**
@@ -61,27 +100,27 @@ export const colStyles = {
     // 计算间距
     const gutterStyle = gutter
       ? {
-          paddingLeft: Array.isArray(gutter)
-            ? `${colStyles.parseSize(gutter[0]) / 2}`
-            : `${colStyles.parseSize(gutter) / 2}`,
-          paddingRight: Array.isArray(gutter)
-            ? `${colStyles.parseSize(gutter[0]) / 2}`
-            : `${colStyles.parseSize(gutter) / 2}`,
-          paddingTop: Array.isArray(gutter)
-            ? `${colStyles.parseSize(gutter[1]) / 2}`
-            : `${colStyles.parseSize(gutter) / 2}`,
-          paddingBottom: Array.isArray(gutter)
-            ? `${colStyles.parseSize(gutter[1]) / 2}`
-            : `${colStyles.parseSize(gutter) / 2}`,
-        }
+        paddingLeft: Array.isArray(gutter)
+          ? colStyles['parseSizeHalf'](gutter[0])
+          : colStyles['parseSizeHalf'](gutter),
+        paddingRight: Array.isArray(gutter)
+          ? colStyles['parseSizeHalf'](gutter[0])
+          : colStyles['parseSizeHalf'](gutter),
+        paddingTop: Array.isArray(gutter)
+          ? colStyles['parseSizeHalf'](gutter[1])
+          : colStyles['parseSizeHalf'](gutter),
+        paddingBottom: Array.isArray(gutter)
+          ? colStyles['parseSizeHalf'](gutter[1])
+          : colStyles['parseSizeHalf'](gutter),
+      }
       : {};
 
     // 计算柔性布局
     const flexStyle =
       flex !== undefined
         ? {
-            flex: flex === 'auto' ? '1' : flex === 'none' ? 'none' : flex,
-          }
+          flex: flex === 'auto' ? '1' : flex === 'none' ? 'none' : flex,
+        }
         : {};
 
     return {
@@ -103,7 +142,7 @@ export const colStyles = {
 
     const baseClass = 'taro-uno-col';
     const spanClass = `${baseClass}--span-${span}`;
-    const offsetClass = offset > 0 ? `${baseClass}--offset-${offset}` : '';
+    const offsetClass = (typeof offset === 'number' ? offset : parseInt(offset)) > 0 ? `${baseClass}--offset-${offset}` : '';
     const flexClass = flex !== undefined ? `${baseClass}--flex-${flex}` : '';
 
     return [baseClass, spanClass, offsetClass, flexClass, className].filter(Boolean).join(' ');
@@ -117,11 +156,12 @@ export const colStyles = {
 
     const responsiveStyle: React.CSSProperties = {};
 
-    Object.entries(responsive).forEach(([breakpoint, props]) => {
+    Object.entries(responsive).forEach(([_breakpoint, props]) => {
       if (props) {
-        const mediaQuery = `@media (min-width: ${colStyles.getBreakpointValue(breakpoint)}px)`;
         // 这里需要配合CSS-in-JS库来处理响应式样式
         // 暂时返回空对象
+        // Breakpoint: breakpoint, value: colStyles['getBreakpointValue'](breakpoint)
+
       }
     });
 

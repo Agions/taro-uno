@@ -1,4 +1,4 @@
-import type { DatePickerProps, DatePickerSize, DatePickerVariant, DatePickerStatus } from './DatePicker.types';
+import type { DatePickerSize, DatePickerVariant, DatePickerStatus } from './DatePicker.types';
 
 /** 日期选择器样式类 */
 export class DatePickerStyles {
@@ -50,7 +50,6 @@ export class DatePickerStyles {
     text: '#374151',
     textPlaceholder: '#9ca3af',
     textDisabled: '#9ca3af',
-    backgroundDisabled: '#f3f4f6',
     borderError: '#ef4444',
     borderWarning: '#f59e0b',
     borderSuccess: '#10b981',
@@ -60,7 +59,7 @@ export class DatePickerStyles {
     textToday: '#d97706',
     backgroundHover: '#f3f4f6',
     backgroundDisabled: '#f9fafb',
-    shadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+    shadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
     shadowFocus: '0 0 0 3px rgba(59, 130, 246, 0.1)',
   };
 
@@ -100,7 +99,7 @@ export class DatePickerStyles {
       minWidth: 200,
       backgroundColor,
       border: variant === 'outlined' ? `1px solid ${borderColor}` : 'none',
-      borderRadius: sizeStyles.borderRadius,
+      borderRadius: sizeStyles['borderRadius'],
       boxShadow: this.COLOR_MAP.shadow,
       transition: 'all 0.2s ease',
       opacity: isDisabled ? 0.6 : 1,
@@ -152,9 +151,9 @@ export class DatePickerStyles {
     return {
       display: 'flex',
       alignItems: 'center',
-      padding: `0 ${sizeStyles.padding}px`,
-      height: sizeStyles.height,
-      borderRadius: sizeStyles.borderRadius,
+      padding: `0 ${sizeStyles['padding']}px`,
+      height: sizeStyles['height'],
+      borderRadius: sizeStyles['borderRadius'],
       border: focused ? `2px solid ${this.COLOR_MAP.borderFocus}` : 'none',
       backgroundColor: 'transparent',
       transition: 'all 0.2s ease',
@@ -171,7 +170,7 @@ export class DatePickerStyles {
       flex: 1,
       border: 'none',
       outline: 'none',
-      fontSize: sizeStyles.fontSize,
+      fontSize: sizeStyles['fontSize'],
       color: disabled ? this.COLOR_MAP.textDisabled : this.COLOR_MAP.text,
       backgroundColor: 'transparent',
       cursor: disabled ? 'not-allowed' : 'text',
@@ -221,7 +220,7 @@ export class DatePickerStyles {
     const sizeStyles = this.SIZE_MAP[size];
 
     return {
-      fontSize: sizeStyles.iconSize,
+      fontSize: sizeStyles['iconSize'],
       color: this.COLOR_MAP.textPlaceholder,
       marginLeft: 8,
     };

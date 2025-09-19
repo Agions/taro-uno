@@ -15,8 +15,8 @@ module.exports = {
         'chore',    // 构建过程或辅助工具的变动
         'revert',   // 回滚
         'build',    // 构建
-        'ci',       // CI
-      ],
+        'ci'       // CI
+      ]
     ],
     'type-case': [2, 'always', 'lower-case'],
     'type-empty': [2, 'never'],
@@ -28,7 +28,7 @@ module.exports = {
     'body-leading-blank': [1, 'always'],
     'body-max-line-length': [2, 'always', 100],
     'footer-leading-blank': [1, 'always'],
-    'footer-max-line-length': [2, 'always', 100],
+    'footer-max-line-length': [2, 'always', 100]
   },
   prompt: {
     questions: {
@@ -38,87 +38,87 @@ module.exports = {
           feat: {
             description: '新功能',
             title: 'Features',
-            emoji: '✨',
+            emoji: '✨'
           },
           fix: {
             description: 'Bug修复',
             title: 'Bug Fixes',
-            emoji: '🐛',
+            emoji: '🐛'
           },
           docs: {
             description: '文档更新',
             title: 'Documentation',
-            emoji: '📚',
+            emoji: '📚'
           },
           style: {
             description: '代码格式（不影响代码运行的变动）',
             title: 'Styles',
-            emoji: '💎',
+            emoji: '💎'
           },
           refactor: {
             description: '重构（既不是新增功能，也不是修改bug的代码变动）',
             title: 'Code Refactoring',
-            emoji: '📦',
+            emoji: '📦'
           },
           perf: {
             description: '性能优化',
             title: 'Performance Improvements',
-            emoji: '🚀',
+            emoji: '🚀'
           },
           test: {
             description: '增加测试',
             title: 'Tests',
-            emoji: '🚨',
+            emoji: '🚨'
           },
           build: {
             description: '构建系统或依赖变更',
             title: 'Builds',
-            emoji: '🛠',
+            emoji: '🛠'
           },
           ci: {
             description: 'CI配置变更',
             title: 'Continuous Integrations',
-            emoji: '⚙️',
+            emoji: '⚙️'
           },
           chore: {
             description: '构建过程或辅助工具的变动',
             title: 'Chores',
-            emoji: '♻️',
+            emoji: '♻️'
           },
           revert: {
             description: '回滚之前的提交',
             title: 'Reverts',
-            emoji: '🗑',
-          },
-        },
+            emoji: '🗑'
+          }
+        }
       },
       scope: {
-        description: '此更改的范围是什么（例如组件或文件名）:',
+        description: '此更改的范围是什么（例如组件或文件名）:'
       },
       subject: {
-        description: '写一个简短的变更描述:',
+        description: '写一个简短的变更描述:'
       },
       body: {
-        description: '提供更详细的变更描述:',
+        description: '提供更详细的变更描述:'
       },
       isBreaking: {
-        description: '是否有破坏性变更?',
+        description: '是否有破坏性变更?'
       },
       breakingBody: {
-        description: '破坏性变更的详细描述:',
+        description: '破坏性变更的详细描述:'
       },
       breaking: {
-        description: '描述破坏性变更:',
+        description: '描述破坏性变更:'
       },
       isIssueAffected: {
-        description: '此变更是否影响任何开放的issue?',
+        description: '此变更是否影响任何开放的issue?'
       },
       issuesBody: {
-        description: '如果issues被关闭，提交需要一个body。请输入更长的变更描述:',
+        description: '如果issues被关闭，提交需要一个body。请输入更长的变更描述:'
       },
       issues: {
-        description: '添加issue引用 (例如 "fix #123", "re #123".):',
-      },
-    },
-  },
+        description: '添加issue引用 (例如 "fix #123", "re #123".):'
+      }
+    }
+  }
 };

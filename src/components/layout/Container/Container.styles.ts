@@ -1,4 +1,5 @@
-import type { ContainerProps, ContainerSize, ContainerAlign } from './Container.types';
+import type { ContainerProps } from './Container.types';
+import type { Size, CSSUnit } from '../../../types';
 
 /** Container组件样式管理器 */
 export const containerStyles = {
@@ -55,43 +56,43 @@ export const containerStyles = {
     } = props;
 
     // 计算宽度
-    const width = size === 'fluid' ? '100%' : containerStyles.parseSize(size);
+    const width = size === 'fluid' ? '100%' : size === 'full' ? '100%' : containerStyles['parseSize'](size);
 
     // 计算最大宽度
     const finalMaxWidth =
       maxWidth !== undefined
-        ? containerStyles.parseSize(maxWidth)
+        ? typeof maxWidth === 'number' ? `${maxWidth}px` : containerStyles['parseSize'](maxWidth as Size)
         : size === 'fluid'
-        ? 'none'
-        : containerStyles.SIZE_MAP[size as keyof typeof containerStyles.SIZE_MAP];
+          ? 'none'
+          : containerStyles.SIZE_MAP[size as keyof typeof containerStyles.SIZE_MAP];
 
     // 计算内边距
     const paddingValue =
       typeof padding === 'number'
         ? `${padding}px`
         : typeof padding === 'string' && padding in containerStyles.SIZE_MAP
-        ? `${containerStyles.SIZE_MAP[padding as keyof typeof containerStyles.SIZE_MAP]}px`
-        : containerStyles.parseSize(padding);
+          ? `${containerStyles.SIZE_MAP[padding as keyof typeof containerStyles.SIZE_MAP]}px`
+          : containerStyles['parseSize'](padding);
 
     // 计算外边距
     const marginValue =
       typeof margin === 'number'
         ? `${margin}px`
         : typeof margin === 'string' && margin in containerStyles.SIZE_MAP
-        ? `${containerStyles.SIZE_MAP[margin as keyof typeof containerStyles.SIZE_MAP]}px`
-        : containerStyles.parseSize(margin);
+          ? `${containerStyles.SIZE_MAP[margin as keyof typeof containerStyles.SIZE_MAP]}px`
+          : containerStyles['parseSize'](margin);
 
     // 计算对齐方式
-    const justifyContent = center ? 'center' : containerStyles.ALIGN_MAP[align];
+    const justifyContent = center ? 'center' : containerStyles['ALIGN_MAP'][align] || 'stretch';
 
     // 计算滚动样式
     const overflow = scrollable
       ? {
-          overflowX: scrollDirection === 'horizontal' || scrollDirection === 'both' ? 'auto' : 'hidden',
-          overflowY: scrollDirection === 'vertical' || scrollDirection === 'both' ? 'auto' : 'hidden',
+          overflowX: (scrollDirection === 'horizontal' || scrollDirection === 'both' ? 'auto' : 'hidden') as any,
+          overflowY: (scrollDirection === 'vertical' || scrollDirection === 'both' ? 'auto' : 'hidden') as any,
         }
       : {
-          overflow: 'visible',
+          overflow: 'visible' as any,
         };
 
     return {
@@ -102,7 +103,7 @@ export const containerStyles = {
       display: 'flex',
       flexDirection: 'column',
       justifyContent,
-      alignItems: center,
+      alignItems: center ? 'center' : undefined,
       boxSizing: 'border-box',
       ...overflow,
       ...style,
@@ -132,11 +133,11 @@ export const containerStyles = {
 
     const responsiveStyle: React.CSSProperties = {};
 
-    Object.entries(responsive).forEach(([breakpoint, props]) => {
+    Object.entries(responsive).forEach(([_breakpoint, props]) => {
       if (props) {
-        const mediaQuery = `@media (min-width: ${containerStyles.getBreakpointValue(breakpoint)}px)`;
         // 这里需要配合CSS-in-JS库来处理响应式样式
         // 暂时返回空对象
+        // Breakpoint value: containerStyles['getBreakpointValue'](breakpoint)
       }
     });
 

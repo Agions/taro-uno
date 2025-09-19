@@ -1,6 +1,20 @@
 import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
+import { vi } from 'vitest'
 import { Card } from './Card'
+
+// Mock Taro components
+vi.mock('@tarojs/components', () => ({
+  View: ({ children, ...props }) => <div {...props}>{children}</div>,
+}))
+
+// Mock @/utils
+vi.mock('@/utils', () => ({
+  cn: (...classes: any[]) => classes.filter(Boolean).join(' '),
+  PlatformDetector: {
+    getPlatform: () => 'h5',
+  },
+}))
 
 describe('Card Component', () => {
   const mockOnPress = vi.fn()
@@ -70,8 +84,8 @@ describe('Card Component', () => {
         Content
       </Card>
     )
-    const card = screen.getByText('Content').closest('div')
-    fireEvent.click(card!)
+    const card = screen.getByTestId('card')
+    fireEvent.click(card)
     expect(mockOnPress).toHaveBeenCalledTimes(1)
   })
 
@@ -81,66 +95,77 @@ describe('Card Component', () => {
         Content
       </Card>
     )
-    const card = screen.getByText('Content').closest('div')
-    fireEvent.click(card!)
+    const card = screen.getByTestId('card')
+    fireEvent.click(card)
     expect(mockOnPress).not.toHaveBeenCalled()
   })
 
   test('shows loading state', () => {
     render(<Card loading>Content</Card>)
-    const card = screen.getByText('Content').closest('div')
+    const card = screen.getByTestId('card')
     expect(card).toHaveClass('opacity-70')
     expect(card).toHaveClass('pointer-events-none')
+    expect(card).toHaveClass('taro-uno-h5-card--loading')
+    expect(screen.getByTestId('card-loading-content')).toBeInTheDocument()
   })
 
   test('applies border when bordered', () => {
     render(<Card bordered>Content</Card>)
-    const card = screen.getByText('Content').closest('div')
-    expect(card).toHaveClass('border')
+    const card = screen.getByTestId('card')
+    expect(card).toHaveClass('taro-uno-h5-card--bordered')
+    expect(card).toHaveAttribute('data-bordered', 'true')
   })
 
   test('does not apply border when not bordered', () => {
     render(<Card bordered={false}>Content</Card>)
-    const card = screen.getByText('Content').closest('div')
-    expect(card).not.toHaveClass('border')
+    const card = screen.getByTestId('card')
+    expect(card).not.toHaveClass('taro-uno-h5-card--bordered')
+    expect(card).toHaveAttribute('data-bordered', 'false')
   })
 
   test('applies shadow based on shadow prop', () => {
     const { rerender } = render(<Card shadow="none">Content</Card>)
-    let card = screen.getByText('Content').closest('div')
-    expect(card).not.toHaveClass('shadow-sm')
-    expect(card).not.toHaveClass('shadow-md')
-    expect(card).not.toHaveClass('shadow-lg')
+    let card = screen.getByTestId('card')
+    expect(card).not.toHaveClass('taro-uno-h5-card--shadow-small')
+    expect(card).not.toHaveClass('taro-uno-h5-card--shadow-default')
+    expect(card).not.toHaveClass('taro-uno-h5-card--shadow-large')
+    expect(card).toHaveAttribute('data-shadow', 'none')
 
     rerender(<Card shadow="small">Content</Card>)
-    card = screen.getByText('Content').closest('div')
-    expect(card).toHaveClass('shadow-sm')
+    card = screen.getByTestId('card')
+    expect(card).toHaveClass('taro-uno-h5-card--shadow-small')
+    expect(card).toHaveAttribute('data-shadow', 'small')
 
     rerender(<Card shadow="default">Content</Card>)
-    card = screen.getByText('Content').closest('div')
-    expect(card).toHaveClass('shadow-md')
+    card = screen.getByTestId('card')
+    expect(card).toHaveClass('taro-uno-h5-card--shadow-default')
+    expect(card).toHaveAttribute('data-shadow', 'default')
 
     rerender(<Card shadow="large">Content</Card>)
-    card = screen.getByText('Content').closest('div')
-    expect(card).toHaveClass('shadow-lg')
+    card = screen.getByTestId('card')
+    expect(card).toHaveClass('taro-uno-h5-card--shadow-large')
+    expect(card).toHaveAttribute('data-shadow', 'large')
   })
 
   test('applies custom className', () => {
     render(<Card className="custom-class">Content</Card>)
-    const card = screen.getByText('Content').closest('div')
+    const card = screen.getByTestId('card')
     expect(card).toHaveClass('custom-class')
   })
 
   test('applies custom style', () => {
     const customStyle = { backgroundColor: 'red' }
     render(<Card style={customStyle}>Content</Card>)
-    const card = screen.getByText('Content').closest('div')
-    expect(card).toHaveStyle({ backgroundColor: 'red' })
+    const card = screen.getByTestId('card')
+    const styleAttr = card.getAttribute('style')
+    expect(styleAttr).toContain('background-color: red')
   })
 
   test('forwards ref correctly', () => {
-    const ref = React.createRef<HTMLDivElement>()
+    const ref = React.createRef<any>()
     render(<Card ref={ref}>Content</Card>)
-    expect(ref.current).toBeInTheDocument()
+    expect(ref.current).toBeTruthy()
+    expect(ref.current.getElement).toBeTruthy()
+    expect(screen.getByTestId('card')).toBe(ref.current.getElement())
   })
 })

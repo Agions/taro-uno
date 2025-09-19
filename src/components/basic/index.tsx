@@ -3,20 +3,18 @@
  * 提供最基础的 UI 组件，包括按钮、图标、文本和分割线
  */
 
+// 导入组件用于默认导出
+import { Button } from './Button';
+import { Icon } from './Icon';
+import { Text } from './Text';
+import { Divider } from './Divider';
+import { Typography } from './Typography';
+
 // 导出 Button 组件
 export { Button } from './Button';
 export type {
   ButtonProps,
   ButtonRef,
-  ButtonGroupProps,
-  ButtonUtils,
-  ButtonSize,
-  ButtonType,
-  ButtonVariant,
-  ButtonShape,
-  ButtonStatus,
-  ButtonIconPosition,
-  ButtonNativeProps,
 } from './Button/Button.types';
 export { buttonStyles } from './Button/Button.styles';
 
@@ -86,18 +84,46 @@ export type {
   DividerPreset,
 } from './Divider/Divider.types';
 
+// 导出 Typography 组件
+export { Typography } from './Typography';
+export type {
+  TypographyProps,
+  TypographyRef,
+  TypographySize,
+  TypographyColor,
+  TypographyWeight,
+  TypographyUtils,
+  TypographyNativeProps,
+  TitleProps,
+  ParagraphProps,
+  TypographyTextProps,
+  LinkProps,
+} from './Typography/Typography.types';
+export { calculateTypographyStyles, typographyStyles } from './Typography/Typography.styles';
+
 // 基础组件类型定义
 export interface BasicComponents {
   Button: typeof Button;
   Icon: typeof Icon;
   Text: typeof Text;
   Divider: typeof Divider;
+  Typography: typeof Typography;
 }
 
 // 基础组件工具类型
-export type BasicComponentProps = ButtonProps | IconProps | TextProps | DividerProps;
+export type BasicComponentProps = 
+  | import('./Button/Button.types').ButtonProps 
+  | import('./Icon/Icon.types').IconProps 
+  | import('./Text/Text.types').TextProps 
+  | import('./Divider/Divider.types').DividerProps 
+  | import('./Typography/Typography.types').TypographyProps;
 
-export type BasicComponentRef = ButtonRef | IconRef | TextRef | DividerRef;
+export type BasicComponentRef = 
+  | import('./Button/Button.types').ButtonRef 
+  | import('./Icon/Icon.types').IconRef 
+  | import('./Text/Text.types').TextRef 
+  | import('./Divider/Divider.types').DividerRef 
+  | import('./Typography/Typography.types').TypographyRef;
 
 // 基础组件工具函数
 export const BasicComponentsUtils = {
@@ -115,8 +141,9 @@ export const BasicComponentsUtils = {
    */
   getComponentType: (props: BasicComponentProps): string => {
     if ('source' in props) return 'Icon';
+    if ('variant' in props && ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'span'].includes(props.variant as string)) return 'Typography';
     if ('children' in props && typeof props.children === 'string') return 'Text';
-    if ('type' in props && ['solid', 'outline', 'ghost', 'text'].includes(props.type)) return 'Button';
+    if ('type' in props && ['solid', 'outline', 'ghost', 'text'].includes(props.type as string)) return 'Button';
     return 'Divider';
   },
 
@@ -164,6 +191,15 @@ export const BasicComponentsUtils = {
           backgroundColor: '#e5e7eb',
           margin: '16px 0',
         };
+      case 'Typography':
+        return {
+          display: 'block',
+          margin: 0,
+          padding: 0,
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+          lineHeight: 1.5,
+          color: '#1f2937',
+        };
       default:
         return {};
     }
@@ -201,6 +237,13 @@ export const BasicComponentsUtils = {
       lg: { height: 2, margin: 20 },
       xl: { height: 2, margin: 24 },
     },
+    Typography: {
+      xs: { fontSize: 12, lineHeight: 1.25 },
+      sm: { fontSize: 14, lineHeight: 1.375 },
+      md: { fontSize: 16, lineHeight: 1.5 },
+      lg: { fontSize: 18, lineHeight: 1.625 },
+      xl: { fontSize: 20, lineHeight: 1.75 },
+    },
   },
 
   /**
@@ -237,6 +280,15 @@ export const BasicComponentsUtils = {
       error: '#ef4444',
       border: '#e5e7eb',
     },
+    Typography: {
+      primary: '#0ea5e9',
+      secondary: '#6b7280',
+      success: '#22c55e',
+      warning: '#f59e0b',
+      error: '#ef4444',
+      disabled: '#9ca3af',
+      inherit: 'inherit',
+    },
   },
 };
 
@@ -246,4 +298,5 @@ export default {
   Icon,
   Text,
   Divider,
+  Typography,
 } as BasicComponents;

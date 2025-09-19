@@ -1,10 +1,25 @@
 /**
  * Taro-Uno UI 组件库核心类型定义
  * 支持多端开发：微信小程序、支付宝小程序、H5、React Native等
+ * 提供严格的TypeScript类型安全保障
  */
 
 import { ReactNode } from 'react';
 import * as Taro from '@tarojs/taro';
+
+// ==================== 导入工具类型 ====================
+
+// 导出通用工具类型
+export * from './utils';
+
+// 导出Button组件专用类型
+export * from './button';
+
+// 导出无障碍属性类型
+export * from './accessibility';
+
+// 导出标准化组件类型
+export * from './standardized-components';
 
 // ==================== 平台类型定义 ====================
 

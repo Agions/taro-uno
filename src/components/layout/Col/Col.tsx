@@ -19,7 +19,7 @@ export const ColComponent = forwardRef<ColRef, ColProps>((props, ref) => {
     ...restProps
   } = props;
 
-  const colRef = useRef<View>(null);
+  const colRef = useRef<typeof View>(null);
   const [internalSpan, setInternalSpan] = useState<ColSpan>(span);
   const [internalOffset, setInternalOffset] = useState<ColOffset>(offset);
   const [internalOrder, setInternalOrder] = useState<ColOrder>(order);
@@ -51,7 +51,7 @@ export const ColComponent = forwardRef<ColRef, ColProps>((props, ref) => {
   );
 
   // 计算样式
-  const colStyle = colStyles.getBaseStyle({
+  const colStyle = colStyles['getBaseStyle']({
     span: internalSpan,
     offset: internalOffset,
     order: internalOrder,
@@ -61,10 +61,10 @@ export const ColComponent = forwardRef<ColRef, ColProps>((props, ref) => {
   });
 
   // 计算响应式样式
-  const responsiveStyle = responsive ? colStyles.getResponsiveStyle(responsive) : {};
+  const responsiveStyle = responsive ? colStyles['getResponsiveStyle'](responsive) : {};
 
   // 计算类名
-  const colClassName = colStyles.getClassName({
+  const colClassName = colStyles['getClassName']({
     span: internalSpan,
     offset: internalOffset,
     flex: internalFlex,
@@ -89,7 +89,7 @@ export const ColComponent = forwardRef<ColRef, ColProps>((props, ref) => {
         setInternalOrder(newOrder);
       },
       scrollIntoView: (options?: ScrollIntoViewOptions) => {
-        colRef.current?.scrollIntoView(options);
+        (colRef.current as any)?.scrollIntoView(options);
       },
     }),
     [internalSpan, internalOffset, internalOrder],

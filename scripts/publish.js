@@ -68,7 +68,7 @@ const checkSyncWithRemote = () => {
   exec('git fetch origin');
   const localCommit = execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim();
   const remoteCommit = execSync('git rev-parse origin/main', { encoding: 'utf8' }).trim();
-  
+
   if (localCommit !== remoteCommit) {
     log.error('本地分支与远程分支不同步，请先拉取远程更改');
     process.exit(1);
@@ -86,10 +86,10 @@ const getCurrentVersion = () => {
 const updateVersion = (newVersion) => {
   const packageJsonPath = join(__dirname, '..', 'package.json');
   const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
-  
+
   packageJson.version = newVersion;
   writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n');
-  
+
   log.success(`版本已更新为: ${newVersion}`);
 };
 
@@ -131,53 +131,53 @@ const publishPackages = () => {
 const main = async () => {
   try {
     log.info('开始发布流程...');
-    
+
     // 检查环境
     checkBranch();
     checkUncommittedChanges();
     checkSyncWithRemote();
-    
+
     // 获取当前版本
     const currentVersion = getCurrentVersion();
     log.info(`当前版本: ${currentVersion}`);
-    
+
     // 询问新版本
     const readline = await import('readline');
     const rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout,
     });
-    
+
     const newVersion = await new Promise((resolve) => {
       rl.question(`请输入新版本 (当前: ${currentVersion}): `, (answer) => {
         rl.close();
         resolve(answer.trim());
       });
     });
-    
+
     if (!newVersion) {
       log.error('版本号不能为空');
       process.exit(1);
     }
-    
+
     // 确认发布
     const confirm = await new Promise((resolve) => {
       const rl2 = readline.createInterface({
         input: process.stdin,
         output: process.stdout,
       });
-      
+
       rl2.question(`确认发布版本 ${newVersion}? (y/N): `, (answer) => {
         rl2.close();
         resolve(answer.trim().toLowerCase() === 'y');
       });
     });
-    
+
     if (!confirm) {
       log.info('发布已取消');
       process.exit(0);
     }
-    
+
     // 执行发布流程
     updateVersion(newVersion);
     commitVersionUpdate(newVersion);
@@ -185,7 +185,7 @@ const main = async () => {
     buildPackages();
     publishPackages();
     pushToRemote(newVersion);
-    
+
     log.success(`版本 ${newVersion} 发布完成！`);
   } catch (error) {
     log.error(`发布失败: ${error.message}`);

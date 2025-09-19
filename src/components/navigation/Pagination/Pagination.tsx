@@ -1,7 +1,8 @@
 import React, { forwardRef, useRef, useState, useEffect, useCallback } from 'react';
-import { View, Text, Input } from '@tarojs/components';
+import { View, Text, Picker } from '@tarojs/components';
+import { Input } from '../../form/Input';
 import { paginationStyles } from './Pagination.styles';
-import type { PaginationProps, PaginationRef, PaginationSize } from './Pagination.types';
+import type { PaginationProps, PaginationRef } from './Pagination.types';
 
 /** Pagination组件 */
 export const PaginationComponent = forwardRef<PaginationRef, PaginationProps>((props, ref) => {
@@ -30,7 +31,7 @@ export const PaginationComponent = forwardRef<PaginationRef, PaginationProps>((p
     ...restProps
   } = props;
 
-  const paginationRef = useRef<View>(null);
+  const paginationRef = useRef<any>(null);
   const [internalCurrent, setInternalCurrent] = useState(defaultCurrent);
   const [internalPageSize, setInternalPageSize] = useState(defaultPageSize);
   const [jumpInput, setJumpInput] = useState('');
@@ -145,7 +146,7 @@ export const PaginationComponent = forwardRef<PaginationRef, PaginationProps>((p
           <View
             key="jump-prev"
             className="taro-uno-pagination__jump-prev"
-            style={paginationStyles.getJumpButtonStyle(size)}
+            style={paginationStyles['getJumpButtonStyle'](size)}
             onClick={() => !disabled && handlePageChange(internalCurrent - 5)}
           >
             ...
@@ -158,7 +159,7 @@ export const PaginationComponent = forwardRef<PaginationRef, PaginationProps>((p
           <View
             key="jump-next"
             className="taro-uno-pagination__jump-next"
-            style={paginationStyles.getJumpButtonStyle(size)}
+            style={paginationStyles['getJumpButtonStyle'](size)}
             onClick={() => !disabled && handlePageChange(internalCurrent + 5)}
           >
             ...
@@ -175,7 +176,7 @@ export const PaginationComponent = forwardRef<PaginationRef, PaginationProps>((p
       <View
         key={page}
         className={`taro-uno-pagination__page ${isActive ? 'taro-uno-pagination__page--active' : ''}`}
-        style={paginationStyles.getPageButtonStyle({
+        style={paginationStyles['getPageButtonStyle']({
           active: isActive,
           disabled: isDisabled,
           size,
@@ -196,7 +197,7 @@ export const PaginationComponent = forwardRef<PaginationRef, PaginationProps>((p
     return (
       <View
         className="taro-uno-pagination__prev"
-        style={paginationStyles.getButtonStyle({
+        style={paginationStyles['getButtonStyle']({
           disabled: isDisabled,
           size,
         })}
@@ -216,7 +217,7 @@ export const PaginationComponent = forwardRef<PaginationRef, PaginationProps>((p
     return (
       <View
         className="taro-uno-pagination__next"
-        style={paginationStyles.getButtonStyle({
+        style={paginationStyles['getButtonStyle']({
           disabled: isDisabled,
           size,
         })}
@@ -237,7 +238,7 @@ export const PaginationComponent = forwardRef<PaginationRef, PaginationProps>((p
     const totalContent = typeof showTotal === 'function' ? showTotal(total, [start, end]) : `共 ${total} 条`;
 
     return (
-      <View className="taro-uno-pagination__total" style={paginationStyles.getTotalStyle()}>
+      <View className="taro-uno-pagination__total" style={paginationStyles['getTotalStyle']()}>
         {totalContent}
       </View>
     );
@@ -248,19 +249,19 @@ export const PaginationComponent = forwardRef<PaginationRef, PaginationProps>((p
     if (!showQuickJumper) return null;
 
     return (
-      <View className="taro-uno-pagination__quick-jumper" style={paginationStyles.getQuickJumperStyle()}>
+      <View className="taro-uno-pagination__quick-jumper" style={paginationStyles['getQuickJumperStyle']()}>
         <Text>跳至</Text>
         <Input
           type="number"
           value={jumpInput}
-          onChange={(e) => setJumpInput(e.detail.value)}
-          style={paginationStyles.getInputStyle()}
+          onInput={(e: any) => setJumpInput(e.detail.value)}
+          style={paginationStyles['getInputStyle']()}
           disabled={disabled}
         />
         <Text>页</Text>
         <View
           className="taro-uno-pagination__jump-button"
-          style={paginationStyles.getButtonStyle({ size })}
+          style={paginationStyles['getButtonStyle']({ size })}
           onClick={handleJump}
         >
           确定
@@ -273,20 +274,28 @@ export const PaginationComponent = forwardRef<PaginationRef, PaginationProps>((p
   const renderSizeChanger = () => {
     if (!showSizeChanger) return null;
 
+    const sizeIndex = pageSizeOptions.findIndex(size => size === internalPageSize);
+
     return (
       <View className="taro-uno-pagination__size-changer">
-        <select
-          value={internalPageSize}
-          onChange={(e) => handlePageSizeChange(Number(e.target.value))}
-          style={paginationStyles.getSelectStyle()}
+        <Picker
+          mode="selector"
+          range={pageSizeOptions}
+          rangeKey="label"
+          value={sizeIndex >= 0 ? sizeIndex : 0}
+          onChange={(e) => {
+            const selectedIndex = e.detail.value;
+            const selectedSize = pageSizeOptions[selectedIndex as number];
+            if (selectedSize !== undefined) {
+              handlePageSizeChange(selectedSize);
+            }
+          }}
           disabled={disabled}
         >
-          {pageSizeOptions.map((size) => (
-            <option key={size} value={size}>
-              {size} 条/页
-            </option>
-          ))}
-        </select>
+          <View style={paginationStyles['getSelectStyle']()}>
+            <Text>{internalPageSize} 条/页</Text>
+          </View>
+        </Picker>
       </View>
     );
   };
@@ -296,20 +305,20 @@ export const PaginationComponent = forwardRef<PaginationRef, PaginationProps>((p
     return (
       <View
         ref={paginationRef}
-        className={paginationStyles.getClassName({
+        className={paginationStyles['getClassName']({
           size,
           position,
           align,
           disabled,
           simple,
           className,
-        })}
-        style={paginationStyles.getBaseStyle({
+        } as any)}
+        style={paginationStyles['getBaseStyle']({
           size,
           position,
           align,
           style,
-        })}
+        } as any)}
         {...restProps}
       >
         {renderPrevButton()}
@@ -322,22 +331,22 @@ export const PaginationComponent = forwardRef<PaginationRef, PaginationProps>((p
   }
 
   // 计算样式
-  const paginationStyle = paginationStyles.getBaseStyle({
+  const paginationStyle = paginationStyles['getBaseStyle']({
     size,
     position,
     align,
     style: style || {},
-  });
+  } as any);
 
   // 计算类名
-  const paginationClassName = paginationStyles.getClassName({
+  const paginationClassName = paginationStyles['getClassName']({
     size,
     position,
     align,
     disabled,
     simple,
     className,
-  });
+  } as any);
 
   // 暴露给外部的引用方法
   React.useImperativeHandle(

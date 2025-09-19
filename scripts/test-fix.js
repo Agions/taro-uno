@@ -18,7 +18,7 @@ class TestFixer {
   // 修复测试配置
   fixTestConfig() {
     console.log('🔧 修复测试配置...');
-    
+
     const vitestConfigPath = path.join(this.projectRoot, 'vitest.config.ts');
     const vitestConfig = `// @ts-nocheck
 import { defineConfig } from 'vitest/config';
@@ -170,7 +170,7 @@ export default defineConfig({
   // 修复测试设置文件
   fixTestSetup() {
     console.log('🔧 修复测试设置...');
-    
+
     const setupPath = path.join(this.testsDir, 'setup.ts');
     const setupContent = `import '@testing-library/jest-dom'
 import { vi } from 'vitest'
@@ -409,7 +409,7 @@ afterEach(() => {
   // 修复 Text 组件测试
   fixTextTest() {
     console.log('🔧 修复 Text 组件测试...');
-    
+
     const textTestPath = path.join(this.componentsDir, 'basic/Text/Text.test.tsx');
     const textTestContent = `import React from 'react'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
@@ -637,7 +637,7 @@ describe('Text Component', () => {
   // 修复 Button 组件测试
   fixButtonTest() {
     console.log('🔧 修复 Button 组件测试...');
-    
+
     const buttonTestPath = path.join(this.componentsDir, 'basic/Button/Button.test.tsx');
     const buttonTestContent = `import React from 'react'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
@@ -831,18 +831,18 @@ describe('Button Component', () => {
 
   // 运行所有修复
   runAllFixes() {
-    console.log('🚀 开始修复测试配置和组件测试...')
-    
+    console.log('🚀 开始修复测试配置和组件测试...');
+
     this.fixTestConfig();
     this.fixTestSetup();
     this.fixTextTest();
     this.fixButtonTest();
-    
-    console.log('✅ 所有测试修复已完成!')
-    console.log('💡 现在可以运行 npm run test:run 来验证修复结果')
+
+    console.log('✅ 所有测试修复已完成!');
+    console.log('💡 现在可以运行 npm run test:run 来验证修复结果');
   }
 }
 
 // 运行修复脚本
-const fixer = new TestFixer()
-fixer.runAllFixes()
+const fixer = new TestFixer();
+fixer.runAllFixes();

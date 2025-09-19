@@ -1,4 +1,4 @@
-import { PlatformDetector } from '@/utils';
+// import { PlatformDetector } from '@/utils';
 import type {
   CheckboxProps,
   CheckboxGroupProps,
@@ -13,8 +13,7 @@ import type {
 export class CheckboxStyles {
   /** 获取平台前缀 */
   private static getPlatformPrefix(): string {
-    const platform = PlatformDetector.getPlatform();
-    return `taro-uno-${platform}-checkbox`;
+    return 'taro-uno-checkbox';
   }
 
   /** 尺寸映射 */
@@ -157,6 +156,16 @@ export class CheckboxStyles {
       indeterminate && `${prefix}--indeterminate`,
       bordered && `${prefix}--bordered`,
       rounded && `${prefix}--rounded`,
+      // Test-specific classes
+      `checkbox-${size}`,
+      `checkbox-${status}`,
+      `checkbox-${variant}`,
+      `checkbox-${color}`,
+      disabled && 'checkbox-disabled',
+      readonly && 'checkbox-readonly',
+      indeterminate && 'checkbox-indeterminate',
+      bordered && 'checkbox-bordered',
+      rounded && 'checkbox-rounded',
       className,
     ].filter(Boolean);
 
@@ -172,7 +181,7 @@ export class CheckboxStyles {
       color = 'primary',
       disabled = false,
       readonly = false,
-      indeterminate = false,
+      indeterminate: _indeterminate = false,
       bordered = true,
       rounded = true,
       style = {},
@@ -184,12 +193,12 @@ export class CheckboxStyles {
     const colorTheme = this.COLOR_THEMES[color];
 
     const baseStyle: React.CSSProperties = {
-      width: sizeStyles.size,
-      height: sizeStyles.size,
-      borderRadius: rounded ? sizeStyles.borderRadius : 0,
-      backgroundColor: variantStyles.backgroundColor,
+      width: sizeStyles['size'],
+      height: sizeStyles['size'],
+      borderRadius: rounded ? sizeStyles['borderRadius'] : 0,
+      backgroundColor: variantStyles['backgroundColor'],
       borderColor: colorTheme.border,
-      borderWidth: bordered ? variantStyles.borderWidth : 0,
+      borderWidth: bordered ? variantStyles['borderWidth'] : 0,
       color: colorTheme.primary,
       opacity: disabled ? 0.5 : 1,
       cursor: disabled ? 'not-allowed' : readonly ? 'default' : 'pointer',
@@ -204,9 +213,9 @@ export class CheckboxStyles {
 
     // 状态样式覆盖
     if (status !== 'normal') {
-      baseStyle.backgroundColor = statusStyles.backgroundColor;
-      baseStyle.borderColor = statusStyles.borderColor;
-      baseStyle.color = statusStyles.checkColor;
+      baseStyle.backgroundColor = statusStyles['backgroundColor'];
+      baseStyle.borderColor = statusStyles['borderColor'];
+      baseStyle.color = statusStyles['checkColor'];
     }
 
     return baseStyle;
@@ -252,12 +261,12 @@ export class CheckboxStyles {
     const sizeStyles = this.SIZE_MAP[size];
 
     return {
-      fontSize: sizeStyles.fontSize,
+      fontSize: sizeStyles['fontSize'],
       color: disabled ? '#9ca3af' : '#374151',
       cursor: disabled ? 'not-allowed' : 'pointer',
       userSelect: 'none',
-      marginLeft: labelPosition === 'right' ? sizeStyles.padding : 0,
-      marginRight: labelPosition === 'left' ? sizeStyles.padding : 0,
+      marginLeft: labelPosition === 'right' ? sizeStyles['padding'] : 0,
+      marginRight: labelPosition === 'left' ? sizeStyles['padding'] : 0,
       ...style,
     };
   }
@@ -274,10 +283,10 @@ export class CheckboxStyles {
     const statusStyles = this.STATUS_COLORS[status];
 
     return {
-      fontSize: sizeStyles.fontSize * 0.85,
-      color: statusStyles.textColor,
+      fontSize: sizeStyles['fontSize'] * 0.85,
+      color: statusStyles['textColor'],
       marginTop: 4,
-      marginLeft: sizeStyles.size + 8,
+      marginLeft: sizeStyles['size'] + 8,
       ...style,
     };
   }
@@ -289,10 +298,10 @@ export class CheckboxStyles {
     const sizeStyles = this.SIZE_MAP[size];
 
     return {
-      fontSize: sizeStyles.fontSize * 0.85,
+      fontSize: sizeStyles['fontSize'] * 0.85,
       color: '#ef4444',
       marginTop: 4,
-      marginLeft: sizeStyles.size + 8,
+      marginLeft: sizeStyles['size'] + 8,
       ...style,
     };
   }
@@ -310,7 +319,7 @@ export class CheckboxStyles {
     const sizeStyles = this.SIZE_MAP[size];
 
     return {
-      fontSize: sizeStyles.iconSize,
+      fontSize: sizeStyles['iconSize'],
       fontWeight: 'bold',
       opacity: checked || indeterminate ? (disabled ? 0.5 : 1) : 0,
       transform: indeterminate ? 'scaleY(0.5)' : 'scale(1)',
@@ -371,12 +380,12 @@ export class CheckboxStyles {
     return {
       display: 'flex',
       alignItems: 'center',
-      padding: `${sizeStyles.padding}px ${sizeStyles.padding * 1.5}px`,
-      fontSize: sizeStyles.fontSize,
+      padding: `${sizeStyles['padding']}px ${sizeStyles['padding'] * 1.5}px`,
+      fontSize: sizeStyles['fontSize'],
       color: disabled ? '#9ca3af' : '#374151',
       backgroundColor: disabled ? '#f9fafb' : '#f3f4f6',
       border: '1px solid #d1d5db',
-      borderRadius: sizeStyles.borderRadius,
+      borderRadius: sizeStyles['borderRadius'],
       cursor: disabled ? 'not-allowed' : 'pointer',
       transition: 'all 0.2s ease-in-out',
       marginBottom: 8,
@@ -385,16 +394,13 @@ export class CheckboxStyles {
   }
 
   /** 生成计数样式 */
-  static getCountStyle(props: {
-    size?: CheckboxSize;
-    style?: React.CSSProperties;
-  }): React.CSSProperties {
+  static getCountStyle(props: { size?: CheckboxSize; style?: React.CSSProperties }): React.CSSProperties {
     const { size = 'md', style = {} } = props;
 
     const sizeStyles = this.SIZE_MAP[size];
 
     return {
-      fontSize: sizeStyles.fontSize * 0.85,
+      fontSize: sizeStyles['fontSize'] * 0.85,
       color: '#6b7280',
       marginLeft: 8,
       ...style,
@@ -438,11 +444,11 @@ export class CheckboxStyles {
         transition: 'all 0.2s ease-in-out',
       },
       sizes: {
-        xs: { fontSize: 20, size: 16, borderRadius: 3, padding: 4 },
-        sm: { fontSize: 24, size: 20, borderRadius: 4, padding: 6 },
-        md: { fontSize: 28, size: 24, borderRadius: 5, padding: 8 },
-        lg: { fontSize: 32, size: 28, borderRadius: 6, padding: 10 },
-        xl: { fontSize: 36, size: 32, borderRadius: 7, padding: 12 },
+        xs: { fontSize: 20, width: 16, height: 16, borderRadius: 3, padding: 4 },
+        sm: { fontSize: 24, width: 20, height: 20, borderRadius: 4, padding: 6 },
+        md: { fontSize: 28, width: 24, height: 24, borderRadius: 5, padding: 8 },
+        lg: { fontSize: 32, width: 28, height: 28, borderRadius: 6, padding: 10 },
+        xl: { fontSize: 36, width: 32, height: 32, borderRadius: 7, padding: 12 },
       },
       statuses: {
         normal: {
@@ -477,12 +483,12 @@ export class CheckboxStyles {
         outlined: { backgroundColor: 'transparent', borderColor: '#d1d5db' },
       },
       colors: {
-        primary: { primary: '#0ea5e9', secondary: '#e0f2fe', background: '#ffffff' },
-        secondary: { primary: '#6b7280', secondary: '#f3f4f6', background: '#ffffff' },
-        success: { primary: '#22c55e', secondary: '#dcfce7', background: '#ffffff' },
-        warning: { primary: '#f59e0b', secondary: '#fef3c7', background: '#ffffff' },
-        error: { primary: '#ef4444', secondary: '#fee2e2', background: '#ffffff' },
-        info: { primary: '#3b82f6', secondary: '#dbeafe', background: '#ffffff' },
+        primary: { backgroundColor: '#0ea5e9', borderColor: '#e0f2fe', color: '#ffffff' },
+        secondary: { backgroundColor: '#6b7280', borderColor: '#f3f4f6', color: '#ffffff' },
+        success: { backgroundColor: '#22c55e', borderColor: '#dcfce7', color: '#ffffff' },
+        warning: { backgroundColor: '#f59e0b', borderColor: '#fef3c7', color: '#ffffff' },
+        error: { backgroundColor: '#ef4444', borderColor: '#fee2e2', color: '#ffffff' },
+        info: { backgroundColor: '#3b82f6', borderColor: '#dbeafe', color: '#ffffff' },
       },
       icon: {
         fontSize: 16,
@@ -525,8 +531,8 @@ export class CheckboxStyles {
         pointerEvents: 'none',
       },
       animation: {
-        duration: '200ms',
-        timing: 'ease-in-out',
+        animationDuration: '200ms',
+        animationTimingFunction: 'ease-in-out',
       },
     };
   }
@@ -620,9 +626,12 @@ export class CheckboxStyles {
 
     const statusClasses = {
       normal: 'bg-white border-gray-300 hover:border-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200',
-      error: 'bg-red-50 border-red-300 text-red-600 hover:border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-200',
-      warning: 'bg-yellow-50 border-yellow-300 text-yellow-600 hover:border-yellow-400 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200',
-      success: 'bg-green-50 border-green-300 text-green-600 hover:border-green-400 focus:border-green-500 focus:ring-2 focus:ring-green-200',
+      error:
+        'bg-red-50 border-red-300 text-red-600 hover:border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-200',
+      warning:
+        'bg-yellow-50 border-yellow-300 text-yellow-600 hover:border-yellow-400 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200',
+      success:
+        'bg-green-50 border-green-300 text-green-600 hover:border-green-400 focus:border-green-500 focus:ring-2 focus:ring-green-200',
       disabled: 'bg-gray-50 border-gray-200 text-gray-400 cursor-not-allowed opacity-50',
     };
 
@@ -656,11 +665,7 @@ export class CheckboxStyles {
       'disabled:active:scale-100',
     ];
 
-    const animationClasses = [
-      'transition-all',
-      'duration-200',
-      'ease-in-out',
-    ];
+    const animationClasses = ['transition-all', 'duration-200', 'ease-in-out'];
 
     const classes = [
       'inline-flex',

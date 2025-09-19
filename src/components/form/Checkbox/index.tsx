@@ -25,6 +25,3 @@ export type {
   CheckboxConfig,
 } from './Checkbox.types';
 export { checkboxStyles } from './Checkbox.styles';
-
-// 默认导出
-export default Checkbox;

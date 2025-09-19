@@ -189,41 +189,41 @@
       height: $button-height-xs,
       font-size: $button-font-size-xs,
       padding: $button-padding-xs,
-      border-radius: $button-border-radius-xs
+      border-radius: $button-border-radius-xs,
     ),
     sm: (
       height: $button-height-sm,
       font-size: $button-font-size-sm,
       padding: $button-padding-sm,
-      border-radius: $button-border-radius-sm
+      border-radius: $button-border-radius-sm,
     ),
     md: (
       height: $button-height-md,
       font-size: $button-font-size-md,
       padding: $button-padding-md,
-      border-radius: $button-border-radius-md
+      border-radius: $button-border-radius-md,
     ),
     lg: (
       height: $button-height-lg,
       font-size: $button-font-size-lg,
       padding: $button-padding-lg,
-      border-radius: $button-border-radius-lg
+      border-radius: $button-border-radius-lg,
     ),
     xl: (
       height: $button-height-xl,
       font-size: $button-font-size-xl,
       padding: $button-padding-xl,
-      border-radius: $button-border-radius-xl
-    )
+      border-radius: $button-border-radius-xl,
+    ),
   );
-  
+
   $size-config: map-get($sizes, $size);
-  
+
   height: map-get($size-config, height);
   font-size: map-get($size-config, font-size);
   padding: map-get($size-config, padding);
   border-radius: map-get($size-config, border-radius);
-  
+
   // 类型样式
   @if $variant == solid {
     background-color: var(--#{$color}-color);
@@ -242,7 +242,7 @@
     color: var(--#{$color}-color);
     border: none;
   }
-  
+
   // 基础样式
   display: inline-flex;
   align-items: center;
@@ -254,14 +254,14 @@
   transition: var(--transition-base);
   font-weight: $font-weight-medium;
   line-height: 1;
-  
+
   // 禁用状态
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
     pointer-events: none;
   }
-  
+
   // 悬停状态
   &:not(:disabled):hover {
     @if $variant == solid {
@@ -275,7 +275,7 @@
       color: var(--text-color-inverse);
     }
   }
-  
+
   // 激活状态
   &:not(:disabled):active {
     transform: scale(0.95);
@@ -297,17 +297,17 @@
   background-color: var(--background-input);
   color: var(--text-color);
   transition: var(--transition-base);
-  
+
   &:focus {
     outline: none;
     border-color: var(--border-color-focus);
     box-shadow: 0 0 0 2px rgba(var(--border-color-focus), 0.2);
   }
-  
+
   &::placeholder {
     color: var(--text-color-disabled);
   }
-  
+
   &:disabled {
     background-color: var(--background-color);
     color: var(--text-color-disabled);
@@ -326,7 +326,7 @@
   box-shadow: $card-shadow;
   padding: $card-padding;
   transition: var(--transition-base);
-  
+
   &:hover {
     box-shadow: $shadow-lg;
   }

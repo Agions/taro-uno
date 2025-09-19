@@ -1,11 +1,8 @@
-import type { StorybookConfig } from '@storybook/react-vite'
-import { mergeConfig } from 'vite'
+import type { StorybookConfig } from '@storybook/react-vite';
+import { mergeConfig } from 'vite';
 
 const config: StorybookConfig = {
-  stories: [
-    '../packages/*/src/**/*.stories.@(js|jsx|ts|tsx|mdx)',
-    '../docs/stories/**/*.stories.@(js|jsx|ts|tsx|mdx)',
-  ],
+  stories: ['../packages/*/src/**/*.stories.@(js|jsx|ts|tsx|mdx)', '../docs/stories/**/*.stories.@(js|jsx|ts|tsx|mdx)'],
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',
@@ -49,11 +46,11 @@ const config: StorybookConfig = {
       define: {
         'process.env.TARO_ENV': JSON.stringify('h5'),
       },
-    })
+    });
   },
   docs: {
     autodocs: 'tag',
   },
-}
+};
 
-export default config
+export default config;

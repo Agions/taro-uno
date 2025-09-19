@@ -30,27 +30,25 @@ const tsConfig = {
     baseUrl: '.',
     paths: {
       '@/*': [`${srcDir}/*`],
-      '@/tests/*': [`${testDir}/*`],
-    },
+      '@/tests/*': [`${testDir}/*`]
+    }
   },
   include: [`${srcDir}/**/*`, `${testDir}/**/*`],
-  exclude: ['node_modules', distDir, 'coverage'],
+  exclude: ['node_modules', distDir, 'coverage']
 };
 
 // ESLint配置
 const eslintConfig = {
-  extends: [
-    path.join(rootDir, '.eslintrc.json'),
-  ],
+  extends: [path.join(rootDir, '.eslintrc.json')],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: 'module',
-    project: './tsconfig.json',
+    project: './tsconfig.json'
   },
   rules: {
     // 可以在这里添加包特定的规则
-  },
+  }
 };
 
 // Jest配置
@@ -62,22 +60,22 @@ const jestConfig = {
     '^@/(.*)$': `<rootDir>/${srcDir}/$1`,
     '^@/tests/(.*)$': `<rootDir>/${testDir}/$1`,
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
-    '\\.(jpg|jpeg|png|gif|webp|svg)$': '<rootDir>/tests/__mocks__/fileMock.js',
+    '\\.(jpg|jpeg|png|gif|webp|svg)$': '<rootDir>/tests/__mocks__/fileMock.js'
   },
   collectCoverageFrom: [
     `${srcDir}/**/*.{ts,tsx}`,
     `!${srcDir}/**/*.d.ts`,
     `!${srcDir}/**/*.test.{ts,tsx}`,
-    `!${srcDir}/**/*.stories.{ts,tsx}`,
+    `!${srcDir}/**/*.stories.{ts,tsx}`
   ],
   coverageThreshold: {
     global: {
       branches: 80,
       functions: 80,
       lines: 80,
-      statements: 80,
-    },
-  },
+      statements: 80
+    }
+  }
 };
 
 // Rollup配置
@@ -88,21 +86,16 @@ const rollupConfig = {
       file: `${distDir}/index.js`,
       format: 'cjs',
       sourcemap: true,
-      exports: 'auto',
+      exports: 'auto'
     },
     {
       file: `${distDir}/index.esm.js`,
       format: 'esm',
-      sourcemap: true,
-    },
+      sourcemap: true
+    }
   ],
-  external: [
-    'react',
-    'react-dom',
-    '@tarojs/components',
-    '@tarojs/taro',
-  ],
-  plugins: [],
+  external: ['react', 'react-dom', '@tarojs/components', '@tarojs/taro'],
+  plugins: []
 };
 
 // Vite配置
@@ -111,25 +104,20 @@ const viteConfig = {
     lib: {
       entry: `${srcDir}/index.ts`,
       name: '',
-      fileName: (format) => `index.${format}.js`,
+      fileName: (format) => `index.${format}.js`
     },
     rollupOptions: {
-      external: [
-        'react',
-        'react-dom',
-        '@tarojs/components',
-        '@tarojs/taro',
-      ],
+      external: ['react', 'react-dom', '@tarojs/components', '@tarojs/taro'],
       output: {
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
           '@tarojs/components': 'Components',
-          '@tarojs/taro': 'Taro',
-        },
-      },
-    },
-  },
+          '@tarojs/taro': 'Taro'
+        }
+      }
+    }
+  }
 };
 
 module.exports = {
@@ -141,5 +129,5 @@ module.exports = {
   eslintConfig,
   jestConfig,
   rollupConfig,
-  viteConfig,
+  viteConfig
 };

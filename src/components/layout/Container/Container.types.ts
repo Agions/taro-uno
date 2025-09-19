@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-import { View } from '@tarojs/components';
 import { BaseComponentProps, Size, CSSUnit } from '../../../types';
 
 /** Container组件尺寸 */
@@ -11,7 +10,7 @@ export type ContainerAlign = 'start' | 'center' | 'end' | 'stretch';
 /** Container组件引用 */
 export interface ContainerRef {
   /** 获取元素引用 */
-  element: View | null;
+  element: any;
   /** 获取当前尺寸 */
   getSize: () => ContainerSize;
   /** 获取当前对齐方式 */

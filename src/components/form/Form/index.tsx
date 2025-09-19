@@ -3,7 +3,8 @@
  * 表单组件，提供完整的表单验证和状态管理功能
  */
 
-export { FormComponent as Form, FormContext } from './Form';
+export { FormComponent as Form } from './Form';
+export type { FormContext } from './Form';
 export type {
   FormProps,
   FormRef,

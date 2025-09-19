@@ -1,5 +1,4 @@
-import { Platform } from '@tarojs/taro';
-import type { RowProps, RowAlign, RowJustify, RowGutter } from './Row.types';
+import type { RowProps, RowGutter } from './Row.types';
 
 /** Row组件样式管理器 */
 export const rowStyles = {
@@ -32,7 +31,7 @@ export const rowStyles = {
   /**
    * 解析尺寸值
    */
-  parseSize: (size: Size | number | `${number}${CSSUnit}`): number | string => {
+  parseSize: (size: any): string => {
     if (typeof size === 'number') {
       return `${size}px`;
     }
@@ -48,14 +47,34 @@ export const rowStyles = {
   },
 
   /**
+   * 解析尺寸值为数字
+   */
+  parseSizeNumber: (size: any): number => {
+    if (typeof size === 'number') {
+      return size;
+    }
+
+    if (typeof size === 'string') {
+      if (size in rowStyles.SIZE_MAP) {
+        return rowStyles.SIZE_MAP[size as keyof typeof rowStyles.SIZE_MAP];
+      }
+      // Try to parse number from string
+      const match = size && size.match ? size.match(/^(\d+)/) : null;
+      return match && match[1] ? parseInt(match[1], 10) : rowStyles.SIZE_MAP.default;
+    }
+
+    return rowStyles.SIZE_MAP.default;
+  },
+
+  /**
    * 解析间距值
    */
   parseGutter: (gutter: RowGutter): string => {
     if (Array.isArray(gutter)) {
       const [rowGutter, colGutter] = gutter;
-      return `${rowStyles.parseSize(rowGutter)} ${rowStyles.parseSize(colGutter)}`;
+      return `${rowStyles['parseSize'](rowGutter)} ${rowStyles['parseSize'](colGutter)}`;
     }
-    return rowStyles.parseSize(gutter);
+    return rowStyles['parseSize'](gutter);
   },
 
   /**
@@ -64,12 +83,9 @@ export const rowStyles = {
   getBaseStyle: (props: RowProps): React.CSSProperties => {
     const { gutter = 0, align = 'top', justify = 'start', wrap = true, style = {} } = props;
 
-    // 计算间距
-    const gutterValue = rowStyles.parseGutter(gutter);
-
     // 计算对齐方式
-    const alignItems = rowStyles.ALIGN_MAP[align];
-    const justifyContent = rowStyles.JUSTIFY_MAP[justify];
+    const alignItems = rowStyles['ALIGN_MAP'][align];
+    const justifyContent = rowStyles['JUSTIFY_MAP'][justify];
 
     return {
       display: 'flex',
@@ -78,17 +94,17 @@ export const rowStyles = {
       alignItems,
       justifyContent,
       marginLeft: Array.isArray(gutter)
-        ? `-${rowStyles.parseSize(gutter[0]) / 2}`
-        : `-${rowStyles.parseSize(gutter) / 2}`,
+        ? `-${rowStyles['parseSizeNumber'](gutter[0]) / 2}px`
+        : `-${rowStyles['parseSizeNumber'](gutter) / 2}px`,
       marginRight: Array.isArray(gutter)
-        ? `-${rowStyles.parseSize(gutter[0]) / 2}`
-        : `-${rowStyles.parseSize(gutter) / 2}`,
+        ? `-${rowStyles['parseSizeNumber'](gutter[0]) / 2}px`
+        : `-${rowStyles['parseSizeNumber'](gutter) / 2}px`,
       marginTop: Array.isArray(gutter)
-        ? `-${rowStyles.parseSize(gutter[1]) / 2}`
-        : `-${rowStyles.parseSize(gutter) / 2}`,
+        ? `-${rowStyles['parseSizeNumber'](gutter[1]) / 2}px`
+        : `-${rowStyles['parseSizeNumber'](gutter) / 2}px`,
       marginBottom: Array.isArray(gutter)
-        ? `-${rowStyles.parseSize(gutter[1]) / 2}`
-        : `-${rowStyles.parseSize(gutter) / 2}`,
+        ? `-${rowStyles['parseSizeNumber'](gutter[1]) / 2}px`
+        : `-${rowStyles['parseSizeNumber'](gutter) / 2}px`,
       boxSizing: 'border-box',
       ...style,
     };
@@ -116,9 +132,8 @@ export const rowStyles = {
 
     const responsiveStyle: React.CSSProperties = {};
 
-    Object.entries(responsive).forEach(([breakpoint, props]) => {
+    Object.entries(responsive).forEach(([_breakpoint, props]) => {
       if (props) {
-        const mediaQuery = `@media (min-width: ${rowStyles.getBreakpointValue(breakpoint)}px)`;
         // 这里需要配合CSS-in-JS库来处理响应式样式
         // 暂时返回空对象
       }

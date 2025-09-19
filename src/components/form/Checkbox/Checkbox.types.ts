@@ -17,7 +17,7 @@ export type CheckboxColor = 'primary' | 'secondary' | 'success' | 'warning' | 'e
 export type CheckboxNativeProps = InputHTMLAttributes<HTMLInputElement>;
 
 /** 复选框组件属性接口 */
-export interface CheckboxProps extends Omit<CheckboxNativeProps, 'size' | 'checked' | 'onChange'> {
+export interface CheckboxProps extends Omit<CheckboxNativeProps, 'size' | 'checked' | 'onChange' | 'onClick'> {
   /** 复选框值 */
   value?: string | number;
   /** 是否选中 */
@@ -107,6 +107,18 @@ export interface CheckboxProps extends Omit<CheckboxNativeProps, 'size' | 'check
   tabIndex?: number;
   /** 数据属性 */
   data?: Record<string, any>;
+  /** 容器样式 */
+  containerStyle?: React.CSSProperties;
+  /** 包装器样式 */
+  wrapperStyle?: React.CSSProperties;
+  /** 图标样式 */
+  iconStyle?: React.CSSProperties;
+  /** 标签样式 */
+  labelStyle?: React.CSSProperties;
+  /** 辅助文本样式 */
+  helperTextStyle?: React.CSSProperties;
+  /** 错误文本样式 */
+  errorTextStyle?: React.CSSProperties;
 }
 
 /** 复选框组件引用类型 */
@@ -186,6 +198,8 @@ export interface CheckboxGroupProps {
     icon?: ReactNode;
     color?: CheckboxColor;
     data?: Record<string, any>;
+    style?: React.CSSProperties;
+    className?: string;
   }>;
   /** 变化事件处理函数 */
   onChange?: (checkedValues: Array<string | number>) => void;
@@ -228,6 +242,8 @@ export interface CheckboxGroupProps {
     busy?: boolean;
     expanded?: boolean;
   };
+  /** 是否启用无障碍访问 */
+  accessible?: boolean;
 }
 
 /** 复选框组组件引用类型 */
@@ -385,7 +401,10 @@ export interface CheckboxUtils {
   /** 生成涟漪效果 */
   createRipple: (event: ITouchEvent, element: HTMLElement, color?: string) => void;
   /** 计算复选框组选中状态 */
-  calculateGroupState: (values: Array<string | number>, options: Array<any>) => {
+  calculateGroupState: (
+    values: Array<string | number>,
+    options: Array<any>,
+  ) => {
     allSelected: boolean;
     indeterminate: boolean;
     selectedCount: number;
@@ -420,6 +439,10 @@ export interface CheckboxGroupOption extends CheckboxOption {
   checked?: boolean;
   /** 选项是否部分选中 */
   indeterminate?: boolean;
+  /** 选项自定义样式 */
+  style?: React.CSSProperties;
+  /** 选项自定义类名 */
+  className?: string;
 }
 
 /** 复选框配置接口 */

@@ -53,7 +53,7 @@ export interface SelectOptionGroup {
 export type SelectNativeProps = SelectHTMLAttributes<HTMLSelectElement>;
 
 /** 选择器组件属性接口 */
-export interface SelectProps extends Omit<SelectNativeProps, 'size' | 'value' | 'onChange' | 'onFocus' | 'onBlur'> {
+export interface SelectProps extends Omit<SelectNativeProps, 'size' | 'onChange' | 'onFocus' | 'onBlur' | 'value' | 'defaultValue' | 'prefix'> {
   /** 选择器值 */
   value?: string | number | Array<string | number>;
   /** 默认值（非受控模式） */
@@ -130,6 +130,10 @@ export interface SelectProps extends Omit<SelectNativeProps, 'size' | 'value' | 
   onPopupScroll?: (event: ITouchEvent) => void;
   /** 自定义选择器样式 */
   style?: React.CSSProperties;
+  /** 是否块级显示 */
+  block?: boolean;
+  /** 容器样式 */
+  containerStyle?: React.CSSProperties;
   /** 是否启用无障碍访问 */
   accessible?: boolean;
   /** 无障碍标签 */

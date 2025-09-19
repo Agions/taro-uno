@@ -1,12 +1,12 @@
-import { PlatformDetector } from '@/utils';
+import { PlatformDetector } from '../../../utils';
 import type { IconProps, IconSize, IconStatus, IconTheme } from './Icon.types';
 
 /** 样式工具类 */
 export class IconStyles {
   /** 获取平台前缀 */
   private static getPlatformPrefix(): string {
-    const platform = PlatformDetector.getPlatform();
-    return `taro-uno-${platform}-icon`;
+    const platformValue = PlatformDetector.getPlatform();
+    return `taro-uno-${platformValue}-icon`;
   }
 
   /** 尺寸映射 */
@@ -95,8 +95,6 @@ export class IconStyles {
       color = 'currentColor',
       rotate = 0,
       status = 'normal',
-      loading = false,
-      disabled = false,
       animated = false,
       animationDuration = 300,
       filter = 'none',
@@ -116,13 +114,13 @@ export class IconStyles {
       height: calculatedSize,
       fontSize: calculatedSize,
       color,
-      opacity: statusStyles.opacity,
-      cursor: statusStyles.cursor,
-      pointerEvents: statusStyles.pointerEvents,
+      opacity: statusStyles['opacity'],
+      cursor: statusStyles['cursor'],
+      pointerEvents: statusStyles['pointerEvents'] as any,
       transform: rotate ? `rotate(${rotate}deg)` : 'none',
       transition: animated ? `all ${animationDuration}ms ease-in-out` : 'none',
       filter: filterStyle,
-      mixBlendMode: blendModeStyle,
+      mixBlendMode: blendModeStyle as any,
       display: 'inline-flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -141,9 +139,9 @@ export class IconStyles {
     return {
       width: calculatedSize,
       height: calculatedSize,
-      fill: themeStyles.fill,
-      stroke: themeStyles.stroke,
-      strokeWidth: themeStyles.strokeWidth,
+      fill: themeStyles['fill'],
+      stroke: themeStyles['stroke'],
+      strokeWidth: themeStyles['strokeWidth'],
       color,
       ...style,
     };

@@ -1,14 +1,15 @@
 import React from 'react'
+import { vi } from 'vitest'
 import { render, fireEvent, screen } from '@testing-library/react'
 import { DatePicker } from './index'
 
 describe('DatePicker Component', () => {
-  const mockOnChange = jest.fn()
-  const mockOnRangeChange = jest.fn()
-  const mockOnOpenChange = jest.fn()
+  const mockOnChange = vi.fn()
+  const mockOnRangeChange = vi.fn()
+  const mockOnOpenChange = vi.fn()
 
   afterEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   test('renders date picker with basic props', () => {
@@ -180,7 +181,7 @@ describe('DatePicker Component', () => {
   test('handles min and max date restrictions', () => {
     const minDate = new Date(2024, 0, 1)
     const maxDate = new Date(2024, 11, 31)
-    const disabledDate = jest.fn((date) => date.getDay() === 0) // 禁用周日
+    const disabledDate = vi.fn((date) => date.getDay() === 0) // 禁用周日
 
     const { container } = render(
       <DatePicker
@@ -201,7 +202,7 @@ describe('DatePicker Component', () => {
   })
 
   test('handles custom date render', () => {
-    const customDateRender = jest.fn((date) => (
+    const customDateRender = vi.fn((date) => (
       <div className="custom-date">{date.getDate()}</div>
     ))
 
@@ -222,7 +223,7 @@ describe('DatePicker Component', () => {
   })
 
   test('handles custom footer', () => {
-    const customFooter = jest.fn(() => (
+    const customFooter = vi.fn(() => (
       <div className="custom-footer">自定义底部</div>
     ))
 
@@ -278,8 +279,8 @@ describe('DatePicker Component', () => {
   })
 
   test('handles focus and blur events', () => {
-    const mockOnFocus = jest.fn()
-    const mockOnBlur = jest.fn()
+    const mockOnFocus = vi.fn()
+    const mockOnBlur = vi.fn()
 
     const { container } = render(
       <DatePicker

@@ -18,7 +18,7 @@ export const RowComponent = forwardRef<RowRef, RowProps>((props, ref) => {
     ...restProps
   } = props;
 
-  const rowRef = useRef<View>(null);
+  const rowRef = useRef<any>(null);
   const [internalAlign, setInternalAlign] = useState<RowAlign>(align);
   const [internalJustify, setInternalJustify] = useState<RowJustify>(justify);
   const [internalGutter, setInternalGutter] = useState<RowGutter>(gutter);
@@ -57,7 +57,7 @@ export const RowComponent = forwardRef<RowRef, RowProps>((props, ref) => {
 
     return childrenArray.map((child, index) => {
       // 为每个Col组件传递gutter属性
-      if (React.isValidElement(child) && child.type?.displayName === 'Col') {
+      if (React.isValidElement(child) && (child.type as any)?.displayName === 'Col') {
         return React.cloneElement(child, {
           key: index,
           gutter: internalGutter,
@@ -69,7 +69,7 @@ export const RowComponent = forwardRef<RowRef, RowProps>((props, ref) => {
   };
 
   // 计算样式
-  const rowStyle = rowStyles.getBaseStyle({
+  const rowStyle = rowStyles['getBaseStyle']({
     gutter: internalGutter,
     align: internalAlign,
     justify: internalJustify,
@@ -78,10 +78,10 @@ export const RowComponent = forwardRef<RowRef, RowProps>((props, ref) => {
   });
 
   // 计算响应式样式
-  const responsiveStyle = responsive ? rowStyles.getResponsiveStyle(responsive) : {};
+  const responsiveStyle = responsive ? rowStyles['getResponsiveStyle'](responsive) : {};
 
   // 计算类名
-  const rowClassName = rowStyles.getClassName({
+  const rowClassName = rowStyles['getClassName']({
     align: internalAlign,
     justify: internalJustify,
     wrap: internalWrap,
@@ -106,7 +106,14 @@ export const RowComponent = forwardRef<RowRef, RowProps>((props, ref) => {
         setInternalGutter(newGutter);
       },
       scrollIntoView: (options?: ScrollIntoViewOptions) => {
-        rowRef.current?.scrollIntoView(options);
+        // Try to access DOM element if available
+        const element = rowRef.current;
+        if (element && typeof element.scrollIntoView === 'function') {
+          element.scrollIntoView(options);
+        } else if (element && element.$el) {
+          // Handle Taro component ref
+          element.$el?.scrollIntoView?.(options);
+        }
       },
     }),
     [internalAlign, internalJustify, internalGutter],

@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
-import { View } from '@tarojs/components';
-import { BaseComponentProps, Size, CSSUnit } from '../../../types';
+import { BaseComponentProps } from '../../../types';
 import type { RowGutter } from '../Row/Row.types';
 
 /** Col组件跨度 */
@@ -15,7 +14,7 @@ export type ColOrder = number | `${number}`;
 /** Col组件引用 */
 export interface ColRef {
   /** 获取元素引用 */
-  element: View | null;
+  element: any;
   /** 获取当前跨度 */
   getSpan: () => ColSpan;
   /** 获取当前偏移量 */

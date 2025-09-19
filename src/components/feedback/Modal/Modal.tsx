@@ -38,7 +38,7 @@ export const ModalComponent = forwardRef<ModalRef, ModalProps>((props, ref) => {
     ...restProps
   } = props;
 
-  const modalRef = useRef<View>(null);
+  const modalRef = useRef<any>(null);
   const [internalVisible, setInternalVisible] = useState(defaultVisible);
   const [internalTitle, setInternalTitle] = useState(title);
   const [internalContent, setInternalContent] = useState(content);
@@ -108,16 +108,6 @@ export const ModalComponent = forwardRef<ModalRef, ModalProps>((props, ref) => {
     onClose?.();
   }, [controlledVisible, onClose]);
 
-  // 处理确定
-  const handleOk = useCallback(async () => {
-    try {
-      await onOk?.();
-      handleClose();
-    } catch (error) {
-      // 处理异步操作中的错误
-      console.error('Modal onOk error:', error);
-    }
-  }, [onOk, handleClose]);
 
   // 处理取消
   const handleCancel = useCallback(() => {
@@ -149,10 +139,9 @@ export const ModalComponent = forwardRef<ModalRef, ModalProps>((props, ref) => {
       return (
         <View
           key={button.key || index}
-          className={`taro-uno-modal__button ${isDisabled ? 'taro-uno-modal__button--disabled' : ''} ${
-            isLoading ? 'taro-uno-modal__button--loading' : ''
-          }`}
-          style={modalStyles.getButtonStyle(button.type || 'default')}
+          className={`taro-uno-modal__button ${modalStyles.button} ${button.type === 'primary' ? modalStyles.primary : button.type === 'danger' ? modalStyles.danger : modalStyles.secondary} ${
+            isDisabled ? 'taro-uno-modal__button--disabled' : ''
+          } ${isLoading ? 'taro-uno-modal__button--loading' : ''}`}
           onClick={() => !isDisabled && !isLoading && handleButtonClick(button)}
         >
           {isLoading ? '加载中...' : button.text}
@@ -166,34 +155,19 @@ export const ModalComponent = forwardRef<ModalRef, ModalProps>((props, ref) => {
     if (!closable) return null;
 
     return (
-      <View className="taro-uno-modal__close" style={modalStyles.getCloseButtonStyle()} onClick={handleClose}>
+      <View className={`taro-uno-modal__close ${modalStyles.close}`} onClick={handleClose}>
         ×
       </View>
     );
   };
 
   // 计算样式
-  const modalStyle = modalStyles.getBaseStyle({
-    size,
-    position,
-    width,
-    height,
-    fullscreen,
-    centered,
-    style: {
-      ...modalStyles.getAnimationStyle(internalVisible, animationDuration),
-      ...style,
-    },
-  });
+  const modalStyle = {
+    ...style,
+  };
 
   // 计算类名
-  const modalClassName = modalStyles.getClassName({
-    size,
-    position,
-    fullscreen,
-    centered,
-    className,
-  });
+  const modalClassName = `${modalStyles.container} ${modalStyles.content} ${className || ''}`;
 
   // 暴露给外部的引用方法
   React.useImperativeHandle(
@@ -246,21 +220,21 @@ export const ModalComponent = forwardRef<ModalRef, ModalProps>((props, ref) => {
   return (
     <>
       {mask && internalVisible && (
-        <View className="taro-uno-modal__mask" style={modalStyles.getMaskStyle()} onClick={handleMaskClick} />
+        <View className="taro-uno-modal__mask" onClick={handleMaskClick} />
       )}
       {internalVisible && (
         <View ref={modalRef} className={modalClassName} style={modalStyle} {...restProps}>
           {renderCloseButton()}
           {internalTitle && (
-            <View className="taro-uno-modal__header" style={modalStyles.getTitleStyle()}>
+            <View className={`taro-uno-modal__header ${modalStyles.header}`}>
               <Text className="taro-uno-modal__title">{internalTitle}</Text>
             </View>
           )}
-          <View className="taro-uno-modal__body" style={modalStyles.getContentStyle()}>
+          <View className={`taro-uno-modal__body ${modalStyles.body}`}>
             {internalContent}
           </View>
           {internalButtons.length > 0 && (
-            <View className="taro-uno-modal__footer" style={modalStyles.getFooterStyle()}>
+            <View className={`taro-uno-modal__footer ${modalStyles.footer}`}>
               {renderButtons()}
             </View>
           )}
@@ -273,8 +247,18 @@ export const ModalComponent = forwardRef<ModalRef, ModalProps>((props, ref) => {
 /** Modal组件显示名称 */
 ModalComponent.displayName = 'Modal';
 
+/** Modal组件类型 */
+interface ModalStatic {
+  new (props: ModalProps): React.ReactElement;
+  confirm: (config: ModalProps) => void;
+  info: (config: ModalProps) => void;
+  success: (config: ModalProps) => void;
+  error: (config: ModalProps) => void;
+  warning: (config: ModalProps) => void;
+}
+
 /** 导出Modal组件 */
-export const Modal = ModalComponent;
+const Modal = ModalComponent as any as ModalStatic;
 
 /** 静态方法 */
 Modal.confirm = (config: ModalProps) => {
@@ -302,3 +286,6 @@ Modal.warning = (config: ModalProps) => {
   // 警告提示框
   console.log('Modal.warning', config);
 };
+
+export { Modal };
+export default ModalComponent;

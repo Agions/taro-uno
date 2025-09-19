@@ -85,7 +85,7 @@ export interface FormFieldInfo {
 export type FormNativeProps = FormHTMLAttributes<HTMLFormElement>;
 
 /** 表单组件属性接口 */
-export interface FormProps extends Omit<FormNativeProps, 'onSubmit' | 'onReset'> {
+export interface FormProps extends Omit<FormNativeProps, 'onSubmit' | 'onReset' | 'dangerouslySetInnerHTML' | 'onTouchStart' | 'onTouchMove' | 'onTouchEnd' | 'onTouchCancel' | 'onClick' | 'onMouseDown' | 'onMouseUp' | 'onMouseOver' | 'onMouseOut'> {
   /** 表单初始值 */
   initialValues?: FormValues;
   /** 表单布局 */
@@ -128,6 +128,10 @@ export interface FormProps extends Omit<FormNativeProps, 'onSubmit' | 'onReset'>
   accessibilityLabel?: string;
   /** 无障碍角色 */
   accessibilityRole?: string;
+  /** HTML role 属性 */
+  role?: string;
+  /** HTML aria-label 属性 */
+  'aria-label'?: string;
   /** 是否禁用表单 */
   disabled?: boolean;
   /** 是否只读表单 */

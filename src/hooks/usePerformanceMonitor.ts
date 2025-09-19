@@ -246,6 +246,7 @@ export function usePerformanceMonitor(options: PerformanceMonitorOptions = {}) {
       const memoryInterval = setInterval(monitorMemoryUsage, 5000);
       return () => clearInterval(memoryInterval);
     }
+    return () => {};
   }, [config, monitorMemoryUsage]);
 
   // 停止性能监控
@@ -327,7 +328,7 @@ export function usePerformanceMonitor(options: PerformanceMonitorOptions = {}) {
     monitorInteractionPerformance();
 
     return () => {
-      cleanup();
+      cleanup?.();
       stopMonitoring();
     };
   }, [startMonitoring, monitorNetworkPerformance, monitorInteractionPerformance, stopMonitoring]);

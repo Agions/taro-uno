@@ -1,8 +1,7 @@
 import React, { forwardRef } from 'react';
 import { View, Text } from '@tarojs/components';
 import { MessageProps, MessageRef } from './Message.types';
-import { usePlatform } from '@/hooks/usePlatform';
-import { cn } from '@/utils';
+import { cn } from '../../../utils';
 import { messageStyles } from './Message.styles';
 
 export const Message = forwardRef<MessageRef, MessageProps>((props, ref) => {
@@ -18,17 +17,22 @@ export const Message = forwardRef<MessageRef, MessageProps>((props, ref) => {
     onClose,
     ...rest
   } = props;
-
-  const platform = usePlatform();
   const [visible, setVisible] = React.useState(true);
 
   React.useImperativeHandle(ref, () => ({
-    close: () => {
+    hide: () => {
       setVisible(false);
       onClose?.();
+      return true;
     },
     show: () => {
       setVisible(true);
+      return true;
+    },
+    update: (newProps: Partial<MessageProps>) => {
+      // 这里可以实现更新消息内容的逻辑
+      console.log('Update message:', newProps);
+      return true;
     },
   }));
 
@@ -40,6 +44,7 @@ export const Message = forwardRef<MessageRef, MessageProps>((props, ref) => {
       }, duration);
       return () => clearTimeout(timer);
     }
+    return undefined;
   }, [duration, onClose]);
 
   const handleClose = () => {
@@ -49,7 +54,7 @@ export const Message = forwardRef<MessageRef, MessageProps>((props, ref) => {
 
   const renderIcon = () => {
     if (icon) {
-      return <View className={messageStyles.icon}>{icon}</View>;
+      return <View className={messageStyles['icon']}>{icon}</View>;
     }
 
     const defaultIcons = {
@@ -60,26 +65,26 @@ export const Message = forwardRef<MessageRef, MessageProps>((props, ref) => {
     };
 
     return (
-      <View className={cn(messageStyles.icon, messageStyles.iconType[type])}>
-        <Text className={messageStyles.iconText}>{defaultIcons[type]}</Text>
+      <View className={cn(messageStyles['icon'], messageStyles['iconType'][type])}>
+        <Text className={messageStyles['iconText']}>{defaultIcons[type]}</Text>
       </View>
     );
   };
 
-  const messageClasses = cn(messageStyles.base, messageStyles.type[type], className);
+  const messageClasses = cn(messageStyles['base'], messageStyles['type'][type], className);
 
   if (!visible) return null;
 
   return (
     <View ref={ref} className={messageClasses} style={style} {...rest}>
       {renderIcon()}
-      <View className={messageStyles.content}>
-        {title && <Text className={messageStyles.title}>{title}</Text>}
-        {content && <Text className={messageStyles.text}>{content}</Text>}
+      <View className={messageStyles['content']}>
+        {title && <Text className={messageStyles['title']}>{title}</Text>}
+        {content && <Text className={messageStyles['text']}>{content}</Text>}
       </View>
       {closable && (
-        <View className={messageStyles.close} onClick={handleClose}>
-          <Text className={messageStyles.closeText}>✕</Text>
+        <View className={messageStyles['close']} onClick={handleClose}>
+          <Text className={messageStyles['closeText']}>✕</Text>
         </View>
       )}
     </View>
@@ -87,3 +92,5 @@ export const Message = forwardRef<MessageRef, MessageProps>((props, ref) => {
 });
 
 Message.displayName = 'Message';
+
+export default Message;

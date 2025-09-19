@@ -1,8 +1,7 @@
 import React, { forwardRef } from 'react';
 import { View } from '@tarojs/components';
 import { ListProps, ListItemProps, ListRef } from './List.types';
-import { usePlatform } from '@/hooks/usePlatform';
-import { cn } from '@/utils';
+import { cn } from '@/utils/index';
 import { ListStyles } from './List.styles';
 
 export const List = forwardRef<ListRef, ListProps>((props, ref) => {
@@ -21,8 +20,6 @@ export const List = forwardRef<ListRef, ListProps>((props, ref) => {
     ...rest
   } = props;
 
-  const platform = usePlatform();
-  const isH5 = platform === 'h5';
 
   const renderItems = () => {
     if (dataSource && renderItem) {
@@ -47,25 +44,25 @@ export const List = forwardRef<ListRef, ListProps>((props, ref) => {
 
   const renderHeader = () => {
     if (!header) return null;
-    return <View className={ListStyles.header}>{header}</View>;
+    return <View className={ListStyles['header']}>{header}</View>;
   };
 
   const renderFooter = () => {
     if (!footer) return null;
-    return <View className={ListStyles.footer}>{footer}</View>;
+    return <View className={ListStyles['footer']}>{footer}</View>;
   };
 
-  const listClasses = cn(ListStyles.base, ListStyles.size[size], bordered && ListStyles.bordered, className);
+  const listClasses = cn(ListStyles['base'], ListStyles['size'][size], bordered && ListStyles['bordered'], className);
 
   return (
     <View ref={ref} className={listClasses} style={style} {...rest}>
       {renderHeader()}
-      <View className={ListStyles.content}>
+      <View className={ListStyles['content']}>
         {loading ? (
-          <View className={ListStyles.loading}>
-            <View className={ListStyles.loadingItem} />
-            <View className={ListStyles.loadingItem} />
-            <View className={ListStyles.loadingItem} />
+          <View className={ListStyles['loading']}>
+            <View className={ListStyles['loadingItem']} />
+            <View className={ListStyles['loadingItem']} />
+            <View className={ListStyles['loadingItem']} />
           </View>
         ) : (
           renderItems()
@@ -100,11 +97,11 @@ export const ListItem = forwardRef<any, ListItemProps>((props, ref) => {
   };
 
   const itemClasses = cn(
-    ListStyles.item,
-    ListStyles.itemSize[size],
-    split && ListStyles.itemSplit,
-    disabled && ListStyles.itemDisabled,
-    clickable && ListStyles.itemClickable,
+    ListStyles['item'],
+    ListStyles['itemSize'][size],
+    split && ListStyles['itemSplit'],
+    disabled && ListStyles['itemDisabled'],
+    clickable && ListStyles['itemClickable'],
     className,
   );
 

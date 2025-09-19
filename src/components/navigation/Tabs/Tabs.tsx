@@ -31,7 +31,7 @@ export const TabsComponent = forwardRef<TabsRef, TabsProps>((props, ref) => {
     ...restProps
   } = props;
 
-  const tabsRef = useRef<View>(null);
+  const tabsRef = useRef<any>(null);
   const [internalItems, setInternalItems] = useState<TabItem[]>(items || []);
   const [activeKey, setActiveKey] = useState<string>(defaultActiveKey || items?.[0]?.key || '');
   const [internalPosition, setInternalPosition] = useState<TabPosition>(position);
@@ -96,7 +96,7 @@ export const TabsComponent = forwardRef<TabsRef, TabsProps>((props, ref) => {
     }
 
     return (
-      <View className="taro-uno-tabs__tab-bar" style={tabsStyles.getTabBarStyle(internalPosition, internalType)}>
+      <View className="taro-uno-tabs__tab-bar" style={tabsStyles['getTabBarStyle'](internalPosition, internalType)}>
         {internalItems.map((item, index) => {
           const isActive = activeKey === item.key;
           const isDisabled = item.disabled;
@@ -107,9 +107,9 @@ export const TabsComponent = forwardRef<TabsRef, TabsProps>((props, ref) => {
               className={`taro-uno-tabs__tab-item ${isActive ? 'taro-uno-tabs__tab-item--active' : ''} ${
                 isDisabled ? 'taro-uno-tabs__tab-item--disabled' : ''
               }`}
-              style={tabsStyles.getTabItemStyle({
+              style={tabsStyles['getTabItemStyle']({
                 active: isActive,
-                disabled: isDisabled,
+                disabled: isDisabled || false,
                 type: internalType,
                 size: internalSize,
                 position: internalPosition,
@@ -123,14 +123,14 @@ export const TabsComponent = forwardRef<TabsRef, TabsProps>((props, ref) => {
                   {item.icon && <View className="taro-uno-tabs__tab-icon">{item.icon}</View>}
                   <Text className="taro-uno-tabs__tab-title">{item.title}</Text>
                   {item.badge && (
-                    <View className="taro-uno-tabs__tab-badge" style={tabsStyles.getBadgeStyle()}>
+                    <View className="taro-uno-tabs__tab-badge" style={tabsStyles['getBadgeStyle']()}>
                       {item.badge}
                     </View>
                   )}
                   {editable && internalItems.length > 1 && (
                     <View
                       className="taro-uno-tabs__tab-remove"
-                      style={tabsStyles.getRemoveButtonStyle()}
+                      style={tabsStyles['getRemoveButtonStyle']()}
                       onClick={(e) => handleRemove(item.key, e)}
                     >
                       ×
@@ -144,7 +144,7 @@ export const TabsComponent = forwardRef<TabsRef, TabsProps>((props, ref) => {
         {addable && (
           <View
             className="taro-uno-tabs__tab-add"
-            style={tabsStyles.getAddButtonStyle(internalSize)}
+            style={tabsStyles['getAddButtonStyle'](internalSize)}
             onClick={handleAdd}
           >
             +
@@ -157,7 +157,7 @@ export const TabsComponent = forwardRef<TabsRef, TabsProps>((props, ref) => {
   // 渲染内容区域
   const renderContentInternal = () => {
     return (
-      <View className="taro-uno-tabs__content" style={tabsStyles.getContentStyle(internalPosition, animated)}>
+      <View className="taro-uno-tabs__content" style={tabsStyles['getContentStyle'](internalPosition, animated)}>
         {internalItems.map((item, index) => {
           const isActive = activeKey === item.key;
 
@@ -170,7 +170,7 @@ export const TabsComponent = forwardRef<TabsRef, TabsProps>((props, ref) => {
             <View
               key={item.key}
               className={`taro-uno-tabs__tab-pane ${isActive ? 'taro-uno-tabs__tab-pane--active' : ''}`}
-              style={tabsStyles.getTabContentStyle(isActive, animated)}
+              style={tabsStyles['getTabContentStyle'](isActive, animated)}
             >
               {renderContent ? renderContent(item, index) : item.content}
             </View>
@@ -181,22 +181,22 @@ export const TabsComponent = forwardRef<TabsRef, TabsProps>((props, ref) => {
   };
 
   // 计算样式
-  const tabsStyle = tabsStyles.getBaseStyle({
+  const tabsStyle = tabsStyles['getBaseStyle']({
     position: internalPosition,
     type: internalType,
     size: internalSize,
     centered,
     style: style || {},
-  });
+  } as any);
 
   // 计算类名
-  const tabsClassName = tabsStyles.getClassName({
+  const tabsClassName = tabsStyles['getClassName']({
     position: internalPosition,
     type: internalType,
     size: internalSize,
     centered,
     className: className || '',
-  });
+  } as any);
 
   // 暴露给外部的引用方法
   React.useImperativeHandle(
@@ -223,14 +223,14 @@ export const TabsComponent = forwardRef<TabsRef, TabsProps>((props, ref) => {
         const newItems = internalItems.filter((item) => item.key !== key);
         setInternalItems(newItems);
         if (activeKey === key && newItems.length > 0) {
-          setActiveKey(newItems[0].key);
+          setActiveKey(newItems[0]?.key || '');
         }
       },
       updateItem: (key, newItem) => {
         const newItems = internalItems.map((item) => (item.key === key ? { ...item, ...newItem } : item));
         setInternalItems(newItems);
       },
-      scrollToTab: (key) => {
+      scrollToTab: (_key) => {
         // 这里需要实现滚动到指定Tab的逻辑
         // 可以使用scrollIntoView或其他滚动方法
       },

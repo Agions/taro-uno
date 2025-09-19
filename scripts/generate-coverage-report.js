@@ -5,13 +5,13 @@
  * 生成详细的测试覆盖率报告和改进建议
  */
 
-import fs from 'fs'
-import path from 'path'
-import { execSync } from 'child_process'
-import { fileURLToPath } from 'url'
+import fs from 'fs';
+import path from 'path';
+import { execSync } from 'child_process';
+import { fileURLToPath } from 'url';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const rootDir = path.resolve(__dirname, '..')
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const rootDir = path.resolve(__dirname, '..');
 
 // 覆盖率配置
 const coverageConfig = {
@@ -29,52 +29,44 @@ const coverageConfig = {
       statements: 70,
     },
   },
-  excludePatterns: [
-    '**/*.test.*',
-    '**/*.spec.*',
-    '**/*.config.*',
-    '**/types.ts',
-    '**/index.ts',
-    '**/stories.*',
-  ],
-}
+  excludePatterns: ['**/*.test.*', '**/*.spec.*', '**/*.config.*', '**/types.ts', '**/index.ts', '**/stories.*'],
+};
 
 // 生成覆盖率报告
 function generateCoverageReport() {
-  console.log('🧪 开始生成测试覆盖率报告...')
-  
+  console.log('🧪 开始生成测试覆盖率报告...');
+
   try {
     // 运行测试并生成覆盖率报告
-    console.log('📊 运行测试并收集覆盖率数据...')
-    execSync('npm run test:coverage', { 
+    console.log('📊 运行测试并收集覆盖率数据...');
+    execSync('npm run test:coverage', {
       cwd: rootDir,
-      stdio: 'inherit'
-    })
-    
+      stdio: 'inherit',
+    });
+
     // 读取覆盖率数据
-    const coveragePath = path.join(rootDir, 'coverage', 'coverage-final.json')
+    const coveragePath = path.join(rootDir, 'coverage', 'coverage-final.json');
     if (!fs.existsSync(coveragePath)) {
-      console.error('❌ 覆盖率数据文件不存在')
-      process.exit(1)
+      console.error('❌ 覆盖率数据文件不存在');
+      process.exit(1);
     }
-    
-    const coverageData = JSON.parse(fs.readFileSync(coveragePath, 'utf8'))
-    
+
+    const coverageData = JSON.parse(fs.readFileSync(coveragePath, 'utf8'));
+
     // 分析覆盖率数据
-    const analysis = analyzeCoverage(coverageData)
-    
+    const analysis = analyzeCoverage(coverageData);
+
     // 生成报告
-    generateHtmlReport(analysis)
-    generateTextReport(analysis)
-    
+    generateHtmlReport(analysis);
+    generateTextReport(analysis);
+
     // 提供改进建议
-    generateRecommendations(analysis)
-    
-    console.log('✅ 覆盖率报告生成完成!')
-    
+    generateRecommendations(analysis);
+
+    console.log('✅ 覆盖率报告生成完成!');
   } catch (error) {
-    console.error('❌ 生成覆盖率报告时出错:', error.message)
-    process.exit(1)
+    console.error('❌ 生成覆盖率报告时出错:', error.message);
+    process.exit(1);
   }
 }
 
@@ -96,43 +88,31 @@ function analyzeCoverage(coverageData) {
     fileLevel: {},
     recommendations: [],
     issues: [],
-  }
-  
+  };
+
   // 遍历覆盖率数据
   for (const [filePath, fileData] of Object.entries(coverageData)) {
-    if (shouldExcludeFile(filePath)) continue
-    
-    analysis.summary.totalFiles++
-    
+    if (shouldExcludeFile(filePath)) continue;
+
+    analysis.summary.totalFiles++;
+
     const fileCoverage = {
       path: filePath,
-      lines: calculatePercentage(
-        fileData.l?.covered || 0,
-        fileData.l?.total || 0
-      ),
-      functions: calculatePercentage(
-        fileData.fn?.covered || 0,
-        fileData.fn?.total || 0
-      ),
-      branches: calculatePercentage(
-        fileData.b?.covered || 0,
-        fileData.b?.total || 0
-      ),
-      statements: calculatePercentage(
-        fileData.s?.covered || 0,
-        fileData.s?.total || 0
-      ),
-    }
-    
-    analysis.summary.totalLines += fileData.l?.total || 0
-    analysis.summary.coveredLines += fileData.l?.covered || 0
-    analysis.summary.totalFunctions += fileData.fn?.total || 0
-    analysis.summary.coveredFunctions += fileData.fn?.covered || 0
-    analysis.summary.totalBranches += fileData.b?.total || 0
-    analysis.summary.coveredBranches += fileData.b?.covered || 0
-    analysis.summary.totalStatements += fileData.s?.total || 0
-    analysis.summary.coveredStatements += fileData.s?.covered || 0
-    
+      lines: calculatePercentage(fileData.l?.covered || 0, fileData.l?.total || 0),
+      functions: calculatePercentage(fileData.fn?.covered || 0, fileData.fn?.total || 0),
+      branches: calculatePercentage(fileData.b?.covered || 0, fileData.b?.total || 0),
+      statements: calculatePercentage(fileData.s?.covered || 0, fileData.s?.total || 0),
+    };
+
+    analysis.summary.totalLines += fileData.l?.total || 0;
+    analysis.summary.coveredLines += fileData.l?.covered || 0;
+    analysis.summary.totalFunctions += fileData.fn?.total || 0;
+    analysis.summary.coveredFunctions += fileData.fn?.covered || 0;
+    analysis.summary.totalBranches += fileData.b?.total || 0;
+    analysis.summary.coveredBranches += fileData.b?.covered || 0;
+    analysis.summary.totalStatements += fileData.s?.total || 0;
+    analysis.summary.coveredStatements += fileData.s?.covered || 0;
+
     // 检查文件级别覆盖率
     if (isFileCoverageLow(fileCoverage)) {
       analysis.recommendations.push({
@@ -140,34 +120,31 @@ function analyzeCoverage(coverageData) {
         file: filePath,
         message: `文件 ${filePath} 覆盖率较低，建议添加更多测试用例`,
         priority: 'high',
-      })
+      });
     }
-    
-    analysis.fileLevel[filePath] = fileCoverage
+
+    analysis.fileLevel[filePath] = fileCoverage;
   }
-  
+
   // 计算总体覆盖率
-  analysis.summary.linesPercentage = calculatePercentage(
-    analysis.summary.coveredLines,
-    analysis.summary.totalLines
-  )
+  analysis.summary.linesPercentage = calculatePercentage(analysis.summary.coveredLines, analysis.summary.totalLines);
   analysis.summary.functionsPercentage = calculatePercentage(
     analysis.summary.coveredFunctions,
-    analysis.summary.totalFunctions
-  )
+    analysis.summary.totalFunctions,
+  );
   analysis.summary.branchesPercentage = calculatePercentage(
     analysis.summary.coveredBranches,
-    analysis.summary.totalBranches
-  )
+    analysis.summary.totalBranches,
+  );
   analysis.summary.statementsPercentage = calculatePercentage(
     analysis.summary.coveredStatements,
-    analysis.summary.totalStatements
-  )
-  
+    analysis.summary.totalStatements,
+  );
+
   // 检查总体覆盖率是否达标
-  checkOverallCoverage(analysis)
-  
-  return analysis
+  checkOverallCoverage(analysis);
+
+  return analysis;
 }
 
 // 生成HTML报告
@@ -321,11 +298,11 @@ function generateHtmlReport(analysis) {
     </div>
 </body>
 </html>
-  `
-  
-  const reportPath = path.join(rootDir, 'coverage', 'report.html')
-  fs.writeFileSync(reportPath, reportHtml)
-  console.log('📄 HTML 报告已生成:', reportPath)
+  `;
+
+  const reportPath = path.join(rootDir, 'coverage', 'report.html');
+  fs.writeFileSync(reportPath, reportHtml);
+  console.log('📄 HTML 报告已生成:', reportPath);
 }
 
 // 生成文本报告
@@ -343,84 +320,82 @@ function generateTextReport(analysis) {
 📋 文件覆盖率:
 ${Object.entries(analysis.fileLevel)
   .map(([file, coverage]) => {
-    const status = getCoverageStatus(coverage)
-    return `${file}: ${status.emoji} ${coverage.lines.toFixed(1)}%`
+    const status = getCoverageStatus(coverage);
+    return `${file}: ${status.emoji} ${coverage.lines.toFixed(1)}%`;
   })
   .join('\n')}
 
 💡 改进建议:
-${analysis.recommendations
-  .map(rec => `${rec.type === 'low_coverage' ? '⚠️' : 'ℹ️'} ${rec.message}`)
-  .join('\n')}
+${analysis.recommendations.map((rec) => `${rec.type === 'low_coverage' ? '⚠️' : 'ℹ️'} ${rec.message}`).join('\n')}
 
 ⏰ 报告生成时间: ${new Date().toLocaleString()}
-  `
-  
-  const reportPath = path.join(rootDir, 'coverage', 'report.txt')
-  fs.writeFileSync(reportPath, report)
-  console.log('📄 文本报告已生成:', reportPath)
+  `;
+
+  const reportPath = path.join(rootDir, 'coverage', 'report.txt');
+  fs.writeFileSync(reportPath, report);
+  console.log('📄 文本报告已生成:', reportPath);
 }
 
 // 生成改进建议
 function generateRecommendations(analysis) {
-  console.log('\n💡 测试覆盖率改进建议:')
-  console.log('========================')
-  
+  console.log('\n💡 测试覆盖率改进建议:');
+  console.log('========================');
+
   if (analysis.recommendations.length === 0) {
-    console.log('✅ 所有文件覆盖率都达到要求!')
-    return
+    console.log('✅ 所有文件覆盖率都达到要求!');
+    return;
   }
-  
+
   analysis.recommendations.forEach((rec, index) => {
-    console.log(`${index + 1}. ${rec.message}`)
-    console.log(`   优先级: ${rec.priority}`)
-    console.log(`   文件: ${rec.file}`)
-    console.log()
-  })
-  
+    console.log(`${index + 1}. ${rec.message}`);
+    console.log(`   优先级: ${rec.priority}`);
+    console.log(`   文件: ${rec.file}`);
+    console.log();
+  });
+
   // 生成具体改进方案
-  console.log('🎯 具体改进方案:')
-  console.log('===============')
-  
+  console.log('🎯 具体改进方案:');
+  console.log('===============');
+
   if (analysis.summary.linesPercentage < coverageConfig.thresholds.global.lines) {
-    console.log('1. 提高行覆盖率:')
-    console.log('   - 添加边界条件测试')
-    console.log('   - 增加错误处理测试')
-    console.log('   - 测试所有代码路径')
+    console.log('1. 提高行覆盖率:');
+    console.log('   - 添加边界条件测试');
+    console.log('   - 增加错误处理测试');
+    console.log('   - 测试所有代码路径');
   }
-  
+
   if (analysis.summary.functionsPercentage < coverageConfig.thresholds.global.functions) {
-    console.log('2. 提高函数覆盖率:')
-    console.log('   - 为每个函数编写测试用例')
-    console.log('   - 测试私有函数（通过公共接口）')
-    console.log('   - 添加回调函数测试')
+    console.log('2. 提高函数覆盖率:');
+    console.log('   - 为每个函数编写测试用例');
+    console.log('   - 测试私有函数（通过公共接口）');
+    console.log('   - 添加回调函数测试');
   }
-  
+
   if (analysis.summary.branchesPercentage < coverageConfig.thresholds.global.branches) {
-    console.log('3. 提高分支覆盖率:')
-    console.log('   - 测试所有条件分支')
-    console.log('   - 添加真假条件测试')
-    console.log('   - 测试循环的不同情况')
+    console.log('3. 提高分支覆盖率:');
+    console.log('   - 测试所有条件分支');
+    console.log('   - 添加真假条件测试');
+    console.log('   - 测试循环的不同情况');
   }
-  
-  console.log('\n🔧 自动化建议:')
-  console.log('==============')
-  console.log('- 运行 npm run test:coverage 查看详细覆盖率')
-  console.log('- 使用 IDE 插件查看未覆盖的代码行')
-  console.log('- 定期运行覆盖率检查并设置 CI/CD 门槛')
+
+  console.log('\n🔧 自动化建议:');
+  console.log('==============');
+  console.log('- 运行 npm run test:coverage 查看详细覆盖率');
+  console.log('- 使用 IDE 插件查看未覆盖的代码行');
+  console.log('- 定期运行覆盖率检查并设置 CI/CD 门槛');
 }
 
 // 辅助函数
 function calculatePercentage(covered, total) {
-  if (total === 0) return 100
-  return (covered / total) * 100
+  if (total === 0) return 100;
+  return (covered / total) * 100;
 }
 
 function shouldExcludeFile(filePath) {
-  return coverageConfig.excludePatterns.some(pattern => {
-    const regex = new RegExp(pattern.replace(/\*\*/g, '.*').replace(/\*/g, '[^/]*'))
-    return regex.test(filePath)
-  })
+  return coverageConfig.excludePatterns.some((pattern) => {
+    const regex = new RegExp(pattern.replace(/\*\*/g, '.*').replace(/\*/g, '[^/]*'));
+    return regex.test(filePath);
+  });
 }
 
 function isFileCoverageLow(coverage) {
@@ -429,75 +404,80 @@ function isFileCoverageLow(coverage) {
     coverage.functions < coverageConfig.thresholds.fileLevel.functions ||
     coverage.branches < coverageConfig.thresholds.fileLevel.branches ||
     coverage.statements < coverageConfig.thresholds.fileLevel.statements
-  )
+  );
 }
 
 function checkOverallCoverage(analysis) {
-  const thresholds = coverageConfig.thresholds.global
-  
+  const thresholds = coverageConfig.thresholds.global;
+
   if (analysis.summary.linesPercentage < thresholds.lines) {
     analysis.issues.push({
       type: 'low_lines_coverage',
       message: `总体行覆盖率 ${analysis.summary.linesPercentage.toFixed(1)}% 低于目标 ${thresholds.lines}%`,
-    })
+    });
   }
-  
+
   if (analysis.summary.functionsPercentage < thresholds.functions) {
     analysis.issues.push({
       type: 'low_functions_coverage',
       message: `总体函数覆盖率 ${analysis.summary.functionsPercentage.toFixed(1)}% 低于目标 ${thresholds.functions}%`,
-    })
+    });
   }
-  
+
   if (analysis.summary.branchesPercentage < thresholds.branches) {
     analysis.issues.push({
       type: 'low_branches_coverage',
       message: `总体分支覆盖率 ${analysis.summary.branchesPercentage.toFixed(1)}% 低于目标 ${thresholds.branches}%`,
-    })
+    });
   }
-  
+
   if (analysis.summary.statementsPercentage < thresholds.statements) {
     analysis.issues.push({
       type: 'low_statements_coverage',
       message: `总体语句覆盖率 ${analysis.summary.statementsPercentage.toFixed(1)}% 低于目标 ${thresholds.statements}%`,
-    })
+    });
   }
 }
 
 function getCoverageStatus(coverage) {
-  const avgCoverage = (coverage.lines + coverage.functions + coverage.branches + coverage.statements) / 4
-  
+  const avgCoverage = (coverage.lines + coverage.functions + coverage.branches + coverage.statements) / 4;
+
   if (avgCoverage >= 80) {
-    return { emoji: '✅', level: 'high' }
+    return { emoji: '✅', level: 'high' };
   } else if (avgCoverage >= 60) {
-    return { emoji: '⚠️', level: 'medium' }
+    return { emoji: '⚠️', level: 'medium' };
   } else {
-    return { emoji: '❌', level: 'low' }
+    return { emoji: '❌', level: 'low' };
   }
 }
 
 function generateRecommendationsSection(recommendations) {
   if (recommendations.length === 0) {
-    return '<div class="recommendations"><h2>✅ 无改进建议</h2></div>'
+    return '<div class="recommendations"><h2>✅ 无改进建议</h2></div>';
   }
-  
+
   return `
     <div class="recommendations">
         <h2>💡 改进建议</h2>
-        ${recommendations.map(rec => `
+        ${recommendations
+          .map(
+            (rec) => `
             <div class="recommendation ${rec.priority}">
                 <strong>${rec.priority === 'high' ? '高优先级' : rec.priority === 'medium' ? '中优先级' : '低优先级'}</strong>
                 <p>${rec.message}</p>
                 <small>文件: ${rec.file}</small>
             </div>
-        `).join('')}
+        `,
+          )
+          .join('')}
     </div>
-  `
+  `;
 }
 
 function generateFileList(fileLevel) {
   return Object.entries(fileLevel)
-    .map(([file, coverage]) => `
+    .map(
+      ([file, coverage]) => `
         <div class="file-item">
             <span class="file-name">${file}</span>
             <div class="coverage-bars">
@@ -508,12 +488,14 @@ function generateFileList(fileLevel) {
                 <span class="coverage-value">${coverage.lines.toFixed(1)}%</span>
             </div>
         </div>
-    `).join('')
+    `,
+    )
+    .join('');
 }
 
 // 如果直接运行此脚本
 if (import.meta.url === `file://${process.argv[1]}`) {
-  generateCoverageReport()
+  generateCoverageReport();
 }
 
-export { generateCoverageReport, analyzeCoverage }
+export { generateCoverageReport, analyzeCoverage };

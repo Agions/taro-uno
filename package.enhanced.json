@@ -1,0 +1,270 @@
+{
+  "name": "taro-uno-ui",
+  "version": "0.1.0",
+  "description": "基于Taro的多端UI组件库",
+  "type": "module",
+  "main": "./dist/taro-uno-ui.cjs.js",
+  "module": "./dist/taro-uno-ui.es.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/taro-uno-ui.es.js",
+      "require": "./dist/taro-uno-ui.cjs.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "development": {
+      "dev": "vite",
+      "preview": "vite preview"
+    },
+    "build": {
+      "build": "vite build",
+      "build:lib": "vite build --mode lib",
+      "build:optimized": "node scripts/build-optimized.js",
+      "build:analyze": "node scripts/build-optimized.js --analyze"
+    },
+    "testing": {
+      "test": "vitest",
+      "test:run": "vitest run",
+      "test:watch": "vitest watch",
+      "test:ui": "vitest --ui",
+      "test:coverage": "vitest run --coverage",
+      "test:coverage:html": "vitest run --coverage --coverage.reporter=html",
+      "test:component": "vitest run src/components/**/*.test.tsx",
+      "test:integration": "vitest run tests/integration/**/*.test.ts",
+      "test:e2e": "playwright test",
+      "test:e2e:ui": "playwright test --ui",
+      "test:e2e:headed": "playwright test --headed",
+      "test:e2e:mobile": "playwright test --project='Mobile Chrome'",
+      "test:accessibility": "vitest run --reporter=verbose tests/accessibility/**/*.test.ts",
+      "test:performance": "vitest run --reporter=verbose tests/performance/**/*.test.ts",
+      "test:visual": "node scripts/visual-test-runner.js",
+      "test:visual:update": "UPDATE_SNAPSHOTS=true node scripts/visual-test-runner.js",
+      "test:smoke": "vitest run tests/smoke/**/*.test.ts",
+      "test:regression": "vitest run tests/regression/**/*.test.ts",
+      "test:all": "node scripts/run-tests.js all",
+      "test:parallel": "vitest run --run --reporter=verbose",
+      "test:debug": "vitest run --reporter=verbose --no-coverage"
+    },
+    "quality": {
+      "lint": "eslint . --fix",
+      "lint:check": "eslint .",
+      "lint:strict": "eslint . --max-warnings=0",
+      "lint:ts": "eslint . --ext .ts,.tsx",
+      "lint:js": "eslint . --ext .js,.jsx",
+      "lint:style": "stylelint \"src/**/*.scss\" --fix",
+      "type-check": "tsc --noEmit",
+      "type-check:watch": "tsc --noEmit --watch",
+      "format": "prettier --write .",
+      "format:check": "prettier --check .",
+      "format:staged": "lint-staged"
+    },
+    "performance": {
+      "perf:test": "node scripts/performance-test.js",
+      "perf:analyze": "node scripts/analyze-bundle.js",
+      "perf:bundle": "node scripts/analyze-bundle.js --clean",
+      "perf:audit": "node scripts/performance-audit.cjs",
+      "perf:monitor": "node scripts/performance-monitor.cjs",
+      "perf:optimize": "node scripts/performance-optimizer.cjs"
+    },
+    "documentation": {
+      "docs:dev": "vitepress dev docs",
+      "docs:build": "vitepress build docs",
+      "docs:serve": "vitepress serve docs",
+      "docs:generate": "node scripts/generate-docs.js all",
+      "docs:validate": "node scripts/validate-docs.js",
+      "docs:update": "node scripts/update-docs.js",
+      "docs:components": "node scripts/generate-docs.js components",
+      "docs:api": "node scripts/generate-docs.js api",
+      "docs:types": "node scripts/generate-docs.js types",
+      "docs:storybook": "start-storybook -p 6006",
+      "docs:build-storybook": "build-storybook"
+    },
+    "coverage": {
+      "coverage:analyze": "node scripts/test-coverage-analyzer.js",
+      "coverage:report": "node scripts/generate-coverage-report.js",
+      "coverage:html": "vitest run --coverage --coverage.reporter=html",
+      "coverage:lcov": "vitest run --coverage --coverage.reporter=lcov",
+      "coverage:json": "vitest run --coverage --coverage.reporter=json",
+      "coverage:threshold": "vitest run --coverage --coverage.thresholds.global=85"
+    },
+    "maintenance": {
+      "clean": "rm -rf dist .vite coverage node_modules/.cache",
+      "clean:deps": "rm -rf node_modules package-lock.json",
+      "reinstall": "npm run clean:deps && npm install",
+      "prepare": "husky install",
+      "deps:check": "npm outdated",
+      "deps:update": "npm update",
+      "audit": "npm audit",
+      "audit:fix": "npm audit fix"
+    },
+    "release": {
+      "changeset": "changeset",
+      "version-packages": "changeset version",
+      "release": "changeset publish",
+      "release:beta": "changeset publish --tag beta",
+      "release:next": "changeset publish --tag next",
+      "prerelease": "changeset pre enter beta",
+      "prerelease:exit": "changeset pre exit beta"
+    },
+    "ci": {
+      "ci:test": "npm run test:all",
+      "ci:build": "npm run build",
+      "ci:lint": "npm run lint:check",
+      "ci:typecheck": "npm run type-check",
+      "ci:coverage": "npm run test:coverage",
+      "ci:e2e": "npm run test:e2e",
+      "ci:visual": "npm run test:visual",
+      "ci:performance": "npm run perf:test",
+      "ci:quality": "npm run lint:check && npm run type-check && npm run test:coverage",
+      "ci:full": "npm run ci:test && npm run ci:build && npm run ci:quality && npm run ci:e2e && npm run ci:visual"
+    },
+    "tools": {
+      "analyze": "node scripts/analyze-bundle.js",
+      "bundle": "rollup -c",
+      "storybook": "start-storybook -p 6006",
+      "build-storybook": "build-storybook",
+      "chromatic": "npx chromatic --project-token=your-project-token"
+    },
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm run type-check && npm run test:run",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "dependencies": {
+    "@tarojs/components": "^4.1.6",
+    "@tarojs/taro": ">=4.1.6",
+    "i18next": "^25.5.2",
+    "i18next-browser-languagedetector": "^8.2.0",
+    "i18next-http-backend": "^3.0.2",
+    "i18next-resources-to-backend": "^1.2.1",
+    "react": ">=19.1.1",
+    "react-dom": ">=19.1.1",
+    "react-i18next": "^15.7.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.21.8",
+    "@babel/preset-env": "^7.21.5",
+    "@babel/preset-react": "^7.18.6",
+    "@babel/preset-typescript": "^7.21.5",
+    "@changesets/cli": "^2.26.0",
+    "@commitlint/cli": "^17.4.4",
+    "@commitlint/config-conventional": "^17.4.4",
+    "@percy/cli": "^1.27.5",
+    "@percy/agent": "^0.28.8",
+    "@playwright/test": "^1.33.0",
+    "@storybook/addon-actions": "^6.5.16",
+    "@storybook/addon-essentials": "^6.5.16",
+    "@storybook/addon-links": "^6.5.16",
+    "@storybook/addons": "^6.5.16",
+    "@storybook/builder-webpack5": "^6.5.16",
+    "@storybook/manager-webpack5": "^6.5.16",
+    "@storybook/react": "^6.5.16",
+    "@storybook/testing-library": "^0.0.13",
+    "@tarojs/cli": "^4.1.6",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@types/node": "^18.15.11",
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
+    "@typescript-eslint/eslint-plugin": "^5.57.1",
+    "@typescript-eslint/parser": "^5.57.1",
+    "@vitejs/plugin-react": "^4.0.0",
+    "@vitest/coverage-v8": "^3.2.4",
+    "@vitest/ui": "^3.2.4",
+    "autoprefixer": "^10.4.14",
+    "axe-core": "^4.6.3",
+    "cssnano": "^7.1.1",
+    "eslint": "^9.35.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "eslint-plugin-testing-library": "^5.10.2",
+    "eslint-plugin-unused-imports": "^2.0.0",
+    "husky": "^8.0.3",
+    "jest-axe": "^7.0.1",
+    "jest-image-snapshot": "^6.1.0",
+    "jsdom": "^22.0.0",
+    "lint-staged": "^13.2.2",
+    "percy": "^0.28.8",
+    "postcss": "^8.4.23",
+    "postcss-pxtorem": "^6.1.0",
+    "prettier": "^3.6.2",
+    "rollup": "^3.20.2",
+    "rollup-plugin-dts": "^5.3.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-visualizer": "^6.0.3",
+    "sass": "^1.62.1",
+    "storybook-addon-performance": "^0.17.1",
+    "stylelint": "^15.4.0",
+    "stylelint-config-standard": "^32.0.0",
+    "tailwindcss": "^3.3.2",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.5",
+    "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-dts": "^2.3.0",
+    "vite-plugin-istanbul": "^4.0.1",
+    "vitepress": "^1.0.0-rc.44",
+    "vitest": "^3.2.4",
+    "vitest-axe": "^0.1.0"
+  },
+  "peerDependencies": {
+    "@tarojs/taro": ">=4.1.6",
+    "react": ">=19.1.1",
+    "react-dom": ">=19.1.1"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ],
+    "*.{scss,css}": [
+      "stylelint --fix"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm run type-check && npm run test:run",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/taro-uno-ui.git"
+  },
+  "keywords": [
+    "taro",
+    "ui",
+    "components",
+    "react",
+    "typescript",
+    "mobile",
+    "multi-platform"
+  ],
+  "author": "Agions Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/your-username/taro-uno-ui/issues"
+  },
+  "homepage": "https://github.com/your-username/taro-uno-ui#readme"
+}

@@ -1,4 +1,4 @@
-export { default } from './DatePicker';
+export { DatePickerComponent as DatePicker } from './DatePicker';
 export type {
   DatePickerProps,
   DatePickerRef,

@@ -5,12 +5,12 @@
  * 目标：测试覆盖率提升至85%+
  */
 
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs'
-import { join, dirname } from 'path'
-import { fileURLToPath } from 'url'
-import { execSync } from 'child_process'
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { execSync } from 'child_process';
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 class TestCoverageAnalyzer {
   constructor() {
@@ -25,88 +25,88 @@ class TestCoverageAnalyzer {
         'ui-navigation',
         'ui-feedback',
         'ui-theme',
-        'ui-hooks'
+        'ui-hooks',
       ],
       coverageDir: join(__dirname, '..', 'coverage'),
-      reportsDir: join(__dirname, '..', 'reports', 'test-coverage')
-    }
-    
-    this.ensureDirectories()
+      reportsDir: join(__dirname, '..', 'reports', 'test-coverage'),
+    };
+
+    this.ensureDirectories();
   }
 
   ensureDirectories() {
-    [this.config.coverageDir, this.config.reportsDir].forEach(dir => {
+    [this.config.coverageDir, this.config.reportsDir].forEach((dir) => {
       if (!existsSync(dir)) {
-        mkdirSync(dir, { recursive: true })
+        mkdirSync(dir, { recursive: true });
       }
-    })
+    });
   }
 
   async analyzeCoverage() {
-    console.log('🔍 开始分析测试覆盖率...')
-    
-    const results = {}
-    
+    console.log('🔍 开始分析测试覆盖率...');
+
+    const results = {};
+
     for (const pkg of this.config.packages) {
-      console.log(`📊 分析包: ${pkg}`)
-      
+      console.log(`📊 分析包: ${pkg}`);
+
       try {
-        const coverage = await this.analyzePackageCoverage(pkg)
-        results[pkg] = coverage
-        
-        console.log(`  ✅ ${pkg}: ${coverage.total.percentage.toFixed(2)}%`)
+        const coverage = await this.analyzePackageCoverage(pkg);
+        results[pkg] = coverage;
+
+        console.log(`  ✅ ${pkg}: ${coverage.total.percentage.toFixed(2)}%`);
       } catch (error) {
-        console.error(`  ❌ ${pkg}: 分析失败 - ${error.message}`)
-        results[pkg] = { error: error.message }
+        console.error(`  ❌ ${pkg}: 分析失败 - ${error.message}`);
+        results[pkg] = { error: error.message };
       }
     }
-    
+
     // 生成综合报告
-    const report = this.generateComprehensiveReport(results)
-    
-    console.log('📊 测试覆盖率分析完成')
-    console.log(`📈 总体覆盖率: ${report.summary.totalCoverage.toFixed(2)}%`)
-    console.log(`🎯 目标覆盖率: ${this.config.targetCoverage}%`)
-    
-    return report
+    const report = this.generateComprehensiveReport(results);
+
+    console.log('📊 测试覆盖率分析完成');
+    console.log(`📈 总体覆盖率: ${report.summary.totalCoverage.toFixed(2)}%`);
+    console.log(`🎯 目标覆盖率: ${this.config.targetCoverage}%`);
+
+    return report;
   }
 
   async analyzePackageCoverage(packageName) {
-    const packageDir = join(__dirname, '..', 'packages', packageName)
-    const coverageFile = join(this.config.coverageDir, `${packageName}/coverage-final.json`)
-    
+    const packageDir = join(__dirname, '..', 'packages', packageName);
+    const coverageFile = join(this.config.coverageDir, `${packageName}/coverage-final.json`);
+
     if (!existsSync(coverageFile)) {
       // 如果没有覆盖率文件，运行测试生成覆盖率
-      await this.generateCoverage(packageName)
+      await this.generateCoverage(packageName);
     }
-    
+
     if (existsSync(coverageFile)) {
-      const coverageData = JSON.parse(readFileSync(coverageFile, 'utf8'))
-      return this.parseCoverageData(coverageData, packageName)
+      const coverageData = JSON.parse(readFileSync(coverageFile, 'utf8'));
+      return this.parseCoverageData(coverageData, packageName);
     } else {
-      throw new Error('无法生成覆盖率数据')
+      throw new Error('无法生成覆盖率数据');
     }
   }
 
   async generateCoverage(packageName) {
-    console.log(`🔄 为 ${packageName} 生成覆盖率数据...`)
-    
+    console.log(`🔄 为 ${packageName} 生成覆盖率数据...`);
+
     try {
-      const testCommand = `cd packages/${packageName} && npm run test:coverage`
-      execSync(testCommand, { 
+      const testCommand = `cd packages/${packageName} && npm run test:coverage`;
+      execSync(testCommand, {
         stdio: 'inherit',
-        timeout: 120000 // 2分钟超时
-      })
+        timeout: 120000, // 2分钟超时
+      });
     } catch (error) {
-      console.warn(`⚠️  ${packageName} 测试覆盖率生成失败，尝试使用全局测试命令`)
+      console.warn(`⚠️  ${packageName} 测试覆盖率生成失败，尝试使用全局测试命令`);
       try {
-        const globalTestCommand = `npm run test:coverage -- --run packages/${packageName}`
-        execSync(globalTestCommand, { 
+        const globalTestCommand = `npm run test:coverage -- --run packages/${packageName}`;
+        execSync(globalTestCommand, {
           stdio: 'inherit',
-          timeout: 120000
-        })
+          timeout: 120000,
+        });
       } catch (globalError) {
-        throw new Error(`无法生成覆盖率数据: ${globalError.message}`)
+        throw new Error(`无法生成覆盖率数据: ${globalError.message}`);
       }
     }
   }
@@ -121,87 +121,87 @@ class TestCoverageAnalyzer {
         branches: { total: 0, covered: 0, percentage: 0 },
         functions: { total: 0, covered: 0, percentage: 0 },
         lines: { total: 0, covered: 0, percentage: 0 },
-        percentage: 0
-      }
-    }
-    
+        percentage: 0,
+      },
+    };
+
     // 解析Istanbul格式覆盖率数据
-    Object.keys(coverageData).forEach(filePath => {
-      const fileData = coverageData[filePath]
-      const fileName = filePath.split('/').pop()
-      
+    Object.keys(coverageData).forEach((filePath) => {
+      const fileData = coverageData[filePath];
+      const fileName = filePath.split('/').pop();
+
       const fileCoverage = {
         statements: this.calculateCoverage(fileData.s),
         branches: this.calculateCoverage(fileData.b),
         functions: this.calculateCoverage(fileData.f),
-        lines: this.calculateCoverage(fileData.l)
-      }
-      
-      fileCoverage.percentage = (
-        fileCoverage.statements.percentage +
-        fileCoverage.branches.percentage +
-        fileCoverage.functions.percentage +
-        fileCoverage.lines.percentage
-      ) / 4
-      
-      result.files[fileName] = fileCoverage
-      
+        lines: this.calculateCoverage(fileData.l),
+      };
+
+      fileCoverage.percentage =
+        (fileCoverage.statements.percentage +
+          fileCoverage.branches.percentage +
+          fileCoverage.functions.percentage +
+          fileCoverage.lines.percentage) /
+        4;
+
+      result.files[fileName] = fileCoverage;
+
       // 累计总计
-      Object.keys(fileCoverage).forEach(key => {
+      Object.keys(fileCoverage).forEach((key) => {
         if (key !== 'percentage' && result.total[key]) {
-          result.total[key].total += fileCoverage[key].total
-          result.total[key].covered += fileCoverage[key].covered
+          result.total[key].total += fileCoverage[key].total;
+          result.total[key].covered += fileCoverage[key].covered;
         }
-      })
-    })
-    
+      });
+    });
+
     // 计算总体覆盖率百分比
-    Object.keys(result.total).forEach(key => {
+    Object.keys(result.total).forEach((key) => {
       if (key !== 'percentage' && result.total[key].total > 0) {
-        result.total[key].percentage = (result.total[key].covered / result.total[key].total) * 100
+        result.total[key].percentage = (result.total[key].covered / result.total[key].total) * 100;
       }
-    })
-    
-    result.total.percentage = (
-      result.total.statements.percentage +
-      result.total.branches.percentage +
-      result.total.functions.percentage +
-      result.total.lines.percentage
-    ) / 4
-    
-    return result
+    });
+
+    result.total.percentage =
+      (result.total.statements.percentage +
+        result.total.branches.percentage +
+        result.total.functions.percentage +
+        result.total.lines.percentage) /
+      4;
+
+    return result;
   }
 
   calculateCoverage(coverageData) {
-    if (!coverageData) return { total: 0, covered: 0, percentage: 0 }
-    
-    let total = 0
-    let covered = 0
-    
+    if (!coverageData) return { total: 0, covered: 0, percentage: 0 };
+
+    let total = 0;
+    let covered = 0;
+
     if (Array.isArray(coverageData)) {
-      coverageData.forEach(hit => {
-        total++
-        if (hit > 0) covered++
-      })
+      coverageData.forEach((hit) => {
+        total++;
+        if (hit > 0) covered++;
+      });
     } else if (typeof coverageData === 'object') {
-      Object.values(coverageData).forEach(hit => {
+      Object.values(coverageData).forEach((hit) => {
         if (Array.isArray(hit)) {
-          hit.forEach(h => {
-            total++
-            if (h > 0) covered++
-          })
+          hit.forEach((h) => {
+            total++;
+            if (h > 0) covered++;
+          });
         } else {
-          total++
-          if (hit > 0) covered++
+          total++;
+          if (hit > 0) covered++;
         }
-      })
+      });
     }
-    
+
     return {
       total,
       covered,
-      percentage: total > 0 ? (covered / total) * 100 : 0
-    }
+      percentage: total > 0 ? (covered / total) * 100 : 0,
+    };
   }
 
   generateComprehensiveReport(results) {
@@ -211,49 +211,49 @@ class TestCoverageAnalyzer {
       packages: results,
       summary: this.calculateSummary(results),
       recommendations: this.generateRecommendations(results),
-      actionPlan: this.generateActionPlan(results)
-    }
-    
+      actionPlan: this.generateActionPlan(results),
+    };
+
     // 保存JSON报告
-    const reportPath = join(this.config.reportsDir, `coverage-report-${Date.now()}.json`)
-    writeFileSync(reportPath, JSON.stringify(report, null, 2))
-    
+    const reportPath = join(this.config.reportsDir, `coverage-report-${Date.now()}.json`);
+    writeFileSync(reportPath, JSON.stringify(report, null, 2));
+
     // 生成HTML报告
-    this.generateHtmlReport(report)
-    
-    return report
+    this.generateHtmlReport(report);
+
+    return report;
   }
 
   calculateSummary(results) {
-    const packages = Object.values(results).filter(r => !r.error)
-    
+    const packages = Object.values(results).filter((r) => !r.error);
+
     if (packages.length === 0) {
       return {
         totalCoverage: 0,
         packagesAnalyzed: 0,
         packagesAboveTarget: 0,
         packagesBelowTarget: 0,
-        averageCoverage: 0
-      }
+        averageCoverage: 0,
+      };
     }
-    
-    const totalCoverage = packages.reduce((sum, pkg) => sum + pkg.total.percentage, 0)
-    const averageCoverage = totalCoverage / packages.length
-    const packagesAboveTarget = packages.filter(pkg => pkg.total.percentage >= this.config.targetCoverage).length
-    const packagesBelowTarget = packages.filter(pkg => pkg.total.percentage < this.config.targetCoverage).length
-    
+
+    const totalCoverage = packages.reduce((sum, pkg) => sum + pkg.total.percentage, 0);
+    const averageCoverage = totalCoverage / packages.length;
+    const packagesAboveTarget = packages.filter((pkg) => pkg.total.percentage >= this.config.targetCoverage).length;
+    const packagesBelowTarget = packages.filter((pkg) => pkg.total.percentage < this.config.targetCoverage).length;
+
     return {
       totalCoverage: averageCoverage,
       packagesAnalyzed: packages.length,
       packagesAboveTarget,
       packagesBelowTarget,
-      averageCoverage
-    }
+      averageCoverage,
+    };
   }
 
   generateRecommendations(results) {
-    const recommendations = []
-    
+    const recommendations = [];
+
     Object.entries(results).forEach(([pkgName, result]) => {
       if (result.error) {
         recommendations.push({
@@ -261,92 +261,92 @@ class TestCoverageAnalyzer {
           priority: 'high',
           type: 'error',
           message: `${pkgName} 包无法生成覆盖率数据: ${result.error}`,
-          action: '修复测试配置或添加测试文件'
-        })
+          action: '修复测试配置或添加测试文件',
+        });
       } else if (result.total.percentage < this.config.targetCoverage) {
-        const gap = this.config.targetCoverage - result.total.percentage
+        const gap = this.config.targetCoverage - result.total.percentage;
         recommendations.push({
           package: pkgName,
           priority: gap > 20 ? 'high' : 'medium',
           type: 'coverage',
           message: `${pkgName} 覆盖率不足 (${result.total.percentage.toFixed(2)}%)，缺少 ${gap.toFixed(2)}%`,
-          action: this.generateCoverageAction(result, gap)
-        })
+          action: this.generateCoverageAction(result, gap),
+        });
       }
-    })
-    
+    });
+
     // 整体建议
-    const summary = this.calculateSummary(results)
+    const summary = this.calculateSummary(results);
     if (summary.averageCoverage < this.config.targetCoverage) {
       recommendations.push({
         package: '整体',
         priority: 'high',
         type: 'overall',
         message: `整体测试覆盖率 (${summary.averageCoverage.toFixed(2)}%) 低于目标 (${this.config.targetCoverage}%)`,
-        action: '系统性增加测试用例，重点关注核心功能和边界情况'
-      })
+        action: '系统性增加测试用例，重点关注核心功能和边界情况',
+      });
     }
-    
-    return recommendations
+
+    return recommendations;
   }
 
   generateCoverageAction(coverageData, gap) {
-    const actions = []
-    
+    const actions = [];
+
     // 分析各个维度的覆盖率
     if (coverageData.total.statements.percentage < 85) {
-      actions.push('增加语句覆盖率测试')
+      actions.push('增加语句覆盖率测试');
     }
     if (coverageData.total.branches.percentage < 85) {
-      actions.push('增加分支条件测试')
+      actions.push('增加分支条件测试');
     }
     if (coverageData.total.functions.percentage < 85) {
-      actions.push('增加函数覆盖率测试')
+      actions.push('增加函数覆盖率测试');
     }
     if (coverageData.total.lines.percentage < 85) {
-      actions.push('增加代码行覆盖率测试')
+      actions.push('增加代码行覆盖率测试');
     }
-    
-    return actions.join('；')
+
+    return actions.join('；');
   }
 
   generateActionPlan(results) {
     const plan = {
       immediate: [],
       shortTerm: [],
-      longTerm: []
-    }
-    
+      longTerm: [],
+    };
+
     Object.entries(results).forEach(([pkgName, result]) => {
       if (result.error) {
         plan.immediate.push({
           package: pkgName,
           action: '修复测试配置',
-          priority: 1
-        })
+          priority: 1,
+        });
       } else if (result.total.percentage < 50) {
         plan.immediate.push({
           package: pkgName,
           action: '建立基础测试框架',
-          priority: 1
-        })
+          priority: 1,
+        });
       } else if (result.total.percentage < this.config.targetCoverage) {
         plan.shortTerm.push({
           package: pkgName,
           action: `提升覆盖率至${this.config.targetCoverage}%`,
-          priority: 2
-        })
+          priority: 2,
+        });
       }
-    })
-    
+    });
+
     // 长期目标
     plan.longTerm.push({
       package: '整体',
       action: '建立持续集成质量门禁',
-      priority: 3
-    })
-    
-    return plan
+      priority: 3,
+    });
+
+    return plan;
   }
 
   generateHtmlReport(report) {
@@ -420,21 +420,26 @@ class TestCoverageAnalyzer {
         </div>
         
         <div class="packages-grid">
-            ${Object.entries(report.packages).map(([pkgName, result]) => {
-              if (result.error) {
-                return `
+            ${Object.entries(report.packages)
+              .map(([pkgName, result]) => {
+                if (result.error) {
+                  return `
                     <div class="package-card error">
                         <h3>${pkgName}</h3>
                         <div class="coverage danger">❌ 分析失败</div>
                         <div>${result.error}</div>
                     </div>
-                `
-              }
-              
-              const status = result.total.percentage >= report.target ? 'good' : 
-                           result.total.percentage >= 50 ? 'warning' : 'danger'
-              
-              return `
+                `;
+                }
+
+                const status =
+                  result.total.percentage >= report.target
+                    ? 'good'
+                    : result.total.percentage >= 50
+                      ? 'warning'
+                      : 'danger';
+
+                return `
                     <div class="package-card ${status}">
                         <h3>${pkgName}</h3>
                         <div class="coverage ${status}">${result.total.percentage.toFixed(2)}%</div>
@@ -445,129 +450,154 @@ class TestCoverageAnalyzer {
                             行: ${result.total.lines.percentage.toFixed(2)}%
                         </div>
                     </div>
-                `
-            }).join('')}
+                `;
+              })
+              .join('')}
         </div>
         
-        ${report.recommendations.length > 0 ? `
+        ${
+          report.recommendations.length > 0
+            ? `
         <div class="recommendations">
             <h2>💡 改进建议</h2>
-            ${report.recommendations.map(rec => `
+            ${report.recommendations
+              .map(
+                (rec) => `
                 <div class="recommendation-item ${rec.priority}">
                     <strong>${rec.package}</strong>: ${rec.message}
                     <br><small>建议操作: ${rec.action}</small>
                 </div>
-            `).join('')}
+            `,
+              )
+              .join('')}
         </div>
-        ` : ''}
+        `
+            : ''
+        }
         
         <div class="action-plan">
             <h2>📋 行动计划</h2>
             
             <div class="action-phase">
                 <h3>🚀 立即执行</h3>
-                ${report.actionPlan.immediate.map(action => `
+                ${
+                  report.actionPlan.immediate
+                    .map(
+                      (action) => `
                     <div class="action-item">
                         <strong>${action.package}</strong>: ${action.action}
                     </div>
-                `).join('') || '<div class="action-item">无立即执行项</div>'}
+                `,
+                    )
+                    .join('') || '<div class="action-item">无立即执行项</div>'
+                }
             </div>
             
             <div class="action-phase">
                 <h3>📅 短期计划</h3>
-                ${report.actionPlan.shortTerm.map(action => `
+                ${
+                  report.actionPlan.shortTerm
+                    .map(
+                      (action) => `
                     <div class="action-item">
                         <strong>${action.package}</strong>: ${action.action}
                     </div>
-                `).join('') || '<div class="action-item">无短期计划项</div>'}
+                `,
+                    )
+                    .join('') || '<div class="action-item">无短期计划项</div>'
+                }
             </div>
             
             <div class="action-phase">
                 <h3>🎯 长期目标</h3>
-                ${report.actionPlan.longTerm.map(action => `
+                ${report.actionPlan.longTerm
+                  .map(
+                    (action) => `
                     <div class="action-item">
                         <strong>${action.package}</strong>: ${action.action}
                     </div>
-                `).join('')}
+                `,
+                  )
+                  .join('')}
             </div>
         </div>
     </div>
 </body>
 </html>
-    `
-    
-    const htmlPath = join(this.config.reportsDir, `coverage-report-${Date.now()}.html`)
-    writeFileSync(htmlPath, html)
-    
-    console.log(`📊 HTML覆盖率报告已生成: ${htmlPath}`)
+    `;
+
+    const htmlPath = join(this.config.reportsDir, `coverage-report-${Date.now()}.html`);
+    writeFileSync(htmlPath, html);
+
+    console.log(`📊 HTML覆盖率报告已生成: ${htmlPath}`);
   }
 
   async generateMissingTests() {
-    console.log('🔧 生成缺失的测试用例...')
-    
+    console.log('🔧 生成缺失的测试用例...');
+
     for (const pkg of this.config.packages) {
-      console.log(`📝 为 ${pkg} 生成测试用例...`)
-      
-      const packageDir = join(__dirname, '..', 'packages', pkg)
-      const srcDir = join(packageDir, 'src')
-      
+      console.log(`📝 为 ${pkg} 生成测试用例...`);
+
+      const packageDir = join(__dirname, '..', 'packages', pkg);
+      const srcDir = join(packageDir, 'src');
+
       if (existsSync(srcDir)) {
-        await this.generateTestsForPackage(pkg, srcDir)
+        await this.generateTestsForPackage(pkg, srcDir);
       }
     }
-    
-    console.log('✅ 测试用例生成完成')
+
+    console.log('✅ 测试用例生成完成');
   }
 
   async generateTestsForPackage(packageName, srcDir) {
-    const { readdirSync, statSync } = require('fs')
-    const { join } = require('path')
-    
+    const { readdirSync, statSync } = require('fs');
+    const { join } = require('path');
+
     const traverseDir = (dir, relativePath = '') => {
-      const items = readdirSync(dir)
-      
-      items.forEach(item => {
-        const itemPath = join(dir, item)
-        const relativeItemPath = join(relativePath, item)
-        const stat = statSync(itemPath)
-        
+      const items = readdirSync(dir);
+
+      items.forEach((item) => {
+        const itemPath = join(dir, item);
+        const relativeItemPath = join(relativePath, item);
+        const stat = statSync(itemPath);
+
         if (stat.isDirectory()) {
-          traverseDir(itemPath, relativeItemPath)
+          traverseDir(itemPath, relativeItemPath);
         } else if (item.endsWith('.ts') || item.endsWith('.tsx')) {
           if (!item.includes('.test.') && !item.includes('.spec.')) {
-            this.generateTestFile(packageName, itemPath, relativeItemPath)
+            this.generateTestFile(packageName, itemPath, relativeItemPath);
           }
         }
-      })
-    }
-    
-    traverseDir(srcDir)
+      });
+    };
+
+    traverseDir(srcDir);
   }
 
   generateTestFile(packageName, sourcePath, relativePath) {
-    const { dirname, basename } = require('path')
-    const testDir = dirname(sourcePath).replace('src', 'tests')
-    const testName = basename.replace(/\.(ts|tsx)$/, '.test.ts')
-    const testPath = join(testDir, testName)
-    
+    const { dirname, basename } = require('path');
+    const testDir = dirname(sourcePath).replace('src', 'tests');
+    const testName = basename.replace(/\.(ts|tsx)$/, '.test.ts');
+    const testPath = join(testDir, testName);
+
     // 如果测试文件已存在，跳过
-    if (existsSync(testPath)) return
-    
+    if (existsSync(testPath)) return;
+
     // 创建测试目录
     if (!existsSync(testDir)) {
-      require('fs').mkdirSync(testDir, { recursive: true })
+      require('fs').mkdirSync(testDir, { recursive: true });
     }
-    
+
     // 生成基础测试模板
-    const testTemplate = this.generateTestTemplate(packageName, relativePath)
-    
-    require('fs').writeFileSync(testPath, testTemplate)
-    console.log(`  📝 生成测试文件: ${testPath}`)
+    const testTemplate = this.generateTestTemplate(packageName, relativePath);
+
+    require('fs').writeFileSync(testPath, testTemplate);
+    console.log(`  📝 生成测试文件: ${testPath}`);
   }
 
   generateTestTemplate(packageName, relativePath) {
-    const componentName = relativePath.replace(/\.(ts|tsx)$/, '').replace(/\//g, '-')
-    
+    const componentName = relativePath.replace(/\.(ts|tsx)$/, '').replace(/\//g, '-');
+
     return `import { describe, it, expect, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import ${componentName} from '../${relativePath}'
@@ -598,35 +628,34 @@ describe('${componentName}', () => {
   // - 无障碍性测试
   // - 集成测试
 })
-`
+`;
   }
 }
 
 // 主函数
 async function main() {
-  const analyzer = new TestCoverageAnalyzer()
-  
+  const analyzer = new TestCoverageAnalyzer();
+
   try {
     // 分析覆盖率
-    const report = await analyzer.analyzeCoverage()
-    
+    const report = await analyzer.analyzeCoverage();
+
     // 如果覆盖率不足，生成缺失的测试
     if (report.summary.averageCoverage < analyzer.config.targetCoverage) {
-      console.log('🔧 覆盖率不足，生成缺失测试用例...')
-      await analyzer.generateMissingTests()
+      console.log('🔧 覆盖率不足，生成缺失测试用例...');
+      await analyzer.generateMissingTests();
     }
-    
-    console.log('🎉 测试覆盖率分析完成')
-    
+
+    console.log('🎉 测试覆盖率分析完成');
   } catch (error) {
-    console.error('❌ 分析失败:', error)
-    process.exit(1)
+    console.error('❌ 分析失败:', error);
+    process.exit(1);
   }
 }
 
 // 运行
 if (import.meta.url === `file://${process.argv[1]}`) {
-  main()
+  main();
 }
 
-export { TestCoverageAnalyzer }
+export { TestCoverageAnalyzer };

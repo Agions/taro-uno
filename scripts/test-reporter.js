@@ -34,27 +34,26 @@ class TestReporter {
   // 运行测试并收集结果
   async runTests() {
     console.log('🚀 开始运行测试...');
-    
+
     try {
       // 运行单元测试
       console.log('📋 运行单元测试...');
       const unitTestResult = this.runUnitTest();
-      
+
       // 运行覆盖率测试
       console.log('📊 运行覆盖率测试...');
       const coverageResult = this.runCoverageTest();
-      
+
       // 运行性能测试
       console.log('⚡ 运行性能测试...');
       const performanceResult = this.runPerformanceTest();
-      
+
       // 生成报告
       console.log('📝 生成测试报告...');
       this.generateReport(unitTestResult, coverageResult, performanceResult);
-      
+
       console.log('✅ 测试完成！');
       console.log(`📁 报告已生成到: ${this.reportsDir}`);
-      
     } catch (error) {
       console.error('❌ 测试运行失败:', error);
       process.exit(1);
@@ -64,11 +63,11 @@ class TestReporter {
   // 运行单元测试
   runUnitTest() {
     try {
-      const output = execSync('npm run test:run', { 
+      const output = execSync('npm run test:run', {
         encoding: 'utf8',
-        stdio: 'pipe'
+        stdio: 'pipe',
       });
-      
+
       return this.parseTestOutput(output);
     } catch (error) {
       console.error('单元测试失败:', error.message);
@@ -79,11 +78,11 @@ class TestReporter {
   // 运行覆盖率测试
   runCoverageTest() {
     try {
-      const output = execSync('npm run test:coverage', { 
+      const output = execSync('npm run test:coverage', {
         encoding: 'utf8',
-        stdio: 'pipe'
+        stdio: 'pipe',
       });
-      
+
       return this.parseCoverageOutput(output);
     } catch (error) {
       console.error('覆盖率测试失败:', error.message);
@@ -94,11 +93,11 @@ class TestReporter {
   // 运行性能测试
   runPerformanceTest() {
     try {
-      const output = execSync('npm run test:performance', { 
+      const output = execSync('npm run test:performance', {
         encoding: 'utf8',
-        stdio: 'pipe'
+        stdio: 'pipe',
       });
-      
+
       return this.parsePerformanceOutput(output);
     } catch (error) {
       console.error('性能测试失败:', error.message);
@@ -115,7 +114,7 @@ class TestReporter {
       failed: 0,
       skipped: 0,
       duration: 0,
-      tests: []
+      tests: [],
     };
 
     for (const line of lines) {
@@ -152,7 +151,7 @@ class TestReporter {
       branches: 0,
       functions: 0,
       lines: 0,
-      files: []
+      files: [],
     };
 
     for (const line of lines) {
@@ -175,7 +174,7 @@ class TestReporter {
     const lines = output.split('\n');
     const performance = {
       metrics: {},
-      benchmarks: []
+      benchmarks: [],
     };
 
     for (const line of lines) {
@@ -197,22 +196,22 @@ class TestReporter {
       summary: {
         ...unitTestResult,
         coverage: coverageResult,
-        performance: performanceResult
+        performance: performanceResult,
       },
       details: {
         unitTests: unitTestResult,
         coverage: coverageResult,
-        performance: performanceResult
+        performance: performanceResult,
       },
-      recommendations: this.generateRecommendations(coverageResult, performanceResult)
+      recommendations: this.generateRecommendations(coverageResult, performanceResult),
     };
 
     // 生成 HTML 报告
     this.generateHtmlReport(report);
-    
+
     // 生成 JSON 报告
     this.generateJsonReport(report);
-    
+
     // 生成控制台报告
     this.generateConsoleReport(report);
   }
@@ -227,7 +226,7 @@ class TestReporter {
         type: 'coverage',
         level: 'warning',
         message: '代码覆盖率较低，建议增加测试用例以提高覆盖率',
-        metric: `语句覆盖率: ${coverageResult.statements}%`
+        metric: `语句覆盖率: ${coverageResult.statements}%`,
       });
     }
 
@@ -236,7 +235,7 @@ class TestReporter {
         type: 'coverage',
         level: 'warning',
         message: '分支覆盖率较低，建议增加分支测试用例',
-        metric: `分支覆盖率: ${coverageResult.branches}%`
+        metric: `分支覆盖率: ${coverageResult.branches}%`,
       });
     }
 
@@ -246,7 +245,7 @@ class TestReporter {
         type: 'performance',
         level: 'warning',
         message: '渲染时间较长，建议优化组件性能',
-        metric: `渲染时间: ${performanceResult.metrics.renderTime}ms`
+        metric: `渲染时间: ${performanceResult.metrics.renderTime}ms`,
       });
     }
 
@@ -439,12 +438,16 @@ class TestReporter {
             <div class="section">
                 <h2>💡 优化建议</h2>
                 <div class="recommendations">
-                    ${report.recommendations.map(rec => `
+                    ${report.recommendations
+                      .map(
+                        (rec) => `
                         <div class="recommendation ${rec.level}">
                             <strong>${rec.type === 'coverage' ? '📊' : '⚡'} ${rec.message}</strong>
                             <div style="margin-top: 5px; color: #666;">${rec.metric}</div>
                         </div>
-                    `).join('')}
+                    `,
+                      )
+                      .join('')}
                 </div>
             </div>
         </div>
@@ -484,7 +487,7 @@ class TestReporter {
     console.log(`✅ 通过测试: ${report.summary.passed || 0}`);
     console.log(`❌ 失败测试: ${report.summary.failed || 0}`);
     console.log(`⏱️  执行时间: ${report.summary.duration || '0ms'}`);
-    
+
     if (report.summary.coverage.statements) {
       console.log('\n🎯 代码覆盖率:');
       console.log(`📝 语句覆盖率: ${report.summary.coverage.statements}%`);
@@ -495,12 +498,12 @@ class TestReporter {
 
     if (report.recommendations.length > 0) {
       console.log('\n💡 优化建议:');
-      report.recommendations.forEach(rec => {
+      report.recommendations.forEach((rec) => {
         const icon = rec.level === 'error' ? '❌' : rec.level === 'warning' ? '⚠️' : '✅';
         console.log(`${icon} ${rec.message}`);
       });
     }
-    
+
     console.log('='.repeat(50));
   }
 }

@@ -1,15 +1,38 @@
-# Taro UI 组件库
+# Taro-Uno UI 文档中心
 
-欢迎使用 Taro UI 组件库！这是一个基于 Taro 框架的现代化、高性能的跨平台 UI 组件库。
+<div align="center">
 
-## ✨ 特性
+![Taro-Uno UI](https://img.shields.io/badge/Taro-Uno%20UI-blue?style=for-the-badge&logo=react&logoColor=white)
+![Version](https://img.shields.io/badge/version-0.1.0-green?style=for-the-badge)
+![License](https://img.shields.io/badge/license-MIT-purple?style=for-the-badge)
 
-- 🎨 **丰富的组件库** - 提供完整的UI组件解决方案
-- 📱 **跨平台支持** - 支持微信小程序、H5、React Native等多平台
-- 🎯 **TypeScript支持** - 完整的类型定义，提供更好的开发体验
-- 🎨 **主题定制** - 灵活的主题系统，支持自定义样式
-- 📚 **完善的文档** - 详细的文档和使用示例
-- 🚀 **高性能** - 优化的性能表现，流畅的用户体验
+**现代化的多端 UI 组件库，让跨平台开发更简单**
+
+[快速开始](./quick-start.md) • [组件库](./components/basic/button.md) • [主题定制](./theme.md) • [最佳实践](./guides/best-practices.md)
+
+</div>
+
+---
+
+## 🌟 核心特性
+
+### 🚀 开发体验
+- **⚡️ 高性能构建** - 基于 Vite，热更新极速响应
+- **🎯 类型安全** - 完整的 TypeScript 支持，智能提示
+- **🔧 开箱即用** - 零配置，直接使用，无需复杂设置
+- **📱 完美适配** - 一套代码，完美运行在多个平台
+
+### 🎨 设计系统
+- **🌓 多主题支持** - 内置浅色/深色主题
+- **🎨 自定义主题** - 完全可定制的主题变量
+- **🌈 响应式设计** - 自适应不同屏幕尺寸
+- **🎭 动态主题** - 支持运行时主题切换
+
+### 🛡️ 企业级质量
+- **🧪 测试覆盖** - 全面的单元测试和集成测试 (28个测试文件)
+- **📖 详细文档** - 75+ 个文档文件，完整的 API 参考
+- **🔄 持续维护** - 定期更新，及时修复问题
+- **🌐 无障碍访问** - 遵循 WCAG 2.1 标准
 
 ## 🚀 快速开始
 

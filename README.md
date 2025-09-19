@@ -16,7 +16,8 @@
   <a href="#-快速开始">快速开始</a> •
   <a href="#-组件展示">组件展示</a> •
   <a href="#-主题定制">主题定制</a> •
-  <a href="https://taro-uno.com">文档</a>
+  <a href="#-文档">文档</a> •
+  <a href="https://taro-uno.com">在线文档</a>
 </p>
 
 ---
@@ -317,6 +318,80 @@ import { usePerformance } from '@taro-uno/ui'
 const { metrics } = usePerformance()
 // 获取性能指标
 ```
+
+## 📖 文档
+
+### 文档结构
+
+我们的文档采用 VitePress 构建，提供完整的组件库使用指南：
+
+- **快速开始**: 快速上手指南
+- **组件文档**: 详细的组件 API 和使用示例
+- **Hooks 文档**: 自定义 Hooks 的使用说明
+- **主题定制**: 主题系统和自定义指南
+- **最佳实践**: 开发和使用的最佳实践
+- **故障排除**: 常见问题解决方案
+
+### 文档生成
+
+我们提供了自动化的文档生成工具：
+
+```bash
+# 生成所有文档
+node scripts/generate-docs.js all
+
+# 生成组件文档
+node scripts/generate-docs.js components
+
+# 生成 API 文档
+node scripts/generate-docs.js api
+
+# 生成类型文档
+node scripts/generate-docs.js types
+```
+
+### 文档验证
+
+使用文档验证工具确保文档质量：
+
+```bash
+# 验证文档
+node scripts/validate-docs.js
+
+# 更新文档
+node scripts/update-docs.js --commit
+```
+
+### 文档部署
+
+文档自动化部署到 GitHub Pages：
+
+- 每次代码提交自动构建和部署
+- 支持多环境部署
+- 自动生成文档统计和报告
+
+### 本地开发
+
+```bash
+# 启动文档开发服务器
+cd docs
+pnpm install
+pnpm dev
+
+# 构建文档
+pnpm build
+```
+
+### 文档贡献
+
+我们欢迎社区贡献文档改进：
+
+1. Fork 项目仓库
+2. 创建文档改进分支
+3. 提交文档更改
+4. 创建 Pull Request
+
+详细的贡献指南请参考 [贡献指南](./CONTRIBUTING.md)。
 
 ## 🤝 贡献指南
 

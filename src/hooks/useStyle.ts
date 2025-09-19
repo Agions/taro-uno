@@ -41,12 +41,15 @@ export const useStyle = () => {
   const css = (
     ...styles: (Record<string, any> | undefined | null | ((theme: ThemeConfig) => Record<string, any>))[]
   ): Record<string, any> => {
-    return styles.reduce((acc, style) => {
-      if (!style) return acc;
+    return styles.reduce<Record<string, any>>(
+      (acc, style) => {
+        if (!style) return acc;
 
-      const resolvedStyle = typeof style === 'function' ? style(currentTheme) : style;
-      return { ...acc, ...resolvedStyle };
-    }, {} as Record<string, any>);
+        const resolvedStyle = typeof style === 'function' ? style(currentTheme) : style;
+        return { ...acc, ...resolvedStyle };
+      },
+      {} as Record<string, any>,
+    );
   };
 
   /**
@@ -434,7 +437,7 @@ export const useStyle = () => {
       minHeight,
     } = layout;
 
-    const result: Record<string, any> = {
+    const result: any = {
       display,
       width,
       height,
@@ -488,17 +491,16 @@ export const useStyle = () => {
     };
 
     if (sides === 'all') {
-      result.border = `${width}px ${style} ${colorValue}`;
+      result['border'] = `${width}px ${style} ${colorValue}`;
     } else if (sides === 'horizontal') {
-      result.borderLeft = `${width}px ${style} ${colorValue}`;
-      result.borderRight = `${width}px ${style} ${colorValue}`;
+      result['borderLeft'] = `${width}px ${style} ${colorValue}`;
+      result['borderRight'] = `${width}px ${style} ${colorValue}`;
     } else if (sides === 'vertical') {
-      result.borderTop = `${width}px ${style} ${colorValue}`;
-      result.borderBottom = `${width}px ${style} ${colorValue}`;
+      result['borderTop'] = `${width}px ${style} ${colorValue}`;
+      result['borderBottom'] = `${width}px ${style} ${colorValue}`;
     } else {
-      result[
-        `border${sides.charAt(0).toUpperCase() + sides.slice(1)}` as keyof Record<string, any>
-      ] = `${width}px ${style} ${colorValue}`;
+      result[`border${sides.charAt(0).toUpperCase() + sides.slice(1)}` as keyof Record<string, any>] =
+        `${width}px ${style} ${colorValue}`;
     }
 
     return result;
@@ -530,6 +532,6 @@ export const useStyle = () => {
     // 样式生成器
     styleGenerator,
   };
-}
+};
 
 export default useStyle;

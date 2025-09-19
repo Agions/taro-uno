@@ -1,8 +1,8 @@
 import React, { forwardRef, useRef, useState, useEffect, useCallback } from 'react';
-import { Input, Text, View } from '@tarojs/components';
+import { Input as TaroInput, Text, View } from '@tarojs/components';
 import type { ITouchEvent } from '@tarojs/components';
 import { inputStyles } from './Input.styles';
-import type { InputProps, InputRef, InputSize, InputType, InputVariant, InputStatus } from './Input.types';
+import type { InputProps, InputRef, InputStatus } from './Input.types';
 
 /** 输入框组件 */
 export const InputComponent = forwardRef<InputRef, InputProps>((props, ref) => {
@@ -89,13 +89,23 @@ export const InputComponent = forwardRef<InputRef, InputProps>((props, ref) => {
   // 立即验证
   useEffect(() => {
     if (immediate && value) {
-      validateInput(value);
+      validateInput(String(value));
     }
   }, [immediate, value]);
 
   // 验证输入值
   const validateInput = useCallback(
     async (inputValue: string): Promise<{ valid: boolean; message?: string }> => {
+      // 验证长度
+      if (minLength !== undefined && inputValue.length < minLength) {
+        return { valid: false, message: `最少需要${minLength}个字符` };
+      }
+
+      if (maxLength !== undefined && inputValue.length > maxLength) {
+        return { valid: false, message: `最多允许${maxLength}个字符` };
+      }
+
+      // 如果没有规则和验证器，直接返回验证通过
       if (!rules && !validator) {
         return { valid: true };
       }
@@ -106,19 +116,10 @@ export const InputComponent = forwardRef<InputRef, InputProps>((props, ref) => {
         return { valid: false, message: requiredRule?.message || '此字段为必填项' };
       }
 
-      // 验证长度
-      if (minLength !== undefined && inputValue.length < minLength) {
-        return { valid: false, message: `最少需要${minLength}个字符` };
-      }
-
-      if (maxLength !== undefined && inputValue.length > maxLength) {
-        return { valid: false, message: `最多允许${maxLength}个字符` };
-      }
-
       // 验证规则
       if (rules) {
         for (let i = 0; i < rules.length; i++) {
-          const rule = rules[i];
+          const rule = rules[i]!;
           if (rule.pattern && !rule.pattern.test(inputValue)) {
             return { valid: false, message: rule.message || '输入格式不正确' };
           }
@@ -187,6 +188,9 @@ export const InputComponent = forwardRef<InputRef, InputProps>((props, ref) => {
   // 处理值变化
   const handleValueChange = useCallback(
     async (newValue: string, event: ITouchEvent) => {
+      // Don't process events when disabled or readonly
+      if (internalDisabled || internalReadonly) return;
+
       const formattedValue = formatInputValue(newValue);
 
       if (!isControlled) {
@@ -206,7 +210,7 @@ export const InputComponent = forwardRef<InputRef, InputProps>((props, ref) => {
       // 触发变化事件
       onChange?.(formattedValue, event);
     },
-    [isControlled, formatInputValue, onInput, validateTrigger, validateInput, onChange],
+    [internalDisabled, internalReadonly, isControlled, formatInputValue, onInput, validateTrigger, validateInput, onChange],
   );
 
   // 处理聚焦事件
@@ -302,14 +306,17 @@ export const InputComponent = forwardRef<InputRef, InputProps>((props, ref) => {
   }, [clearable, internalDisabled, internalReadonly, value, isFocused, clearTrigger]);
 
   // 计算最终状态
-  const finalStatus = internalDisabled ? 'disabled' : validationResult?.valid === false ? 'error' : internalStatus;
+  const finalStatus = internalDisabled ? 'disabled' : validationResult?.valid === false || errorText ? 'error' : internalStatus;
 
   // 暴露给外部的引用方法
   React.useImperativeHandle(
     ref,
     () => ({
       element: nativeInputRef.current,
-      getValue: () => value as string,
+      getValue: () => {
+        // Always return the current internal value for uncontrolled components
+        return isControlled ? (controlledValue as string) : internalValue;
+      },
       setValue: (newValue: string) => {
         if (!isControlled) {
           setInternalValue(newValue);
@@ -361,7 +368,14 @@ export const InputComponent = forwardRef<InputRef, InputProps>((props, ref) => {
         return result;
       },
       clear: () => {
-        handleClear({} as ITouchEvent);
+        if (!isControlled) {
+          setInternalValue('');
+        }
+        setValidationResult(null);
+        setInternalStatus('normal');
+        onClear?.({} as ITouchEvent);
+        // For controlled components, we need to call onChange to update the displayed value
+        onChange?.('', {} as ITouchEvent);
       },
       reset: () => {
         if (!isControlled) {
@@ -375,19 +389,19 @@ export const InputComponent = forwardRef<InputRef, InputProps>((props, ref) => {
   );
 
   // 生成输入框样式
-  const inputStyle = inputStyles.getStyle({
+  const { translate, ...styleWithoutTranslate } = style || {};
+  const inputStyle = inputStyles['getStyle']({
     size,
     variant,
     status: finalStatus,
     disabled: internalDisabled,
     readonly: internalReadonly,
     multiline,
-    translate: 'no' as const,
-    ...style,
+    ...styleWithoutTranslate,
   });
 
   // 生成输入框类名
-  const inputClassName = inputStyles.getClassName({
+  const inputClassName = inputStyles['getClassName']({
     size,
     variant,
     status: finalStatus,
@@ -401,7 +415,7 @@ export const InputComponent = forwardRef<InputRef, InputProps>((props, ref) => {
 
   // 生成多行输入框样式
   const multilineStyle = multiline
-    ? inputStyles.getMultilineStyle({
+    ? inputStyles['getMultilineStyle']({
         size,
         rows,
         autoHeight,
@@ -409,16 +423,18 @@ export const InputComponent = forwardRef<InputRef, InputProps>((props, ref) => {
     : {};
 
   // 无障碍状态
-  const finalAccessibilityState = {
+  const finalAccessibilityState = JSON.stringify({
     disabled: internalDisabled,
     readonly: internalReadonly,
     required: rules?.some((rule) => rule.required),
     invalid: validationResult?.valid === false,
     ...accessibilityState,
-  };
+  });
 
   // 计算字符长度
   const calculateLength = (text: string) => {
+    if (!text) return 0;
+
     if (type === 'idcard') {
       // 身份证号，每个字符算一个长度
       return text.length;
@@ -433,64 +449,76 @@ export const InputComponent = forwardRef<InputRef, InputProps>((props, ref) => {
     }
   };
 
-  const currentLength = calculateLength(value as string);
+  const currentLength = calculateLength(String(value || ''));
   const maxLengthToShow = maxLength || (type === 'tel' ? 11 : type === 'idcard' ? 18 : undefined);
 
   return (
-    <View style={inputStyles.getContainerStyle({ size, block: props.block, style: props.containerStyle })}>
+    <View style={inputStyles['getContainerStyle']({ size, block: props.block, style: props.containerStyle })}>
       {/* 标签 */}
-      {label && <Text style={inputStyles.getLabelStyle({ size, disabled: internalDisabled })}>{label}</Text>}
+      {label && <Text style={inputStyles['getLabelStyle']({ size, disabled: internalDisabled })}>{label}</Text>}
 
       {/* 输入框包装器 */}
       <View
-        style={inputStyles.getWrapperStyle({
+        style={inputStyles['getWrapperStyle']({
           size,
           status: finalStatus,
           disabled: internalDisabled,
           readonly: internalReadonly,
           bordered,
-          isFocused,
         })}
       >
         {/* 前缀 */}
-        {prefix && <View style={inputStyles.getPrefixStyle({ size, disabled: internalDisabled })}>{prefix}</View>}
+        {prefix && <View style={inputStyles['getPrefixStyle']({ size, disabled: internalDisabled })}>{prefix}</View>}
 
         {/* 输入框 */}
-        <Input
+        <TaroInput
           ref={nativeInputRef}
           className={inputClassName}
           style={{ ...inputStyle, ...multilineStyle }}
-          value={value}
+          value={value == null ? '' : String(value)}
           placeholder={placeholder}
-          type={showPassword ? 'text' : type}
+          type={showPassword ? 'text' : (type as any)}
           disabled={internalDisabled}
-          readonly={internalReadonly}
-          maxLength={maxLength}
+          readOnly={internalReadonly}
+          maxlength={maxLength || undefined}
           autoFocus={autoFocus}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          onConfirm={handleConfirm}
-          onInput={(e) => handleValueChange(e.detail.value, e)}
-          onKeyboardHeightChange={(e) => onKeyboardHeightChange?.(e.detail.height, e)}
-          accessible={accessible}
+          onFocus={(e) => handleFocus(e as unknown as ITouchEvent)}
+          onBlur={(e) => handleBlur(e as unknown as ITouchEvent)}
+          onConfirm={(e) => handleConfirm(e as unknown as ITouchEvent)}
+          onKeyDown={(e) => {
+            // Handle standard keyDown events for Enter key
+            if ((e as any).key === 'Enter') {
+              handleConfirm(e as unknown as ITouchEvent);
+            }
+          }}
+          onInput={(e) => {
+            // Handle both Taro event (detail.value) and standard DOM event (target.value)
+            const inputValue = (e as any).detail?.value || (e as any).target?.value || '';
+            handleValueChange(inputValue, e as unknown as ITouchEvent);
+          }}
+          onKeyboardHeightChange={(e) => onKeyboardHeightChange?.((e as any).detail?.height, e as unknown as ITouchEvent)}
           aria-label={accessibilityLabel}
           aria-role={accessibilityRole}
           aria-state={finalAccessibilityState}
-          {...restProps}
+          aria-disabled={internalDisabled ? 'true' : 'false'}
+          aria-readonly={internalReadonly ? 'true' : 'false'}
+          aria-invalid={validationResult?.valid === false ? 'true' : 'false'}
+          aria-required={rules?.some((rule) => rule.required) ? 'true' : 'false'}
+          {...(restProps as any)}
         />
 
         {/* 后缀 */}
-        <View style={inputStyles.getSuffixStyle({ size, disabled: internalDisabled })}>
+        <View style={inputStyles['getSuffixStyle']({ size, disabled: internalDisabled })}>
           {/* 清除按钮 */}
           {shouldShowClear() && (
-            <View style={inputStyles.getClearButtonStyle({ size })} onClick={handleClear}>
+            <View style={inputStyles['getClearButtonStyle']({ size })} onClick={handleClear}>
               <Text>×</Text>
             </View>
           )}
 
           {/* 密码切换按钮 */}
           {showPasswordToggle && type === 'password' && (
-            <View style={inputStyles.getPasswordToggleStyle({ size })} onClick={handlePasswordToggle}>
+            <View style={inputStyles['getPasswordToggleStyle']({ size })} onClick={handlePasswordToggle}>
               <Text>{showPassword ? '👁️' : '👁️‍🗨️'}</Text>
             </View>
           )}
@@ -502,20 +530,20 @@ export const InputComponent = forwardRef<InputRef, InputProps>((props, ref) => {
 
       {/* 辅助文本 */}
       {helperText && finalStatus === 'normal' && (
-        <Text style={inputStyles.getHelperTextStyle({ size, status: finalStatus })}>{helperText}</Text>
+        <Text style={inputStyles['getHelperTextStyle']({ size, status: finalStatus })}>{helperText}</Text>
       )}
 
       {/* 错误文本 */}
-      {errorText && finalStatus === 'error' && <Text style={inputStyles.getErrorTextStyle({ size })}>{errorText}</Text>}
+      {errorText && finalStatus === 'error' && <Text style={inputStyles['getErrorTextStyle']({ size })}>{errorText}</Text>}
 
       {/* 验证结果文本 */}
       {validationResult?.message && finalStatus === 'error' && (
-        <Text style={inputStyles.getErrorTextStyle({ size })}>{validationResult.message}</Text>
+        <Text style={inputStyles['getErrorTextStyle']({ size })}>{validationResult.message}</Text>
       )}
 
       {/* 字数统计 */}
       {(showCount || showWordLimit) && maxLengthToShow && (
-        <Text style={inputStyles.getCounterStyle({ size })}>
+        <Text style={inputStyles['getCounterStyle']({ size })}>
           {currentLength}/{maxLengthToShow}
         </Text>
       )}

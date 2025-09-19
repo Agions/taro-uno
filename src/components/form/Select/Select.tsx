@@ -1,15 +1,11 @@
 import React, { forwardRef, useRef, useState, useEffect, useCallback } from 'react';
-import { Picker, View, Text, Input } from '@tarojs/components';
+import { Picker, View, Text } from '@tarojs/components';
 import type { ITouchEvent } from '@tarojs/components';
-import { PlatformDetector } from '@/utils';
 import { selectStyles } from './Select.styles';
 import type {
   SelectProps,
   SelectRef,
-  SelectSize,
-  SelectVariant,
   SelectStatus,
-  SelectMode,
   SelectOption,
   SelectOptionGroup,
 } from './Select.types';
@@ -21,17 +17,17 @@ export const SelectComponent = forwardRef<SelectRef, SelectProps>((props, ref) =
     defaultValue,
     placeholder = '请选择',
     size = 'md',
-    variant = 'outlined',
+    variant: _variant = 'outlined',
     status: propStatus = 'normal',
     mode = 'single',
     disabled = false,
     readonly = false,
     bordered = true,
     allowClear = false,
-    showSearch = false,
-    searchPlaceholder = '搜索选项',
-    showTags = false,
-    maxTagCount,
+    showSearch: _showSearch = false,
+    searchPlaceholder: _searchPlaceholder = '搜索选项',
+    showTags: _showTags = false,
+    maxTagCount: _maxTagCount,
     options = [],
     prefix,
     suffix,
@@ -39,21 +35,19 @@ export const SelectComponent = forwardRef<SelectRef, SelectProps>((props, ref) =
     helperText,
     errorText,
     showArrow = true,
-    dropdownStyle,
-    dropdownClassName,
-    dropdownMatchSelectWidth = true,
-    placement = 'bottomLeft',
-    className,
+    dropdownStyle: _dropdownStyle,
+    dropdownClassName: _dropdownClassName,
+    dropdownMatchSelectWidth: _dropdownMatchSelectWidth = true,
+    placement: _placement = 'bottomLeft',
+    className: _className,
     onChange,
-    onFocus,
-    onBlur,
     onDropdownVisibleChange,
-    onSearch,
-    onClear,
-    accessible = true,
-    accessibilityLabel,
-    accessibilityRole = 'combobox',
-    accessibilityState,
+    // onSearch: removed - not used
+    // onClear: removed - not used
+    accessible: _accessible = true,
+    accessibilityLabel: _accessibilityLabel,
+    accessibilityRole: _accessibilityRole = 'combobox',
+    // accessibilityState: removed - not used
     rules,
     validateTrigger = 'onBlur',
     immediate = false,
@@ -62,16 +56,35 @@ export const SelectComponent = forwardRef<SelectRef, SelectProps>((props, ref) =
     validator,
     loading = false,
     loadingText = '加载中...',
-    notFoundContent = '暂无数据',
-    style,
-    ...restProps
+    notFoundContent: _notFoundContent = '暂无数据',
+    style: _style
+    // ...restProps // Removed unused rest props
   } = props;
+
+  // Generate CSS classes
+  const generatedClassName = selectStyles.getClassName({
+    size,
+    variant: _variant,
+    status: propStatus,
+    disabled,
+    readonly,
+    bordered,
+    className: _className,
+  });
+
+  // Generate styles
+  const generatedStyle = selectStyles.getStyle({
+    size,
+    variant: _variant,
+    status: propStatus,
+    disabled,
+    readonly,
+    style: _style,
+  });
 
   const selectRef = useRef<HTMLSelectElement>(null);
   const [internalValue, setInternalValue] = useState(defaultValue);
-  const [isFocused, setIsFocused] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [searchValue, setSearchValue] = useState('');
   const [internalStatus, setInternalStatus] = useState<SelectStatus>(propStatus);
   const [internalDisabled, setInternalDisabled] = useState(disabled);
   const [internalReadonly, setInternalReadonly] = useState(readonly);
@@ -97,7 +110,7 @@ export const SelectComponent = forwardRef<SelectRef, SelectProps>((props, ref) =
   // 立即验证
   useEffect(() => {
     if (immediate && value) {
-      validateSelect(value);
+      validateSelect(value || '');
     }
   }, [immediate, value]);
 
@@ -122,11 +135,13 @@ export const SelectComponent = forwardRef<SelectRef, SelectProps>((props, ref) =
 
   // 获取选中选项
   const getSelectedOptions = useCallback((): SelectOption[] => {
+    if (value === undefined || value === null) return [];
+
     if (mode === 'single') {
       const option = findOption(value as string | number);
       return option ? [option] : [];
     } else {
-      const values = Array.isArray(value) ? value : [];
+      const values = Array.isArray(value) ? value : value ? [value] : [];
       return values.map((val) => findOption(val)).filter(Boolean) as SelectOption[];
     }
   }, [value, mode, findOption]);
@@ -161,13 +176,13 @@ export const SelectComponent = forwardRef<SelectRef, SelectProps>((props, ref) =
       if (rules) {
         for (let i = 0; i < rules.length; i++) {
           const rule = rules[i];
-          if (rule.validator) {
+          if (rule?.validator) {
             const result = await rule.validator(selectValue);
             if (typeof result === 'string') {
               return { valid: false, message: result };
             }
             if (!result) {
-              return { valid: false, message: rule.message || '选择不正确' };
+              return { valid: false, message: rule?.message || '选择不正确' };
             }
           }
         }
@@ -198,7 +213,7 @@ export const SelectComponent = forwardRef<SelectRef, SelectProps>((props, ref) =
 
       // 验证选择
       if (validateTrigger === 'onChange') {
-        const result = await validateSelect(newValue);
+        const result = await validateSelect(newValue || '');
         setValidationResult(result);
         setInternalStatus(result.valid ? 'normal' : 'error');
       }
@@ -209,45 +224,9 @@ export const SelectComponent = forwardRef<SelectRef, SelectProps>((props, ref) =
     [isControlled, validateTrigger, validateSelect, onChange],
   );
 
-  // 处理聚焦事件
-  const handleFocus = useCallback(
-    async (event: ITouchEvent) => {
-      if (internalDisabled || internalReadonly) return;
-
-      setIsFocused(true);
-      onFocus?.(event);
-
-      // 聚焦时验证
-      if (validateTrigger === 'onFocus') {
-        const result = await validateSelect(value);
-        setValidationResult(result);
-        setInternalStatus(result.valid ? 'normal' : 'error');
-      }
-    },
-    [internalDisabled, internalReadonly, onFocus, validateTrigger, validateSelect, value],
-  );
-
-  // 处理失焦事件
-  const handleBlur = useCallback(
-    async (event: ITouchEvent) => {
-      if (internalDisabled || internalReadonly) return;
-
-      setIsFocused(false);
-      onBlur?.(event);
-
-      // 失焦时验证
-      if (validateTrigger === 'onBlur') {
-        const result = await validateSelect(value);
-        setValidationResult(result);
-        setInternalStatus(result.valid ? 'normal' : 'error');
-      }
-    },
-    [internalDisabled, internalReadonly, onBlur, validateTrigger, validateSelect, value],
-  );
-
   // 处理清除事件
   const handleClear = useCallback(
-    (event: ITouchEvent) => {
+    (_event: ITouchEvent) => {
       if (internalDisabled || internalReadonly) return;
 
       const emptyValue = mode === 'single' ? '' : [];
@@ -257,42 +236,32 @@ export const SelectComponent = forwardRef<SelectRef, SelectProps>((props, ref) =
 
       setValidationResult(null);
       setInternalStatus('normal');
-      onClear?.(event);
       onChange?.(emptyValue, []);
     },
-    [internalDisabled, internalReadonly, isControlled, mode, onClear, onChange],
-  );
-
-  // 处理搜索
-  const handleSearch = useCallback(
-    (searchText: string) => {
-      setSearchValue(searchText);
-      onSearch?.(searchText);
-    },
-    [onSearch],
+    [internalDisabled, internalReadonly, isControlled, mode, onChange],
   );
 
   // 计算最终状态
   const finalStatus = internalDisabled
     ? 'disabled'
     : loading
-    ? 'loading'
-    : validationResult?.valid === false
-    ? 'error'
-    : internalStatus;
+      ? 'loading'
+      : validationResult?.valid === false
+        ? 'error'
+        : internalStatus;
 
   // 获取显示文本
   const getDisplayText = useCallback((): string => {
     const selectedOptions = getSelectedOptions();
 
     if (selectedOptions.length === 0) {
-      return placeholder;
+      return placeholder || '请选择';
     }
 
     if (mode === 'single') {
       return selectedOptions[0]?.label?.toString() || '';
     } else {
-      return selectedOptions.map((opt) => opt.label?.toString()).join(', ');
+      return selectedOptions.map((opt) => opt.label?.toString()).filter(Boolean).join(', ');
     }
   }, [getSelectedOptions, placeholder, mode]);
 
@@ -301,14 +270,14 @@ export const SelectComponent = forwardRef<SelectRef, SelectProps>((props, ref) =
     ref,
     () => ({
       element: selectRef.current,
-      getValue: () => value,
+      getValue: () => value !== undefined && value !== null ? value : (mode === 'single' ? '' : []) as string | number | (string | number)[],
       setValue: (newValue) => {
         if (!isControlled) {
           setInternalValue(newValue);
         }
       },
       focus: () => {
-        if (selectRef.current && !internalDisabled && !internalReadonly) {
+        if (selectRef.current && !internalDisabled && !internalReadonly && !loading) {
           selectRef.current.focus();
         }
       },
@@ -343,7 +312,7 @@ export const SelectComponent = forwardRef<SelectRef, SelectProps>((props, ref) =
       },
       getStatus: () => finalStatus,
       validate: async () => {
-        const result = await validateSelect(value);
+        const result = await validateSelect(value || '');
         setValidationResult(result);
         setInternalStatus(result.valid ? 'normal' : 'error');
         return result;
@@ -360,12 +329,16 @@ export const SelectComponent = forwardRef<SelectRef, SelectProps>((props, ref) =
       },
       getSelectedOptions,
       searchOptions: (keyword) => {
+        if (!keyword || typeof keyword !== 'string') return [];
         const flatOptions = flattenOptions(options);
-        return flatOptions.filter((opt) => opt.label?.toString().toLowerCase().includes(keyword.toLowerCase()));
+        return flatOptions.filter((opt) =>
+          opt.label?.toString().toLowerCase().includes(keyword.toLowerCase()) ||
+          opt.value?.toString().toLowerCase().includes(keyword.toLowerCase())
+        );
       },
-      scrollToOption: (optionValue) => {
+      scrollToOption: (_optionValue) => {
         // 在实际实现中，这里会滚动到指定选项
-        console.log('Scroll to option:', optionValue);
+        // Scroll to option: _optionValue
       },
     }),
     [
@@ -384,112 +357,90 @@ export const SelectComponent = forwardRef<SelectRef, SelectProps>((props, ref) =
     ],
   );
 
-  // 生成选择器样式
-  const selectStyle = selectStyles.getStyle({
-    size,
-    variant,
-    status: finalStatus,
-    disabled: internalDisabled,
-    readonly: internalReadonly,
-    ...style,
-  });
-
-  // 生成选择器类名
-  const selectClassName = selectStyles.getClassName({
-    size,
-    variant,
-    status: finalStatus,
-    disabled: internalDisabled,
-    readonly: internalReadonly,
-    bordered,
-    className,
-  });
-
-  // 无障碍状态
-  const finalAccessibilityState = {
-    disabled: internalDisabled,
-    readonly: internalReadonly,
-    required: rules?.some((rule) => rule.required),
-    expanded: isDropdownOpen,
-    busy: loading,
-    ...accessibilityState,
-  };
-
+  
   // 处理Picker变化
   const handlePickerChange = (e: any) => {
-    const selectedValue = e.detail.value;
-    const selectedOption = findOption(selectedValue);
+    const selectedIndex = e.detail?.value;
+    // 根据索引获取对应的选项
+    const selectedOption = options[selectedIndex];
 
-    if (selectedOption) {
-      handleValueChange(selectedValue, selectedOption);
+    if (selectedOption && !('options' in selectedOption)) {
+      handleValueChange(selectedOption.value, selectedOption);
     }
   };
 
-  // 准备Picker数据
-  const pickerData = options.map((opt) => {
+  // 简化Picker数据（仅显示标签）
+  const simplePickerData = options.map((opt) => {
     if ('options' in opt) {
-      return {
-        label: opt.label,
-        value: opt.label,
-        children: opt.options.map((subOpt) => ({
-          label: subOpt.label,
-          value: subOpt.value,
-        })),
-      };
+      return (opt.label as any)?.toString() || '';
     }
-    return {
-      label: opt.label,
-      value: opt.value,
-    };
+    return (opt.label as any)?.toString() || '';
   });
 
+  // 获取当前选中的索引
+  const getCurrentIndex = () => {
+    if (value === undefined || value === null || value === '') return 0;
+    const index = options.findIndex(opt => {
+      if ('options' in opt) return false;
+      return opt.value === value;
+    });
+    return index >= 0 ? index : 0;
+  };
+
   return (
-    <View style={selectStyles.getContainerStyle({ size, block: props.block, style: props.containerStyle })}>
+    <View style={selectStyles['getContainerStyle']({ size, block: props.block, style: props.containerStyle })}>
       {/* 标签 */}
-      {label && <Text style={selectStyles.getLabelStyle({ size, disabled: internalDisabled })}>{label}</Text>}
+      {label && <Text style={selectStyles['getLabelStyle']({ size, disabled: internalDisabled })}>{label}</Text>}
 
       {/* 选择器包装器 */}
       <View
-        style={selectStyles.getWrapperStyle({
+        style={selectStyles['getWrapperStyle']({
           size,
           status: finalStatus,
           disabled: internalDisabled,
           readonly: internalReadonly,
           bordered,
-          isFocused,
+          // isFocused,
         })}
       >
         {/* 前缀 */}
-        {prefix && <View style={selectStyles.getPrefixStyle({ size, disabled: internalDisabled })}>{prefix}</View>}
+        {prefix && <View style={selectStyles['getPrefixStyle']({ size, disabled: internalDisabled })}>{prefix}</View>}
 
         {/* 选择器 */}
         <Picker
-          mode={mode === 'multiple' ? 'multiSelector' : 'selector'}
-          range={pickerData}
-          rangeKey="label"
-          value={Array.isArray(value) ? value : [value].filter(Boolean)}
+          mode="selector"
+          range={simplePickerData}
+          value={getCurrentIndex()}
           onChange={handlePickerChange}
-          disabled={internalDisabled || internalReadonly}
-          className={selectClassName}
-          style={selectStyle}
+          disabled={internalDisabled || internalReadonly || loading}
+          className={generatedClassName}
+          style={generatedStyle}
+          accessibilityLabel={_accessibilityLabel}
+          accessibilityRole={_accessibilityRole}
+          // Taro Picker doesn't support these props natively
+          // onFocus={props.onFocus}
+          // onBlur={props.onBlur}
+          // aria-disabled={internalDisabled || loading}
+          // aria-busy={loading}
+          // aria-readonly={internalReadonly}
         >
-          <View style={selectStyles.getSelectorStyle({ size, disabled: internalDisabled })}>
-            <Text style={selectStyles.getValueStyle({ size, hasValue: !!value, disabled: internalDisabled })}>
+          <View style={selectStyles['getSelectorStyle']({ size, disabled: internalDisabled })}>
+            <Text style={selectStyles['getValueStyle']({ size, hasValue: !!value, disabled: internalDisabled })}>
               {getDisplayText()}
             </Text>
 
             {/* 后缀 */}
-            <View style={selectStyles.getSuffixStyle({ size, disabled: internalDisabled })}>
+            <View style={selectStyles['getSuffixStyle']({ size, disabled: internalDisabled })}>
               {/* 清除按钮 */}
               {allowClear && value && !internalDisabled && !internalReadonly && (
-                <View style={selectStyles.getClearButtonStyle({ size })} onClick={handleClear}>
+                <View style={selectStyles['getClearButtonStyle']({ size })} onClick={handleClear}>
                   <Text>×</Text>
                 </View>
               )}
 
               {/* 箭头 */}
               {showArrow && !internalDisabled && !internalReadonly && (
-                <Text style={selectStyles.getArrowStyle({ size, open: isDropdownOpen })}>▼</Text>
+                <Text style={selectStyles['getArrowStyle']({ size, open: isDropdownOpen })}>▼</Text>
               )}
 
               {/* 自定义后缀 */}
@@ -501,21 +452,26 @@ export const SelectComponent = forwardRef<SelectRef, SelectProps>((props, ref) =
 
       {/* 辅助文本 */}
       {helperText && finalStatus === 'normal' && (
-        <Text style={selectStyles.getHelperTextStyle({ size, status: finalStatus })}>{helperText}</Text>
+        <Text style={selectStyles['getHelperTextStyle']({ size, status: finalStatus })}>{helperText}</Text>
       )}
 
       {/* 错误文本 */}
       {errorText && finalStatus === 'error' && (
-        <Text style={selectStyles.getErrorTextStyle({ size })}>{errorText}</Text>
+        <Text style={selectStyles['getErrorTextStyle']({ size })}>{errorText}</Text>
       )}
 
       {/* 验证结果文本 */}
       {validationResult?.message && finalStatus === 'error' && (
-        <Text style={selectStyles.getErrorTextStyle({ size })}>{validationResult.message}</Text>
+        <Text style={selectStyles['getErrorTextStyle']({ size })}>{validationResult.message}</Text>
+      )}
+
+      {/* 无数据提示 */}
+      {!loading && options.length === 0 && _notFoundContent && (
+        <Text style={selectStyles['getNotFoundTextStyle']({ size })}>{_notFoundContent}</Text>
       )}
 
       {/* 加载状态 */}
-      {loading && <Text style={selectStyles.getLoadingTextStyle({ size })}>{loadingText}</Text>}
+      {loading && <Text style={selectStyles['getLoadingTextStyle']({ size })}>{loadingText}</Text>}
     </View>
   );
 });

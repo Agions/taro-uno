@@ -3,6 +3,7 @@
  * 输入框组件，支持多种类型、状态和验证功能
  */
 
+// Export the Input component and its types
 export { Input } from './Input';
 export type {
   InputProps,
@@ -17,9 +18,9 @@ export type {
   InputEvents,
   InputStyleConfig,
   InputContext,
-  ClearTrigger,
+  // ClearTrigger already exported by form/index.tsx, avoiding conflict
 } from './Input.types';
 export { inputStyles } from './Input.styles';
 
-// 默认导出
-export default Input;
+// Default export for convenience
+export { Input as default } from './Input';

@@ -1,6 +1,8 @@
 import React from 'react';
+import { BaseComponentProps } from '../../../types';
+import { AccessibilityProps } from '../../../types/accessibility';
 
-export interface CardProps {
+export interface CardProps extends BaseComponentProps, AccessibilityProps {
   /** 卡片内容 */
   children: React.ReactNode;
   /** 卡片标题 */

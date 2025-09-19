@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-import { View } from '@tarojs/components';
 import { BaseComponentProps, Size, CSSUnit } from '../../../types';
 
 /** Row组件对齐方式 */
@@ -18,7 +17,7 @@ export type RowGutter =
 /** Row组件引用 */
 export interface RowRef {
   /** 获取元素引用 */
-  element: View | null;
+  element: any | null;
   /** 获取当前对齐方式 */
   getAlign: () => RowAlign;
   /** 获取当前对齐方式 */

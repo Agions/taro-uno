@@ -1,5 +1,5 @@
-import { Platform } from '@tarojs/taro';
-import type { GridProps, GridAlign, GridJustify, GridGap, GridCols } from './Grid.types';
+import type { GridProps, GridGap, GridCols } from './Grid.types';
+import type { Size, CSSUnit } from '../../../types';
 
 /** Grid组件样式管理器 */
 export const gridStyles = {
@@ -32,7 +32,7 @@ export const gridStyles = {
   /**
    * 解析尺寸值
    */
-  parseSize: (size: Size | number | `${number}${CSSUnit}`): number | string => {
+  parseSize: (size: Size | number | `${number}${CSSUnit}`): string => {
     if (typeof size === 'number') {
       return `${size}px`;
     }
@@ -53,9 +53,9 @@ export const gridStyles = {
   parseGap: (gap: GridGap): string => {
     if (Array.isArray(gap)) {
       const [rowGap, columnGap] = gap;
-      return `${gridStyles.parseSize(rowGap)} ${gridStyles.parseSize(columnGap)}`;
+      return `${gridStyles['parseSize'](rowGap)} ${gridStyles['parseSize'](columnGap)}`;
     }
-    return gridStyles.parseSize(gap);
+    return gridStyles['parseSize'](gap);
   },
 
   /**
@@ -84,7 +84,7 @@ export const gridStyles = {
     } = props;
 
     // 计算网格模板列
-    const gridTemplateColumns = gridStyles.parseCols(cols);
+    const gridTemplateColumns = gridStyles['parseCols'](cols);
 
     // 计算网格模板行
     const gridTemplateRows = rows ? `repeat(${rows}, 1fr)` : undefined;
@@ -92,14 +92,14 @@ export const gridStyles = {
     // 计算间距
     const gapValue =
       rowGap || columnGap
-        ? `${rowGap ? gridStyles.parseSize(rowGap) : gridStyles.parseSize(gap)} ${
-            columnGap ? gridStyles.parseSize(columnGap) : gridStyles.parseSize(gap)
+        ? `${rowGap ? gridStyles['parseSize'](rowGap) : gridStyles['parseSize'](Array.isArray(gap) ? gap[0] : gap)} ${
+            columnGap ? gridStyles['parseSize'](columnGap) : gridStyles['parseSize'](Array.isArray(gap) ? gap[1] : gap)
           }`
-        : gridStyles.parseGap(gap);
+        : gridStyles['parseGap'](gap);
 
     // 计算对齐方式
-    const alignItems = gridStyles.ALIGN_MAP[align];
-    const justifyContent = gridStyles.JUSTIFY_MAP[justify];
+    const alignItems = gridStyles['ALIGN_MAP'][align];
+    const justifyContent = gridStyles['JUSTIFY_MAP'][justify];
 
     return {
       display: 'grid',
@@ -130,7 +130,7 @@ export const gridStyles = {
   /**
    * 获取子元素样式
    */
-  getItemStyle: (index: number, total: number, cols: GridCols): React.CSSProperties => {
+  getItemStyle: (index: number, _total: number, cols: GridCols): React.CSSProperties => {
     const style: React.CSSProperties = {
       position: 'relative',
       minWidth: 0,
@@ -156,9 +156,8 @@ export const gridStyles = {
 
     const responsiveStyle: React.CSSProperties = {};
 
-    Object.entries(responsive).forEach(([breakpoint, props]) => {
+    Object.entries(responsive).forEach(([_breakpoint, props]) => {
       if (props) {
-        const mediaQuery = `@media (min-width: ${gridStyles.getBreakpointValue(breakpoint)}px)`;
         // 这里需要配合CSS-in-JS库来处理响应式样式
         // 暂时返回空对象
       }

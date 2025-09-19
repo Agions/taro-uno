@@ -1,15 +1,24 @@
 import React, { forwardRef } from 'react';
 import { View, Text } from '@tarojs/components';
-import { LoadingProps, LoadingRef } from './Loading.types';
-import { usePlatform } from '@/hooks/usePlatform';
-import { cn } from '@/utils';
+import { cn } from '../../../utils';
 import { LoadingStyles } from './Loading.styles';
+import type { LoadingProps, LoadingRef } from './Loading.types';
 
 export const Loading = forwardRef<LoadingRef, LoadingProps>((props, ref) => {
-  const { type = 'spinner', size = 'default', color, text, delay = 0, className, style, ...rest } = props;
+  const { type = 'spinner', size = 'default', text, delay = 0, style, ...rest } = props;
 
-  const platform = usePlatform();
-  const [visible, setVisible] = React.useState(delay > 0);
+  const [visible, setVisible] = React.useState(delay === 0);
+  const elementRef = React.useRef<any>(null);
+
+  React.useImperativeHandle(ref, () => ({
+    getElement: () => elementRef.current,
+    show: () => {
+      setVisible(true);
+    },
+    hide: () => {
+      setVisible(false);
+    },
+  }));
 
   React.useEffect(() => {
     if (delay > 0) {
@@ -19,28 +28,33 @@ export const Loading = forwardRef<LoadingRef, LoadingProps>((props, ref) => {
       return () => clearTimeout(timer);
     }
     setVisible(true);
+    return undefined;
   }, [delay]);
 
   const renderSpinner = () => {
-    const spinnerClasses = cn(LoadingStyles.spinner, LoadingStyles.spinnerSize[size], color && `border-${color}-500`);
+    const baseSpinnerStyle = LoadingStyles['spinner'] as React.CSSProperties;
+    const sizeStyle = (LoadingStyles['spinnerSize'] as any)[size] as React.CSSProperties;
+    const spinnerStyle = { ...baseSpinnerStyle, ...sizeStyle };
 
     return (
-      <View className={spinnerClasses}>
-        <View className={LoadingStyles.spinnerInner} />
+      <View style={spinnerStyle}>
+        <View style={LoadingStyles['spinnerInner'] as React.CSSProperties} />
       </View>
     );
   };
 
   const renderDots = () => {
-    const dotClasses = cn(LoadingStyles.dot, LoadingStyles.dotSize[size], color && `bg-${color}-500`);
+    const baseDotStyle = LoadingStyles['dot'] as React.CSSProperties;
+    const sizeStyle = (LoadingStyles['dotSize'] as any)[size] as React.CSSProperties;
+    const dotStyle = { ...baseDotStyle, ...sizeStyle };
 
     return (
-      <View className={LoadingStyles.dots}>
+      <View style={LoadingStyles['dots'] as React.CSSProperties}>
         {[0, 1, 2].map((index) => (
           <View
             key={index}
-            className={dotClasses}
             style={{
+              ...dotStyle,
               animationDelay: `${index * 0.2}s`,
             }}
           />
@@ -50,25 +64,29 @@ export const Loading = forwardRef<LoadingRef, LoadingProps>((props, ref) => {
   };
 
   const renderPulse = () => {
-    const pulseClasses = cn(LoadingStyles.pulse, LoadingStyles.pulseSize[size], color && `bg-${color}-500`);
+    const basePulseStyle = LoadingStyles['pulse'] as React.CSSProperties;
+    const sizeStyle = (LoadingStyles['pulseSize'] as any)[size] as React.CSSProperties;
+    const pulseStyle = { ...basePulseStyle, ...sizeStyle };
 
     return (
-      <View className={LoadingStyles.pulseContainer}>
-        <View className={pulseClasses} />
+      <View style={LoadingStyles['pulseContainer'] as React.CSSProperties}>
+        <View style={pulseStyle} />
       </View>
     );
   };
 
   const renderBars = () => {
-    const barClasses = cn(LoadingStyles.bar, LoadingStyles.barSize[size], color && `bg-${color}-500`);
+    const baseBarStyle = LoadingStyles['bar'] as React.CSSProperties;
+    const sizeStyle = (LoadingStyles['barSize'] as any)[size] as React.CSSProperties;
+    const barStyle = { ...baseBarStyle, ...sizeStyle };
 
     return (
-      <View className={LoadingStyles.bars}>
+      <View style={LoadingStyles['bars'] as React.CSSProperties}>
         {[0, 1, 2, 3].map((index) => (
           <View
             key={index}
-            className={barClasses}
             style={{
+              ...barStyle,
               animationDelay: `${index * 0.1}s`,
             }}
           />
@@ -92,16 +110,18 @@ export const Loading = forwardRef<LoadingRef, LoadingProps>((props, ref) => {
     }
   };
 
-  const loadingClasses = cn(LoadingStyles.base, LoadingStyles.size[size], className);
+  const loadingClasses = cn('taro-uno-loading', `taro-uno-loading--${size}`, rest.className);
 
   if (!visible) return null;
 
   return (
-    <View ref={ref} className={loadingClasses} style={style} {...rest}>
+    <View ref={elementRef} className={loadingClasses} style={{...LoadingStyles['base'] as React.CSSProperties, ...style}} {...rest}>
       {renderContent()}
-      {text && <Text className={LoadingStyles.text}>{text}</Text>}
+      {text && <Text style={LoadingStyles['text'] as React.CSSProperties}>{text}</Text>}
     </View>
   );
 });
 
 Loading.displayName = 'Loading';
+
+export default Loading;

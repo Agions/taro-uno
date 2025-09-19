@@ -1,8 +1,9 @@
-/**
- * Loading 组件导出文件
- */
+import LoadingComponent from './Loading';
 
-export { default } from './Loading';
-export * from './Loading';
-export * from './Loading.types';
-export { LoadingStyles } from './Loading.styles';
+export { LoadingComponent as Loading };
+export type {
+  LoadingProps,
+  LoadingRef,
+} from './Loading.types';
+
+export default LoadingComponent;

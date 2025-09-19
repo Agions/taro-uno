@@ -25,30 +25,30 @@ function updateVersion(newVersion) {
   const packagesDir = path.join(__dirname, '../packages');
   const packages = fs.readdirSync(packagesDir);
 
-  packages.forEach(pkg => {
+  packages.forEach((pkg) => {
     const packageJsonPath = path.join(packagesDir, pkg, 'package.json');
     if (fs.existsSync(packageJsonPath)) {
       const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
       packageJson.version = newVersion;
-      
+
       // 更新依赖版本
       if (packageJson.dependencies) {
-        Object.keys(packageJson.dependencies).forEach(dep => {
+        Object.keys(packageJson.dependencies).forEach((dep) => {
           if (dep.startsWith('@taro-uno/')) {
             packageJson.dependencies[dep] = newVersion;
           }
         });
       }
-      
+
       // 更新开发依赖版本
       if (packageJson.devDependencies) {
-        Object.keys(packageJson.devDependencies).forEach(dep => {
+        Object.keys(packageJson.devDependencies).forEach((dep) => {
           if (dep.startsWith('@taro-uno/')) {
             packageJson.devDependencies[dep] = newVersion;
           }
         });
       }
-      
+
       fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n');
     }
   });

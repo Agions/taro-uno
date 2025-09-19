@@ -7,16 +7,45 @@ import type { PaginationProps, PaginationRef } from '../Pagination.types'
 vi.mock('@tarojs/components', () => ({
   View: 'div',
   Text: 'span',
-  Input: ({ onChange, ...props }) => {
-    const handleChange = (e) => {
-      if (onChange) {
-        onChange({ detail: { value: e.target.value } })
-      }
-    }
-    return <input {...props} onChange={handleChange} />
+  Picker: ({ onChange, range, children, ...props }) => {
+    // The Pagination component uses rangeKey="label" but the data is just an array of numbers
+    // We need to simulate the Picker's behavior properly
+    return (
+      <select {...props} role="combobox" onChange={(e) => {
+        const selectedIndex = parseInt(e.target.value);
+        const selectedValue = range ? range[selectedIndex] : selectedIndex;
+        onChange && onChange({ detail: { value: selectedIndex } });
+      }}>
+        {range?.map((value, index) => (
+          <option key={index} value={index}>{value}</option>
+        ))}
+        {children}
+      </select>
+    );
   },
   select: ({ onChange, ...props }) => {
     return <select {...props} onChange={(e) => onChange && onChange({ target: { value: parseInt(e.target.value) } })} />
+  }
+}))
+
+// Mock the Input component from form module
+vi.mock('../../form/Input', () => ({
+  Input: ({ onChange, onInput, value, ...props }) => {
+    // Taro Input uses onInput instead of onChange for value changes
+    const handleChange = (e) => {
+      const event = {
+        detail: {
+          value: e.target.value
+        }
+      }
+      if (onInput) {
+        onInput(event)
+      }
+      if (onChange) {
+        onChange(event)
+      }
+    }
+    return <input {...props} value={value} onChange={handleChange} />
   }
 }))
 
@@ -293,7 +322,7 @@ describe('Pagination Component', () => {
       )
 
       const select = screen.getByRole('combobox')
-      fireEvent.change(select, { target: { value: '20' } })
+      fireEvent.change(select, { target: { value: '1' } }) // Index 1 = 20 items per page
 
       expect(handleSizeChange).toHaveBeenCalledWith(1, 20)
       expect(handleChange).toHaveBeenCalledWith(1, 20)
@@ -314,7 +343,7 @@ describe('Pagination Component', () => {
       )
 
       const select = screen.getByRole('combobox')
-      fireEvent.change(select, { target: { value: '20' } })
+      fireEvent.change(select, { target: { value: '1' } }) // Index 1 = 20 items per page
 
       expect(handleSizeChange).toHaveBeenCalledWith(5, 20)
       expect(handleChange).toHaveBeenCalledWith(5, 20)
@@ -491,7 +520,7 @@ describe('Pagination Component', () => {
       render(<Pagination total={100} pageSize={20} showSizeChanger onShowSizeChange={handleSizeChange} data-testid="pagination" />)
 
       const select = screen.getByRole('combobox')
-      fireEvent.change(select, { target: { value: '30' } })
+      fireEvent.change(select, { target: { value: '2' } }) // Index 2 = 50 items per page
 
       expect(handleSizeChange).toHaveBeenCalled()
     })
@@ -501,7 +530,7 @@ describe('Pagination Component', () => {
       render(<Pagination total={100} defaultPageSize={20} showSizeChanger onShowSizeChange={handleSizeChange} data-testid="pagination" />)
 
       const select = screen.getByRole('combobox')
-      fireEvent.change(select, { target: { value: '30' } })
+      fireEvent.change(select, { target: { value: '2' } }) // Index 2 = 50 items per page
 
       expect(handleSizeChange).toHaveBeenCalled()
     })

@@ -23,7 +23,7 @@ export const ContainerComponent = forwardRef<ContainerRef, ContainerProps>((prop
     ...restProps
   } = props;
 
-  const containerRef = useRef<View>(null);
+  const containerRef = useRef<any>(null);
   const [internalSize, setInternalSize] = useState<ContainerSize>(size);
   const [internalAlign, setInternalAlign] = useState<ContainerAlign>(align);
   const [internalCenter, setInternalCenter] = useState(center);
@@ -67,8 +67,9 @@ export const ContainerComponent = forwardRef<ContainerRef, ContainerProps>((prop
     [onScroll],
   );
 
+  
   // 计算样式
-  const containerStyle = containerStyles.getBaseStyle({
+  const containerStyle = containerStyles['getBaseStyle']({
     size: internalSize,
     maxWidth,
     padding,
@@ -81,10 +82,10 @@ export const ContainerComponent = forwardRef<ContainerRef, ContainerProps>((prop
   });
 
   // 计算响应式样式
-  const responsiveStyle = responsive ? containerStyles.getResponsiveStyle(responsive) : {};
+  const responsiveStyle = responsive ? containerStyles['getResponsiveStyle'](responsive) : {};
 
   // 计算类名
-  const containerClassName = containerStyles.getClassName({
+  const containerClassName = containerStyles['getClassName']({
     size: internalSize,
     align: internalAlign,
     center: internalCenter,

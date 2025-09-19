@@ -1,21 +1,17 @@
-import React, { forwardRef, useRef, useState, useCallback, useMemo } from 'react';
+import React, { forwardRef, useRef, useState, useEffect, useCallback, useMemo } from 'react';
 import { View, Text, ScrollView } from '@tarojs/components';
-import { tableStyles } from './Table.styles';
+import { TableStyles } from './Table.styles';
 import type {
   TableProps,
   TableRef,
-  TableColumn,
   TableSortOrder,
-  TableRowSelection,
-  TablePagination,
-  TableExpandable,
 } from './Table.types';
 
 /** 表格组件 */
 export const TableComponent = forwardRef<TableRef, TableProps>((props, ref) => {
   const {
     columns = [],
-    dataSource = [],
+    dataSource: initialDataSource = [],
     rowKey = 'key',
     size = 'medium',
     bordered = false,
@@ -37,6 +33,7 @@ export const TableComponent = forwardRef<TableRef, TableProps>((props, ref) => {
   } = props;
 
   const tableRef = useRef<HTMLDivElement>(null);
+  const [data, setData] = useState(initialDataSource);
   const [sortField, setSortField] = useState<string>('');
   const [sortOrder, setSortOrder] = useState<TableSortOrder>(null);
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
@@ -44,16 +41,17 @@ export const TableComponent = forwardRef<TableRef, TableProps>((props, ref) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
+  // 同步数据状态
+  useEffect(() => {
+    setData(initialDataSource);
+  }, [initialDataSource]);
+
   // 处理排序
   const handleSort = useCallback(
     (field: string, order: TableSortOrder) => {
       setSortField(field);
       setSortOrder(order);
-      onChange?.({
-        pagination: { current: currentPage, pageSize },
-        filters: {},
-        sorter: { field, order },
-      });
+      onChange?.({ current: currentPage, pageSize }, {}, { field, order });
     },
     [currentPage, pageSize, onChange],
   );
@@ -66,24 +64,24 @@ export const TableComponent = forwardRef<TableRef, TableProps>((props, ref) => {
       setSelectedRowKeys(newSelectedKeys);
       rowSelection?.onChange?.(
         newSelectedKeys,
-        dataSource.filter((item) => newSelectedKeys.includes(item[rowKey as keyof typeof item])),
+        data.filter((item) => newSelectedKeys.includes(item[rowKey as keyof typeof item])),
       );
     },
-    [selectedRowKeys, dataSource, rowKey, rowSelection],
+    [selectedRowKeys, data, rowKey, rowSelection],
   );
 
   // 处理全选
   const handleSelectAll = useCallback(
     (selected: boolean) => {
-      const newSelectedKeys = selected ? dataSource.map((item) => String(item[rowKey as keyof typeof item])) : [];
+      const newSelectedKeys = selected ? data.map((item) => String(item[rowKey as keyof typeof item])) : [];
 
       setSelectedRowKeys(newSelectedKeys);
       rowSelection?.onChange?.(
         newSelectedKeys,
-        dataSource.filter((item) => newSelectedKeys.includes(String(item[rowKey as keyof typeof item]))),
+        data.filter((item) => newSelectedKeys.includes(String(item[rowKey as keyof typeof item]))),
       );
     },
-    [dataSource, rowKey, rowSelection],
+    [data, rowKey, rowSelection],
   );
 
   // 处理展开
@@ -92,8 +90,14 @@ export const TableComponent = forwardRef<TableRef, TableProps>((props, ref) => {
       const newExpandedKeys = expanded ? [...expandedRowKeys, key] : expandedRowKeys.filter((k) => k !== key);
 
       setExpandedRowKeys(newExpandedKeys);
+
+      // 调用外部展开回调
+      const record = data.find(item => String(item[rowKey as keyof typeof item]) === key);
+      if (record && typeof expandable === 'object' && expandable.onExpand) {
+        expandable.onExpand(expanded, record);
+      }
     },
-    [expandedRowKeys],
+    [expandedRowKeys, data, rowKey, expandable],
   );
 
   // 处理分页
@@ -101,18 +105,14 @@ export const TableComponent = forwardRef<TableRef, TableProps>((props, ref) => {
     (page: number, size?: number) => {
       setCurrentPage(page);
       if (size) setPageSize(size);
-      onChange?.({
-        pagination: { current: page, pageSize: size || pageSize },
-        filters: {},
-        sorter: { field: sortField, order: sortOrder },
-      });
+      onChange?.({ current: page, pageSize: size || pageSize }, {}, { field: sortField, order: sortOrder });
     },
     [pageSize, sortField, sortOrder, onChange],
   );
 
   // 排序和筛选后的数据
   const processedData = useMemo(() => {
-    const result = [...dataSource];
+    const result = [...data];
 
     // 排序处理
     if (sortField && sortOrder) {
@@ -132,7 +132,7 @@ export const TableComponent = forwardRef<TableRef, TableProps>((props, ref) => {
     }
 
     return result;
-  }, [dataSource, sortField, sortOrder]);
+  }, [data, sortField, sortOrder]);
 
   // 分页后的数据
   const paginatedData = useMemo(() => {
@@ -147,7 +147,7 @@ export const TableComponent = forwardRef<TableRef, TableProps>((props, ref) => {
   const renderHeader = () => {
     if (!showHeader) return null;
 
-    const headerProps = onHeaderRow?.(columns) || {};
+    const headerProps = onHeaderRow?.(columns, 0) || {};
 
     return (
       <View className="taro-uno-table__header" {...headerProps}>
@@ -157,9 +157,9 @@ export const TableComponent = forwardRef<TableRef, TableProps>((props, ref) => {
             <View className="taro-uno-table__cell taro-uno-table__cell--selection">
               <input
                 type="checkbox"
-                checked={selectedRowKeys.length > 0 && selectedRowKeys.length === dataSource.length}
+                checked={selectedRowKeys.length > 0 && selectedRowKeys.length === data.length}
                 onChange={(e) => handleSelectAll(e.target.checked)}
-                disabled={dataSource.length === 0}
+                disabled={data.length === 0}
               />
             </View>
           )}
@@ -236,7 +236,7 @@ export const TableComponent = forwardRef<TableRef, TableProps>((props, ref) => {
           {/* 展开列 */}
           {expandable && (
             <View className="taro-uno-table__cell taro-uno-table__cell--expand">
-              {expandable.rowExpandable?.(record) && (
+              {typeof expandable === 'object' && expandable.rowExpandable?.(record) && (
                 <View
                   className={`taro-uno-table__expand-icon ${isExpanded ? 'taro-uno-table__expand-icon--expanded' : ''}`}
                   onClick={() => handleExpand(key, !isExpanded)}
@@ -264,10 +264,10 @@ export const TableComponent = forwardRef<TableRef, TableProps>((props, ref) => {
         </View>
 
         {/* 展开内容 */}
-        {expandable && isExpanded && expandable.rowExpandable?.(record) && (
+        {expandable && isExpanded && typeof expandable === 'object' && expandable.rowExpandable?.(record) && (
           <View className="taro-uno-table__expanded-row">
-            <View className="taro-uno-table__expanded-cell" colSpan={columns.length + 2}>
-              {expandable.expandedRowRender?.(record, rowIndex)}
+            <View className="taro-uno-table__expanded-cell">
+              {typeof expandable === 'object' && expandable.expandedRowRender?.(record, rowIndex)}
             </View>
           </View>
         )}
@@ -279,7 +279,7 @@ export const TableComponent = forwardRef<TableRef, TableProps>((props, ref) => {
   const renderPagination = () => {
     if (!pagination) return null;
 
-    const total = dataSource.length;
+    const total = data.length;
     const totalPages = Math.ceil(total / pageSize);
 
     return (
@@ -310,7 +310,7 @@ export const TableComponent = forwardRef<TableRef, TableProps>((props, ref) => {
 
   // 渲染空状态
   const renderEmpty = () => {
-    if (dataSource.length > 0) return null;
+    if (data.length > 0) return null;
 
     return (
       <View className="taro-uno-table__empty">
@@ -336,29 +336,46 @@ export const TableComponent = forwardRef<TableRef, TableProps>((props, ref) => {
     ref,
     () => ({
       element: tableRef.current,
+      getData: () => data,
+      getSelectedRows: () => data.filter(item => selectedRowKeys.includes(item.id as string)),
       getSelectedRowKeys: () => selectedRowKeys,
-      setSelectedRowKeys: (keys) => setSelectedRowKeys(keys),
-      getExpandedRowKeys: () => expandedRowKeys,
-      setExpandedRowKeys: (keys) => setExpandedRowKeys(keys),
       getSortField: () => sortField,
       getSortOrder: () => sortOrder,
-      setSort: (field, order) => {
+      getFilterValues: () => ({}),
+      setData: (newData) => setData(newData),
+      setSelectedRows: (keys: string[]) => setSelectedRowKeys(keys),
+      setSelectedRowKeys: (keys: string[]) => setSelectedRowKeys(keys),
+      getExpandedRowKeys: () => expandedRowKeys,
+      setExpandedRowKeys: (keys: string[]) => setExpandedRowKeys(keys),
+      setSort: (field: string, order: TableSortOrder) => {
         setSortField(field);
         setSortOrder(order);
+      },
+      setFilter: (_field: string, _values: any[]) => {
+        // Filter implementation
       },
       refresh: () => {
         // 重新加载数据的逻辑
         handlePageChange(currentPage, pageSize);
       },
-      scrollTo: (options) => {
+      reset: () => {
+        setSelectedRowKeys([]);
+        setExpandedRowKeys([]);
+        setSortField('');
+        setSortOrder(null);
+      },
+      scrollToRow: (_key: string) => {
+        // Scroll to row implementation
+      },
+      scrollTo: (options: any) => {
         tableRef.current?.scrollTo(options);
       },
     }),
-    [selectedRowKeys, expandedRowKeys, sortField, sortOrder, currentPage, pageSize],
+    [selectedRowKeys, expandedRowKeys, sortField, sortOrder, currentPage, pageSize, data],
   );
 
   // 生成样式
-  const tableStyle = tableStyles.getStyle({
+  const tableStyle = TableStyles['getStyle']({
     size,
     bordered,
     striped,
@@ -368,7 +385,7 @@ export const TableComponent = forwardRef<TableRef, TableProps>((props, ref) => {
   });
 
   // 生成类名
-  const tableClassName = tableStyles.getClassName({
+  const tableClassName = TableStyles['getClassName']({
     size,
     bordered,
     striped,
@@ -378,7 +395,7 @@ export const TableComponent = forwardRef<TableRef, TableProps>((props, ref) => {
   });
 
   return (
-    <View ref={tableRef} className={tableClassName} style={tableStyle} {...restProps}>
+    <View ref={tableRef} className={tableClassName} style={tableStyle} {...restProps} aria-label={props.accessibilityLabel} aria-role={props.accessibilityRole}>
       {renderLoading()}
 
       <ScrollView
@@ -409,4 +426,5 @@ export const TableComponent = forwardRef<TableRef, TableProps>((props, ref) => {
 TableComponent.displayName = 'Table';
 
 /** 导出表格组件 */
+export const Table = TableComponent;
 export default TableComponent;

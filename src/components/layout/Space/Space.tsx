@@ -1,5 +1,6 @@
 import React, { forwardRef, useRef, useState, useEffect, useCallback } from 'react';
 import { View } from '@tarojs/components';
+import type { ITouchEvent } from '@tarojs/components';
 import { spaceStyles } from './Space.styles';
 import type { SpaceProps, SpaceRef, SpaceDirection, SpaceAlign, SpaceWrap, SpaceSize, SpaceGap } from './Space.types';
 
@@ -27,7 +28,7 @@ export const SpaceComponent = forwardRef<SpaceRef, SpaceProps>((props, ref) => {
     ...restProps
   } = props;
 
-  const spaceRef = useRef<View>(null);
+  const spaceRef = useRef<any>(null);
   const [internalDirection, setInternalDirection] = useState<SpaceDirection>(direction);
   const [internalAlign, setInternalAlign] = useState<SpaceAlign>(align);
   const [internalWrap, setInternalWrap] = useState<SpaceWrap>(wrap);
@@ -72,27 +73,20 @@ export const SpaceComponent = forwardRef<SpaceRef, SpaceProps>((props, ref) => {
 
   // 处理子元素点击事件
   const handleItemClick = useCallback(
-    (index: number, event: React.MouseEvent) => {
+    (index: number, event: ITouchEvent) => {
       onItemClick?.(index, event);
     },
     [onItemClick],
   );
 
   // 处理子元素悬停事件
-  const handleItemHover = useCallback(
-    (index: number, event: React.MouseEvent) => {
-      onItemHover?.(index, event);
-    },
-    [onItemHover],
-  );
-
+  
   // 渲染子元素
   const renderChildren = () => {
     if (!children) return null;
 
     const childrenArray = React.Children.toArray(children);
     const visibleChildren = childrenArray.slice(0, visibleItems);
-    const hiddenChildren = childrenArray.slice(visibleItems);
 
     return visibleChildren.map((child, index) => {
       const isLast = index === visibleChildren.length - 1;
@@ -102,15 +96,13 @@ export const SpaceComponent = forwardRef<SpaceRef, SpaceProps>((props, ref) => {
         <React.Fragment key={index}>
           <View
             className="taro-uno-space__item"
-            style={spaceStyles.getItemStyle(index, visibleChildren.length, split)}
-            onClick={(e) => handleItemClick(index, e)}
-            onMouseEnter={(e) => handleItemHover(index, e)}
-            onMouseLeave={(e) => handleItemHover(index, e)}
+            style={spaceStyles['getItemStyle'](index, visibleChildren.length, split)}
+            onClick={(e: ITouchEvent) => handleItemClick(index, e)}
           >
             {child}
           </View>
           {showSeparator && (
-            <View className="taro-uno-space__separator" style={spaceStyles.getSeparatorStyle()}>
+            <View className="taro-uno-space__separator" style={spaceStyles['getSeparatorStyle']()}>
               {separator === true ? '|' : separator}
             </View>
           )}
@@ -124,14 +116,14 @@ export const SpaceComponent = forwardRef<SpaceRef, SpaceProps>((props, ref) => {
     if (!ellipsis || visibleItems >= React.Children.count(children)) return null;
 
     return (
-      <View className="taro-uno-space__ellipsis" style={spaceStyles.getEllipsisStyle()}>
+      <View className="taro-uno-space__ellipsis" style={spaceStyles['getEllipsisStyle']()}>
         {ellipsis}
       </View>
     );
   };
 
   // 计算样式
-  const spaceStyle = spaceStyles.getBaseStyle({
+  const spaceStyle = spaceStyles['getBaseStyle']({
     direction: internalDirection,
     align: internalAlign,
     wrap: internalWrap,
@@ -145,10 +137,10 @@ export const SpaceComponent = forwardRef<SpaceRef, SpaceProps>((props, ref) => {
   });
 
   // 计算响应式样式
-  const responsiveStyle = responsive ? spaceStyles.getResponsiveStyle(responsive) : {};
+  const responsiveStyle = responsive ? spaceStyles['getResponsiveStyle'](responsive) : {};
 
   // 计算类名
-  const spaceClassName = spaceStyles.getClassName({
+  const spaceClassName = spaceStyles['getClassName']({
     direction: internalDirection,
     align: internalAlign,
     wrap: internalWrap,
@@ -185,7 +177,14 @@ export const SpaceComponent = forwardRef<SpaceRef, SpaceProps>((props, ref) => {
         setInternalSize(newSize);
       },
       scrollIntoView: (options?: ScrollIntoViewOptions) => {
-        spaceRef.current?.scrollIntoView(options);
+        // Try to access DOM element if available
+        const element = spaceRef.current;
+        if (element && typeof element.scrollIntoView === 'function') {
+          element.scrollIntoView(options);
+        } else if (element && element.$el) {
+          // Handle Taro component ref
+          element.$el?.scrollIntoView?.(options);
+        }
       },
     }),
     [internalDirection, internalAlign, internalWrap, internalGap, internalSize],

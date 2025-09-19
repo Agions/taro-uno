@@ -9,7 +9,6 @@ export default defineConfig({
   testDir: './tests/e2e',
   
   /* 在本地运行测试时，设置为 'headed' 模式以查看浏览器 */
-  headed: process.env.HEADED === 'true',
   
   /* 设置每个测试的超时时间 */
   timeout: 30000,
@@ -25,16 +24,18 @@ export default defineConfig({
   fullyParallel: true,
   
   /* 失败时重试次数 */
-  retries: process.env.CI ? 2 : 0,
+  retries: (process.env as any).CI ? 2 : 0,
   
   /* 限制并行测试的数量 */
-  workers: process.env.CI ? 1 : undefined,
+  workers: (process.env as any).CI ? 1 : undefined,
   
   /* 报告器配置 */
   reporter: 'html',
   
   /* 共享设置给所有项目 */
   use: {
+    /* 在本地运行测试时，设置为 'headed' 模式以查看浏览器 */
+    headless: (process.env as any).HEADED !== 'true',
     /* 基础 URL */
     baseURL: 'http://localhost:3000',
     
@@ -89,7 +90,7 @@ export default defineConfig({
   webServer: {
     command: 'npm run dev',
     url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: !(process.env as any).CI,
     timeout: 120 * 1000,
   },
 })

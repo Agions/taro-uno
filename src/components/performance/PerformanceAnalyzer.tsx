@@ -59,7 +59,7 @@ const PerformanceAnalyzer: React.FC<PerformanceAnalyzerProps> = ({
   const [isVisible, setIsVisible] = useState(false);
   const [history, setHistory] = useState<PerformanceData[]>([]);
 
-  const { metrics, recordCustomMetric, getPerformanceReport } = usePerformanceMonitor({
+  const { metrics, recordCustomMetric /*, getPerformanceReport */ } = usePerformanceMonitor({
     enableRenderMonitor: true,
     enableMemoryMonitor: true,
     enableNetworkMonitor: true,
@@ -153,15 +153,15 @@ const PerformanceAnalyzer: React.FC<PerformanceAnalyzerProps> = ({
   };
 
   // 格式化数值
-  const formatValue = (value: number, unit: string) => {
-    if (unit === 'bytes') {
-      return (value / 1024 / 1024).toFixed(2) + 'MB';
-    }
-    if (unit === 'ms') {
-      return value.toFixed(2) + 'ms';
-    }
-    return value.toString();
-  };
+  // const formatValue = (value: number, unit: string) => {
+  //   if (unit === 'bytes') {
+  //     return (value / 1024 / 1024).toFixed(2) + 'MB';
+  //   }
+  //   if (unit === 'ms') {
+  //     return value.toFixed(2) + 'ms';
+  //   }
+  //   return value.toString();
+  // }; // Commented out - unused
 
   // 获取性能等级
   const getPerformanceLevel = () => {

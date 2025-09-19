@@ -1,4 +1,5 @@
 import type { ReactNode, SVGAttributes } from 'react';
+import type { AccessibilityState, AccessibilityProps } from '../../../types/accessibility';
 
 /** 图标类型 */
 export type IconType = 'svg' | 'image' | 'font' | 'custom';
@@ -34,7 +35,7 @@ export type IconTheme = 'outlined' | 'filled' | 'two-tone' | 'colored';
 export type IconNativeProps = SVGAttributes<SVGElement>;
 
 /** 图标组件属性接口 */
-export interface IconProps extends Omit<IconNativeProps, 'size' | 'color'> {
+export interface IconProps extends Omit<IconNativeProps, 'size' | 'color'>, AccessibilityProps {
   /** 图标源 */
   source: IconSource;
   /** 图标类型 */
@@ -76,12 +77,31 @@ export interface IconProps extends Omit<IconNativeProps, 'size' | 'color'> {
   /** 无障碍角色 */
   accessibilityRole?: string;
   /** 无障碍状态 */
-  accessibilityState?: {
-    disabled?: boolean;
-    selected?: boolean;
-    busy?: boolean;
-    expanded?: boolean;
+  accessibilityState?: AccessibilityState;
+  /** 无障碍提示 */
+  accessibilityHint?: string;
+  /** 无障碍值 */
+  accessibilityValue?: {
+    min?: number;
+    max?: number;
+    now?: number;
+    text?: string;
   };
+  /** 无障碍元素标识 */
+  accessibilityId?: string;
+  /** 无障碍动作 */
+  accessibilityActions?: Array<{
+    name: string;
+    label?: string;
+  }>;
+  /** 无障碍实时区域类型 */
+  accessibilityLiveRegion?: 'none' | 'polite' | 'assertive';
+  /** 无障碍重要程度 */
+  accessibilityImportant?: boolean;
+  /** 无障碍视图是否隐藏 */
+  accessibilityViewIsModal?: boolean;
+  /** 无障碍元素树角色 */
+  accessibilityElementsHidden?: boolean;
   /** 图标组中的索引位置 */
   groupIndex?: number;
   /** 图标组中的总数 */
@@ -98,6 +118,8 @@ export interface IconProps extends Omit<IconNativeProps, 'size' | 'color'> {
   filter?: 'none' | 'grayscale' | 'sepia' | 'blur' | 'brightness' | 'contrast' | 'hue-rotate';
   /** 图标混合模式 */
   blendMode?: 'normal' | 'multiply' | 'screen' | 'overlay' | 'darken' | 'lighten';
+  /** 测试标识 */
+  'data-testid'?: string;
 }
 
 /** 图标组件引用类型 */

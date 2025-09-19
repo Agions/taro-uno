@@ -1,33 +1,5 @@
 import type { ReactNode, HTMLAttributes } from 'react';
-
-// 从Taro组件类型中导入ITouchEvent
-export interface ITouchEvent {
-  currentTarget: EventTarget;
-  target: EventTarget;
-  detail: Record<string, unknown>;
-  changedTouches: Array<{
-    identifier: number;
-    pageX: number;
-    pageY: number;
-    clientX: number;
-    clientY: number;
-  }>;
-  targetTouches: Array<{
-    identifier: number;
-    pageX: number;
-    pageY: number;
-    clientX: number;
-    clientY: number;
-  }>;
-  touches: Array<{
-    identifier: number;
-    pageX: number;
-    pageY: number;
-    clientX: number;
-    clientY: number;
-  }>;
-  [key: string]: unknown;
-}
+import type { CommonEventFunction } from '@tarojs/components';
 
 /** 分割线方向 */
 export type DividerOrientation = 'horizontal' | 'vertical';
@@ -123,7 +95,7 @@ export interface DividerProps extends Omit<DividerNativeProps, 'orientation'> {
   /** 是否可点击 */
   clickable?: boolean | undefined;
   /** 点击事件处理函数 */
-  onClick?: (event: ITouchEvent) => void;
+  onClick?: CommonEventFunction<any>;
   /** 是否响应式 */
   responsive?: boolean | undefined;
   /** 响应式断点 */

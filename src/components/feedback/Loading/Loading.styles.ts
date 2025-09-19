@@ -1,121 +1,117 @@
-import { cn } from '@/utils';
-import { createStyles } from '@/theme/styles';
+import { CSSProperties } from 'react';
 
-export const LoadingStyles = createStyles({
-  base: `
-    flex
-    flex-col
-    items-center
-    justify-center
-    gap-2
-  `,
+export const LoadingStyles: Record<string, CSSProperties | Record<string, CSSProperties>> = {
+  base: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
 
   size: {
-    xs: 'text-xs',
-    sm: 'text-sm',
-    default: 'text-base',
-    lg: 'text-lg',
-    xl: 'text-xl',
+    xs: { fontSize: '12px' },
+    sm: { fontSize: '14px' },
+    default: { fontSize: '16px' },
+    lg: { fontSize: '18px' },
+    xl: { fontSize: '20px' },
   },
 
-  spinner: `
-    relative
-    w-8
-    h-8
-    border-4
-    border-gray-200
-    border-t-blue-500
-    rounded-full
-    animate-spin
-  `,
+  spinner: {
+    position: 'relative',
+    width: 32,
+    height: 32,
+    border: '4px solid #e5e7eb',
+    borderTop: '4px solid #3b82f6',
+    borderRadius: '50%',
+    animation: 'spin 1s linear infinite',
+  },
 
   spinnerSize: {
-    xs: 'w-4 h-4 border-2',
-    sm: 'w-6 h-6 border-3',
-    default: 'w-8 h-8 border-4',
-    lg: 'w-12 h-12 border-4',
-    xl: 'w-16 h-16 border-6',
+    xs: { width: 16, height: 16, borderWidth: 2 },
+    sm: { width: 24, height: 24, borderWidth: 3 },
+    default: { width: 32, height: 32, borderWidth: 4 },
+    lg: { width: 48, height: 48, borderWidth: 4 },
+    xl: { width: 64, height: 64, borderWidth: 6 },
   },
 
-  spinnerInner: `
-    absolute
-    inset-0
-    rounded-full
-    animate-ping
-  `,
+  spinnerInner: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderRadius: '50%',
+    animation: 'ping 1s cubic-bezier(0, 0, 0.2, 1) infinite',
+  },
 
-  dots: `
-    flex
-    gap-1
-  `,
+  dots: {
+    display: 'flex',
+    gap: 4,
+  },
 
-  dot: `
-    w-2
-    h-2
-    bg-blue-500
-    rounded-full
-    animate-bounce
-  `,
+  dot: {
+    width: 8,
+    height: 8,
+    backgroundColor: '#3b82f6',
+    borderRadius: '50%',
+    animation: 'bounce 1.5s ease-in-out infinite',
+  },
 
   dotSize: {
-    xs: 'w-1 h-1',
-    sm: 'w-1.5 h-1.5',
-    default: 'w-2 h-2',
-    lg: 'w-3 h-3',
-    xl: 'w-4 h-4',
+    xs: { width: 4, height: 4 },
+    sm: { width: 6, height: 6 },
+    default: { width: 8, height: 8 },
+    lg: { width: 12, height: 12 },
+    xl: { width: 16, height: 16 },
   },
 
-  pulse: `
-    relative
-  `,
+  pulseContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 
-  pulseContainer: `
-    flex
-    items-center
-    justify-center
-  `,
-
-  pulseDot: `
-    w-8
-    h-8
-    bg-blue-500
-    rounded-full
-    animate-pulse
-  `,
+  pulse: {
+    width: 32,
+    height: 32,
+    backgroundColor: '#3b82f6',
+    borderRadius: '50%',
+    animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+  },
 
   pulseSize: {
-    xs: 'w-4 h-4',
-    sm: 'w-6 h-6',
-    default: 'w-8 h-8',
-    lg: 'w-12 h-12',
-    xl: 'w-16 h-16',
+    xs: { width: 16, height: 16 },
+    sm: { width: 24, height: 24 },
+    default: { width: 32, height: 32 },
+    lg: { width: 48, height: 48 },
+    xl: { width: 64, height: 64 },
   },
 
-  bars: `
-    flex
-    gap-1
-  `,
+  bars: {
+    display: 'flex',
+    gap: 4,
+  },
 
-  bar: `
-    w-1
-    h-8
-    bg-blue-500
-    rounded
-    animate-pulse
-  `,
+  bar: {
+    width: 4,
+    height: 32,
+    backgroundColor: '#3b82f6',
+    borderRadius: 2,
+    animation: 'pulse 1.5s ease-in-out infinite',
+  },
 
   barSize: {
-    xs: 'w-0.5 h-4',
-    sm: 'w-1 h-6',
-    default: 'w-1 h-8',
-    lg: 'w-2 h-12',
-    xl: 'w-3 h-16',
+    xs: { width: 2, height: 16 },
+    sm: { width: 4, height: 24 },
+    default: { width: 4, height: 32 },
+    lg: { width: 8, height: 48 },
+    xl: { width: 12, height: 64 },
   },
 
-  text: `
-    text-sm
-    text-gray-600
-    dark:text-gray-400
-    mt-2
-  `,
-});
+  text: {
+    fontSize: 14,
+    color: '#6b7280',
+    marginTop: 8,
+  },
+};

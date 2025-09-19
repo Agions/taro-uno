@@ -1,5 +1,4 @@
-import { Platform } from '@tarojs/taro';
-import type { PaginationProps, PaginationSize, PaginationPosition, PaginationAlign } from './Pagination.types';
+import type { PaginationProps, PaginationSize } from './Pagination.types';
 
 /** Pagination组件样式管理器 */
 export const paginationStyles = {
@@ -15,7 +14,7 @@ export const paginationStyles = {
    * 获取基础样式
    */
   getBaseStyle: (props: PaginationProps): React.CSSProperties => {
-    const { size = 'default', position = 'bottom', align = 'right', style = {} } = props;
+    const { align = 'right', style = {} } = props;
 
     // 计算对齐方式
     const justifyContent = align === 'left' ? 'flex-start' : align === 'center' ? 'center' : 'flex-end';

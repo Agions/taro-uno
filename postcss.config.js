@@ -8,7 +8,7 @@ export default {
       minPixelValue: 2, // 最小的转换数值
       mediaQuery: false, // 是否在媒体查询中转换px
       replace: true, // 转换后是否删除原有单位
-      exclude: /node_modules/i, // 忽略node_modules目录下的文件
+      exclude: /node_modules/i // 忽略node_modules目录下的文件
     },
     'autoprefixer': {
       overrideBrowserslist: [
@@ -17,12 +17,12 @@ export default {
         'Chrome > 31',
         'ff > 31',
         'ie >= 8',
-        'last 2 versions',
+        'last 2 versions'
       ],
-      grid: true,
+      grid: true
     },
     'cssnano': {
-      preset: 'default',
-    },
-  },
-}
+      preset: 'default'
+    }
+  }
+};

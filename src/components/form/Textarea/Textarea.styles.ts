@@ -1,5 +1,11 @@
 import { PlatformDetector } from '../../../utils';
-import type { TextareaProps, TextareaSize, TextareaVariant, TextareaStatus, TextareaStyleConfig } from './Textarea.types';
+import type {
+  TextareaProps,
+  TextareaSize,
+  TextareaVariant,
+  TextareaStatus,
+  TextareaStyleConfig,
+} from './Textarea.types';
 
 /** 样式工具类 */
 export class TextareaStyles {
@@ -92,18 +98,19 @@ export class TextareaStyles {
 
     const baseStyle: React.CSSProperties = {
       width: '100%',
-      minHeight: sizeStyles.minHeight,
-      fontSize: sizeStyles.fontSize,
-      padding: sizeStyles.padding,
-      lineHeight: sizeStyles.lineHeight,
-      borderRadius: sizeStyles.borderRadius,
-      backgroundColor: statusStyles.backgroundColor || variantStyles.backgroundColor,
-      borderColor: statusStyles.borderColor || variantStyles.borderColor,
-      borderWidth: variantStyles.borderWidth,
-      color: statusStyles.color,
+      minHeight: sizeStyles['minHeight'],
+      fontSize: sizeStyles['fontSize'],
+      padding: sizeStyles['padding'],
+      lineHeight: sizeStyles['lineHeight'],
+      borderRadius: sizeStyles['borderRadius'],
+      backgroundColor: statusStyles['backgroundColor'] || variantStyles['backgroundColor'],
+      borderColor: statusStyles['borderColor'] || variantStyles['borderColor'],
+      borderWidth: variantStyles['borderWidth'],
+      color: statusStyles['color'],
       opacity: disabled ? 0.5 : 1,
       cursor: disabled ? 'not-allowed' : readonly ? 'default' : 'text',
-      resize: disabled || readonly || resize === 'none' ? 'none' : resize as 'none' | 'both' | 'horizontal' | 'vertical',
+      resize:
+        disabled || readonly || resize === 'none' ? 'none' : (resize as 'none' | 'both' | 'horizontal' | 'vertical'),
       transition: 'all 0.2s ease-in-out',
       boxSizing: 'border-box',
       outline: 'none',
@@ -117,7 +124,7 @@ export class TextareaStyles {
       baseStyle.borderRightWidth = 0;
       baseStyle.borderTopWidth = 0;
       baseStyle.borderRadius = 0;
-      baseStyle.borderBottomWidth = variantStyles.borderBottomWidth || 1;
+      baseStyle.borderBottomWidth = variantStyles['borderBottomWidth'] || 1;
     }
 
     return baseStyle;
@@ -134,22 +141,21 @@ export class TextareaStyles {
       display: 'flex',
       flexDirection: 'column',
       width: block ? '100%' : 'auto',
-      minWidth: sizeStyles.minHeight * 2,
+      minWidth: sizeStyles['minHeight'] * 2,
       ...style,
     };
   }
 
   /** 生成文本域包装器样式 */
   static getWrapperStyle(props: Partial<TextareaProps>): React.CSSProperties {
-    const { 
-      size = 'md', 
-      status = 'normal', 
-      disabled = false, 
-      readonly = false, 
-      bordered = true, 
+    const {
+      size = 'md',
+      status = 'normal',
+      disabled = false,
+      bordered = true,
       autoHeight = false,
       rows = 3,
-      style = {} 
+      style = {},
     } = props;
 
     const sizeStyles = this.SIZE_MAP[size];
@@ -160,11 +166,11 @@ export class TextareaStyles {
       display: 'flex',
       flexDirection: 'column',
       width: '100%',
-      minHeight: autoHeight ? sizeStyles.minHeight : sizeStyles.minHeight * rows,
-      borderRadius: sizeStyles.borderRadius,
+      minHeight: autoHeight ? sizeStyles['minHeight'] : sizeStyles['minHeight'] * rows,
+      borderRadius: sizeStyles['borderRadius'],
       border: bordered ? '1px solid' : 'none',
-      borderColor: statusStyles.borderColor,
-      backgroundColor: statusStyles.backgroundColor || 'transparent',
+      borderColor: statusStyles['borderColor'],
+      backgroundColor: statusStyles['backgroundColor'] || 'transparent',
       opacity: disabled ? 0.5 : 1,
       transition: 'all 0.2s ease-in-out',
       ...style,
@@ -179,13 +185,13 @@ export class TextareaStyles {
 
     return {
       position: 'absolute',
-      top: sizeStyles.padding.split(' ')[0],
-      left: sizeStyles.padding.split(' ')[1],
+      top: sizeStyles['padding'].split(' ')[0],
+      left: sizeStyles['padding'].split(' ')[1],
       display: 'flex',
       alignItems: 'flex-start',
       justifyContent: 'center',
       color: disabled ? '#9ca3af' : '#6b7280',
-      fontSize: sizeStyles.fontSize,
+      fontSize: sizeStyles['fontSize'],
       zIndex: 1,
       pointerEvents: 'none',
       ...style,
@@ -200,13 +206,13 @@ export class TextareaStyles {
 
     return {
       position: 'absolute',
-      top: sizeStyles.padding.split(' ')[0],
-      right: sizeStyles.padding.split(' ')[1],
+      top: sizeStyles['padding'].split(' ')[0],
+      right: sizeStyles['padding'].split(' ')[1],
       display: 'flex',
       alignItems: 'flex-start',
       justifyContent: 'center',
       color: disabled ? '#9ca3af' : '#6b7280',
-      fontSize: sizeStyles.fontSize,
+      fontSize: sizeStyles['fontSize'],
       zIndex: 1,
       pointerEvents: 'none',
       ...style,
@@ -220,7 +226,7 @@ export class TextareaStyles {
     const sizeStyles = this.SIZE_MAP[size];
 
     return {
-      fontSize: sizeStyles.fontSize,
+      fontSize: sizeStyles['fontSize'],
       fontWeight: 500,
       color: disabled ? '#9ca3af' : '#374151',
       marginBottom: 8,
@@ -236,8 +242,8 @@ export class TextareaStyles {
     const statusStyles = this.STATUS_COLORS[status];
 
     return {
-      fontSize: sizeStyles.fontSize * 0.85,
-      color: statusStyles.color,
+      fontSize: sizeStyles['fontSize'] * 0.85,
+      color: statusStyles['color'],
       marginTop: 4,
       ...style,
     };
@@ -250,7 +256,7 @@ export class TextareaStyles {
     const sizeStyles = this.SIZE_MAP[size];
 
     return {
-      fontSize: sizeStyles.fontSize * 0.85,
+      fontSize: sizeStyles['fontSize'] * 0.85,
       color: '#ef4444',
       marginTop: 4,
       ...style,
@@ -258,14 +264,16 @@ export class TextareaStyles {
   }
 
   /** 生成计数器样式 */
-  static getCounterStyle(props: Partial<TextareaProps> & { position?: 'top-right' | 'bottom-right' | 'top-left' | 'bottom-left' }): React.CSSProperties {
+  static getCounterStyle(
+    props: Partial<TextareaProps> & { position?: 'top-right' | 'bottom-right' | 'top-left' | 'bottom-left' },
+  ): React.CSSProperties {
     const { size = 'md', position = 'bottom-right', style = {} } = props;
 
     const sizeStyles = this.SIZE_MAP[size];
 
     const baseStyle: React.CSSProperties = {
       position: 'absolute',
-      fontSize: sizeStyles.fontSize * 0.75,
+      fontSize: sizeStyles['fontSize'] * 0.75,
       color: '#9ca3af',
       backgroundColor: 'rgba(255, 255, 255, 0.9)',
       padding: '2px 6px',
@@ -318,12 +326,12 @@ export class TextareaStyles {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      width: sizeStyles.fontSize * 1.2,
-      height: sizeStyles.fontSize * 1.2,
+      width: sizeStyles['fontSize'] * 1.2,
+      height: sizeStyles['fontSize'] * 1.2,
       borderRadius: '50%',
       backgroundColor: '#e5e7eb',
       color: '#6b7280',
-      fontSize: sizeStyles.fontSize * 0.8,
+      fontSize: sizeStyles['fontSize'] * 0.8,
       cursor: 'pointer',
       transition: 'all 0.2s ease-in-out',
       zIndex: 3,
@@ -336,9 +344,9 @@ export class TextareaStyles {
     const { size = 'md', minRows = 1, maxRows = 10, style = {} } = props;
 
     const sizeStyles = this.SIZE_MAP[size];
-    const lineHeight = sizeStyles.fontSize * sizeStyles.lineHeight;
-    const paddingTop = parseInt(sizeStyles.padding.split(' ')[0]);
-    const paddingBottom = parseInt(sizeStyles.padding.split(' ')[0]);
+    const lineHeight = sizeStyles['fontSize'] * sizeStyles['lineHeight'];
+    const paddingTop = parseInt((String(sizeStyles['padding'] || '0px')).split(' ')[0] || '0');
+    const paddingBottom = parseInt((String(sizeStyles['padding'] || '0px')).split(' ')[0] || '0');
     const minHeight = lineHeight * minRows + paddingTop + paddingBottom;
     const maxHeight = lineHeight * maxRows + paddingTop + paddingBottom;
 
@@ -489,7 +497,7 @@ export class TextareaStyles {
     strategy: 'content' | 'rows' | 'max-rows' = 'content',
     rows?: number,
     minRows?: number,
-    maxRows?: number
+    maxRows?: number,
   ): void {
     if (!element) return;
 
@@ -546,36 +554,36 @@ export class TextareaStyles {
     padding: string,
     rows?: number,
     minRows?: number,
-    maxRows?: number
+    maxRows?: number,
   ): number {
-    const paddingTop = parseInt(padding.split(' ')[0]);
-    const paddingBottom = parseInt(padding.split(' ')[0]);
+    const paddingTop = parseInt((String(padding || '0px')).split(' ')[0] || '0');
+    const paddingBottom = parseInt((String(padding || '0px')).split(' ')[0] || '0');
     const lineHeightPx = fontSize * lineHeight;
-    
+
     // 计算内容行数
     const lines = value.split('\n').length;
     const contentHeight = lines * lineHeightPx;
-    
+
     // 计算总高度
     let totalHeight = contentHeight + paddingTop + paddingBottom;
-    
+
     // 应用最小行数限制
     if (minRows) {
       const minHeight = minRows * lineHeightPx + paddingTop + paddingBottom;
       totalHeight = Math.max(totalHeight, minHeight);
     }
-    
+
     // 应用最大行数限制
     if (maxRows) {
       const maxHeight = maxRows * lineHeightPx + paddingTop + paddingBottom;
       totalHeight = Math.min(totalHeight, maxHeight);
     }
-    
+
     // 应用固定行数
     if (rows) {
       totalHeight = rows * lineHeightPx + paddingTop + paddingBottom;
     }
-    
+
     return totalHeight;
   }
 }

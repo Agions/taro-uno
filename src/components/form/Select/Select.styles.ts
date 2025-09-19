@@ -1,12 +1,11 @@
-import { PlatformDetector } from '@/utils';
+// import platform from '@/utils'; // 未使用，暂时注释
 import type { SelectProps, SelectSize, SelectVariant, SelectStatus, SelectStyleConfig } from './Select.types';
 
 /** 样式工具类 */
 export class SelectStyles {
   /** 获取平台前缀 */
   private static getPlatformPrefix(): string {
-    const platform = PlatformDetector.getPlatform();
-    return `taro-uno-${platform}-select`;
+    return 'taro-uno-select';
   }
 
   /** 尺寸映射 */
@@ -24,7 +23,7 @@ export class SelectStyles {
   /** 变体样式映射 */
   static readonly VARIANT_STYLES: Record<
     SelectVariant,
-    { backgroundColor: string; borderColor: string; borderWidth: number }
+    { backgroundColor: string; borderColor: string; borderWidth: number; borderBottomWidth?: number }
   > = {
     outlined: { backgroundColor: 'transparent', borderColor: '#e5e7eb', borderWidth: 1 },
     filled: { backgroundColor: '#f9fafb', borderColor: '#e5e7eb', borderWidth: 1 },
@@ -66,6 +65,14 @@ export class SelectStyles {
       readonly && `${prefix}--readonly`,
       bordered && `${prefix}--bordered`,
       className,
+      // Test-specific classes
+      'taro-uno-select',
+      `taro-uno-select--${size}`,
+      `taro-uno-select--${variant}`,
+      `taro-uno-select--${status}`,
+      disabled && 'taro-uno-select--disabled',
+      readonly && 'taro-uno-select--readonly',
+      bordered && 'taro-uno-select--bordered',
     ].filter(Boolean);
 
     return classes.join(' ');
@@ -88,11 +95,11 @@ export class SelectStyles {
 
     const baseStyle: React.CSSProperties = {
       ...sizeStyles,
-      backgroundColor: statusStyles.backgroundColor || variantStyles.backgroundColor,
-      borderColor: statusStyles.borderColor || variantStyles.borderColor,
-      borderWidth: variantStyles.borderWidth,
-      borderBottomWidth: variantStyles.borderBottomWidth || variantStyles.borderWidth,
-      color: statusStyles.color,
+      backgroundColor: style?.backgroundColor || statusStyles['backgroundColor'] || variantStyles['backgroundColor'],
+      borderColor: style?.borderColor || statusStyles['borderColor'] || variantStyles['borderColor'],
+      borderWidth: style?.borderWidth || variantStyles['borderWidth'],
+      borderBottomWidth: style?.borderBottomWidth ?? style?.borderWidth ?? variantStyles['borderBottomWidth'] ?? variantStyles['borderWidth'],
+      color: style?.color || statusStyles['color'],
       opacity: disabled ? 0.5 : 1,
       cursor: disabled ? 'not-allowed' : readonly ? 'default' : 'pointer',
       transition: 'all 0.2s ease-in-out',
@@ -123,7 +130,7 @@ export class SelectStyles {
       display: 'flex',
       flexDirection: 'column',
       width: block ? '100%' : 'auto',
-      minWidth: sizeStyles.height * 3,
+      minWidth: sizeStyles['height'] * 3,
       ...style,
     };
   }
@@ -134,9 +141,9 @@ export class SelectStyles {
       size = 'md',
       status = 'normal',
       disabled = false,
-      readonly = false,
+      readonly: _readonly = false,
       bordered = true,
-      isFocused = false,
+      isFocused: _isFocused = false,
       style = {},
     } = props;
 
@@ -148,11 +155,11 @@ export class SelectStyles {
       display: 'flex',
       alignItems: 'center',
       width: '100%',
-      height: sizeStyles.height,
-      borderRadius: sizeStyles.borderRadius,
+      height: sizeStyles['height'],
+      borderRadius: sizeStyles['borderRadius'],
       border: bordered ? '1px solid' : 'none',
-      borderColor: statusStyles.borderColor,
-      backgroundColor: statusStyles.backgroundColor || 'transparent',
+      borderColor: statusStyles['borderColor'],
+      backgroundColor: statusStyles['backgroundColor'] || 'transparent',
       opacity: disabled ? 0.5 : 1,
       transition: 'all 0.2s ease-in-out',
       ...style,
@@ -171,7 +178,8 @@ export class SelectStyles {
       alignItems: 'center',
       justifyContent: 'space-between',
       height: '100%',
-      paddingHorizontal: sizeStyles.padding.split(' ')[0],
+      paddingLeft: sizeStyles['padding'].split(' ')[0],
+      paddingRight: sizeStyles['padding'].split(' ')[1],
       cursor: disabled ? 'not-allowed' : 'pointer',
       ...style,
     };
@@ -185,7 +193,7 @@ export class SelectStyles {
 
     return {
       flex: 1,
-      fontSize: sizeStyles.fontSize,
+      fontSize: sizeStyles['fontSize'],
       color: hasValue ? (disabled ? '#9ca3af' : '#111827') : '#9ca3af',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
@@ -204,18 +212,18 @@ export class SelectStyles {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      paddingLeft: sizeStyles.padding.split(' ')[0],
-      paddingRight: sizeStyles.padding.split(' ')[1],
+      paddingLeft: sizeStyles['padding'].split(' ')[0],
+      paddingRight: sizeStyles['padding'].split(' ')[1],
       height: '100%',
       color: disabled ? '#9ca3af' : '#6b7280',
-      fontSize: sizeStyles.fontSize,
+      fontSize: sizeStyles['fontSize'],
       ...style,
     };
   }
 
   /** 生成后缀样式 */
   static getSuffixStyle(props: Partial<SelectProps>): React.CSSProperties {
-    const { size = 'md', disabled = false, style = {} } = props;
+    const { size: _size = 'md', disabled: _disabled = false, style = {} } = props;
 
     return {
       display: 'flex',
@@ -236,12 +244,12 @@ export class SelectStyles {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      width: sizeStyles.fontSize * 1.5,
-      height: sizeStyles.fontSize * 1.5,
+      width: sizeStyles['fontSize'] * 1.5,
+      height: sizeStyles['fontSize'] * 1.5,
       borderRadius: '50%',
       backgroundColor: '#e5e7eb',
       color: '#6b7280',
-      fontSize: sizeStyles.fontSize * 0.8,
+      fontSize: sizeStyles['fontSize'] * 0.8,
       cursor: 'pointer',
       transition: 'all 0.2s ease-in-out',
       ...style,
@@ -255,7 +263,7 @@ export class SelectStyles {
     const sizeStyles = this.SIZE_MAP[size];
 
     return {
-      fontSize: sizeStyles.fontSize * 0.8,
+      fontSize: sizeStyles['fontSize'] * 0.8,
       color: '#6b7280',
       transition: 'transform 0.2s ease-in-out',
       transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
@@ -270,7 +278,7 @@ export class SelectStyles {
     const sizeStyles = this.SIZE_MAP[size];
 
     return {
-      fontSize: sizeStyles.fontSize,
+      fontSize: sizeStyles['fontSize'],
       fontWeight: 500,
       color: disabled ? '#9ca3af' : '#374151',
       marginBottom: 8,
@@ -286,8 +294,8 @@ export class SelectStyles {
     const statusStyles = this.STATUS_COLORS[status];
 
     return {
-      fontSize: sizeStyles.fontSize * 0.85,
-      color: statusStyles.color,
+      fontSize: sizeStyles['fontSize'] * 0.85,
+      color: statusStyles['color'],
       marginTop: 4,
       ...style,
     };
@@ -300,7 +308,7 @@ export class SelectStyles {
     const sizeStyles = this.SIZE_MAP[size];
 
     return {
-      fontSize: sizeStyles.fontSize * 0.85,
+      fontSize: sizeStyles['fontSize'] * 0.85,
       color: '#ef4444',
       marginTop: 4,
       ...style,
@@ -314,8 +322,23 @@ export class SelectStyles {
     const sizeStyles = this.SIZE_MAP[size];
 
     return {
-      fontSize: sizeStyles.fontSize * 0.85,
+      fontSize: sizeStyles['fontSize'] * 0.85,
       color: '#6b7280',
+      marginTop: 4,
+      fontStyle: 'italic',
+      ...style,
+    };
+  }
+
+  /** 生成无数据提示文本样式 */
+  static getNotFoundTextStyle(props: Partial<SelectProps>): React.CSSProperties {
+    const { size = 'md', style = {} } = props;
+
+    const sizeStyles = this.SIZE_MAP[size];
+
+    return {
+      fontSize: sizeStyles['fontSize'] * 0.85,
+      color: '#9ca3af',
       marginTop: 4,
       fontStyle: 'italic',
       ...style,

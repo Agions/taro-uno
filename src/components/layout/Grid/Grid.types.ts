@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { View } from '@tarojs/components';
+import type { ITouchEvent } from '@tarojs/components';
 import { BaseComponentProps, Size, CSSUnit } from '../../../types';
 
 /** Grid组件对齐方式 */
@@ -21,7 +21,7 @@ export type GridCols = number | `${number}`;
 /** Grid组件引用 */
 export interface GridRef {
   /** 获取元素引用 */
-  element: View | null;
+  element: any;
   /** 获取当前列数 */
   getCols: () => GridCols;
   /** 获取当前对齐方式 */
@@ -65,7 +65,7 @@ export interface GridProps extends BaseComponentProps {
   /** 子元素点击事件 */
   onItemHover?: (index: number, event: React.MouseEvent) => void;
   /** 子元素点击事件 */
-  onItemClick?: (index: number, event: React.MouseEvent) => void;
+  onItemClick?: (index: number, event: ITouchEvent) => void;
   /** 响应式断点 */
   responsive?: {
     xs?: Partial<GridProps>;

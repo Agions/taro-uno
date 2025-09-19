@@ -2,7 +2,7 @@
  * 基础组件测试设置
  */
 
-import { vi } from 'vitest'
+import { vi } from 'vitest';
 
 // Mock Taro 组件
 vi.mock('@tarojs/components', () => ({
@@ -52,7 +52,7 @@ vi.mock('@tarojs/components', () => ({
   CustomWrapper: 'div',
   Embed: 'iframe',
   ITouchEvent: {}
-}))
+}));
 
 // Mock Taro API
 vi.mock('@tarojs/taro', () => ({
@@ -82,14 +82,14 @@ vi.mock('@tarojs/taro', () => ({
   getStorageSync: vi.fn(),
   getNetworkType: vi.fn(),
   getBatteryInfo: vi.fn()
-}))
+}));
 
 // Mock clipboard API
 Object.assign(navigator, {
   clipboard: {
     writeText: vi.fn().mockResolvedValue(undefined)
   }
-})
+});
 
 // Mock selection API
 Object.assign(window, {
@@ -97,19 +97,19 @@ Object.assign(window, {
     removeAllRanges: vi.fn(),
     addRange: vi.fn()
   }))
-})
+});
 
 Object.assign(document, {
   createRange: vi.fn(() => ({
     selectNodeContents: vi.fn()
   }))
-})
+});
 
 // Mock performance API
 Object.assign(performance, {
   now: vi.fn(() => Date.now()),
   getEntriesByType: vi.fn(() => [])
-})
+});
 
 // Mock match media
 Object.assign(window, {
@@ -118,6 +118,6 @@ Object.assign(window, {
     removeEventListener: vi.fn(),
     matches: false
   }))
-})
+});
 
-export default {}
+export default {};

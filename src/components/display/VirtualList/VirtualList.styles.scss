@@ -1,0 +1,256 @@
+/**
+ * 虚拟滚动列表组件样式
+ */
+
+.virtual-list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  .virtual-list-container {
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #ffffff;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f3f4f6;
+      border-radius: 3px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 3px;
+      
+      &:hover {
+        background: #9ca3af;
+      }
+    }
+
+    &::-webkit-scrollbar-corner {
+      background: transparent;
+    }
+  }
+
+  .virtual-list-viewport {
+    position: relative;
+  }
+
+  .virtual-list-item {
+    box-sizing: border-box;
+    border-bottom: 1px solid #f3f4f6;
+    background: #ffffff;
+    
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background: #f9fafb;
+    }
+  }
+
+  .virtual-list-empty {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    z-index: 1;
+
+    .empty-content {
+      text-align: center;
+      padding: 40px 20px;
+    }
+  }
+
+  .virtual-list-loading {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border-top: 1px solid #e5e7eb;
+    padding: 16px;
+    z-index: 2;
+
+    .loading-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .loading-spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid #e5e7eb;
+      border-top: 2px solid #3b82f6;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+  }
+
+  .virtual-list-actions {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 10;
+
+    .action-button {
+      width: 36px;
+      height: 36px;
+      border: 1px solid #d1d5db;
+      border-radius: 50%;
+      background: #ffffff;
+      color: #374151;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+      &:hover {
+        background: #f3f4f6;
+        border-color: #9ca3af;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      &:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        
+        &:hover {
+          background: #ffffff;
+          border-color: #d1d5db;
+          transform: none;
+        }
+      }
+    }
+  }
+
+  .virtual-list-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+    font-size: 12px;
+    color: #6b7280;
+  }
+}
+
+// 动画
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .virtual-list {
+    .virtual-list-actions {
+      bottom: 12px;
+      right: 12px;
+
+      .action-button {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+      }
+    }
+
+    .virtual-list-stats {
+      flex-direction: column;
+      gap: 4px;
+      align-items: flex-start;
+      padding: 6px 8px;
+    }
+  }
+}
+
+// 深色模式支持
+@media (prefers-color-scheme: dark) {
+  .virtual-list {
+    .virtual-list-container {
+      background: #1f2937;
+      border-color: #374151;
+
+      &::-webkit-scrollbar-track {
+        background: #374151;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: #6b7280;
+        
+        &:hover {
+          background: #9ca3af;
+        }
+      }
+    }
+
+    .virtual-list-item {
+      background: #1f2937;
+      border-color: #374151;
+      
+      &:hover {
+        background: #374151;
+      }
+    }
+
+    .virtual-list-empty {
+      background: #1f2937;
+    }
+
+    .virtual-list-loading {
+      background: #1f2937;
+      border-color: #374151;
+    }
+
+    .virtual-list-actions {
+      .action-button {
+        background: #1f2937;
+        color: #f9fafb;
+        border-color: #4b5563;
+
+        &:hover {
+          background: #374151;
+          border-color: #6b7280;
+        }
+
+        &:disabled {
+          opacity: 0.5;
+        }
+      }
+    }
+
+    .virtual-list-stats {
+      background: #111827;
+      border-color: #374151;
+      color: #9ca3af;
+    }
+  }
+}

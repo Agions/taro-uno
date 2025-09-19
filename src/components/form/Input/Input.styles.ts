@@ -1,12 +1,10 @@
-import { PlatformDetector } from '@/utils';
 import type { InputProps, InputSize, InputVariant, InputStatus, InputStyleConfig } from './Input.types';
 
 /** 样式工具类 */
 export class InputStyles {
   /** 获取平台前缀 */
   private static getPlatformPrefix(): string {
-    const platform = PlatformDetector.getPlatform();
-    return `taro-uno-${platform}-input`;
+    return 'taro-uno-input';
   }
 
   /** 尺寸映射 */
@@ -92,10 +90,10 @@ export class InputStyles {
 
     const baseStyle: React.CSSProperties = {
       ...sizeStyles,
-      backgroundColor: statusStyles.backgroundColor || variantStyles.backgroundColor,
-      borderColor: statusStyles.borderColor || variantStyles.borderColor,
-      borderWidth: variantStyles.borderWidth,
-      color: statusStyles.color,
+      backgroundColor: statusStyles['backgroundColor'] || variantStyles['backgroundColor'],
+      borderColor: statusStyles['borderColor'] || variantStyles['borderColor'],
+      borderWidth: variantStyles['borderWidth'],
+      color: statusStyles['color'],
       opacity: disabled ? 0.5 : 1,
       cursor: disabled ? 'not-allowed' : readonly ? 'default' : 'text',
       transition: 'all 0.2s ease-in-out',
@@ -110,7 +108,7 @@ export class InputStyles {
       baseStyle.borderRightWidth = 0;
       baseStyle.borderTopWidth = 0;
       baseStyle.borderRadius = 0;
-      baseStyle.borderBottomWidth = variantStyles.borderBottomWidth || 1;
+      baseStyle.borderBottomWidth = variantStyles['borderBottomWidth'] || 1;
     }
 
     return baseStyle;
@@ -127,14 +125,14 @@ export class InputStyles {
       display: 'flex',
       flexDirection: 'column',
       width: block ? '100%' : 'auto',
-      minWidth: sizeStyles.height * 3,
+      minWidth: sizeStyles['height'] * 3,
       ...style,
     };
   }
 
   /** 生成输入框包装器样式 */
   static getWrapperStyle(props: Partial<InputProps>): React.CSSProperties {
-    const { size = 'md', status = 'normal', disabled = false, readonly = false, bordered = true, style = {} } = props;
+    const { size = 'md', status = 'normal', disabled = false, readonly: _readonly = false, bordered = true, style = {} } = props;
 
     const sizeStyles = this.SIZE_MAP[size];
     const statusStyles = this.STATUS_COLORS[status];
@@ -144,11 +142,11 @@ export class InputStyles {
       display: 'flex',
       alignItems: 'center',
       width: '100%',
-      height: sizeStyles.height,
-      borderRadius: sizeStyles.borderRadius,
+      height: sizeStyles['height'],
+      borderRadius: sizeStyles['borderRadius'],
       border: bordered ? '1px solid' : 'none',
-      borderColor: statusStyles.borderColor,
-      backgroundColor: statusStyles.backgroundColor || 'transparent',
+      borderColor: statusStyles['borderColor'],
+      backgroundColor: statusStyles['backgroundColor'] || 'transparent',
       opacity: disabled ? 0.5 : 1,
       transition: 'all 0.2s ease-in-out',
       ...style,
@@ -165,11 +163,11 @@ export class InputStyles {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      paddingLeft: sizeStyles.padding.split(' ')[0],
-      paddingRight: sizeStyles.padding.split(' ')[1],
+      paddingLeft: sizeStyles['padding'].split(' ')[0],
+      paddingRight: sizeStyles['padding'].split(' ')[1],
       height: '100%',
       color: disabled ? '#9ca3af' : '#6b7280',
-      fontSize: sizeStyles.fontSize,
+      fontSize: sizeStyles['fontSize'],
       ...style,
     };
   }
@@ -184,11 +182,11 @@ export class InputStyles {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      paddingLeft: sizeStyles.padding.split(' ')[1],
-      paddingRight: sizeStyles.padding.split(' ')[0],
+      paddingLeft: sizeStyles['padding'].split(' ')[1],
+      paddingRight: sizeStyles['padding'].split(' ')[0],
       height: '100%',
       color: disabled ? '#9ca3af' : '#6b7280',
-      fontSize: sizeStyles.fontSize,
+      fontSize: sizeStyles['fontSize'],
       ...style,
     };
   }
@@ -200,7 +198,7 @@ export class InputStyles {
     const sizeStyles = this.SIZE_MAP[size];
 
     return {
-      fontSize: sizeStyles.fontSize,
+      fontSize: sizeStyles['fontSize'],
       fontWeight: 500,
       color: disabled ? '#9ca3af' : '#374151',
       marginBottom: 8,
@@ -216,8 +214,8 @@ export class InputStyles {
     const statusStyles = this.STATUS_COLORS[status];
 
     return {
-      fontSize: sizeStyles.fontSize * 0.85,
-      color: statusStyles.color,
+      fontSize: sizeStyles['fontSize'] * 0.85,
+      color: statusStyles['color'],
       marginTop: 4,
       ...style,
     };
@@ -230,7 +228,7 @@ export class InputStyles {
     const sizeStyles = this.SIZE_MAP[size];
 
     return {
-      fontSize: sizeStyles.fontSize * 0.85,
+      fontSize: sizeStyles['fontSize'] * 0.85,
       color: '#ef4444',
       marginTop: 4,
       ...style,
@@ -244,7 +242,7 @@ export class InputStyles {
     const sizeStyles = this.SIZE_MAP[size];
 
     return {
-      fontSize: sizeStyles.fontSize * 0.75,
+      fontSize: sizeStyles['fontSize'] * 0.75,
       color: '#9ca3af',
       textAlign: 'right',
       marginTop: 4,
@@ -262,12 +260,12 @@ export class InputStyles {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      width: sizeStyles.fontSize * 1.5,
-      height: sizeStyles.fontSize * 1.5,
+      width: sizeStyles['fontSize'] * 1.5,
+      height: sizeStyles['fontSize'] * 1.5,
       borderRadius: '50%',
       backgroundColor: '#e5e7eb',
       color: '#6b7280',
-      fontSize: sizeStyles.fontSize * 0.8,
+      fontSize: sizeStyles['fontSize'] * 0.8,
       cursor: 'pointer',
       transition: 'all 0.2s ease-in-out',
       ...style,
@@ -284,10 +282,10 @@ export class InputStyles {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      width: sizeStyles.fontSize * 1.5,
-      height: sizeStyles.fontSize * 1.5,
+      width: sizeStyles['fontSize'] * 1.5,
+      height: sizeStyles['fontSize'] * 1.5,
       color: '#6b7280',
-      fontSize: sizeStyles.fontSize,
+      fontSize: sizeStyles['fontSize'],
       cursor: 'pointer',
       transition: 'all 0.2s ease-in-out',
       ...style,
@@ -301,11 +299,11 @@ export class InputStyles {
     const sizeStyles = this.SIZE_MAP[size];
 
     return {
-      minHeight: autoHeight ? sizeStyles.height : sizeStyles.height * rows,
-      maxHeight: autoHeight ? sizeStyles.height * 6 : 'none',
+      minHeight: autoHeight ? sizeStyles['height'] : sizeStyles['height'] * rows,
+      maxHeight: autoHeight ? sizeStyles['height'] * 6 : 'none',
       resize: autoHeight ? 'none' : 'vertical',
-      paddingTop: sizeStyles.padding.split(' ')[0],
-      paddingBottom: sizeStyles.padding.split(' ')[0],
+      paddingTop: sizeStyles['padding'].split(' ')[0],
+      paddingBottom: sizeStyles['padding'].split(' ')[0],
       lineHeight: 1.5,
       ...style,
     };

@@ -33,12 +33,12 @@ export const CONFIG = {
   theme: 'light',
   platform: 'taro',
   components: {
-    basic: ['Button', 'Icon', 'Text', 'Divider'],
-    display: ['Avatar', 'Badge', 'Calendar', 'Card', 'List', 'Progress', 'Tag', 'Timeline'],
-    feedback: ['Loading', 'Message', 'Modal', 'Toast'],
-    form: ['Form', 'Input', 'Select', 'Checkbox', 'Radio'],
-    layout: ['Space', 'Grid', 'Container', 'Row', 'Col'],
-    navigation: ['Tabs', 'Pagination'],
+    basic: ['Button', 'Icon', 'Text', 'Divider', 'Typography'],
+    display: ['Avatar', 'Badge', 'Card', 'List', 'Rate', 'Table', 'Tag', 'Timeline', 'Calendar', 'Carousel'],
+    feedback: ['Modal', 'Message', 'Notification', 'Loading', 'Progress', 'Popconfirm', 'Tooltip', 'Drawer', 'Result'],
+    form: ['Form', 'Input', 'Select', 'DatePicker', 'Radio', 'Checkbox', 'Switch', 'Rate', 'Slider', 'Upload', 'AutoComplete'],
+    layout: ['Grid', 'Layout', 'Space', 'Affix'],
+    navigation: ['Menu', 'Tabs', 'Pagination', 'Breadcrumb', 'Steps', 'PageHeader'],
   },
 };
 

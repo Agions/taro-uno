@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { View } from '@tarojs/components';
+// import { View } from '@tarojs/components'; // Commented out - unused
 import { BaseComponentProps, Size } from '../../../types';
 
 /** Tab位置 */
@@ -34,7 +34,7 @@ export interface TabItem {
 /** Tabs组件引用 */
 export interface TabsRef {
   /** 获取元素引用 */
-  element: View | null;
+  element: any | null;
   /** 获取当前激活的键值 */
   getActiveKey: () => string;
   /** 获取所有Tab项 */

@@ -30,8 +30,15 @@ describe('Text Component', () => {
 
       sizes.forEach(size => {
         const { container } = render(<Text {...defaultProps} size={size} />)
-        const text = container.querySelector('.taro-uno-text')
-        expect(text).toHaveClass(`taro-uno-text--${size}`)
+        const text = container.querySelector('.taro-uno-h5-text')
+        expect(text).toHaveClass(`taro-uno-h5-text--${size}`)
+
+        // Verify font size is applied via style attribute
+        if (text) {
+          const fontSize = text.style.fontSize
+          expect(fontSize).toBeTruthy()
+          expect(fontSize).toMatch(/\d+px/)
+        }
       })
     })
 
@@ -40,32 +47,39 @@ describe('Text Component', () => {
 
       colors.forEach(color => {
         const { container } = render(<Text {...defaultProps} color={color} />)
-        const text = container.querySelector('.taro-uno-text')
-        expect(text).toHaveClass(`taro-uno-text--${color}`)
+        const text = container.querySelector('.taro-uno-h5-text')
+        expect(text).toHaveClass(`taro-uno-h5-text--${color}`)
+
+        // Verify color is applied via style attribute
+        if (text) {
+          const colorValue = text.style.color
+          expect(colorValue).toBeTruthy()
+          expect(colorValue).toMatch(/^#[0-9a-fA-F]{6}$|rgb(a?\(.*\))|hsl(a?\(.*\))$/)
+        }
       })
     })
 
     it('renders clickable text', () => {
       const { container } = render(<Text {...defaultProps} clickable />)
-      const text = container.querySelector('.taro-uno-text')
-      expect(text).toHaveClass('taro-uno-text--clickable')
+      const text = container.querySelector('.taro-uno-h5-text')
+      expect(text).toHaveClass('taro-uno-h5-text--clickable')
     })
 
     it('renders loading text', () => {
       const { container } = render(<Text {...defaultProps} loading />)
-      const text = container.querySelector('.taro-uno-text')
-      expect(text).toHaveClass('taro-uno-text--loading')
+      const text = container.querySelector('.taro-uno-h5-text')
+      expect(text).toHaveClass('taro-uno-h5-text--loading')
     })
 
     it('renders disabled text', () => {
       const { container } = render(<Text {...defaultProps} disabled />)
-      const text = container.querySelector('.taro-uno-text')
-      expect(text).toHaveClass('taro-uno-text--disabled')
+      const text = container.querySelector('.taro-uno-h5-text')
+      expect(text).toHaveClass('taro-uno-h5-text--disabled')
     })
 
     it('renders with custom className', () => {
       const { container } = render(<Text {...defaultProps} className="custom-text" />)
-      const text = container.querySelector('.taro-uno-text')
+      const text = container.querySelector('.taro-uno-h5-text')
       expect(text).toHaveClass('custom-text')
     })
   })
@@ -126,21 +140,21 @@ describe('Text Component', () => {
       render(<Text {...defaultProps} accessibilityLabel="Greeting text" />)
 
       const text = screen.getByText('Hello World')
-      expect(text).toHaveAttribute('accessibility-label', 'Greeting text')
+      expect(text).toHaveAttribute('aria-label', 'Greeting text')
     })
 
     it('updates accessibility state when disabled', () => {
       render(<Text {...defaultProps} disabled />)
 
       const text = screen.getByText('Hello World')
-      expect(text).toHaveAttribute('accessibility-state', JSON.stringify({ disabled: true }))
+      expect(text).toHaveAttribute('aria-disabled', 'true')
     })
 
     it('updates accessibility state when loading', () => {
       render(<Text {...defaultProps} loading />)
 
       const text = screen.getByText('Hello World')
-      expect(text).toHaveAttribute('accessibility-state', JSON.stringify({ busy: true }))
+      expect(text).toHaveAttribute('aria-busy', 'true')
     })
   })
 
@@ -173,44 +187,87 @@ describe('Text Component', () => {
       expect(ref.current.getText()).toBe('New Text')
     })
 
-    it('can set disabled state via ref', () => {
+    it('can set disabled state via ref', async () => {
       const ref = React.createRef<any>()
       render(<Text {...defaultProps} ref={ref} />)
 
       ref.current.setDisabled(true)
 
-      const text = screen.getByText('Hello World')
-      expect(text).toHaveClass('taro-uno-text--disabled')
+      // Wait for state update and re-render
+      await waitFor(() => {
+        const text = screen.getByText('Hello World')
+        expect(text).toHaveClass('taro-uno-h5-text--disabled')
+        expect(text).toHaveAttribute('aria-disabled', 'true')
+      })
     })
 
-    it('can set loading state via ref', () => {
+    it('can set loading state via ref', async () => {
       const ref = React.createRef<any>()
       render(<Text {...defaultProps} ref={ref} />)
 
       ref.current.setLoading(true)
 
+      // Wait for state update and re-render
+      await waitFor(() => {
+        const text = screen.getByText('Hello World')
+        expect(text).toHaveClass('taro-uno-h5-text--loading')
+        expect(text).toHaveAttribute('aria-busy', 'true')
+      })
+    })
+
+    it('can get color via ref', () => {
+      const ref = React.createRef<any>()
+      render(<Text {...defaultProps} color="primary" ref={ref} />)
+
+      expect(ref.current.getColor()).toBe('primary')
+    })
+
+    it('can set color via ref', () => {
+      const ref = React.createRef<any>()
+      render(<Text {...defaultProps} ref={ref} />)
+
+      ref.current.setColor('#ff0000')
+
       const text = screen.getByText('Hello World')
-      expect(text).toHaveClass('taro-uno-text--loading')
+      expect(text.style.color).toBe('rgb(255, 0, 0)')
+    })
+
+    it('can get size via ref', () => {
+      const ref = React.createRef<any>()
+      render(<Text {...defaultProps} size="lg" ref={ref} />)
+
+      expect(ref.current.getSize()).toBe('lg')
+    })
+
+    it('can set size via ref', () => {
+      const ref = React.createRef<any>()
+      render(<Text {...defaultProps} ref={ref} />)
+
+      ref.current.setSize('xl')
+
+      const text = screen.getByText('Hello World')
+      expect(text.style.fontSize).toBe('36px')
     })
   })
 
   describe('Edge Cases', () => {
     it('renders without children', () => {
       const { container } = render(<Text {...defaultProps} children={undefined} />)
-      const text = container.querySelector('.taro-uno-text')
+      const text = container.querySelector('.taro-uno-h5-text')
       expect(text).toBeInTheDocument()
     })
 
     it('renders with empty string children', () => {
-      render(<Text {...defaultProps} children="" />)
+      const { container } = render(<Text {...defaultProps} children="" />)
 
-      const text = screen.getByText('')
+      const text = container.querySelector('.taro-uno-h5-text')
       expect(text).toBeInTheDocument()
+      expect(text?.textContent).toBe('')
     })
 
     it('renders with null children', () => {
       const { container } = render(<Text {...defaultProps} children={null} />)
-      const text = container.querySelector('.taro-uno-text')
+      const text = container.querySelector('.taro-uno-h5-text')
       expect(text).toBeInTheDocument()
     })
   })

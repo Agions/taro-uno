@@ -4,11 +4,11 @@
  */
 
 export { Textarea } from './Textarea';
-export type { 
-  TextareaProps, 
-  TextareaRef, 
-  TextareaSize, 
-  TextareaVariant, 
+export type {
+  TextareaProps,
+  TextareaRef,
+  TextareaSize,
+  TextareaVariant,
   TextareaStatus,
   TextareaResize,
   AutoHeightStrategy,
@@ -21,6 +21,6 @@ export type {
   TextareaUtils,
   TextareaEvents,
   TextareaGroupProps,
-  TextareaGroupRef
+  TextareaGroupRef,
 } from './Textarea.types';
 export { textareaStyles } from './Textarea.styles';

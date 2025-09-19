@@ -1,5 +1,5 @@
-import React, { forwardRef, useRef, useState, useEffect, useCallback, createContext } from 'react';
-import { Form, View, Text } from '@tarojs/components';
+import React, { forwardRef, useState, useCallback, createContext } from 'react';
+import { Form as TaroForm } from '@tarojs/components';
 import type { ITouchEvent } from '@tarojs/components';
 import { formStyles } from './Form.styles';
 import type {
@@ -7,19 +7,16 @@ import type {
   FormRef,
   FormInstance,
   FormContext,
-  FormItemProps,
-  FormLayout,
-  FormLabelAlign,
-  FormSize,
-  FormStatus,
   FormValues,
   FormErrors,
   FormFieldInfo,
-  FormRule,
 } from './Form.types';
 
 // 创建表单上下文
-export const FormContext = createContext<FormContext | null>(null);
+export const FormContextProvider = createContext<FormContext | null>(null);
+
+// 导出FormContext
+export type { FormContext } from './Form.types';
 
 /** 表单组件 */
 export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
@@ -54,6 +51,16 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
     ...restProps
   } = props;
 
+  // Filter out React DOM event handlers that are incompatible with TaroForm
+  const filteredProps = Object.fromEntries(
+    Object.entries(restProps).filter(([key]) => !key.startsWith('on') || key.includes('Click') || key.includes('Touch'))
+  );
+
+  // Handle aria attributes
+  const ariaProps = Object.fromEntries(
+    Object.entries(restProps).filter(([key]) => key.startsWith('aria-'))
+  );
+
   const [formInstance, setFormInstance] = useState<FormInstance>({
     values: { ...initialValues },
     errors: {},
@@ -66,22 +73,20 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
     readonly,
   });
 
-  const formRef = useRef<HTMLFormElement>(null);
-
   // 更新表单实例
   const updateFormInstance = useCallback((updates: Partial<FormInstance>) => {
-    setFormInstance((prev) => ({ ...prev, ...updates }));
+    setFormInstance((prev): FormInstance => ({ ...prev, ...updates }));
   }, []);
 
   // 注册字段
   const registerField = useCallback((name: string, info: Partial<FormFieldInfo>) => {
-    setFormInstance((prev) => ({
+    setFormInstance((prev): FormInstance => ({
       ...prev,
       fields: {
         ...prev.fields,
         [name]: {
           name,
-          value: prev.values[name] || info.value,
+          value: prev.values[name] ?? info.value ?? '',
           errors: [],
           touched: false,
           validating: false,
@@ -95,12 +100,12 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
   // 注销字段
   const unregisterField = useCallback(
     (name: string) => {
-      setFormInstance((prev) => {
-        const newFields = { ...prev.fields };
+      setFormInstance((prev): FormInstance => {
+        const newFields: Record<string, FormFieldInfo> = { ...prev.fields };
         delete newFields[name];
 
         if (!preserve) {
-          const newValues = { ...prev.values };
+          const newValues: FormValues = { ...prev.values };
           delete newValues[name];
 
           return {
@@ -118,12 +123,12 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
 
   // 更新字段
   const updateField = useCallback((name: string, info: Partial<FormFieldInfo>) => {
-    setFormInstance((prev) => ({
+    setFormInstance((prev): FormInstance => ({
       ...prev,
       fields: {
         ...prev.fields,
         [name]: {
-          ...prev.fields[name],
+          ...(prev.fields[name] || { name, value: '', errors: [], touched: false, validating: false, rules: [] }),
           ...info,
         },
       },
@@ -141,12 +146,12 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
   // 设置字段值
   const setFieldValue = useCallback(
     (name: string, value: any) => {
-      setFormInstance((prev) => {
-        const newValues = { ...prev.values, [name]: value };
-        const newFields = {
+      setFormInstance((prev): FormInstance => {
+        const newValues: FormValues = { ...prev.values, [name]: value };
+        const newFields: Record<string, FormFieldInfo> = {
           ...prev.fields,
           [name]: {
-            ...prev.fields[name],
+            ...(prev.fields[name] || { name, value: '', errors: [], touched: false, validating: false, rules: [] }),
             value,
           },
         };
@@ -158,7 +163,7 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
 
         // 触发字段变化事件
         if (onFieldsChange) {
-          const changedField = newFields[name];
+          const changedField = newFields[name] as FormFieldInfo;
           onFieldsChange([changedField], Object.values(newFields));
         }
 
@@ -182,7 +187,7 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
 
   // 设置字段错误
   const setFieldError = useCallback((name: string, error: string | string[]) => {
-    setFormInstance((prev) => ({
+    setFormInstance((prev): FormInstance => ({
       ...prev,
       errors: {
         ...prev.errors,
@@ -191,7 +196,7 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
       fields: {
         ...prev.fields,
         [name]: {
-          ...prev.fields[name],
+          ...(prev.fields[name] || { name, value: '', errors: [], touched: false, validating: false, rules: [] }),
           errors: Array.isArray(error) ? error : [error],
         },
       },
@@ -201,14 +206,15 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
   // 获取字段错误
   const getFieldError = useCallback(
     (name: string): string[] => {
-      return formInstance.errors[name] || [];
+      const errors = formInstance.errors[name];
+      return Array.isArray(errors) ? errors : (errors ? [errors] : []);
     },
     [formInstance.errors],
   );
 
   // 设置字段 touched 状态
   const setFieldTouched = useCallback((name: string, touched: boolean) => {
-    setFormInstance((prev) => ({
+    setFormInstance((prev): FormInstance => ({
       ...prev,
       touched: {
         ...prev.touched,
@@ -217,7 +223,7 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
       fields: {
         ...prev.fields,
         [name]: {
-          ...prev.fields[name],
+          ...(prev.fields[name] || { name, value: '', errors: [], touched: false, validating: false, rules: [] }),
           touched,
         },
       },
@@ -226,7 +232,7 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
 
   // 设置字段 validating 状态
   const setFieldValidating = useCallback((name: string, validating: boolean) => {
-    setFormInstance((prev) => ({
+    setFormInstance((prev): FormInstance => ({
       ...prev,
       validating: {
         ...prev.validating,
@@ -235,7 +241,7 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
       fields: {
         ...prev.fields,
         [name]: {
-          ...prev.fields[name],
+          ...(prev.fields[name] || { name, value: '', errors: [], touched: false, validating: false, rules: [] }),
           validating,
         },
       },
@@ -343,13 +349,13 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
 
   // 重置字段
   const resetField = useCallback((name: string) => {
-    setFormInstance((prev) => {
+    setFormInstance((prev): FormInstance => {
       const field = prev.fields[name];
       if (!field) return prev;
 
       const defaultValue = field.rules.find((rule) => rule.defaultValue !== undefined)?.defaultValue;
-      const newValues = { ...prev.values, [name]: defaultValue };
-      const newFields = {
+      const newValues: FormValues = { ...prev.values, [name]: defaultValue };
+      const newFields: Record<string, FormFieldInfo> = {
         ...prev.fields,
         [name]: {
           ...field,
@@ -387,7 +393,7 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
       disabled,
       readonly,
     },
-    styleConfig: formStyles.getStyleConfig(),
+    styleConfig: formStyles['getStyleConfig'](),
     registerField,
     unregisterField,
     updateField,
@@ -404,8 +410,8 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
 
   // 处理表单提交
   const handleSubmit = useCallback(
-    async (event: ITouchEvent) => {
-      event.preventDefault();
+    async (event: any) => {
+      event.preventDefault?.();
 
       // 验证所有字段
       const validationResults = await Promise.all(Object.keys(formInstance.fields).map((name) => validateField(name)));
@@ -416,7 +422,7 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
         const errors: FormErrors = {};
         validationResults.forEach((result, index) => {
           const fieldName = Object.keys(formInstance.fields)[index];
-          if (!result.valid) {
+          if (fieldName && !result.valid) {
             errors[fieldName] = result.errors;
           }
         });
@@ -427,7 +433,14 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
 
       // 提交表单
       try {
-        await onSubmit?.(formInstance.values, event);
+        // Create a synthetic event for compatibility
+        const syntheticEvent = {
+          preventDefault: () => {},
+          stopPropagation: () => {},
+          ...event
+        } as ITouchEvent;
+        
+        await onSubmit?.(formInstance.values, syntheticEvent);
       } catch (error) {
         console.error('Form submission error:', error);
       }
@@ -437,8 +450,8 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
 
   // 处理表单重置
   const handleReset = useCallback(
-    (event: ITouchEvent) => {
-      setFormInstance((prev) => {
+    (event: any) => {
+      setFormInstance((prev): FormInstance => {
         const newValues: FormValues = {};
         const newFields: Record<string, FormFieldInfo> = {};
         const newErrors: FormErrors = {};
@@ -447,18 +460,21 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
 
         Object.keys(prev.fields).forEach((name) => {
           const field = prev.fields[name];
-          const defaultValue = field.rules.find((rule) => rule.defaultValue !== undefined)?.defaultValue;
-          newValues[name] = defaultValue;
-          newFields[name] = {
-            ...field,
-            value: defaultValue,
-            errors: [],
-            touched: false,
-            validating: false,
-          };
-          newErrors[name] = [];
-          newTouched[name] = false;
-          newValidating[name] = false;
+          if (field) {
+            const defaultValue = field.rules.find((rule) => rule.defaultValue !== undefined)?.defaultValue;
+            newValues[name] = defaultValue;
+            newFields[name] = {
+              name: field.name,
+              value: defaultValue,
+              errors: [],
+              touched: false,
+              validating: false,
+              rules: field.rules,
+            };
+            newErrors[name] = [];
+            newTouched[name] = false;
+            newValidating[name] = false;
+          }
         });
 
         return {
@@ -471,9 +487,16 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
         };
       });
 
-      onReset?.(initialValues, event);
+      // Create a synthetic event for compatibility
+      const syntheticEvent = {
+        preventDefault: () => {},
+        stopPropagation: () => {},
+        ...event
+      } as ITouchEvent;
+
+      onReset?.(formInstance.values, syntheticEvent);
     },
-    [initialValues, onReset],
+    [formInstance.values, onReset],
   );
 
   // 暴露给外部的引用方法
@@ -482,7 +505,7 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
     () => ({
       getValues: () => formInstance.values,
       setValues: (values) => {
-        setFormInstance((prev) => ({
+        setFormInstance((prev): FormInstance => ({
           ...prev,
           values: { ...prev.values, ...values },
         }));
@@ -507,7 +530,7 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
           const errors: FormErrors = {};
           validationResults.forEach((result, index) => {
             const fieldName = Object.keys(formInstance.fields)[index];
-            if (!result.valid) {
+            if (fieldName && !result.valid) {
               errors[fieldName] = result.errors;
             }
           });
@@ -527,7 +550,7 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
 
         validationResults.forEach((result, index) => {
           const fieldName = fieldNames[index];
-          if (!result.valid) {
+          if (fieldName && !result.valid) {
             errors[fieldName] = result.errors;
             hasErrors = true;
           }
@@ -548,7 +571,7 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
 
         validationResults.forEach((result, index) => {
           const fieldName = names[index];
-          if (!result.valid) {
+          if (fieldName && !result.valid) {
             errors[fieldName] = result.errors;
             hasErrors = true;
           }
@@ -564,14 +587,14 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
         if (fields) {
           fields.forEach((name) => setFieldError(name, []));
         } else {
-          setFormInstance((prev) => ({
+          setFormInstance((prev): FormInstance => ({
             ...prev,
             errors: {},
           }));
         }
       },
       setErrors: (errors) => {
-        setFormInstance((prev) => ({
+        setFormInstance((prev): FormInstance => ({
           ...prev,
           errors: { ...prev.errors, ...errors },
         }));
@@ -589,16 +612,16 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
       getFieldInfo: (name) => formInstance.fields[name] || null,
       setFieldsTouched: (touched) => {
         Object.keys(touched).forEach((name) => {
-          setFieldTouched(name, touched[name]);
+          setFieldTouched(name, touched[name] as boolean);
         });
       },
       setFieldsValidating: (validating) => {
         Object.keys(validating).forEach((name) => {
-          setFieldValidating(name, validating[name]);
+          setFieldValidating(name, validating[name] as boolean);
         });
       },
       addFieldRules: (name, newRules) => {
-        setFormInstance((prev) => ({
+        setFormInstance((prev): FormInstance => ({
           ...prev,
           rules: {
             ...prev.rules,
@@ -607,20 +630,20 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
           fields: {
             ...prev.fields,
             [name]: {
-              ...prev.fields[name],
+              ...(prev.fields[name] || { name, value: '', errors: [], touched: false, validating: false, rules: [] }),
               rules: [...(prev.fields[name]?.rules || []), ...newRules],
             },
           },
         }));
       },
       removeFieldRules: (name) => {
-        setFormInstance((prev) => ({
+        setFormInstance((prev): FormInstance => ({
           ...prev,
           rules: { ...prev.rules, [name]: [] },
           fields: {
             ...prev.fields,
             [name]: {
-              ...prev.fields[name],
+              ...(prev.fields[name] || { name, value: '', errors: [], touched: false, validating: false, rules: [] }),
               rules: [],
             },
           },
@@ -641,35 +664,35 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
   );
 
   // 生成表单样式
-  const formStyle = formStyles.getStyle({
+  const formStyle = formStyles['getStyle']({
     layout,
     size,
     style,
   });
 
   // 生成表单类名
-  const formClassName = formStyles.getClassName({
+  const formClassName = formStyles['getClassName']({
     layout,
     size,
     className,
   });
 
   return (
-    <FormContext.Provider value={formContext}>
-      <Form
-        ref={formRef}
+    <FormContextProvider.Provider value={formContext}>
+      <TaroForm
         className={formClassName}
         style={formStyle}
         onSubmit={handleSubmit}
         onReset={handleReset}
-        accessible={accessible}
+        role={accessibilityRole}
         aria-label={accessibilityLabel}
-        aria-role={accessibilityRole}
-        {...restProps}
+        accessible={accessible}
+        {...filteredProps}
+        {...ariaProps}
       >
         {children}
-      </Form>
-    </FormContext.Provider>
+      </TaroForm>
+    </FormContextProvider.Provider>
   );
 });
 
@@ -677,4 +700,4 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
 FormComponent.displayName = 'Form';
 
 /** 导出表单组件 */
-export const Form = FormComponent;
+export { FormComponent as Form };

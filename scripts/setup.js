@@ -36,7 +36,7 @@ const directories = [
   'tools/codegen',
 ];
 
-directories.forEach(dir => {
+directories.forEach((dir) => {
   const fullPath = path.join(rootDir, dir);
   if (!fs.existsSync(fullPath)) {
     fs.mkdirSync(fullPath, { recursive: true });
@@ -71,7 +71,7 @@ const configFiles = [
 configFiles.forEach(({ source, target }) => {
   const sourcePath = path.join(rootDir, source);
   const targetPath = path.join(rootDir, target);
-  
+
   if (fs.existsSync(sourcePath) && !fs.existsSync(targetPath)) {
     fs.copyFileSync(sourcePath, targetPath);
     console.log(`✅ 复制配置文件: ${target}`);
@@ -93,7 +93,7 @@ const symlinks = [
 symlinks.forEach(({ source, target }) => {
   const sourcePath = path.join(rootDir, 'packages', source);
   const targetPath = path.join(rootDir, 'packages', target);
-  
+
   if (fs.existsSync(sourcePath) && !fs.existsSync(targetPath)) {
     try {
       fs.symlinkSync(sourcePath, targetPath, 'dir');

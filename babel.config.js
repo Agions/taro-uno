@@ -7,19 +7,19 @@ module.exports = {
           'last 2 versions',
           'not ie <= 8',
           'iOS >= 8',
-          'Android >= 4.1',
-        ],
+          'Android >= 4.1'
+        ]
       },
       useBuiltIns: 'usage',
-      corejs: 3,
+      corejs: 3
     }],
     ['@babel/preset-react', {
-      runtime: 'automatic',
+      runtime: 'automatic'
     }],
     ['@babel/preset-typescript', {
       isTSX: true,
-      allExtensions: true,
-    }],
+      allExtensions: true
+    }]
   ],
   plugins: [
     '@babel/plugin-transform-runtime',
@@ -32,36 +32,36 @@ module.exports = {
     '@babel/plugin-proposal-private-methods',
     '@babel/plugin-proposal-private-property-in-object',
     ['@babel/plugin-transform-modules-commonjs', {
-      strictMode: false,
+      strictMode: false
     }],
     ['babel-plugin-import', {
       libraryName: '@tarojs/taro',
       libraryDirectory: '',
-      style: false,
+      style: false
     }],
     ['babel-plugin-import', {
       libraryName: '@tarojs/components',
       libraryDirectory: '',
-      style: false,
+      style: false
     }],
     ['babel-plugin-import', {
       libraryName: 'lodash',
       libraryDirectory: '',
-      camel2DashComponentName: false,
-    }],
+      camel2DashComponentName: false
+    }]
   ],
   env: {
     development: {
-      plugins: ['react-refresh/babel'],
+      plugins: ['react-refresh/babel']
     },
     test: {
-      plugins: ['@babel/plugin-transform-runtime'],
+      plugins: ['@babel/plugin-transform-runtime']
     },
     production: {
       plugins: [
         '@babel/plugin-transform-react-inline-elements',
-        '@babel/plugin-transform-react-constant-elements',
-      ],
-    },
-  },
-}
+        '@babel/plugin-transform-react-constant-elements'
+      ]
+    }
+  }
+};

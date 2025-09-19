@@ -1,8 +1,9 @@
-/**
- * Message 组件导出文件
- */
+import MessageComponent from './Message';
 
-export { default } from './Message';
-export * from './Message';
-export * from './Message.types';
-export { messageStyles } from './Message.styles';
+export { MessageComponent as Message };
+export type {
+  MessageProps,
+  MessageRef,
+} from './Message.types';
+
+export default MessageComponent;

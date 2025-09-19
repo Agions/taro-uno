@@ -301,7 +301,7 @@ class WeappAdapter implements PlatformAdapter {
 
   biometrics = {
     async checkIsAvailable(): Promise<boolean> {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         Taro.checkIsSoterEnrolledInDevice({
           checkAuthMode: 'fingerPrint',
           success: (res) => resolve(res.isEnrolled),
@@ -571,13 +571,13 @@ class H5Adapter implements PlatformAdapter {
         navigator.geolocation.getCurrentPosition(
           (position) => {
             resolve({
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-              accuracy: position.coords.accuracy,
-              altitude: position.coords.altitude,
-              verticalAccuracy: position.coords.altitudeAccuracy,
-              horizontalAccuracy: position.coords.accuracy,
-              speed: position.coords.speed,
+              latitude: position.coords.latitude || 0,
+              longitude: position.coords.longitude || 0,
+              accuracy: position.coords.accuracy || 0,
+              altitude: position.coords.altitude || 0,
+              verticalAccuracy: position.coords.altitudeAccuracy || 0,
+              horizontalAccuracy: position.coords.accuracy || 0,
+              speed: position.coords.speed || 0,
               errMsg: 'getLocation:ok',
             });
           },
@@ -868,21 +868,21 @@ class RNAdapter implements PlatformAdapter {
 
   // React Native的存储实现需要使用AsyncStorage
   storage = {
-    async set(key: string, value: any): Promise<void> {
+    async set(_key: string, _value: any): Promise<void> {
       // 这里需要导入AsyncStorage
       // const { AsyncStorage } = require('react-native')
       // await AsyncStorage.setItem(key, JSON.stringify(value))
       throw new Error('AsyncStorage not implemented');
     },
 
-    async get(key: string): Promise<any> {
+    async get(_key: string): Promise<any> {
       // const { AsyncStorage } = require('react-native')
       // const value = await AsyncStorage.getItem(key)
       // return value ? JSON.parse(value) : null
       throw new Error('AsyncStorage not implemented');
     },
 
-    async remove(key: string): Promise<void> {
+    async remove(_key: string): Promise<void> {
       // const { AsyncStorage } = require('react-native')
       // await AsyncStorage.removeItem(key)
       throw new Error('AsyncStorage not implemented');
@@ -986,7 +986,7 @@ class RNAdapter implements PlatformAdapter {
   };
 
   clipboard = {
-    async set(text: string): Promise<void> {
+    async set(_text: string): Promise<void> {
       throw new Error('Clipboard service not implemented');
     },
 

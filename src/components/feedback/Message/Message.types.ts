@@ -1,8 +1,14 @@
 import React from 'react';
 
+/** 消息类型 */
+export type MessageType = 'success' | 'error' | 'warning' | 'info';
+
+/** 消息位置 */
+export type MessagePosition = 'top' | 'bottom' | 'center' | 'topRight' | 'topLeft' | 'bottomRight' | 'bottomLeft';
+
 export interface MessageProps {
   /** 消息类型 */
-  type?: 'success' | 'error' | 'warning' | 'info';
+  type?: MessageType;
   /** 消息标题 */
   title?: React.ReactNode;
   /** 消息内容 */

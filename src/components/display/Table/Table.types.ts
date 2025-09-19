@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
-import { View } from '@tarojs/components';
 import { BaseComponentProps, Size } from '../../../types';
+import { AccessibilityProps } from '../../../types/accessibility';
 
 /** 表格尺寸 */
 export type TableSize = Size | 'small' | 'medium' | 'large';
@@ -82,6 +82,42 @@ export interface TableRowConfig<T = any> {
   className?: string;
 }
 
+/** 表格行选择配置 */
+export interface TableRowSelection<T = any> {
+  /** 选择类型 */
+  type?: 'checkbox' | 'radio';
+  /** 选中行键值 */
+  selectedRowKeys?: string[];
+  /** 行选择变化回调 */
+  onChange?: (selectedRowKeys: string[], selectedRows: T[]) => void;
+  /** 行是否可展开 */
+  rowExpandable?: (record: T) => boolean;
+  /** 获取复选框属性 */
+  getCheckboxProps?: (record: T) => { disabled?: boolean };
+  /** 是否默认选中所有行 */
+  defaultSelectedAll?: boolean;
+  /** 是否禁用选择 */
+  disabled?: boolean;
+}
+
+/** 表格展开配置 */
+export interface TableExpandable<T = any> {
+  /** 展开行渲染 */
+  expandedRowRender?: (record: T, index: number) => ReactNode;
+  /** 行是否可展开 */
+  rowExpandable?: (record: T) => boolean;
+  /** 默认展开的行键值 */
+  defaultExpandedRowKeys?: string[];
+  /** 展开的行键值 */
+  expandedRowKeys?: string[];
+  /** 展开变化回调 */
+  onExpand?: (expanded: boolean, record: T) => void;
+  /** 展开图标 */
+  expandIcon?: ReactNode;
+  /** 展开图标位置 */
+  expandIconPosition?: 'left' | 'right';
+}
+
 /** 表格分页配置 */
 export interface TablePaginationConfig {
   /** 当前页码 */
@@ -111,7 +147,7 @@ export interface TablePaginationConfig {
 /** 表格引用 */
 export interface TableRef<T = any> {
   /** 获取元素引用 */
-  element: View | null;
+  element: any | null;
   /** 获取当前数据 */
   getData: () => T[];
   /** 获取选中行 */
@@ -141,9 +177,11 @@ export interface TableRef<T = any> {
 }
 
 /** 表格组件属性 */
-export interface TableProps<T = any> extends BaseComponentProps {
+export interface TableProps<T = any> extends BaseComponentProps, AccessibilityProps {
   /** 表格数据 */
   data?: T[];
+  /** 数据源（兼容属性） */
+  dataSource?: T[];
   /** 列配置 */
   columns: TableColumn<T>[];
   /** 行键值字段 */
@@ -152,12 +190,14 @@ export interface TableProps<T = any> extends BaseComponentProps {
   size?: TableSize;
   /** 表格边框 */
   border?: TableBorder;
+  /** 是否有边框（兼容属性） */
+  bordered?: boolean;
   /** 是否斑马纹 */
   striped?: boolean;
   /** 是否悬停效果 */
   hoverable?: boolean;
   /** 是否可展开 */
-  expandable?: boolean;
+  expandable?: boolean | TableExpandable<T>;
   /** 展开行渲染 */
   expandedRowRender?: (record: T, index: number) => ReactNode;
   /** 是否可选择 */
@@ -170,10 +210,18 @@ export interface TableProps<T = any> extends BaseComponentProps {
   selectedRowKeys?: string[];
   /** 行选择事件 */
   onRowSelect?: (selectedRowKeys: string[], selectedRows: T[]) => void;
-  /** 行点击事件 */
-  onRowClick?: (record: T, index: number, event: React.MouseEvent) => void;
-  /** 行双击事件 */
-  onRowDoubleClick?: (record: T, index: number, event: React.MouseEvent) => void;
+  /** 行选择配置 */
+  rowSelection?: TableRowSelection<T>;
+  /** 表格变化事件 */
+  onChange?: (pagination: TablePaginationConfig, filters: any, sorter: any) => void;
+  /** 行配置 - Taro.js compatible */
+  onRow?: (record: T, index: number) => Record<string, any>;
+  /** 表头行配置 - Taro.js compatible */
+  onHeaderRow?: (columns: TableColumn<T>[], index: number) => Record<string, any>;
+  /** 行点击事件 - Taro.js compatible */
+  onRowClick?: (record: T, index: number, event: any) => void;
+  /** 行双击事件 - not supported in Taro.js */
+  onRowDoubleClick?: (record: T, index: number, event: any) => void;
   /** 排序事件 */
   onSort?: (field: string, order: TableSortOrder) => void;
   /** 筛选事件 */
@@ -203,3 +251,6 @@ export interface TableProps<T = any> extends BaseComponentProps {
   /** 自定义单元格渲染 */
   cellRender?: (value: any, record: T, column: TableColumn<T>, index: number) => ReactNode;
 }
+
+/** 表格分页类型别名 */
+export type TablePagination = TablePaginationConfig;

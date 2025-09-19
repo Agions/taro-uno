@@ -1,4 +1,4 @@
-export { Icon } from './Icon';
+export { IconComponent, IconComponent as Icon } from './Icon';
 export type {
   IconProps,
   IconRef,
@@ -18,4 +18,5 @@ export type {
 export { iconStyles } from './Icon.styles';
 
 /** 图标组件默认导出 */
-export default Icon;
+import { IconComponent } from './Icon';
+export { IconComponent as default };

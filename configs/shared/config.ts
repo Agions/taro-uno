@@ -3,10 +3,10 @@
  * 包含所有工具和框架的配置
  */
 
-import { resolve } from 'path'
+import { resolve } from 'path';
 
 // 项目根目录
-const rootDir = resolve(__dirname, '..')
+const rootDir = resolve(__dirname, '..', '..');
 
 // 路径配置
 export const paths = {
@@ -19,7 +19,7 @@ export const paths = {
   configs: resolve(rootDir, 'configs'),
   scripts: resolve(rootDir, 'scripts'),
   styles: resolve(rootDir, 'styles'),
-}
+};
 
 // 别名配置
 export const aliases = {
@@ -32,24 +32,17 @@ export const aliases = {
   '@/constants': resolve(paths.src, 'constants'),
   '@/platform': resolve(paths.src, 'platform'),
   '@/styles': paths.styles,
-}
+};
 
 // 构建配置
 export const buildConfig = {
   lib: {
     entry: resolve(paths.src, 'components/index.tsx'),
     name: 'TaroUnoUI',
-    fileName: (format: 'es' | 'umd' | 'cjs') => `taro-uno-ui.${format}.js`,
-    formats: ['es', 'umd', 'cjs'] as const,
+    fileName: (format: string, _entryName: string) => `taro-uno-ui.${format}.js`,
+    formats: ['es', 'umd', 'cjs'] as ('es' | 'umd' | 'cjs')[],
   },
-  external: [
-    'react',
-    'react-dom',
-    '@tarojs/taro',
-    '@tarojs/components',
-    '@tarojs/runtime',
-    '@tarojs/helper',
-  ],
+  external: ['react', 'react-dom', '@tarojs/taro', '@tarojs/components', '@tarojs/runtime', '@tarojs/helper'],
   globals: {
     react: 'React',
     'react-dom': 'ReactDOM',
@@ -58,7 +51,7 @@ export const buildConfig = {
     '@tarojs/runtime': 'TaroRuntime',
     '@tarojs/helper': 'TaroHelper',
   },
-}
+};
 
 // 测试配置
 export const testConfig = {
@@ -66,14 +59,7 @@ export const testConfig = {
   environment: 'jsdom',
   setupFiles: ['./tests/setup.ts'],
   include: ['src/**/*.{test,spec}.{js,ts,jsx,tsx}'],
-  exclude: [
-    'node_modules',
-    'dist',
-    '.git',
-    '.cache',
-    '**/*.d.ts',
-    '**/node_modules/**',
-  ],
+  exclude: ['node_modules', 'dist', '.git', '.cache', '**/*.d.ts', '**/node_modules/**'],
   coverage: {
     provider: 'v8',
     reporter: ['text', 'json', 'html', 'lcov'],
@@ -100,22 +86,13 @@ export const testConfig = {
   },
   testTimeout: 10000,
   hookTimeout: 10000,
-}
+};
 
 // 代码质量配置
 export const lintConfig = {
-  extends: [
-    'eslint:recommended',
-    '@typescript-eslint/recommended',
-    'prettier',
-  ],
+  extends: ['eslint:recommended', '@typescript-eslint/recommended', 'prettier'],
   parser: '@typescript-eslint/parser',
-  plugins: [
-    '@typescript-eslint',
-    'react',
-    'react-hooks',
-    'prettier',
-  ],
+  plugins: ['@typescript-eslint', 'react', 'react-hooks', 'prettier'],
   rules: {
     'react/react-in-jsx-scope': 'off',
     '@typescript-eslint/no-explicit-any': 'warn',
@@ -127,7 +104,7 @@ export const lintConfig = {
     es2021: true,
     node: true,
   },
-}
+};
 
 // 样式配置
 export const styleConfig = {
@@ -138,7 +115,7 @@ export const styleConfig = {
       `,
     },
   },
-}
+};
 
 // 主题配置
 export const themeConfig = {
@@ -170,7 +147,7 @@ export const themeConfig = {
     md: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
     lg: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
   },
-}
+};
 
 // 开发服务器配置
 export const devServerConfig = {
@@ -178,7 +155,7 @@ export const devServerConfig = {
   host: true,
   open: true,
   cors: true,
-}
+};
 
 // 部署配置
 export const deployConfig = {
@@ -189,9 +166,9 @@ export const deployConfig = {
     minify: 'terser',
   },
   analyze: {
-    enabled: process.env.ANALYZE === 'true',
+    enabled: (process.env as any).ANALYZE === 'true',
   },
-}
+};
 
 // 导出所有配置
 export default {
@@ -204,4 +181,4 @@ export default {
   themeConfig,
   devServerConfig,
   deployConfig,
-}
+};

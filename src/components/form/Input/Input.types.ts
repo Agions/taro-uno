@@ -21,7 +21,7 @@ export type InputNativeProps = InputHTMLAttributes<HTMLInputElement> & TextareaH
 
 /** 输入框组件属性接口 */
 export interface InputProps
-  extends Omit<InputNativeProps, 'size' | 'type' | 'value' | 'onChange' | 'onFocus' | 'onBlur'> {
+  extends Omit<InputNativeProps, 'size' | 'type' | 'value' | 'onChange' | 'onFocus' | 'onBlur' | 'prefix' | 'onInput' | 'dangerouslySetInnerHTML' | 'onTouchStart'> {
   /** 输入框内容 */
   value?: string | number;
   /** 默认值（非受控模式） */
@@ -46,6 +46,8 @@ export interface InputProps
   clearTrigger?: ClearTrigger;
   /** 最大长度 */
   maxLength?: number;
+  /** 最大长度 (Taro原生属性) */
+  maxlength?: number;
   /** 最小长度 */
   minLength?: number;
   /** 前缀图标或文本 */

@@ -3,7 +3,7 @@
  * 单选框组件，支持单选功能
  */
 
-export { Radio } from './Radio';
+import { Radio as RadioComponent } from './Radio';
 export type {
   RadioProps,
   RadioRef,
@@ -14,6 +14,8 @@ export type {
   RadioStyleConfig,
 } from './Radio.types';
 export { radioStyles } from './Radio.styles';
+
+export const Radio = RadioComponent;
 
 // 默认导出
 export default Radio;
