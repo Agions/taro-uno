@@ -39,16 +39,16 @@ export const useStyle = () => {
    * @returns 合并后的样式对象
    */
   const css = (
-    ...styles: (Record<string, any> | undefined | null | ((theme: ThemeConfig) => Record<string, any>))[]
-  ): Record<string, any> => {
-    return styles.reduce<Record<string, any>>(
+    ...styles: (Record<string, unknown> | undefined | null | ((theme: ThemeConfig) => Record<string, unknown>))[]
+  ): Record<string, unknown> => {
+    return styles.reduce<Record<string, unknown>>(
       (acc, style) => {
         if (!style) return acc;
 
         const resolvedStyle = typeof style === 'function' ? style(currentTheme) : style;
         return { ...acc, ...resolvedStyle };
       },
-      {} as Record<string, any>,
+      {} as Record<string, unknown>,
     );
   };
 
@@ -58,14 +58,14 @@ export const useStyle = () => {
    * @returns 响应式样式对象
    */
   const responsive = (breakpoints: {
-    base?: Record<string, any>;
-    sm?: Record<string, any>;
-    md?: Record<string, any>;
-    lg?: Record<string, any>;
-    xl?: Record<string, any>;
-    xxl?: Record<string, any>;
-  }): Record<string, any> => {
-    const result: Record<string, any> = {};
+    base?: Record<string, unknown>;
+    sm?: Record<string, unknown>;
+    md?: Record<string, unknown>;
+    lg?: Record<string, unknown>;
+    xl?: Record<string, unknown>;
+    xxl?: Record<string, unknown>;
+  }): Record<string, unknown> => {
+    const result: Record<string, unknown> = {};
 
     if (breakpoints.base) {
       Object.assign(result, breakpoints.base);
@@ -83,7 +83,7 @@ export const useStyle = () => {
     Object.entries(mediaQueries).forEach(([key, query]) => {
       const style = breakpoints[key as keyof typeof breakpoints];
       if (style) {
-        result[query as keyof Record<string, any>] = style;
+        result[query as keyof Record<string, unknown>] = style;
       }
     });
 
@@ -99,9 +99,9 @@ export const useStyle = () => {
    */
   const conditional = (
     condition: boolean,
-    trueStyle: Record<string, any>,
-    falseStyle?: Record<string, any>,
-  ): Record<string, any> => {
+    trueStyle: Record<string, unknown>,
+    falseStyle?: Record<string, unknown>,
+  ): Record<string, unknown> => {
     return condition ? trueStyle : falseStyle || {};
   };
 
@@ -111,7 +111,7 @@ export const useStyle = () => {
    * @param baseStyle 基础样式
    * @returns 包含悬停效果的样式对象
    */
-  const hover = (hoverStyle: Record<string, any>, baseStyle?: Record<string, any>): Record<string, any> => {
+  const hover = (hoverStyle: Record<string, unknown>, baseStyle?: Record<string, unknown>): Record<string, unknown> => {
     return {
       ...baseStyle,
       '&:hover': hoverStyle,
@@ -124,7 +124,7 @@ export const useStyle = () => {
    * @param baseStyle 基础样式
    * @returns 包含焦点效果的样式对象
    */
-  const focus = (focusStyle: Record<string, any>, baseStyle?: Record<string, any>): Record<string, any> => {
+  const focus = (focusStyle: Record<string, unknown>, baseStyle?: Record<string, unknown>): Record<string, unknown> => {
     return {
       ...baseStyle,
       '&:focus': focusStyle,
@@ -137,7 +137,7 @@ export const useStyle = () => {
    * @param baseStyle 基础样式
    * @returns 包含激活效果的样式对象
    */
-  const active = (activeStyle: Record<string, any>, baseStyle?: Record<string, any>): Record<string, any> => {
+  const active = (activeStyle: Record<string, unknown>, baseStyle?: Record<string, unknown>): Record<string, unknown> => {
     return {
       ...baseStyle,
       '&:active': activeStyle,
@@ -150,7 +150,7 @@ export const useStyle = () => {
    * @param baseStyle 基础样式
    * @returns 包含禁用效果的样式对象
    */
-  const disabled = (disabledStyle: Record<string, any>, baseStyle?: Record<string, any>): Record<string, any> => {
+  const disabled = (disabledStyle: Record<string, unknown>, baseStyle?: Record<string, unknown>): Record<string, unknown> => {
     return {
       ...baseStyle,
       '&:disabled': disabledStyle,
@@ -164,14 +164,14 @@ export const useStyle = () => {
    */
   const interactions = (
     interactions: {
-      hover?: Record<string, any>;
-      focus?: Record<string, any>;
-      active?: Record<string, any>;
-      disabled?: Record<string, any>;
+      hover?: Record<string, unknown>;
+      focus?: Record<string, unknown>;
+      active?: Record<string, unknown>;
+      disabled?: Record<string, unknown>;
     },
-    baseStyle?: Record<string, any>,
-  ): Record<string, any> => {
-    const result: Record<string, any> = { ...baseStyle };
+    baseStyle?: Record<string, unknown>,
+  ): Record<string, unknown> => {
+    const result: Record<string, unknown> = { ...baseStyle };
 
     if (interactions.hover) {
       result['&:hover'] = interactions.hover;
@@ -205,7 +205,7 @@ export const useStyle = () => {
     iterationCount?: string | number;
     direction?: string;
     fillMode?: string;
-  }): Record<string, any> => {
+  }): Record<string, unknown> => {
     const {
       name,
       duration = currentTheme.animation.duration.normal,
@@ -239,7 +239,7 @@ export const useStyle = () => {
     rotateZ?: number | string;
     skewX?: number | string;
     skewY?: number | string;
-  }): Record<string, any> => {
+  }): Record<string, unknown> => {
     const transformFunctions: string[] = [];
 
     if (transforms.translateX !== undefined) {
@@ -328,7 +328,7 @@ export const useStyle = () => {
     type?: 'linear' | 'radial';
     direction?: string | number;
     colors: string[];
-  }): Record<string, any> => {
+  }): Record<string, unknown> => {
     const { type = 'linear', direction = 'to right', colors } = gradient;
 
     const gradientString =
@@ -353,7 +353,7 @@ export const useStyle = () => {
     spread?: number;
     color?: string;
     inset?: boolean;
-  }): Record<string, any> => {
+  }): Record<string, unknown> => {
     const { x = 0, y = 0, blur = 0, spread = 0, color = currentTheme.colors.shadow, inset = false } = shadow;
 
     return {
@@ -375,7 +375,7 @@ export const useStyle = () => {
     transform?: 'none' | 'uppercase' | 'lowercase' | 'capitalize';
     spacing?: keyof ThemeConfig['typography']['letterSpacing'];
     lineHeight?: keyof ThemeConfig['typography']['lineHeight'];
-  }): Record<string, any> => {
+  }): Record<string, unknown> => {
     const {
       size = 'base',
       weight = 'normal',
@@ -437,7 +437,7 @@ export const useStyle = () => {
       minHeight,
     } = layout;
 
-    const result: any = {
+    const result: Record<string, unknown> = {
       display,
       width,
       height,
@@ -448,22 +448,22 @@ export const useStyle = () => {
     };
 
     if (display === 'flex') {
-      result.flexDirection = direction;
-      result.justifyContent = justify;
-      result.alignItems = align;
-      result.flexWrap = wrap;
+      result['flexDirection'] = direction;
+      result['justifyContent'] = justify;
+      result['alignItems'] = align;
+      result['flexWrap'] = wrap;
     }
 
     if (gap !== undefined) {
-      result.gap = typeof gap === 'number' ? `${gap}px` : `${currentTheme.spacing[gap]}px`;
+      result['gap'] = typeof gap === 'number' ? `${gap}px` : `${currentTheme.spacing[gap]}px`;
     }
 
     if (padding !== undefined) {
-      result.padding = typeof padding === 'number' ? `${padding}px` : `${currentTheme.spacing[padding]}px`;
+      result['padding'] = typeof padding === 'number' ? `${padding}px` : `${currentTheme.spacing[padding]}px`;
     }
 
     if (margin !== undefined) {
-      result.margin = typeof margin === 'number' ? `${margin}px` : `${currentTheme.spacing[margin]}px`;
+      result['margin'] = typeof margin === 'number' ? `${margin}px` : `${currentTheme.spacing[margin]}px`;
     }
 
     return result;
@@ -480,13 +480,13 @@ export const useStyle = () => {
     color?: string | keyof ThemeConfig['colors'];
     radius?: number | keyof ThemeConfig['borderRadius'];
     sides?: 'all' | 'top' | 'right' | 'bottom' | 'left' | 'horizontal' | 'vertical';
-  }): Record<string, any> => {
+  }): Record<string, unknown> => {
     const { width = 1, style = 'solid', color = 'border', radius = 'md', sides = 'all' } = border;
 
     const colorValue = typeof color === 'string' ? color : currentTheme.colors[color];
     const radiusValue = typeof radius === 'number' ? radius : currentTheme.borderRadius[radius];
 
-    const result: Record<string, any> = {
+    const result: Record<string, unknown> = {
       borderRadius: `${radiusValue}px`,
     };
 
@@ -499,7 +499,7 @@ export const useStyle = () => {
       result['borderTop'] = `${width}px ${style} ${colorValue}`;
       result['borderBottom'] = `${width}px ${style} ${colorValue}`;
     } else {
-      result[`border${sides.charAt(0).toUpperCase() + sides.slice(1)}` as keyof Record<string, any>] =
+      result[`border${sides.charAt(0).toUpperCase() + sides.slice(1)}` as keyof Record<string, unknown>] =
         `${width}px ${style} ${colorValue}`;
     }
 

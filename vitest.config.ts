@@ -1,6 +1,6 @@
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react'
-import { aliases, testConfig, styleConfig } from './configs/shared/config'
+import path from 'path'
 
 // Mock plugin for Taro components
 const taroMockPlugin = {
@@ -8,6 +8,9 @@ const taroMockPlugin = {
   resolveId(source: string) {
     if (source === '@tarojs/components' || source === '@tarojs/components/types/common') {
       return '\0' + source
+    }
+    if (source.includes('@tarojs/runtime')) {
+      return '\0taro-runtime-stub'
     }
     return null
   },
@@ -60,12 +63,18 @@ const taroMockPlugin = {
         export const CustomWrapper = 'div'
         export const Embed = 'iframe'
         export const ITouchEvent = {}
+        export const StyleSheet = {
+          create: (styles) => styles
+        }
       `
     }
     if (id === '\0@tarojs/components/types/common') {
       return `
         export const ITouchEvent = {}
       `
+    }
+    if (id === '\0taro-runtime-stub') {
+      return 'export default {}'
     }
     return null
   }
@@ -75,13 +84,12 @@ export default defineConfig({
   plugins: [react(), taroMockPlugin],
 
   test: {
-    ...testConfig,
     // 测试环境配置
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./tests/setup.ts'],
     // 测试文件匹配
-    include: ['src/**/*.{test,spec}.{js,ts,jsx,tsx}'],
+    include: ['src/**/*.{test,spec}.{js,ts,jsx,tsx}', 'tests/**/*.{test,spec}.{js,ts,jsx,tsx}'],
     exclude: [
       'node_modules',
       'dist',
@@ -89,6 +97,7 @@ export default defineConfig({
       '.cache',
       '**/*.d.ts',
       '**/node_modules/**',
+      'tests/**/e2e/**',
     ],
     // 覆盖率配置
     coverage: {
@@ -103,15 +112,17 @@ export default defineConfig({
         '**/dist/',
         '**/*.test.*',
         '**/*.spec.*',
-        '**/types.ts',
-        '**/index.ts',
+        '**/*.types.ts',      // Only exclude .types.ts files
+        '**/index.ts',        // Export files typically have no logic
+        '**/*.stories.tsx',   // Storybook files
+        '**/*.stories.ts',
       ],
       thresholds: {
         global: {
-          branches: 80,
-          functions: 80,
-          lines: 80,
-          statements: 80,
+          branches: 85,
+          functions: 85,
+          lines: 85,
+          statements: 85,
         },
       },
     },
@@ -130,13 +141,31 @@ export default defineConfig({
   },
 
   resolve: {
-    alias: aliases,
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+      '@components': path.resolve(__dirname, './src/components'),
+      '@utils': path.resolve(__dirname, './src/utils'),
+      '@types': path.resolve(__dirname, './src/types'),
+      '@theme': path.resolve(__dirname, './src/theme'),
+      '@hooks': path.resolve(__dirname, './src/hooks'),
+      '@tarojs/runtime': path.resolve(__dirname, './tests/stubs/taro-runtime.ts'),
+    },
   },
 
-  css: styleConfig,
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@import "@/theme/design-tokens.scss";`,
+      },
+    },
+  },
 
   define: {
     'process.env.NODE_ENV': '"test"',
     'process.env.VITE_APP_ENV': '"test"',
+    ENABLE_INNER_HTML: true,
+    ENABLE_ADJACENT_HTML: true,
+    SUPPORT_TYPED_ARRAY: true,
+    ENABLE_CLONE_NODE: true,
   },
 })

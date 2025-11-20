@@ -53,10 +53,6 @@ export const SwitchComponent = forwardRef<SwitchRef, SwitchProps>((props, ref) =
     containerClassName,
     containerStyle,
     block = false,
-    accessible = true,
-    accessibilityLabel,
-    accessibilityRole = 'switch',
-    accessibilityState,
     // onFocus, // Commented out - not supported by Taro components
     // onBlur, // Commented out - not supported by Taro components
     // ...restProps // Removed unused rest props
@@ -320,7 +316,7 @@ export const SwitchComponent = forwardRef<SwitchRef, SwitchProps>((props, ref) =
         // setStatus is required by interface but internalStatus is not used
         // We'll keep the method for compatibility
       },
-      getStatus: () => currentStatusRef.current,
+      getStatus: () => currentStatusRef.current as 'normal' | 'error' | 'checked' | 'unchecked' | 'disabled' | 'loading',
       validate: async () => {
         const result = await validateSwitch(value);
         // setInternalStatus(result.valid ? 'normal' : 'error'); // Commented out - internalStatus unused
@@ -349,23 +345,7 @@ export const SwitchComponent = forwardRef<SwitchRef, SwitchProps>((props, ref) =
     ],
   );
 
-  // 无障碍状态
-  const finalAccessibilityState = {
-    disabled: internalDisabled,
-    checked: value,
-    busy: internalLoading,
-    required: rules.some((rule: any) => rule.required),
-    invalid: validationResult?.valid === false,
-    ...accessibilityState,
-  };
-
-  // 格式化无障碍状态为字符串
-  // const formatAccessibilityState = (state: any) => {
-  //   return Object.entries(state)
-  //     .map(([key, value]) => `${key}:${value}`)
-  //     .join(',');
-  // };
-
+  
   // 获取标签文本
   const getLabelText = () => {
     if (!showLabel) return null;
@@ -393,20 +373,10 @@ export const SwitchComponent = forwardRef<SwitchRef, SwitchProps>((props, ref) =
           disabled: internalDisabled,
           readonly: internalReadonly,
         })}
+        data-testid="switch"
         onClick={handleClick}
         // onFocus={handleFocus}
         // onBlur={handleBlur}
-        accessible={accessible}
-        accessibilityLabel={accessibilityLabel}
-        accessibilityRole={accessibilityRole}
-        accessibilityState={finalAccessibilityState}
-        aria-label={accessibilityLabel}
-        role={accessibilityRole}
-        aria-checked={value}
-        aria-disabled={internalDisabled}
-        aria-busy={internalLoading}
-        aria-required={rules.some((rule: any) => rule.required)}
-        aria-invalid={validationResult?.valid === false}
       >
         {/* 标签 */}
         {showLabel && (

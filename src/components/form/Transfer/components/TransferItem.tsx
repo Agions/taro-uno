@@ -79,7 +79,7 @@ export const TransferItem: React.FC<TransferItemProps> = memo(({
       accessibilityState={{ selected: isSelected, disabled: disabled }}
       role="option"
     >
-      <View style={checkboxStyle} accessibilityElementsHidden={true}>
+      <View style={checkboxStyle} hidden={true}>
         {isSelected && <Text accessibilityLabel="已选中">✓</Text>}
       </View>
       <View style={TransferStyles['getListItemContentStyle']()}>

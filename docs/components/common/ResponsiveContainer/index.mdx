@@ -1,0 +1,216 @@
+import { ResponsiveContainer } from '@taro-uno/ui';
+import ResponsiveContainerExample from './examples/index';
+
+<Meta title="通用组件 / ResponsiveContainer 响应式容器" description="提供多平台适配的响应式布局容器" />
+
+<Description>
+  ResponsiveContainer 组件是一个响应式布局容器，能够根据屏幕尺寸和平台自动调整布局，提供一致的用户体验。
+</Description>
+
+<CodeExample title="基本用法">
+  <ResponsiveContainerExample />
+  <ExampleCode>
+  ```tsx
+  import React from 'react';
+  import { ResponsiveContainer } from '@taro-uno/ui';
+  
+  export default function ResponsiveContainerExample() {
+    return (
+      <ResponsiveContainer>
+        <View>
+          <Text>这是一个响应式容器</Text>
+          <Text>它会根据屏幕尺寸自动调整布局</Text>
+        </View>
+      </ResponsiveContainer>
+    );
+  }
+  ```
+  </ExampleCode>
+</CodeExample>
+
+## 功能介绍
+
+ResponsiveContainer 组件提供了以下核心功能：
+
+### 响应式布局
+- 根据屏幕尺寸自动调整布局
+- 支持多种尺寸断点（xs、sm、md、lg、xl）
+- 响应式样式设置
+
+### 多平台适配
+- 支持 Web、小程序等多平台
+- 平台特定样式调整
+- 安全区域适配
+
+### 样式定制
+- 响应式边距和内边距
+- 响应式最大宽度
+- 响应式背景色和边框半径
+
+### 易用性
+- 简单的 API 设计
+- 与现有组件无缝集成
+- 支持自定义样式
+
+## API
+
+### ResponsiveContainerProps
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| children | ReactNode | - | 容器内容 |
+| className | string | '' | 自定义类名 |
+| style | ResponsiveStyle | {} | 自定义响应式样式 |
+| padding | ResponsiveValue<string \| number> | { xs: '8px', sm: '16px', md: '24px' } | 响应式内边距 |
+| margin | ResponsiveValue<string \| number> | { xs: 0, sm: 'auto' } | 响应式外边距 |
+| maxWidth | ResponsiveValue<string \| number> | { xs: '100%', sm: '540px', md: '720px', lg: '960px', xl: '1140px' } | 响应式最大宽度 |
+| backgroundColor | ResponsiveValue<string> | 'transparent' | 响应式背景色 |
+| borderRadius | ResponsiveValue<string \| number> | { xs: 0, sm: '8px' } | 响应式边框半径 |
+| safeArea | boolean | false | 是否适配安全区域 |
+
+### 响应式类型
+
+#### ResponsiveValue<T>
+
+```ts
+type ResponsiveValue<T> = T | {
+  xs?: T;
+  sm?: T;
+  md?: T;
+  lg?: T;
+  xl?: T;
+};
+```
+
+#### ResponsiveStyle
+
+```ts
+type ResponsiveStyle = {
+  [key: string]: ResponsiveValue<string | number>;
+};
+```
+
+## 使用示例
+
+### 基本用法
+
+```tsx
+<ResponsiveContainer>
+  <View>
+    <Text>响应式容器内容</Text>
+  </View>
+</ResponsiveContainer>
+```
+
+### 自定义边距和内边距
+
+```tsx
+<ResponsiveContainer
+  padding={{ xs: '10px', sm: '20px', md: '30px' }}
+  margin={{ xs: '5px', sm: '10px', md: '15px' }}
+>
+  <View>
+    <Text>带自定义边距和内边距的容器</Text>
+  </View>
+</ResponsiveContainer>
+```
+
+### 自定义最大宽度
+
+```tsx
+<ResponsiveContainer
+  maxWidth={{ xs: '100%', sm: '600px', md: '800px', lg: '1000px' }}
+>
+  <View>
+    <Text>带自定义最大宽度的容器</Text>
+  </View>
+</ResponsiveContainer>
+```
+
+### 自定义背景色和边框半径
+
+```tsx
+<ResponsiveContainer
+  backgroundColor={{ xs: '#f5f5f5', sm: '#e0e0e0' }}
+  borderRadius={{ xs: '4px', sm: '8px', md: '12px' }}
+>
+  <View>
+    <Text>带自定义背景色和边框半径的容器</Text>
+  </View>
+</ResponsiveContainer>
+```
+
+### 安全区域适配
+
+```tsx
+<ResponsiveContainer safeArea={true}>
+  <View>
+    <Text>适配安全区域的容器</Text>
+  </View>
+</ResponsiveContainer>
+```
+
+### 自定义响应式样式
+
+```tsx
+<ResponsiveContainer
+  style={{
+    fontSize: { xs: '14px', sm: '16px', md: '18px' },
+    color: { xs: '#333', sm: '#666' },
+    border: { xs: '1px solid #ddd', md: '2px solid #aaa' }
+  }}
+>
+  <View>
+    <Text>带自定义响应式样式的容器</Text>
+  </View>
+</ResponsiveContainer>
+```
+
+### 嵌套使用
+
+```tsx
+<ResponsiveContainer>
+  <View>
+    <Text>外层容器</Text>
+    <ResponsiveContainer
+      padding={{ xs: '10px', sm: '20px' }}
+      backgroundColor="#f0f0f0"
+    >
+      <View>
+        <Text>内层容器</Text>
+      </View>
+    </ResponsiveContainer>
+  </View>
+</ResponsiveContainer>
+```
+
+## 使用提示
+
+1. **断点设计**：根据产品需求和目标用户设备，合理设计响应式断点。
+
+2. **内容适配**：容器内的内容也应该进行响应式设计，与容器的响应式布局保持一致。
+
+3. **性能优化**：避免在响应式样式中使用过多复杂的计算，影响渲染性能。
+
+4. **平台差异**：注意不同平台的显示差异，针对性地调整响应式策略。
+
+5. **安全区域**：在移动设备上，特别是带有刘海屏和底部指示器的设备，启用安全区域适配可以提供更好的用户体验。
+
+6. **测试验证**：在不同尺寸的设备和浏览器上测试响应式效果，确保布局正确。
+
+## 浏览器兼容性
+
+| 浏览器 | 版本 | 支持情况 |
+| --- | --- | --- |
+| Chrome | 80+ | ✅ |
+| Firefox | 75+ | ✅ |
+| Safari | 13+ | ✅ |
+| Edge | 80+ | ✅ |
+| 微信小程序 | 基础库 2.10+ | ✅ |
+| 支付宝小程序 | 基础库 2.7+ | ✅ |
+
+## 无障碍支持
+
+- 支持屏幕阅读器
+- 提供适当的对比度
+- 响应式设计不影响内容的可访问性

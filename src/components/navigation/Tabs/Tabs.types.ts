@@ -40,15 +40,15 @@ export interface TabsRef {
   /** 获取所有Tab项 */
   getItems: () => TabItem[];
   /** 设置激活的键值 */
-  setActiveKey: (key: string) => void;
+  setActiveKey: (_key: string) => void;
   /** 添加Tab项 */
-  addItem: (item: TabItem, index?: number) => void;
+  addItem: (_item: TabItem, index?: number) => void;
   /** 移除Tab项 */
-  removeItem: (key: string) => void;
+  removeItem: (_key: string) => void;
   /** 更新Tab项 */
-  updateItem: (key: string, newItem: Partial<TabItem>) => void;
+  updateItem: (_key: string, newItem: Partial<TabItem>) => void;
   /** 滚动到Tab项 */
-  scrollToTab: (key: string) => void;
+  scrollToTab: (_key: string) => void;
 }
 
 /** Tabs组件属性 */
@@ -78,21 +78,21 @@ export interface TabsProps extends BaseComponentProps {
   /** 是否销毁隐藏的Tab */
   destroyInactiveTabPane?: boolean;
   /** 点击Tab事件 */
-  onTabClick?: (key: string, event: React.MouseEvent) => void;
+  onTabClick?: (_key: string, event: React.MouseEvent) => void;
   /** 切换Tab事件 */
-  onChange?: (key: string) => void;
+  onChange?: (_key: string) => void;
   /** 添加Tab事件 */
   onAdd?: () => void;
   /** 删除Tab事件 */
-  onRemove?: (key: string) => void;
+  onRemove?: (_key: string) => void;
   /** 编辑Tab事件 */
-  onEdit?: (key: string, action: 'add' | 'remove') => void;
+  onEdit?: (_key: string, action: 'add' | 'remove') => void;
   /** 自定义Tab渲染 */
-  renderTabBar?: (props: TabsProps) => ReactNode;
+  renderTabBar?: (_props: TabsProps) => ReactNode;
   /** 自定义Tab项渲染 */
-  renderTab?: (item: TabItem, index: number) => ReactNode;
+  renderTab?: (_item: TabItem, index: number) => ReactNode;
   /** 自定义内容渲染 */
-  renderContent?: (item: TabItem, index: number) => ReactNode;
+  renderContent?: (_item: TabItem, index: number) => ReactNode;
 }
 
 /** TabPane组件属性 */

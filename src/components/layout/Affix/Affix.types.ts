@@ -20,7 +20,7 @@ export interface AffixProps extends ViewProps {
   offsetTop?: number
   offsetBottom?: number
   target?: AffixTarget
-  onChange?: (affixed: boolean) => void
+  onChange?: (_affixed: boolean) => void
 }
 
 export interface AffixRef {

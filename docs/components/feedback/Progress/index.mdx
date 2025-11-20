@@ -1,0 +1,363 @@
+---
+title: Progress 进度条
+description: 用于展示任务进度，支持线型、圆形和仪表盘三种类型。
+category: feedback
+zh-CN: { preview: '/screenshots/progress.png' }
+en-US: { preview: '/screenshots/progress.png' }
+---
+
+## 功能介绍
+
+Progress 组件用于展示任务进度，支持以下功能：
+
+- 支持三种进度条类型：线型、圆形和仪表盘
+- 支持自定义进度百分比（0-100）
+- 支持四种状态：正常、成功、异常和激活
+- 支持多种尺寸：xs、sm、small、default、lg、large
+- 支持自定义颜色和线条宽度
+- 支持动画效果
+- 支持进度信息展示和格式化
+- 支持分段进度条
+- 提供丰富的 Ref 方法控制进度
+
+## 基本用法
+
+```tsx
+import React from 'react';
+import { View } from '@tarojs/components';
+import { Progress } from '@taro-uno/ui';
+
+const BasicProgress = () => {
+  return (
+    <View>
+      <Progress percent={50} />
+    </View>
+  );
+};
+
+export default BasicProgress;
+```
+
+## 使用示例
+
+### 不同类型的进度条
+
+```tsx
+import React from 'react';
+import { View } from '@tarojs/components';
+import { Progress } from '@taro-uno/ui';
+
+const DifferentTypesExample = () => {
+  return (
+    <View>
+      <Progress type="line" percent={60} />
+      <Progress type="circle" percent={75} />
+      <Progress type="dashboard" percent={85} gapDegree={75} />
+    </View>
+  );
+};
+
+export default DifferentTypesExample;
+```
+
+### 不同状态的进度条
+
+```tsx
+import React from 'react';
+import { View } from '@tarojs/components';
+import { Progress } from '@taro-uno/ui';
+
+const DifferentStatusExample = () => {
+  return (
+    <View>
+      <Progress percent={60} status="normal" />
+      <Progress percent={100} status="success" />
+      <Progress percent={80} status="exception" />
+      <Progress percent={40} status="active" />
+    </View>
+  );
+};
+
+export default DifferentStatusExample;
+```
+
+### 自定义样式
+
+```tsx
+import React from 'react';
+import { View } from '@tarojs/components';
+import { Progress } from '@taro-uno/ui';
+
+const CustomStyleExample = () => {
+  return (
+    <View>
+      <Progress 
+        percent={60} 
+        strokeColor="#13c2c2" 
+        trailColor="#e6f7ff"
+        strokeWidth={10}
+      />
+      <Progress 
+        type="circle" 
+        percent={75} 
+        strokeColor="#52c41a" 
+        size="large"
+      />
+      <Progress 
+        type="dashboard" 
+        percent={85} 
+        strokeColor="#faad14" 
+        gapPosition="bottom"
+      />
+    </View>
+  );
+};
+
+export default CustomStyleExample;
+```
+
+### 自定义尺寸
+
+```tsx
+import React from 'react';
+import { View } from '@tarojs/components';
+import { Progress } from '@taro-uno/ui';
+
+const CustomSizeExample = () => {
+  return (
+    <View>
+      <Progress percent={60} size="xs" />
+      <Progress percent={60} size="sm" />
+      <Progress percent={60} size="default" />
+      <Progress percent={60} size="lg" />
+    </View>
+  );
+};
+
+export default CustomSizeExample;
+```
+
+### 隐藏进度信息
+
+```tsx
+import React from 'react';
+import { View } from '@tarojs/components';
+import { Progress } from '@taro-uno/ui';
+
+const HideInfoExample = () => {
+  return (
+    <View>
+      <Progress percent={60} showInfo={false} />
+      <Progress type="circle" percent={75} showInfo={false} />
+    </View>
+  );
+};
+
+export default HideInfoExample;
+```
+
+### 自定义进度信息格式
+
+```tsx
+import React from 'react';
+import { View } from '@tarojs/components';
+import { Progress } from '@taro-uno/ui';
+
+const CustomFormatExample = () => {
+  return (
+    <View>
+      <Progress 
+        percent={60} 
+        format={(percent) => `${percent}% 完成`} 
+      />
+      <Progress 
+        type="circle" 
+        percent={75} 
+        format={(percent) => `${percent}`} 
+      />
+    </View>
+  );
+};
+
+export default CustomFormatExample;
+```
+
+### 动画效果
+
+```tsx
+import React, { useState, useEffect } from 'react';
+import { View, Button } from '@tarojs/components';
+import { Progress } from '@taro-uno/ui';
+
+const AnimationExample = () => {
+  const [percent, setPercent] = useState(0);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setPercent(60);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <View>
+      <Progress percent={percent} animated={true} animationDuration={2000} />
+      <Button onClick={() => setPercent(percent + 10)}>
+        增加进度
+      </Button>
+    </View>
+  );
+};
+
+export default AnimationExample;
+```
+
+### 通过 Ref 控制
+
+```tsx
+import React, { useRef } from 'react';
+import { View, Button } from '@tarojs/components';
+import { Progress } from '@taro-uno/ui';
+
+const RefControlExample = () => {
+  const progressRef = useRef(null);
+
+  return (
+    <View>
+      <Progress ref={progressRef} percent={30} />
+      <Button onClick={() => progressRef.current?.setPercent(70)}>
+        设置进度为70%
+      </Button>
+      <Button onClick={() => progressRef.current?.complete()}>完成</Button>
+      <Button onClick={() => progressRef.current?.reset()}>重置</Button>
+      <Button onClick={() => progressRef.current?.start()}>开始动画</Button>
+      <Button onClick={() => progressRef.current?.pause()}>暂停动画</Button>
+    </View>
+  );
+};
+
+export default RefControlExample;
+```
+
+## API
+
+### ProgressProps
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| type | `ProgressType` | `'line'` | 进度条类型 |
+| percent | `number` | `0` | 进度百分比 (0-100) |
+| status | `ProgressStatus` | `'normal'` | 进度条状态 |
+| size | `ProgressSize` | `'default'` | 进度条尺寸 |
+| strokeWidth | `number` | - | 进度条宽度（仅线型有效） |
+| strokeColor | `string \| ProgressGradient` | - | 进度条线条颜色 |
+| trailColor | `string` | - | 进度条轨道颜色 |
+| showInfo | `boolean` | `true` | 是否显示进度信息 |
+| format | `(percent: number) => React.ReactNode` | - | 进度信息格式化 |
+| title | `React.ReactNode` | - | 进度条标题 |
+| description | `React.ReactNode` | - | 进度条描述 |
+| className | `string` | - | 自定义类名 |
+| style | `CSSProperties` | - | 自定义样式 |
+| gapDegree | `number` | `75` | 仪表盘缺口角度（仅仪表盘有效） |
+| gapPosition | `ProgressGapPosition` | `'top'` | 仪表盘缺口位置（仅仪表盘有效） |
+| animationDuration | `number` | `300` | 动画持续时间 |
+| animated | `boolean` | `true` | 是否开启动画 |
+| strokeLinecap | `ProgressLineCap` | `'round'` | 线条端点样式 |
+| segments | `ProgressSegment[]` | - | 分段进度条数据 |
+| successPercent | `number` | - | 成功进度百分比 |
+| animation | `ProgressAnimationConfig` | - | 动画配置 |
+| theme | `Partial<ProgressTheme>` | - | 自定义主题 |
+| events | `ProgressEventHandlers` | - | 事件处理函数 |
+| ariaLabel | `string` | - | 无障碍标签 |
+| ariaDescribedby | `string` | - | 无障碍描述 |
+| children | `React.ReactNode` | - | 子元素 |
+
+### ProgressRef
+
+| 方法 | 类型 | 说明 |
+| --- | --- | --- |
+| getPercent | `() => number` | 获取当前进度 |
+| setPercent | `(percent: number) => void` | 设置进度 |
+| reset | `() => void` | 重置进度 |
+| start | `() => void` | 开始动画 |
+| pause | `() => void` | 暂停动画 |
+| complete | `() => void` | 完成进度 |
+| getElement | `() => HTMLElement \| null` | 获取DOM元素 |
+| getStatus | `() => ProgressStatus` | 获取当前状态 |
+| setStatus | `(status: ProgressStatus) => void` | 设置状态 |
+| isAnimating | `() => boolean` | 是否正在动画中 |
+
+### 类型定义
+
+```ts
+type ProgressType = 'line' | 'circle' | 'dashboard';
+type ProgressSize = 'xs' | 'sm' | 'small' | 'default' | 'lg' | 'large';
+type ProgressStatus = 'normal' | 'success' | 'exception' | 'active';
+type ProgressLineCap = 'round' | 'square' | 'butt';
+type ProgressGapPosition = 'top' | 'bottom' | 'left' | 'right';
+
+interface ProgressSegment {
+  color: string;
+  percent: number;
+}
+
+interface ProgressGradient {
+  type: 'linear' | 'radial';
+  direction?: string;
+  colors: string[];
+}
+
+interface ProgressAnimationConfig {
+  duration: number;
+  easing?: string;
+  delay?: number;
+}
+
+interface ProgressTheme {
+  primaryColor: string;
+  successColor: string;
+  errorColor: string;
+  warningColor: string;
+  textColor: string;
+  backgroundColor: string;
+  borderRadius: number;
+}
+
+interface ProgressEventHandlers {
+  onChange?: (percent: number) => void;
+  onComplete?: () => void;
+  onAnimationStart?: () => void;
+  onAnimationEnd?: () => void;
+}
+```
+
+## 使用提示
+
+1. **类型选择**：根据不同的场景选择合适的进度条类型，如长任务使用线型，简短状态指示使用圆形，复杂数据展示使用仪表盘。
+
+2. **状态管理**：使用 `status` 属性可以清晰地指示进度的完成状态，如成功、异常等。
+
+3. **动画效果**：通过 `animated` 和 `animationDuration` 属性可以控制进度条的动画效果，提升用户体验。
+
+4. **自定义样式**：可以通过 `strokeColor`、`trailColor`、`strokeWidth` 等属性自定义进度条的外观，适应不同的设计需求。
+
+5. **进度控制**：使用 Ref 提供的方法可以灵活地控制进度条的显示，如动态更新进度、重置进度等。
+
+6. **无障碍支持**：通过 `ariaLabel` 和 `ariaDescribedby` 属性可以提升组件的无障碍性，支持屏幕阅读器。
+
+## 浏览器兼容性
+
+| 浏览器 | 版本 |
+| --- | --- |
+| Chrome | ✅ |
+| Firefox | ✅ |
+| Safari | ✅ |
+| Edge | ✅ |
+| Taro 小程序 | ✅ |
+
+## 无障碍支持
+
+- 支持键盘操作
+- 提供适当的 ARIA 属性
+- 支持屏幕阅读器
+- 提供清晰的进度状态指示

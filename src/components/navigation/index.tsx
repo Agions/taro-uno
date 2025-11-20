@@ -3,6 +3,8 @@ export * from './Menu';
 export * from './Tabs';
 export * from './Pagination';
 export * from './Steps';
+export * from './NavBar';
+export * from './Tree';
 
 // 导出类型
 export type { TabsProps, TabsRef, TabPosition, TabType, TabSize, TabItem, TabPaneProps } from './Tabs/Tabs.types';
@@ -18,12 +20,14 @@ export type {
 export type { MenuProps, MenuRef, MenuItem, MenuMode, MenuTheme } from './Menu/Menu.types';
 
 export type { StepsProps, StepsRef, StepProps, StepStatus, StepDirection } from './Steps/Steps.types';
+export type { NavBarProps, NavBarRef, NavBarPosition, NavBarTheme } from './NavBar/NavBar.types';
 
 // 导出样式
 export { tabsStyles } from './Tabs/Tabs.styles';
 export { paginationStyles } from './Pagination/Pagination.styles';
 export { menuStyles } from './Menu/Menu.styles';
 export { stepsStyles } from './Steps/Steps.styles';
+export { navBarStyles } from './NavBar/NavBar.styles';
 
 // 导航组件工具函数
 export const NavigationUtils = {

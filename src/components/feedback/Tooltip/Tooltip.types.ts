@@ -53,7 +53,7 @@ export interface TooltipProps {
   /** 自定义样式 */
   style?: React.CSSProperties;
   /** 显示/隐藏回调 */
-  onVisibleChange?: (visible: boolean) => void;
+  onVisibleChange?: (_visible: boolean) => void;
   /** 显示回调 */
   onShow?: () => void;
   /** 隐藏回调 */
@@ -92,13 +92,13 @@ export interface TooltipRef {
   /** 获取当前显示状态 */
   getVisible: () => boolean;
   /** 更新提示内容 */
-  updateTitle: (title: React.ReactNode) => void;
+  updateTitle: (_title: React.ReactNode) => void;
   /** 重新定位 */
   reposition: () => void;
 }
 
 // 事件处理器类型
-export type TooltipEventHandler = (event: ITouchEvent) => void;
+export type TooltipEventHandler = (_event: ITouchEvent) => void;
 
 // Tooltip 状态类型
 export interface TooltipState {
@@ -167,6 +167,6 @@ export interface TooltipInstance {
   show: () => void;
   hide: () => void;
   toggle: () => void;
-  update: (props: Partial<TooltipProps>) => void;
+  update: (_props: Partial<TooltipProps>) => void;
   destroy: () => void;
 }

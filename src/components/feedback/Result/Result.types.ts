@@ -27,11 +27,11 @@ export interface ResultRef {
   /** 获取当前状态 */
   getStatus: () => ResultStatus;
   /** 设置状态 */
-  setStatus: (status: ResultStatus) => void;
+  setStatus: (_status: ResultStatus) => void;
   /** 设置标题 */
-  setTitle: (title: React.ReactNode) => void;
+  setTitle: (_title: React.ReactNode) => void;
   /** 设置副标题 */
-  setSubTitle: (subTitle: React.ReactNode) => void;
+  setSubTitle: (_subTitle: React.ReactNode) => void;
 }
 
 export type ResultSize = 'small' | 'medium' | 'large';
@@ -59,15 +59,15 @@ export interface ResultConfig {
 
 export interface ResultUtils {
   /** 获取状态对应的颜色 */
-  getStatusColor: (status: ResultStatus) => string;
+  getStatusColor: (_status: ResultStatus) => string;
   /** 获取状态对应的图标 */
-  getStatusIcon: (status: ResultStatus) => React.ReactNode;
+  getStatusIcon: (_status: ResultStatus) => React.ReactNode;
   /** 获取状态对应的默认标题 */
-  getStatusTitle: (status: ResultStatus) => string;
+  getStatusTitle: (_status: ResultStatus) => string;
   /** 格式化结果数据 */
-  formatResultData: (data: any) => any;
+  formatResultData: (_data: any) => any;
   /** 验证状态是否有效 */
-  validateStatus: (status: string) => boolean;
+  validateStatus: (_status: string) => boolean;
 }
 
 export const ResultUtils: ResultUtils = {

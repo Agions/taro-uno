@@ -61,9 +61,9 @@ export interface CheckboxProps extends Omit<CheckboxNativeProps, 'size' | 'check
   /** 自定义样式类名 */
   className?: string;
   /** 变化事件处理函数 */
-  onChange?: (checked: boolean, event: ITouchEvent) => void;
+  onChange?: (_checked: boolean, event: ITouchEvent) => void;
   /** 点击事件处理函数 */
-  onClick?: (event: ITouchEvent) => void;
+  onClick?: (_event: ITouchEvent) => void;
   /** 自定义样式 */
   style?: React.CSSProperties;
   /** 是否启用无障碍访问 */
@@ -85,14 +85,14 @@ export interface CheckboxProps extends Omit<CheckboxNativeProps, 'size' | 'check
   rules?: Array<{
     required?: boolean;
     message?: string;
-    validator?: (checked: boolean) => boolean | string | Promise<boolean | string>;
+    validator?: (_checked: boolean) => boolean | string | Promise<boolean | string>;
   }>;
   /** 验证触发时机 */
   validateTrigger?: 'onChange' | 'onBlur' | 'onSubmit';
   /** 是否立即验证 */
   immediate?: boolean;
   /** 自定义验证函数 */
-  validator?: (checked: boolean) => boolean | string | Promise<boolean | string>;
+  validator?: (_checked: boolean) => boolean | string | Promise<boolean | string>;
   /** 动画效果 */
   animation?: boolean;
   /** 动画时长 */
@@ -128,23 +128,23 @@ export type CheckboxRef = {
   /** 获取选中状态 */
   getChecked: () => boolean;
   /** 设置选中状态 */
-  setChecked: (checked: boolean) => void;
+  setChecked: (_checked: boolean) => void;
   /** 切换选中状态 */
   toggle: () => void;
   /** 设置禁用状态 */
-  setDisabled: (disabled: boolean) => void;
+  setDisabled: (_disabled: boolean) => void;
   /** 设置只读状态 */
-  setReadonly: (readonly: boolean) => void;
+  setReadonly: (_readonly: boolean) => void;
   /** 设置半选状态 */
-  setIndeterminate: (indeterminate: boolean) => void;
+  setIndeterminate: (_indeterminate: boolean) => void;
   /** 设置复选框状态 */
-  setStatus: (status: CheckboxStatus) => void;
+  setStatus: (_status: CheckboxStatus) => void;
   /** 获取复选框状态 */
   getStatus: () => CheckboxStatus;
   /** 设置复选框尺寸 */
-  setSize: (size: CheckboxSize) => void;
+  setSize: (_size: CheckboxSize) => void;
   /** 设置复选框颜色 */
-  setColor: (color: CheckboxColor) => void;
+  setColor: (_color: CheckboxColor) => void;
   /** 验证复选框 */
   validate: () => Promise<{ valid: boolean; message?: string }>;
   /** 重置复选框 */
@@ -156,7 +156,7 @@ export type CheckboxRef = {
   /** 获取复选框数据 */
   getData: () => Record<string, any> | undefined;
   /** 设置复选框数据 */
-  setData: (data: Record<string, any>) => void;
+  setData: (_data: Record<string, any>) => void;
   /** 震动效果 - 用于错误提示 */
   shake: () => void;
   /** 脉冲效果 - 用于吸引用户注意 */
@@ -166,7 +166,7 @@ export type CheckboxRef = {
 /** 复选框组属性接口 */
 export interface CheckboxGroupProps {
   /** 复选框组内容 */
-  children: ReactNode;
+  children?: ReactNode;
   /** 复选框组值 */
   value?: Array<string | number>;
   /** 默认值（非受控模式） */
@@ -202,9 +202,9 @@ export interface CheckboxGroupProps {
     className?: string;
   }>;
   /** 变化事件处理函数 */
-  onChange?: (checkedValues: Array<string | number>) => void;
+  onChange?: (_checkedValues: Array<string | number>) => void;
   /** 全选变化事件处理函数 */
-  onAllChange?: (checked: boolean) => void;
+  onAllChange?: (_checked: boolean) => void;
   /** 自定义样式类名 */
   className?: string;
   /** 自定义样式 */
@@ -220,7 +220,7 @@ export interface CheckboxGroupProps {
   /** 是否显示计数 */
   showCount?: boolean;
   /** 计数文本格式 */
-  countText?: (selected: number, total: number) => string;
+  countText?: (_selected: number, total: number) => string;
   /** 是否允许取消全选 */
   allowDeselectAll?: boolean;
   /** 是否紧凑布局 */
@@ -251,7 +251,7 @@ export type CheckboxGroupRef = {
   /** 获取选中值 */
   getValue: () => Array<string | number>;
   /** 设置选中值 */
-  setValue: (values: Array<string | number>) => void;
+  setValue: (_values: Array<string | number>) => void;
   /** 全选 */
   selectAll: () => void;
   /** 取消全选 */
@@ -267,11 +267,11 @@ export type CheckboxGroupRef = {
   /** 是否部分选中 */
   isIndeterminate: () => boolean;
   /** 设置禁用状态 */
-  setDisabled: (disabled: boolean) => void;
+  setDisabled: (_disabled: boolean) => void;
   /** 设置只读状态 */
-  setReadonly: (readonly: boolean) => void;
+  setReadonly: (_readonly: boolean) => void;
   /** 设置组状态 */
-  setStatus: (status: CheckboxStatus) => void;
+  setStatus: (_status: CheckboxStatus) => void;
   /** 验证复选框组 */
   validate: () => Promise<{ valid: boolean; message?: string }>;
   /** 重置复选框组 */
@@ -287,11 +287,11 @@ export type CheckboxGroupRef = {
     data?: Record<string, any>;
   }>;
   /** 根据值获取选项 */
-  getOptionByValue: (value: string | number) => any;
+  getOptionByValue: (_value: string | number) => any;
   /** 根据值设置选项状态 */
-  setOptionDisabled: (value: string | number, disabled: boolean) => void;
+  setOptionDisabled: (_value: string | number, disabled: boolean) => void;
   /** 批量设置选项状态 */
-  setOptionsDisabled: (values: Array<string | number>, disabled: boolean) => void;
+  setOptionsDisabled: (_values: Array<string | number>, disabled: boolean) => void;
   /** 聚焦组 */
   focus: () => void;
   /** 失焦组 */
@@ -347,7 +347,7 @@ export interface CheckboxContext {
   /** 布局方向 */
   direction: 'horizontal' | 'vertical';
   /** 变化事件处理函数 */
-  onChange: (checked: boolean, value: string | number) => void;
+  onChange: (_checked: boolean, value: string | number) => void;
   /** 复选框样式配置 */
   styleConfig: CheckboxStyleConfig;
 }
@@ -367,29 +367,29 @@ export interface CheckboxValidationResult {
 /** 复选框事件接口 */
 export interface CheckboxEvents {
   /** 值变化事件 */
-  onChange: (checked: boolean, event: ITouchEvent) => void;
+  onChange: (_checked: boolean, event: ITouchEvent) => void;
   /** 点击事件 */
-  onClick: (event: ITouchEvent) => void;
+  onClick: (_event: ITouchEvent) => void;
   /** 聚焦事件 */
-  onFocus: (event: ITouchEvent) => void;
+  onFocus: (_event: ITouchEvent) => void;
   /** 失焦事件 */
-  onBlur: (event: ITouchEvent) => void;
+  onBlur: (_event: ITouchEvent) => void;
 }
 
 /** 复选框组事件接口 */
 export interface CheckboxGroupEvents {
   /** 值变化事件 */
-  onChange: (checkedValues: Array<string | number>) => void;
+  onChange: (_checkedValues: Array<string | number>) => void;
   /** 全选变化事件 */
-  onAllChange: (checked: boolean) => void;
+  onAllChange: (_checked: boolean) => void;
 }
 
 /** 复选框工具函数接口 */
 export interface CheckboxUtils {
   /** 格式化复选框值 */
-  formatValue: (value: string | number | boolean) => string | number;
+  formatValue: (_value: string | number | boolean) => string | number;
   /** 验证复选框值 */
-  validateValue: (checked: boolean, rules: CheckboxProps['rules']) => { valid: boolean; message?: string };
+  validateValue: (_checked: boolean, rules: CheckboxProps['rules']) => { valid: boolean; message?: string };
   /** 获取复选框尺寸映射 */
   getSizeMap: () => Record<CheckboxSize, { fontSize: number; size: number; borderRadius: number; padding: number }>;
   /** 获取复选框状态映射 */
@@ -399,7 +399,7 @@ export interface CheckboxUtils {
   /** 生成复选框ID */
   generateId: (prefix?: string) => string;
   /** 生成涟漪效果 */
-  createRipple: (event: ITouchEvent, element: HTMLElement, color?: string) => void;
+  createRipple: (_event: ITouchEvent, element: HTMLElement, color?: string) => void;
   /** 计算复选框组选中状态 */
   calculateGroupState: (
     values: Array<string | number>,

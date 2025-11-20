@@ -133,15 +133,15 @@ export type DividerRef = {
   /** 获取分割线颜色 */
   getColor: () => string;
   /** 设置分割线方向 */
-  setOrientation: (orientation: DividerOrientation) => void;
+  setOrientation: (_orientation: DividerOrientation) => void;
   /** 设置分割线类型 */
-  setType: (type: DividerType) => void;
+  setType: (_type: DividerType) => void;
   /** 设置分割线位置 */
-  setPosition: (position: DividerPosition) => void;
+  setPosition: (_position: DividerPosition) => void;
   /** 设置分割线尺寸 */
-  setSize: (size: DividerSize) => void;
+  setSize: (_size: DividerSize) => void;
   /** 设置分割线颜色 */
-  setColor: (color: string) => void;
+  setColor: (_color: string) => void;
   /** 滚动到视图 */
   scrollIntoView: (options?: ScrollIntoViewOptions) => void;
 };
@@ -175,31 +175,31 @@ export interface DividerGroupProps {
 /** 分割线工具函数接口 */
 export interface DividerUtils {
   /** 获取分割线样式类名 */
-  getDividerClassName: (props: Partial<DividerProps>) => string;
+  getDividerClassName: (_props: Partial<DividerProps>) => string;
   /** 获取分割线样式对象 */
-  getDividerStyle: (props: Partial<DividerProps>) => React.CSSProperties;
+  getDividerStyle: (_props: Partial<DividerProps>) => React.CSSProperties;
   /** 获取分割线尺寸映射 */
   getSizeMap: () => Record<DividerSize, { width: number; height: number; margin: number }>;
   /** 获取分割线颜色映射 */
   getColorMap: () => Record<DividerColor, string>;
   /** 验证分割线属性 */
-  validateDividerProps: (props: DividerProps) => boolean;
+  validateDividerProps: (_props: DividerProps) => boolean;
   /** 格式化分割线方向 */
-  formatDividerOrientation: (orientation: DividerOrientation) => string;
+  formatDividerOrientation: (_orientation: DividerOrientation) => string;
   /** 格式化分割线类型 */
-  formatDividerType: (type: DividerType) => string;
+  formatDividerType: (_type: DividerType) => string;
   /** 格式化分割线位置 */
-  formatDividerPosition: (position: DividerPosition) => string;
+  formatDividerPosition: (_position: DividerPosition) => string;
   /** 格式化分割线尺寸 */
-  formatDividerSize: (size: DividerSize) => string;
+  formatDividerSize: (_size: DividerSize) => string;
   /** 格式化分割线颜色 */
-  formatDividerColor: (color: DividerColor) => string;
+  formatDividerColor: (_color: DividerColor) => string;
   /** 计算分割线长度 */
-  calculateDividerLength: (props: DividerProps) => number | string;
+  calculateDividerLength: (_props: DividerProps) => number | string;
   /** 生成渐变背景 */
-  generateGradientBackground: (gradient: { start: string; end: string; direction?: string }) => string;
+  generateGradientBackground: (_gradient: { start: string; end: string; direction?: string }) => string;
   /** 响应式处理 */
-  handleResponsive: (props: DividerProps, breakpoint?: string) => Partial<DividerProps>;
+  handleResponsive: (_props: DividerProps, breakpoint?: string) => Partial<DividerProps>;
 }
 
 /** 垂直分割线属性接口 */

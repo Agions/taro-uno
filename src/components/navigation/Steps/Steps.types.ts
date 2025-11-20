@@ -18,13 +18,13 @@ export interface StepsProps extends ViewProps {
   current?: number
   direction?: 'horizontal' | 'vertical'
   labelPlacement?: 'horizontal' | 'vertical'
-  progressDot?: boolean | ((index: number, status: string, title: ReactNode, description: ReactNode) => ReactNode)
+  progressDot?: boolean | ((_index: number, status: string, title: ReactNode, description: ReactNode) => ReactNode)
   initial?: number
   status?: 'wait' | 'process' | 'finish' | 'error'
   size?: 'default' | 'small'
   items?: Step[]
   children?: ReactNode
-  onChange?: (current: number) => void
+  onChange?: (_current: number) => void
 }
 
 export interface StepsRef {

@@ -1,0 +1,430 @@
+# TimePicker 时间选择器
+
+用于选择或输入时间，支持多种时间格式和交互方式。
+
+## 功能特性
+
+- 支持小时、分钟、秒的精确选择
+- 可自定义时间格式（HH:mm:ss、HH:mm、mm:ss等）
+- 支持受控和非受控两种使用模式
+- 提供清除按钮快速重置
+- 支持禁用和只读状态
+- 支持多种尺寸（sm/md/lg）
+- 支持多种变体样式（outlined/filled/underlined）
+- 支持12/24小时制切换
+- 提供丰富的API方法
+
+## 基本用法
+
+```tsx
+import React from 'react';
+import { TimePicker } from '@taro-uno/components';
+
+function App() {
+  return (
+    <TimePicker placeholder="请选择时间" />
+  );
+}
+
+export default App;
+```
+
+## 使用示例
+
+### 受控模式
+
+```tsx
+import React, { useState } from 'react';
+import { View } from '@tarojs/components';
+import { TimePicker } from '@taro-uno/components';
+
+function ControlledTimePicker() {
+  const [time, setTime] = useState<{ hours: number; minutes: number; seconds: number } | null>({
+    hours: 12,
+    minutes: 30,
+    seconds: 45
+  });
+
+  const handleTimeChange = (newTime: { hours: number; minutes: number; seconds: number } | null) => {
+    setTime(newTime);
+    console.log('Selected time:', newTime);
+  };
+
+  return (
+    <View>
+      <TimePicker
+        value={time}
+        onChange={handleTimeChange}
+        placeholder="请选择时间"
+      />
+      <View>当前选择的时间: {time ? `${time.hours}:${time.minutes}:${time.seconds}` : '未选择'}</View>
+    </View>
+  );
+}
+
+export default ControlledTimePicker;
+```
+
+### 自定义时间格式
+
+```tsx
+import React from 'react';
+import { TimePicker } from '@taro-uno/components';
+
+function CustomFormatTimePicker() {
+  return (
+    <View>
+      <TimePicker
+        format="HH:mm"
+        placeholder="选择小时和分钟 (HH:mm)"
+      />
+      <TimePicker
+        format="HH:mm:ss"
+        placeholder="选择完整时间 (HH:mm:ss)"
+        style={{ marginTop: '16px' }}
+      />
+    </View>
+  );
+}
+
+export default CustomFormatTimePicker;
+```
+
+### 尺寸
+
+```tsx
+import React from 'react';
+import { View } from '@tarojs/components';
+import { TimePicker } from '@taro-uno/components';
+
+function SizeTimePicker() {
+  return (
+    <View>
+      <TimePicker
+        size="sm"
+        placeholder="小尺寸"
+      />
+      <TimePicker
+        size="md"
+        placeholder="中等尺寸"
+        style={{ marginTop: '16px' }}
+      />
+      <TimePicker
+        size="lg"
+        placeholder="大尺寸"
+        style={{ marginTop: '16px' }}
+      />
+    </View>
+  );
+}
+
+export default SizeTimePicker;
+```
+
+### 变体
+
+```tsx
+import React from 'react';
+import { View } from '@tarojs/components';
+import { TimePicker } from '@taro-uno/components';
+
+function VariantTimePicker() {
+  return (
+    <View>
+      <TimePicker
+        variant="outlined"
+        placeholder="外框变体"
+      />
+      <TimePicker
+        variant="filled"
+        placeholder="填充变体"
+        style={{ marginTop: '16px' }}
+      />
+      <TimePicker
+        variant="underlined"
+        placeholder="下划线变体"
+        style={{ marginTop: '16px' }}
+      />
+    </View>
+  );
+}
+
+export default VariantTimePicker;
+```
+
+### 状态
+
+```tsx
+import React from 'react';
+import { View } from '@tarojs/components';
+import { TimePicker } from '@taro-uno/components';
+
+function StatusTimePicker() {
+  return (
+    <View>
+      <TimePicker
+        status="normal"
+        placeholder="正常状态"
+      />
+      <TimePicker
+        status="error"
+        placeholder="错误状态"
+        style={{ marginTop: '16px' }}
+      />
+      <TimePicker
+        status="warning"
+        placeholder="警告状态"
+        style={{ marginTop: '16px' }}
+      />
+      <TimePicker
+        status="success"
+        placeholder="成功状态"
+        style={{ marginTop: '16px' }}
+      />
+    </View>
+  );
+}
+
+export default StatusTimePicker;
+```
+
+### 禁用状态
+
+```tsx
+import React from 'react';
+import { View } from '@tarojs/components';
+import { TimePicker } from '@taro-uno/components';
+
+function DisabledTimePicker() {
+  return (
+    <View>
+      <TimePicker
+        disabled
+        placeholder="禁用状态"
+      />
+      <TimePicker
+        readOnly
+        value={{ hours: 14, minutes: 30, seconds: 0 }}
+        placeholder="只读状态"
+        style={{ marginTop: '16px' }}
+      />
+    </View>
+  );
+}
+
+export default DisabledTimePicker;
+```
+
+### 显示清除按钮
+
+```tsx
+import React, { useState } from 'react';
+import { TimePicker } from '@taro-uno/components';
+
+function ClearableTimePicker() {
+  const [time, setTime] = useState<{ hours: number; minutes: number; seconds: number }>({
+    hours: 9,
+    minutes: 45,
+    seconds: 30
+  });
+
+  const handleTimeChange = (newTime: { hours: number; minutes: number; seconds: number } | null) => {
+    setTime(newTime as any);
+  };
+
+  const handleClear = () => {
+    console.log('时间已清除');
+  };
+
+  return (
+    <TimePicker
+      value={time}
+      onChange={handleTimeChange}
+      allowClear
+      onClear={handleClear}
+      placeholder="可清除的时间选择器"
+    />
+  );
+}
+
+export default ClearableTimePicker;
+```
+
+### 使用Ref方法
+
+```tsx
+import React, { useRef } from 'react';
+import { View, Button } from '@tarojs/components';
+import { TimePicker } from '@taro-uno/components';
+import type { TimePickerRef } from '@taro-uno/components/es/form/TimePicker/TimePicker.types';
+
+function TimePickerWithRef() {
+  const timePickerRef = useRef<TimePickerRef>(null);
+
+  const handleSetNow = () => {
+    timePickerRef.current?.setNow();
+  };
+
+  const handleClear = () => {
+    timePickerRef.current?.clear();
+  };
+
+  const handleGetValue = () => {
+    const value = timePickerRef.current?.getValue();
+    const timeString = timePickerRef.current?.getTimeString();
+    console.log('当前值:', value, '时间字符串:', timeString);
+  };
+
+  return (
+    <View>
+      <TimePicker
+        ref={timePickerRef}
+        placeholder="使用Ref方法"
+      />
+      <View style={{ marginTop: '16px' }}>
+        <Button type="primary" size="small" onClick={handleSetNow} style={{ marginRight: '8px' }}>
+          设置当前时间
+        </Button>
+        <Button type="default" size="small" onClick={handleClear} style={{ marginRight: '8px' }}>
+          清除
+        </Button>
+        <Button type="default" size="small" onClick={handleGetValue}>
+          获取值
+        </Button>
+      </View>
+    </View>
+  );
+}
+
+export default TimePickerWithRef;
+```
+
+### 自定义样式
+
+```tsx
+import React from 'react';
+import { TimePicker } from '@taro-uno/components';
+
+function CustomStyleTimePicker() {
+  return (
+    <TimePicker
+      placeholder="自定义样式的时间选择器"
+      style={{
+        width: '300px',
+        borderRadius: '8px',
+        borderColor: '#1890ff',
+        backgroundColor: '#f0f8ff'
+      }}
+    />
+  );
+}
+
+export default CustomStyleTimePicker;
+```
+
+## API
+
+### TimePickerProps
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| value | `TimeValue \| null` | - | 选中的时间值（受控模式） |
+| defaultValue | `TimeValue \| null` | null | 默认时间值（非受控模式） |
+| format | `TimePickerFormat` | 'HH:mm:ss' | 时间格式，可选值：HH:mm:ss、HH:mm、mm:ss、hh:mm:ss A、hh:mm A |
+| disabled | `boolean` | false | 是否禁用 |
+| readOnly | `boolean` | false | 是否只读 |
+| allowClear | `boolean` | false | 是否显示清除按钮 |
+| size | `TimePickerSize` | 'md' | 尺寸，可选值：sm、md、lg |
+| status | `TimePickerStatus` | 'normal' | 状态，可选值：normal、error、warning、success、disabled |
+| variant | `TimePickerVariant` | 'outlined' | 变体，可选值：outlined、filled、underlined |
+| placeholder | `string` | '请选择时间' | 占位符文本 |
+| onChange | `(time: TimeValue \| null, timeString: string) => void` | - | 时间变化时的回调 |
+| onFocus | `(event: ITouchEvent) => void` | - | 输入框获取焦点时的回调 |
+| onBlur | `(event: ITouchEvent) => void` | - | 输入框失去焦点时的回调 |
+| onClear | `(event: ITouchEvent) => void` | - | 点击清除按钮时的回调 |
+| onClick | `(event: ITouchEvent) => void` | - | 点击输入框时的回调 |
+| onOpenChange | `(open: boolean) => void` | - | 面板开关状态变化时的回调 |
+| className | `string` | - | 自定义类名 |
+| style | `CSSProperties` | - | 自定义样式 |
+
+### TimePickerRef
+
+| 方法 | 类型 | 说明 |
+| --- | --- | --- |
+| getValue | `() => TimeValue \| null` | 获取当前时间值 |
+| setValue | `(value: TimeValue \| null) => void` | 设置时间值 |
+| getTimeString | `() => string` | 获取格式化后的时间字符串 |
+| focus | `() => void` | 让输入框获取焦点 |
+| blur | `() => void` | 让输入框失去焦点 |
+| open | `() => void` | 打开时间选择面板 |
+| close | `() => void` | 关闭时间选择面板 |
+| clear | `() => void` | 清除选中的时间 |
+| setNow | `() => void` | 设置当前时间 |
+| confirm | `() => void` | 确认选择并关闭面板 |
+| isOpen | `() => boolean` | 判断面板是否打开 |
+| isDisabled | `() => boolean` | 判断是否禁用 |
+| isReadOnly | `() => boolean` | 判断是否只读 |
+| getCurrentTime | `() => TimeValue` | 获取当前系统时间 |
+| validateTime | `(time: TimeValue) => boolean` | 验证时间是否有效 |
+| formatTime | `(time: TimeValue) => string` | 将时间对象格式化为字符串 |
+| parseTimeString | `(timeString: string) => TimeValue \| null` | 将字符串解析为时间对象 |
+
+### 类型定义
+
+```ts
+/** 时间选择器尺寸 */
+export type TimePickerSize = 'sm' | 'md' | 'lg';
+
+/** 时间选择器变体 */
+export type TimePickerVariant = 'outlined' | 'filled' | 'underlined';
+
+/** 时间选择器状态 */
+export type TimePickerStatus = 'normal' | 'error' | 'warning' | 'success' | 'disabled';
+
+/** 时间格式 */
+export type TimePickerFormat = 'HH:mm:ss' | 'HH:mm' | 'mm:ss' | 'hh:mm:ss A' | 'hh:mm A';
+
+/** 时间值 */
+export interface TimeValue {
+  /** 小时 (0-23) */
+  hours: number;
+  /** 分钟 (0-59) */
+  minutes: number;
+  /** 秒数 (0-59) */
+  seconds: number;
+  /** 周期 (12小时制) */
+  period?: TimePickerPeriod;
+}
+```
+
+## 使用提示
+
+1. **受控与非受控**：TimePicker 组件同时支持受控和非受控两种使用方式。当需要外部控制时间值时，使用 `value` 和 `onChange` 属性；否则使用 `defaultValue` 属性。
+
+2. **时间格式**：通过 `format` 属性可以自定义时间显示格式，支持多种常用格式。
+
+3. **性能优化**：当需要频繁更新时间值时，建议使用受控模式并合理使用 React.memo 或 useMemo 等优化手段。
+
+4. **无障碍访问**：组件支持设置 `accessible`、`accessibilityLabel` 等属性，提升无障碍访问体验。
+
+5. **自定义样式**：除了通过 `style` 和 `className` 属性自定义样式外，还可以通过主题配置来统一修改组件样式。
+
+## 浏览器兼容性
+
+| 浏览器 | 版本 |
+| --- | --- |
+| Chrome | 支持 |
+| Firefox | 支持 |
+| Safari | 支持 |
+| Edge | 支持 |
+| WeChat Mini Program | 支持 |
+| Alipay Mini Program | 支持 |
+
+## 无障碍支持
+
+- 支持键盘导航
+- 支持屏幕阅读器
+- 支持焦点管理
+- 提供无障碍标签和角色配置
+
+通过合理使用这些无障碍特性，可以确保不同能力的用户都能正常使用 TimePicker 组件。

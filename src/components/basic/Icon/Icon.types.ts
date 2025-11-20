@@ -1,5 +1,4 @@
 import type { ReactNode, SVGAttributes } from 'react';
-import type { AccessibilityState, AccessibilityProps } from '../../../types/accessibility';
 
 /** 图标类型 */
 export type IconType = 'svg' | 'image' | 'font' | 'custom';
@@ -35,7 +34,7 @@ export type IconTheme = 'outlined' | 'filled' | 'two-tone' | 'colored';
 export type IconNativeProps = SVGAttributes<SVGElement>;
 
 /** 图标组件属性接口 */
-export interface IconProps extends Omit<IconNativeProps, 'size' | 'color'>, AccessibilityProps {
+export interface IconProps extends Omit<IconNativeProps, 'size' | 'color'> {
   /** 图标源 */
   source: IconSource;
   /** 图标类型 */
@@ -59,7 +58,7 @@ export interface IconProps extends Omit<IconNativeProps, 'size' | 'color'>, Acce
   /** 自定义样式类名 */
   className?: string;
   /** 点击事件处理函数 */
-  onClick?: (event: React.MouseEvent) => void;
+  onClick?: (_event: React.MouseEvent) => void;
   /** 自定义样式 */
   style?: React.CSSProperties;
   /** 图标库前缀 */
@@ -70,38 +69,6 @@ export interface IconProps extends Omit<IconNativeProps, 'size' | 'color'>, Acce
   animated?: boolean;
   /** 动画持续时间 */
   animationDuration?: number;
-  /** 是否启用无障碍访问 */
-  accessible?: boolean;
-  /** 无障碍标签 */
-  accessibilityLabel?: string;
-  /** 无障碍角色 */
-  accessibilityRole?: string;
-  /** 无障碍状态 */
-  accessibilityState?: AccessibilityState;
-  /** 无障碍提示 */
-  accessibilityHint?: string;
-  /** 无障碍值 */
-  accessibilityValue?: {
-    min?: number;
-    max?: number;
-    now?: number;
-    text?: string;
-  };
-  /** 无障碍元素标识 */
-  accessibilityId?: string;
-  /** 无障碍动作 */
-  accessibilityActions?: Array<{
-    name: string;
-    label?: string;
-  }>;
-  /** 无障碍实时区域类型 */
-  accessibilityLiveRegion?: 'none' | 'polite' | 'assertive';
-  /** 无障碍重要程度 */
-  accessibilityImportant?: boolean;
-  /** 无障碍视图是否隐藏 */
-  accessibilityViewIsModal?: boolean;
-  /** 无障碍元素树角色 */
-  accessibilityElementsHidden?: boolean;
   /** 图标组中的索引位置 */
   groupIndex?: number;
   /** 图标组中的总数 */
@@ -129,9 +96,9 @@ export type IconRef = {
   /** 触发点击事件 */
   click: () => void;
   /** 设置禁用状态 */
-  setDisabled: (disabled: boolean) => void;
+  setDisabled: (_disabled: boolean) => void;
   /** 设置加载状态 */
-  setLoading: (loading: boolean) => void;
+  setLoading: (_loading: boolean) => void;
   /** 获取图标状态 */
   getStatus: () => IconStatus;
   /** 获取图标尺寸 */
@@ -139,11 +106,11 @@ export type IconRef = {
   /** 获取图标颜色 */
   getColor: () => string;
   /** 旋转图标 */
-  rotate: (angle: IconRotation) => void;
+  rotate: (_angle: IconRotation) => void;
   /** 设置图标颜色 */
-  setColor: (color: string) => void;
+  setColor: (_color: string) => void;
   /** 设置图标尺寸 */
-  setSize: (size: IconSize | number) => void;
+  setSize: (_size: IconSize | number) => void;
 };
 
 /** 图标组属性接口 */
@@ -173,33 +140,33 @@ export interface IconGroupProps {
 /** 图标工具函数接口 */
 export interface IconUtils {
   /** 获取图标样式类名 */
-  getIconClassName: (props: Partial<IconProps>) => string;
+  getIconClassName: (_props: Partial<IconProps>) => string;
   /** 获取图标样式对象 */
-  getIconStyle: (props: Partial<IconProps>) => React.CSSProperties;
+  getIconStyle: (_props: Partial<IconProps>) => React.CSSProperties;
   /** 获取图标尺寸映射 */
   getSizeMap: () => Record<IconSize, number>;
   /** 获取图标状态映射 */
   getStatusMap: () => Record<IconStatus, { opacity: number; cursor: string; pointerEvents: string }>;
   /** 验证图标属性 */
-  validateIconProps: (props: IconProps) => boolean;
+  validateIconProps: (_props: IconProps) => boolean;
   /** 格式化图标尺寸 */
-  formatIconSize: (size: IconSize | number) => string;
+  formatIconSize: (_size: IconSize | number) => string;
   /** 格式化图标类型 */
-  formatIconType: (type: IconType) => string;
+  formatIconType: (_type: IconType) => string;
   /** 格式化图标状态 */
-  formatIconStatus: (status: IconStatus) => string;
+  formatIconStatus: (_status: IconStatus) => string;
   /** 解析图标源 */
-  parseIconSource: (source: IconSource) => { type: IconType; data: any };
+  parseIconSource: (_source: IconSource) => { type: IconType; data: any };
   /** 生成SVG路径 */
-  generateSVGPath: (data: any) => ReactNode;
+  generateSVGPath: (_data: any) => ReactNode;
   /** 生成字体图标 */
-  generateFontIcon: (data: any) => ReactNode;
+  generateFontIcon: (_data: any) => ReactNode;
   /** 生成图片图标 */
-  generateImageIcon: (data: any) => ReactNode;
+  generateImageIcon: (_data: any) => ReactNode;
   /** 生成自定义图标 */
-  generateCustomIcon: (data: any) => ReactNode;
+  generateCustomIcon: (_data: any) => ReactNode;
   /** 检测图标类型 */
-  detectIconType: (source: IconSource) => IconType;
+  detectIconType: (_source: IconSource) => IconType;
 }
 
 /** 预定义图标集 */
@@ -237,7 +204,7 @@ export interface IconLibraryConfig {
   /** 加载图标库 */
   load: () => Promise<void>;
   /** 获取图标URL */
-  getIconUrl: (iconName: string) => string;
+  getIconUrl: (_iconName: string) => string;
   /** 获取图标CSS类名 */
-  getIconClassName: (iconName: string) => string;
+  getIconClassName: (_iconName: string) => string;
 }

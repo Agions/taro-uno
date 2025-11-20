@@ -1,7 +1,16 @@
 {
-  "name": "taro-uno-ui",
-  "version": "0.1.0",
-  "description": "基于Taro的多端UI组件库",
+  "name": "@taro-uno/ui",
+  "version": "0.9.0-beta",
+  "description": "Simplified multi-platform UI component library for Taro ecosystem",
+  "keywords": [
+    "taro",
+    "react",
+    "ui",
+    "components",
+    "typescript",
+    "mobile",
+    "mini-program"
+  ],
   "type": "module",
   "main": "./dist/taro-uno-ui.cjs.js",
   "module": "./dist/taro-uno-ui.es.js",
@@ -11,137 +20,100 @@
       "import": "./dist/taro-uno-ui.es.js",
       "require": "./dist/taro-uno-ui.cjs.js",
       "types": "./dist/index.d.ts"
-    }
+    },
+    "./dist/style.css": "./dist/style.css"
   },
   "files": [
     "dist",
-    "src"
+    "src",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:lib": "vite build --mode lib",
-    "build:optimized": "node scripts/build-optimized.js",
-    "build:analyze": "node scripts/build-optimized.js --analyze",
-    "build:vite-optimized": "vite build --config vite.optimized.config.ts",
+    "build:lib": "vite build --mode lib && npm run types:build",
     "preview": "vite preview",
     "test": "vitest",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
+    "test:coverage:debug": "vitest run --coverage --reporter=verbose",
     "test:watch": "vitest watch",
-    "test:ui": "vitest --ui",
-    "test:e2e": "playwright test",
     "lint": "eslint . --fix",
-    "lint:style": "stylelint \"src/**/*.scss\" --fix",
+    "lint:check": "eslint .",
     "type-check": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "clean": "rm -rf dist .vite coverage",
-    "analyze": "node scripts/analyze-bundle.js",
-    "analyze:clean": "node scripts/analyze-bundle.js --clean",
-    "performance:test": "node scripts/performance-test.js",
-    "performance:monitor": "node scripts/performance-test.js",
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
-    "docs:serve": "vitepress serve docs",
-    "docs:generate": "node scripts/generate-docs.js all",
-    "docs:validate": "node scripts/validate-docs.js",
-    "docs:update": "node scripts/update-docs.js",
-    "docs:update:commit": "node scripts/update-docs.js --commit",
-    "docs:update:pr": "node scripts/update-docs.js --commit --pr",
-    "docs:components": "node scripts/generate-docs.js components",
-    "docs:api": "node scripts/generate-docs.js api",
-    "docs:types": "node scripts/generate-docs.js types",
-    "docs:examples": "node scripts/generate-examples.js",
-    "docs:api-generate": "node scripts/generate-api-docs.js",
-    "docs:report": "node scripts/update-docs.js --dry-run",
-    "prepare": "husky install",
-    "changeset": "changeset",
-    "version-packages": "changeset version",
-    "release": "changeset publish"
+    "tokens:generate": "tsx scripts/generate-scss-tokens.ts",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "precommit": "npm run type-check && npm run lint:check && npm run test:run",
+    "prebuild": "npm run clean && npm run type-check",
+    "types:build": "tsc -p tsconfig.build.json",
+    "docs:generate": "typedoc",
+    "docs:watch": "typedoc --watch"
   },
   "dependencies": {
     "@tarojs/components": "^4.1.6",
     "@tarojs/taro": ">=4.1.6",
-    "i18next": "^25.5.2",
-    "i18next-browser-languagedetector": "^8.2.0",
-    "i18next-http-backend": "^3.0.2",
-    "i18next-resources-to-backend": "^1.2.1",
     "react": ">=19.1.1",
-    "react-dom": ">=19.1.1",
-    "react-i18next": "^15.7.3"
+    "react-dom": ">=19.1.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.21.8",
-    "@babel/preset-env": "^7.21.5",
-    "@babel/preset-react": "^7.18.6",
-    "@babel/preset-typescript": "^7.21.5",
-    "@changesets/cli": "^2.26.0",
-    "@playwright/test": "^1.33.0",
-    "@tarojs/cli": "^4.1.6",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^14.3.1",
-    "@testing-library/user-event": "^14.4.3",
-    "@types/node": "^18.15.11",
+    "@storybook/addon-essentials": "^8.6.14",
+    "@storybook/addon-interactions": "^8.6.14",
+    "@storybook/builder-vite": "^10.0.7",
+    "@storybook/cli": "^10.0.7",
+    "@storybook/react": "^10.0.7",
+    "@storybook/testing-library": "^0.2.1",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.8.0",
+    "@testing-library/react": "^16.3.0",
     "@types/react": "^19.1.12",
     "@types/react-dom": "^19.1.9",
-    "@typescript-eslint/eslint-plugin": "^5.57.1",
-    "@typescript-eslint/parser": "^5.57.1",
+    "@types/testing-library__jest-dom": "^6.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
     "@vitejs/plugin-react": "^4.0.0",
-    "@vitest/coverage-v8": "^3.2.4",
-    "@vitest/ui": "^3.2.4",
-    "autoprefixer": "^10.4.14",
-    "cssnano": "^7.1.1",
+    "@vitest/coverage-v8": "^1.6.1",
     "eslint": "^9.35.0",
     "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.20",
-    "husky": "^8.0.3",
-    "jest-axe": "^10.0.0",
-    "jsdom": "^22.0.0",
-    "lint-staged": "^13.2.2",
-    "postcss": "^8.4.23",
+    "eslint-plugin-storybook": "^9.1.8",
+    "globals": "^16.5.0",
+    "jsdom": "^24.0.0",
     "postcss-pxtorem": "^6.1.0",
     "prettier": "^3.6.2",
-    "rollup": "^3.20.2",
-    "rollup-plugin-dts": "^5.3.0",
-    "rollup-plugin-peer-deps-external": "^2.2.4",
-    "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-visualizer": "^6.0.3",
-    "sass": "^1.62.1",
-    "stylelint": "^15.4.0",
-    "stylelint-config-standard": "^32.0.0",
-    "tailwindcss": "^3.3.2",
+    "tsx": "^4.19.2",
+    "typedoc": "^0.28.14",
     "typescript": "^5.9.2",
     "vite": "^7.1.5",
-    "vite-plugin-compression": "^0.5.1",
-    "vite-plugin-dts": "^2.3.0",
-    "vitepress": "^1.0.0-rc.44",
-    "vitest": "^3.2.4"
+    "vitest": "^1.6.1"
   },
   "peerDependencies": {
     "@tarojs/taro": ">=4.1.6",
     "react": ">=19.1.1",
     "react-dom": ">=19.1.1"
   },
-  "lint-staged": {
-    "*.{ts,tsx,js,jsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{json,md}": [
-      "prettier --write"
-    ],
-    "*.{scss,css}": [
-      "stylelint --fix"
-    ]
-  },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0"
   },
-  "author": "Agions Team",
+  "author": {
+    "name": "Taro-Uno Team",
+    "email": "team@taro-uno.com",
+    "url": "https://taro-uno.com"
+  },
   "license": "MIT",
-  "packageManager": "pnpm@10.14.0+sha512.ad27a79641b49c3e481a16a805baa71817a04bbe06a38d17e60e2eaee83f6a146c6a688125f5792e48dd5ba30e7da52a5cda4c3992b9ccf333f9ce223af84748"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/agions/taro-uno.git",
+    "directory": "packages/ui"
+  },
+  "homepage": "https://taro-uno.com",
+  "bugs": {
+    "url": "https://github.com/agions/taro-uno/issues"
+  }
 }

@@ -44,10 +44,6 @@ export const SelectComponent = forwardRef<SelectRef, SelectProps>((props, ref) =
     onDropdownVisibleChange,
     // onSearch: removed - not used
     // onClear: removed - not used
-    accessible: _accessible = true,
-    accessibilityLabel: _accessibilityLabel,
-    accessibilityRole: _accessibilityRole = 'combobox',
-    // accessibilityState: removed - not used
     rules,
     validateTrigger = 'onBlur',
     immediate = false,
@@ -415,14 +411,9 @@ export const SelectComponent = forwardRef<SelectRef, SelectProps>((props, ref) =
           disabled={internalDisabled || internalReadonly || loading}
           className={generatedClassName}
           style={generatedStyle}
-          accessibilityLabel={_accessibilityLabel}
-          accessibilityRole={_accessibilityRole}
           // Taro Picker doesn't support these props natively
           // onFocus={props.onFocus}
           // onBlur={props.onBlur}
-          // aria-disabled={internalDisabled || loading}
-          // aria-busy={loading}
-          // aria-readonly={internalReadonly}
         >
           <View style={selectStyles['getSelectorStyle']({ size, disabled: internalDisabled })}>
             <Text style={selectStyles['getValueStyle']({ size, hasValue: !!value, disabled: internalDisabled })}>

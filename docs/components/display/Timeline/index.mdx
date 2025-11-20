@@ -1,0 +1,262 @@
+---
+title: Timeline 时间线
+---
+
+Timeline 组件用于展示时间序列的事件，支持多种展示模式和自定义配置。
+
+## 功能介绍
+
+- 支持垂直和水平两种方向展示
+- 提供左侧、右侧、交替三种展示模式
+- 支持通过数据源或子组件两种方式定义时间线项
+- 支持自定义节点颜色和内容
+- 支持时间戳显示和反向排序
+- 提供丰富的样式配置选项
+
+## 基本用法
+
+```tsx
+import { Timeline } from '@taro-uno/components';
+
+// 使用数据源方式
+<Timeline
+  items={[
+    { title: '事件一', description: '这是第一个事件的描述', timestamp: '2023-01-01' },
+    { title: '事件二', description: '这是第二个事件的描述', timestamp: '2023-01-02' },
+    { title: '事件三', description: '这是第三个事件的描述', timestamp: '2023-01-03' },
+  ]}
+  showTimestamp
+/>
+
+// 使用子组件方式
+<Timeline showTimestamp>
+  <Timeline.Item title="事件一" description="这是第一个事件的描述" timestamp="2023-01-01" />
+  <Timeline.Item title="事件二" description="这是第二个事件的描述" timestamp="2023-01-02" />
+  <Timeline.Item title="事件三" description="这是第三个事件的描述" timestamp="2023-01-03" />
+</Timeline>
+```
+
+## 使用示例
+
+### 基本时间线
+
+```tsx
+import { Timeline } from '@taro-uno/components';
+
+function BasicTimeline() {
+  return (
+    <Timeline>
+      <Timeline.Item title="事件一" description="这是第一个事件的描述" />
+      <Timeline.Item title="事件二" description="这是第二个事件的描述" />
+      <Timeline.Item title="事件三" description="这是第三个事件的描述" />
+    </Timeline>
+  );
+}
+```
+
+### 右侧时间线
+
+```tsx
+import { Timeline } from '@taro-uno/components';
+
+function RightTimeline() {
+  return (
+    <Timeline mode="right">
+      <Timeline.Item title="事件一" description="这是第一个事件的描述" />
+      <Timeline.Item title="事件二" description="这是第二个事件的描述" />
+      <Timeline.Item title="事件三" description="这是第三个事件的描述" />
+    </Timeline>
+  );
+}
+```
+
+### 交替时间线
+
+```tsx
+import { Timeline } from '@taro-uno/components';
+
+function AlternateTimeline() {
+  return (
+    <Timeline mode="alternate">
+      <Timeline.Item title="事件一" description="这是第一个事件的描述" />
+      <Timeline.Item title="事件二" description="这是第二个事件的描述" />
+      <Timeline.Item title="事件三" description="这是第三个事件的描述" />
+    </Timeline>
+  );
+}
+```
+
+### 带时间戳
+
+```tsx
+import { Timeline } from '@taro-uno/components';
+
+function TimestampTimeline() {
+  return (
+    <Timeline showTimestamp>
+      <Timeline.Item title="事件一" description="这是第一个事件的描述" timestamp="2023-01-01" />
+      <Timeline.Item title="事件二" description="这是第二个事件的描述" timestamp="2023-01-02" />
+      <Timeline.Item title="事件三" description="这是第三个事件的描述" timestamp="2023-01-03" />
+    </Timeline>
+  );
+}
+```
+
+### 自定义节点颜色
+
+```tsx
+import { Timeline } from '@taro-uno/components';
+
+function CustomColorTimeline() {
+  return (
+    <Timeline>
+      <Timeline.Item title="成功事件" description="操作成功" color="success" />
+      <Timeline.Item title="警告事件" description="需要注意" color="warning" />
+      <Timeline.Item title="错误事件" description="发生错误" color="danger" />
+      <Timeline.Item title="信息事件" description="信息提示" color="info" />
+      <Timeline.Item title="自定义颜色" description="自定义节点颜色" color="#1890ff" />
+    </Timeline>
+  );
+}
+```
+
+### 自定义节点
+
+```tsx
+import { Timeline, Icon } from '@taro-uno/components';
+
+function CustomDotTimeline() {
+  return (
+    <Timeline>
+      <Timeline.Item 
+        title="自定义节点" 
+        description="使用图标作为节点"
+        dot={<Icon name="check" size="16" color="#fff" />}
+        color="success"
+      />
+      <Timeline.Item 
+        title="自定义节点" 
+        description="使用自定义内容作为节点"
+        dot={<View style={{ width: 16, height: 16, borderRadius: '50%', backgroundColor: '#1890ff' }} />}
+      />
+    </Timeline>
+  );
+}
+```
+
+### 水平时间线
+
+```tsx
+import { Timeline } from '@taro-uno/components';
+
+function HorizontalTimeline() {
+  return (
+    <Timeline direction="horizontal">
+      <Timeline.Item title="步骤一" description="开始" />
+      <Timeline.Item title="步骤二" description="进行中" />
+      <Timeline.Item title="步骤三" description="完成" />
+    </Timeline>
+  );
+}
+```
+
+### 反向时间线
+
+```tsx
+import { Timeline } from '@taro-uno/components';
+
+function ReverseTimeline() {
+  return (
+    <Timeline reverse showTimestamp>
+      <Timeline.Item title="事件一" description="这是第一个事件的描述" timestamp="2023-01-01" />
+      <Timeline.Item title="事件二" description="这是第二个事件的描述" timestamp="2023-01-02" />
+      <Timeline.Item title="事件三" description="这是第三个事件的描述" timestamp="2023-01-03" />
+    </Timeline>
+  );
+}
+```
+
+### 数据源方式
+
+```tsx
+import { Timeline } from '@taro-uno/components';
+
+function DataSourceTimeline() {
+  const items = [
+    { title: '事件一', description: '这是第一个事件的描述', timestamp: '2023-01-01', color: 'primary' },
+    { title: '事件二', description: '这是第二个事件的描述', timestamp: '2023-01-02', color: 'success' },
+    { title: '事件三', description: '这是第三个事件的描述', timestamp: '2023-01-03', color: 'warning' },
+  ];
+
+  return (
+    <Timeline items={items} showTimestamp />
+  );
+}
+```
+
+## API
+
+### TimelineProps
+
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| items | `TimelineItemProps[]` | `[]` | 时间线数据源 |
+| mode | `'left' \| 'right' \| 'alternate'` | `'left'` | 时间线模式 |
+| reverse | `boolean` | `false` | 是否反向显示 |
+| showTimestamp | `boolean` | `false` | 是否显示时间戳 |
+| direction | `'vertical' \| 'horizontal'` | `'vertical'` | 时间线方向 |
+| style | `CSSProperties` | - | 自定义样式 |
+| className | `string` | - | 自定义类名 |
+| children | `ReactNode` | - | 子节点，用于嵌套 `Timeline.Item` |
+
+### TimelineItemProps
+
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| title | `ReactNode` | - | 时间线项标题 |
+| children | `ReactNode` | - | 时间线项内容 |
+| description | `ReactNode` | - | 时间线项描述 |
+| timestamp | `string` | - | 时间戳 |
+| color | `'default' \| 'primary' \| 'success' \| 'warning' \| 'danger' \| 'info' \| string` | `'default'` | 节点颜色 |
+| dot | `ReactNode` | - | 自定义节点 |
+| position | `'left' \| 'right'` | - | 节点位置，仅在非 `alternate` 模式下生效 |
+| isLast | `boolean` | `false` | 是否为最后一项 |
+| style | `CSSProperties` | - | 自定义样式 |
+| className | `string` | - | 自定义类名 |
+
+### TimelineRef
+
+| 方法名 | 类型 | 说明 |
+| --- | --- | --- |
+| getMode | `() => 'left' \| 'right' \| 'alternate'` | 获取时间线模式 |
+| getDirection | `() => 'vertical' \| 'horizontal'` | 获取时间线方向 |
+| isReverse | `() => boolean` | 检查是否反向 |
+| getItemCount | `() => number` | 获取项目数量 |
+
+## 使用提示
+
+1. **数据源 vs 子组件**：Timeline 支持两种方式定义时间线项，当数据动态变化时推荐使用 `items` 属性，当需要更灵活的自定义内容时推荐使用 `Timeline.Item` 子组件。
+
+2. **方向和模式**：垂直方向支持 `left`、`right`、`alternate` 三种模式，水平方向仅支持 `left` 模式。
+
+3. **自定义节点**：使用 `dot` 属性可以自定义节点内容，如图标、图片等。自定义节点时，`color` 属性仍会影响节点的背景色。
+
+4. **时间戳**：设置 `showTimestamp` 为 `true` 时，时间线项的 `timestamp` 属性会显示在内容下方。
+
+5. **反向排序**：设置 `reverse` 为 `true` 时，时间线项会按照相反的顺序显示。
+
+## 浏览器兼容性
+
+| 浏览器 | 版本 |
+| --- | --- |
+| Chrome | 支持 |
+| Firefox | 支持 |
+| Safari | 支持 |
+| Taro 小程序 | 支持 |
+| Taro H5 | 支持 |
+
+## 无障碍支持
+
+- 支持键盘导航
+- 支持屏幕阅读器
+- 提供适当的 ARIA 属性

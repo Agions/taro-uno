@@ -17,7 +17,7 @@ export interface TransferPaginationConfig {
   /** 总条数 */
   total?: number;
   /** 页码变化回调 */
-  onChange?: (page: number, pageSize: number) => void;
+  onChange?: (_page: number, _pageSize: number) => void;
 }
 
 /** 搜索框渲染属性 */
@@ -27,7 +27,7 @@ export interface SearchRenderProps {
   /** 当前值 */
   value: string;
   /** 值变化回调 */
-  onChange: (value: string) => void;
+  onChange: (_value: string) => void;
   /** 方向 */
   direction: TransferDirection;
 }
@@ -100,17 +100,17 @@ export interface TransferNativeProps {
   /** 组件样式 */
   style?: CSSProperties;
   /** 点击事件 */
-  onClick?: (event: ITouchEvent) => void;
+  onClick?: (_event: ITouchEvent) => void;
   /** 长按事件 */
-  onLongPress?: (event: ITouchEvent) => void;
+  onLongPress?: (_event: ITouchEvent) => void;
   /** 触摸开始事件 */
-  onTouchStart?: (event: ITouchEvent) => void;
+  onTouchStart?: (_event: ITouchEvent) => void;
   /** 触摸移动事件 */
-  onTouchMove?: (event: ITouchEvent) => void;
+  onTouchMove?: (_event: ITouchEvent) => void;
   /** 触摸结束事件 */
-  onTouchEnd?: (event: ITouchEvent) => void;
+  onTouchEnd?: (_event: ITouchEvent) => void;
   /** 触摸取消事件 */
-  onTouchCancel?: (event: ITouchEvent) => void;
+  onTouchCancel?: (_event: ITouchEvent) => void;
   /** 数据集属性 */
   dataset?: Record<string, any>;
   /** 自定义属性 */
@@ -156,31 +156,31 @@ export interface TransferProps extends Omit<TransferNativeProps, 'onChange'> {
   /** 搜索框占位符 */
   searchPlaceholder?: string;
   /** 过滤函数 */
-  filterOption?: (inputValue: string, option: TransferOption) => boolean;
+  filterOption?: (_inputValue: string, _option: TransferOption) => boolean;
   /** 自定义渲染函数 */
-  render?: (item: TransferOption) => ReactNode;
+  render?: (_item: TransferOption) => ReactNode;
   /** 自定义底部渲染 */
-  footer?: (props: { direction: TransferDirection; dataSource: TransferDataSource[] }) => ReactNode;
+  footer?: (_props: { direction: TransferDirection; dataSource: TransferDataSource[] }) => ReactNode;
   /** 自定义列表渲染 */
-  listStyle?: (direction: TransferDirection) => CSSProperties;
+  listStyle?: (_direction: TransferDirection) => CSSProperties;
   /** 自定义选项渲染 */
-  optionRender?: (option: TransferOption) => ReactNode;
+  optionRender?: (_option: TransferOption) => ReactNode;
   /** 自定义行渲染 */
-  rowRender?: (item: TransferOption, index: number, direction: TransferDirection) => ReactNode;
+  rowRender?: (_item: TransferOption, _index: number, _direction: TransferDirection) => ReactNode;
   /** 自定义搜索框渲染 */
-  searchRender?: (props: SearchRenderProps) => ReactNode;
+  searchRender?: (_props: SearchRenderProps) => ReactNode;
   /** 自定义操作按钮渲染 */
-  operationRender?: (direction: TransferDirection) => ReactNode;
+  operationRender?: (_direction: TransferDirection) => ReactNode;
   /** 自定义空状态渲染 */
-  emptyRender?: (direction: TransferDirection) => ReactNode;
+  emptyRender?: (_direction: TransferDirection) => ReactNode;
   /** 值变化回调 */
-  onChange?: (targetKeys: TransferValue, direction: TransferDirection, moveKeys: TransferValue) => void;
+  onChange?: (_targetKeys: TransferValue, _direction: TransferDirection, _moveKeys: TransferValue) => void;
   /** 选中变化回调 */
-  onSelectChange?: (sourceSelectedKeys: TransferValue, targetSelectedKeys: TransferValue) => void;
+  onSelectChange?: (_sourceSelectedKeys: TransferValue, _targetSelectedKeys: TransferValue) => void;
   /** 搜索回调 */
-  onSearch?: (direction: TransferDirection, value: string) => void;
+  onSearch?: (_direction: TransferDirection, _value: string) => void;
   /** 滚动回调 */
-  onScroll?: (direction: TransferDirection, e: React.UIEvent<HTMLDivElement>) => void;
+  onScroll?: (_direction: TransferDirection, _e: React.UIEvent<HTMLDivElement>) => void;
   /** 无障碍访问 */
   accessible?: boolean;
   /** 无障碍标签 */
@@ -293,13 +293,13 @@ export interface TransferUtils {
 /** 穿梭框事件接口 */
 export interface TransferEvents {
   /** 值变化事件 */
-  onChange?: (targetKeys: TransferValue, direction: TransferDirection, moveKeys: TransferValue) => void;
+  onChange?: (_targetKeys: TransferValue, _direction: TransferDirection, _moveKeys: TransferValue) => void;
   /** 选中变化事件 */
-  onSelectChange?: (sourceSelectedKeys: TransferValue, targetSelectedKeys: TransferValue) => void;
+  onSelectChange?: (_sourceSelectedKeys: TransferValue, _targetSelectedKeys: TransferValue) => void;
   /** 搜索事件 */
-  onSearch?: (direction: TransferDirection, value: string) => void;
+  onSearch?: (_direction: TransferDirection, _value: string) => void;
   /** 滚动事件 */
-  onScroll?: (direction: TransferDirection, e: React.UIEvent<HTMLDivElement>) => void;
+  onScroll?: (_direction: TransferDirection, _e: React.UIEvent<HTMLDivElement>) => void;
 }
 
 /** 穿梭框样式接口 */
@@ -356,11 +356,11 @@ export class TransferTools {
       if (filterOption) {
         return filterOption(inputValue, option);
       }
-      
+
       const searchText = inputValue.toLowerCase();
       const title = String(option.title).toLowerCase();
       const description = option.description ? String(option.description).toLowerCase() : '';
-      
+
       return title.includes(searchText) || description.includes(searchText);
     });
   }
@@ -447,7 +447,7 @@ export class TransferTools {
     return [...options].sort((a, b) => {
       const aValue = a[sortBy];
       const bValue = b[sortBy];
-      
+
       if (aValue < bValue) return order === 'asc' ? -1 : 1;
       if (aValue > bValue) return order === 'asc' ? 1 : -1;
       return 0;
@@ -494,7 +494,7 @@ export class TransferTools {
     const enabledOptions = options.filter(option => !option.disabled);
     const totalCount = enabledOptions.length;
     const selectedCount = enabledOptions.filter(option => selectedKeys.includes(option.key)).length;
-    
+
     const allSelected = totalCount > 0 && selectedCount === totalCount;
     const noneSelected = selectedCount === 0;
     const partiallySelected = !allSelected && !noneSelected;

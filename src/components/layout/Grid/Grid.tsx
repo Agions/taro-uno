@@ -59,7 +59,7 @@ export const GridComponent = forwardRef<GridRef, GridProps>((props, ref) => {
 
   // 处理点击事件
   const handleClick = useCallback(
-    (event: React.MouseEvent) => {
+    (event: ITouchEvent) => {
       onClick?.(event);
     },
     [onClick],
@@ -75,13 +75,12 @@ export const GridComponent = forwardRef<GridRef, GridProps>((props, ref) => {
 
   // 处理子元素悬停事件
   const handleItemHover = useCallback(
-    (index: number, event: React.MouseEvent) => {
+    (index: number, event: ITouchEvent) => {
       onItemHover?.(index, event);
     },
     [onItemHover],
   );
 
-  
   // 渲染子元素
   const renderChildren = () => {
     if (!children) return null;
@@ -94,8 +93,8 @@ export const GridComponent = forwardRef<GridRef, GridProps>((props, ref) => {
         className="taro-uno-grid__item"
         style={gridStyles['getItemStyle'](index, childrenArray.length, internalCols)}
         onClick={(e: ITouchEvent) => handleItemClick(index, e)}
-        onMouseEnter={(e: React.MouseEvent) => handleItemHover(index, e)}
-        onMouseLeave={(e: React.MouseEvent) => handleItemHover(index, e)}
+        onTouchStart={(event) => handleItemHover(index, event as ITouchEvent)}
+        onTouchEnd={(event) => handleItemHover(index, event as ITouchEvent)}
       >
         {child}
       </View>

@@ -24,11 +24,11 @@ export interface PaginationRef {
   /** 获取总条数 */
   getTotal: () => number;
   /** 设置当前页码 */
-  setCurrent: (current: number) => void;
+  setCurrent: (_current: number) => void;
   /** 设置每页条数 */
-  setPageSize: (pageSize: number) => void;
+  setPageSize: (_pageSize: number) => void;
   /** 跳转到指定页 */
-  goTo: (page: number) => void;
+  goTo: (_page: number) => void;
   /** 上一页 */
   prev: () => void;
   /** 下一页 */
@@ -54,7 +54,7 @@ export interface PaginationProps extends BaseComponentProps {
   /** 分页尺寸 */
   size?: PaginationSize;
   /** 是否显示总数 */
-  showTotal?: boolean | ((total: number, range: [number, number]) => ReactNode);
+  showTotal?: boolean | ((_total: number, range: [number, number]) => ReactNode);
   /** 是否显示快速跳转 */
   showQuickJumper?: boolean;
   /** 是否显示页码选择器 */
@@ -80,7 +80,7 @@ export interface PaginationProps extends BaseComponentProps {
     element: ReactNode,
   ) => ReactNode;
   /** 页码改变事件 */
-  onChange?: (page: number, pageSize: number) => void;
+  onChange?: (_page: number, pageSize: number) => void;
   /** 每页条数改变事件 */
-  onShowSizeChange?: (current: number, size: number) => void;
+  onShowSizeChange?: (_current: number, size: number) => void;
 }

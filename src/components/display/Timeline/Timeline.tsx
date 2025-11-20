@@ -229,7 +229,7 @@ export const TimelineComponent = forwardRef<TimelineRef, TimelineProps>((props, 
 TimelineComponent.displayName = 'Timeline';
 
 // 创建复合组件类型
-interface TimelineCompoundComponent extends React.ForwardRefExoticComponent<TimelineProps & React.RefAttributes<TimelineRef>> {
+export interface TimelineCompoundComponent extends React.ForwardRefExoticComponent<TimelineProps & React.RefAttributes<TimelineRef>> {
   Item: typeof TimelineItem;
 }
 

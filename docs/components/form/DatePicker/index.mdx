@@ -1,0 +1,499 @@
+---
+title: DatePicker 日期选择器
+nav: 组件
+group: Form
+order: 2
+---
+
+# DatePicker 日期选择器
+
+日期选择器组件，支持单日期选择、日期范围选择、自定义日期格式等功能。
+
+## 功能介绍
+
+- 📅 **单日期选择**：支持选择单个日期
+- 📅📅 **日期范围选择**：支持选择开始日期和结束日期
+- 🎨 **多种样式变体**：支持 outlined、filled、underlined 三种变体
+- 📏 **多尺寸支持**：支持 xs、sm、md、lg、xl 五种尺寸
+- 📝 **自定义日期格式**：支持多种日期显示格式
+- ⏰ **时间选择**：支持显示时间选择器
+- 🔒 **禁用日期**：支持自定义禁用日期和时间
+- ✨ **自定义渲染**：支持自定义日期单元格和面板底部
+- 🎯 **响应式设计**：适配不同屏幕尺寸
+- ♿ **无障碍访问**：支持 ARIA 无障碍属性
+
+## 基本用法
+
+```tsx
+import React, { useState } from 'react';
+import { DatePicker } from '@tarojs/taro-uno';
+
+// 单日期选择
+const SingleDateDemo = () => {
+  const [date, setDate] = useState<Date | null>(null);
+
+  return (
+    <DatePicker
+      value={date}
+      onChange={(newDate, dateString) => {
+        setDate(newDate);
+        console.log('选择日期:', dateString);
+      }}
+    />
+  );
+};
+
+// 日期范围选择
+const RangeDateDemo = () => {
+  const [range, setRange] = useState<{ start: Date; end: Date } | null>(null);
+
+  return (
+    <DatePicker
+      range
+      valueRange={range}
+      onRangeChange={(newRange, dateStrings) => {
+        setRange(newRange);
+        console.log('选择范围:', dateStrings);
+      }}
+    />
+  );
+};
+```
+
+## 使用示例
+
+### 1. 基本日期选择器
+
+```tsx
+import React, { useState } from 'react';
+import { DatePicker } from '@tarojs/taro-uno';
+
+const BasicDemo = () => {
+  const [date, setDate] = useState<Date | null>(null);
+
+  return (
+    <DatePicker
+      value={date}
+      onChange={(newDate, dateString) => {
+        setDate(newDate);
+        console.log('选择日期:', dateString);
+      }}
+      placeholder="请选择日期"
+      allowClear
+    />
+  );
+};
+```
+
+### 2. 日期范围选择
+
+```tsx
+import React, { useState } from 'react';
+import { DatePicker } from '@tarojs/taro-uno';
+
+const RangeDemo = () => {
+  const [range, setRange] = useState<{ start: Date; end: Date } | null>(null);
+
+  return (
+    <DatePicker
+      range
+      valueRange={range}
+      onRangeChange={(newRange, dateStrings) => {
+        setRange(newRange);
+        console.log('选择范围:', dateStrings);
+      }}
+      rangePlaceholder={['开始日期', '结束日期']}
+      allowClear
+    />
+  );
+};
+```
+
+### 3. 自定义日期格式
+
+```tsx
+import React, { useState } from 'react';
+import { DatePicker } from '@tarojs/taro-uno';
+
+const FormatDemo = () => {
+  const [date, setDate] = useState<Date | null>(null);
+
+  return (
+    <DatePicker
+      value={date}
+      onChange={(newDate, dateString) => setDate(newDate)}
+      format="YYYY年MM月DD日"
+      placeholder="请选择日期"
+    />
+  );
+};
+```
+
+### 4. 不同尺寸
+
+```tsx
+import React, { useState } from 'react';
+import { DatePicker, Space } from '@tarojs/taro-uno';
+
+const SizeDemo = () => {
+  const [date, setDate] = useState<Date | null>(null);
+
+  return (
+    <Space direction="vertical" size="large">
+      <DatePicker
+        value={date}
+        onChange={(newDate, dateString) => setDate(newDate)}
+        size="xs"
+        placeholder="超小尺寸"
+      />
+      <DatePicker
+        value={date}
+        onChange={(newDate, dateString) => setDate(newDate)}
+        size="sm"
+        placeholder="小尺寸"
+      />
+      <DatePicker
+        value={date}
+        onChange={(newDate, dateString) => setDate(newDate)}
+        size="md"
+        placeholder="中等尺寸"
+      />
+      <DatePicker
+        value={date}
+        onChange={(newDate, dateString) => setDate(newDate)}
+        size="lg"
+        placeholder="大尺寸"
+      />
+      <DatePicker
+        value={date}
+        onChange={(newDate, dateString) => setDate(newDate)}
+        size="xl"
+        placeholder="超大尺寸"
+      />
+    </Space>
+  );
+};
+```
+
+### 5. 不同变体样式
+
+```tsx
+import React, { useState } from 'react';
+import { DatePicker, Space } from '@tarojs/taro-uno';
+
+const VariantDemo = () => {
+  const [date, setDate] = useState<Date | null>(null);
+
+  return (
+    <Space direction="vertical" size="large">
+      <DatePicker
+        value={date}
+        onChange={(newDate, dateString) => setDate(newDate)}
+        variant="outlined"
+        placeholder="Outlined 变体"
+      />
+      <DatePicker
+        value={date}
+        onChange={(newDate, dateString) => setDate(newDate)}
+        variant="filled"
+        placeholder="Filled 变体"
+      />
+      <DatePicker
+        value={date}
+        onChange={(newDate, dateString) => setDate(newDate)}
+        variant="underlined"
+        placeholder="Underlined 变体"
+      />
+    </Space>
+  );
+};
+```
+
+### 6. 禁用状态
+
+```tsx
+import React, { useState } from 'react';
+import { DatePicker, Space } from '@tarojs/taro-uno';
+
+const DisabledDemo = () => {
+  const [date, setDate] = useState<Date | null>(new Date());
+
+  return (
+    <Space direction="vertical" size="large">
+      <DatePicker
+        value={date}
+        onChange={(newDate, dateString) => setDate(newDate)}
+        disabled
+        placeholder="禁用状态"
+      />
+      <DatePicker
+        value={date}
+        onChange={(newDate, dateString) => setDate(newDate)}
+        readOnly
+        placeholder="只读状态"
+      />
+    </Space>
+  );
+};
+```
+
+### 7. 带状态提示
+
+```tsx
+import React, { useState } from 'react';
+import { DatePicker, Space } from '@tarojs/taro-uno';
+
+const StatusDemo = () => {
+  const [date, setDate] = useState<Date | null>(null);
+
+  return (
+    <Space direction="vertical" size="large">
+      <DatePicker
+        value={date}
+        onChange={(newDate, dateString) => setDate(newDate)}
+        status="normal"
+        placeholder="正常状态"
+      />
+      <DatePicker
+        value={date}
+        onChange={(newDate, dateString) => setDate(newDate)}
+        status="error"
+        placeholder="错误状态"
+      />
+      <DatePicker
+        value={date}
+        onChange={(newDate, dateString) => setDate(newDate)}
+        status="warning"
+        placeholder="警告状态"
+      />
+      <DatePicker
+        value={date}
+        onChange={(newDate, dateString) => setDate(newDate)}
+        status="success"
+        placeholder="成功状态"
+      />
+    </Space>
+  );
+};
+```
+
+### 8. 禁用特定日期
+
+```tsx
+import React, { useState } from 'react';
+import { DatePicker } from '@tarojs/taro-uno';
+
+const DisabledDateDemo = () => {
+  const [date, setDate] = useState<Date | null>(null);
+
+  // 禁用今天之后的日期
+  const disabledDate = (current: Date) => {
+    return current > new Date();
+  };
+
+  return (
+    <DatePicker
+      value={date}
+      onChange={(newDate, dateString) => setDate(newDate)}
+      disabledDate={disabledDate}
+      placeholder="只能选择今天之前的日期"
+    />
+  );
+};
+```
+
+### 9. 自定义日期渲染
+
+```tsx
+import React, { useState } from 'react';
+import { DatePicker, Text } from '@tarojs/taro-uno';
+
+const CustomRenderDemo = () => {
+  const [date, setDate] = useState<Date | null>(new Date());
+
+  // 自定义日期单元格渲染
+  const dateRender = (current: Date) => {
+    // 标记周末
+    const day = current.getDay();
+    if (day === 0 || day === 6) {
+      return (
+        <Text style={{ color: '#ff4d4f' }}>
+          {current.getDate()}
+        </Text>
+      );
+    }
+    return <Text>{current.getDate()}</Text>;
+  };
+
+  return (
+    <DatePicker
+      value={date}
+      onChange={(newDate, dateString) => setDate(newDate)}
+      dateRender={dateRender}
+      placeholder="自定义日期渲染"
+    />
+  );
+};
+```
+
+### 10. 自定义面板底部
+
+```tsx
+import React, { useState } from 'react';
+import { DatePicker, Button, Space } from '@tarojs/taro-uno';
+
+const CustomFooterDemo = () => {
+  const [date, setDate] = useState<Date | null>(null);
+
+  // 自定义面板底部
+  const renderExtraFooter = () => (
+    <Space style={{ width: '100%', justifyContent: 'flex-end', padding: '8px 16px' }}>
+      <Button size="small" variant="text">
+        今天
+      </Button>
+      <Button size="small" type="primary">
+        确定
+      </Button>
+    </Space>
+  );
+
+  return (
+    <DatePicker
+      value={date}
+      onChange={(newDate, dateString) => setDate(newDate)}
+      renderExtraFooter={renderExtraFooter}
+      placeholder="自定义面板底部"
+    />
+  );
+};
+```
+
+## API
+
+### DatePickerProps
+
+| 参数名 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| value | `Date \| null` | `null` | 选中日期（受控） |
+| defaultValue | `Date \| null` | `null` | 默认日期（非受控） |
+| onChange | `(date: Date \| null, dateString: string) => void` | - | 日期变化回调 |
+| range | `boolean` | `false` | 是否为日期范围选择 |
+| valueRange | `DateRange \| null` | `null` | 日期范围值（受控） |
+| defaultRangeValue | `DateRange \| null` | `null` | 默认日期范围（非受控） |
+| onRangeChange | `(range: DateRange \| null, dateStrings: [string, string]) => void` | - | 日期范围变化回调 |
+| format | `DatePickerFormat` | `YYYY-MM-DD` | 日期格式 |
+| placeholder | `string` | `请选择日期` | 占位符 |
+| rangePlaceholder | `[string, string]` | `['开始时间', '结束时间']` | 范围选择占位符 |
+| disabledDate | `(date: Date) => boolean` | - | 禁用日期函数 |
+| disabledTime | `(date: Date) => { disabledHours?: number[]; disabledMinutes?: number[]; disabledSeconds?: number[] }` | - | 禁用时间函数 |
+| size | `DatePickerSize` | `md` | 尺寸 |
+| variant | `DatePickerVariant` | `outlined` | 变体 |
+| status | `DatePickerStatus` | `normal` | 状态 |
+| allowClear | `boolean` | `false` | 是否显示清除按钮 |
+| readOnly | `boolean` | `false` | 是否只读 |
+| disabled | `boolean` | `false` | 是否禁用 |
+| className | `string` | - | 自定义样式类名 |
+| style | `React.CSSProperties` | - | 自定义样式 |
+| onFocus | `(event: ITouchEvent) => void` | - | 获取焦点回调 |
+| onBlur | `(event: ITouchEvent) => void` | - | 失去焦点回调 |
+| onClick | `(event: ITouchEvent) => void` | - | 点击回调 |
+| onOpenChange | `(open: boolean) => void` | - | 面板打开回调 |
+| minDate | `Date` | - | 最小日期 |
+| maxDate | `Date` | - | 最大日期 |
+| showTime | `boolean` | `false` | 是否显示时间选择 |
+| timeFormat | `string` | - | 时间格式 |
+| dateRender | `(currentDate: Date) => ReactNode` | - | 自定义日期单元格渲染 |
+| renderExtraFooter | `() => ReactNode` | - | 自定义面板底部渲染 |
+| accessible | `boolean` | `true` | 是否启用无障碍访问 |
+| accessibilityLabel | `string` | - | 无障碍标签 |
+| accessibilityRole | `string` | - | 无障碍角色 |
+
+### DatePickerRef
+
+| 方法名 | 类型 | 说明 |
+| --- | --- | --- |
+| getValue | `() => Date \| null` | 获取当前值 |
+| setValue | `(value: Date \| null) => void` | 设置值 |
+| getRangeValue | `() => DateRange \| null` | 获取范围值 |
+| setRangeValue | `(value: DateRange \| null) => void` | 设置范围值 |
+| getDateString | `() => string` | 获取格式化字符串 |
+| getRangeDateString | `() => [string, string] \| null` | 获取范围格式化字符串 |
+| focus | `() => void` | 聚焦 |
+| blur | `() => void` | 失焦 |
+| open | `() => void` | 打开面板 |
+| close | `() => void` | 关闭面板 |
+| clear | `() => void` | 清除值 |
+| disable | `() => void` | 禁用 |
+| enable | `() => void` | 启用 |
+| isOpen | `() => boolean` | 是否打开 |
+| isDisabled | `() => boolean` | 是否禁用 |
+| isReadOnly | `() => boolean` | 是否只读 |
+| element | `HTMLDivElement \| null` | 获取DOM元素 |
+
+### 类型定义
+
+#### DatePickerSize
+```ts
+type DatePickerSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+```
+
+#### DatePickerVariant
+```ts
+type DatePickerVariant = 'outlined' | 'filled' | 'underlined';
+```
+
+#### DatePickerStatus
+```ts
+type DatePickerStatus = 'normal' | 'error' | 'warning' | 'success' | 'disabled';
+```
+
+#### DatePickerFormat
+```ts
+type DatePickerFormat = 'YYYY-MM-DD' | 'YYYY/MM/DD' | 'DD/MM/YYYY' | 'MM/DD/YYYY' | 'YYYY年MM月DD日';
+```
+
+#### DateRange
+```ts
+interface DateRange {
+  start: Date;
+  end: Date;
+}
+```
+
+## 使用提示
+
+1. **受控与非受控模式**：
+   - 使用 `value` 和 `onChange` 实现受控模式
+   - 使用 `defaultValue` 实现非受控模式
+
+2. **日期格式化**：
+   - 支持多种内置日期格式，可根据需求选择
+   - 如需自定义格式，可通过 `format` 属性指定
+
+3. **禁用日期**：
+   - 通过 `disabledDate` 函数可灵活控制禁用日期
+   - 结合 `minDate` 和 `maxDate` 可限制日期范围
+
+4. **自定义渲染**：
+   - 使用 `dateRender` 可自定义日期单元格显示
+   - 使用 `renderExtraFooter` 可在面板底部添加自定义内容
+
+5. **无障碍支持**：
+   - 组件默认启用无障碍访问
+   - 可通过 `accessible`、`accessibilityLabel` 等属性自定义无障碍配置
+
+## 浏览器兼容性
+
+| 浏览器 | 版本 |
+| --- | --- |
+| Chrome | ≥70 |
+| Firefox | ≥65 |
+| Safari | ≥13 |
+| Edge | ≥79 |
+
+## 无障碍支持
+
+- 支持 ARIA 角色和属性
+- 支持键盘导航
+- 支持屏幕阅读器
+- 符合 WCAG 2.1 标准

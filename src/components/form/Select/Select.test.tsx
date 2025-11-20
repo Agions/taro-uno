@@ -531,42 +531,7 @@ describe('Select Component', () => {
     });
   });
 
-  describe('Accessibility', () => {
-    it('has proper accessibility attributes', () => {
-      render(<Select options={basicOptions} accessibilityLabel="Select an option" />);
-      const picker = screen.getByTestId('picker');
-      expect(picker).toHaveAttribute('aria-label', 'Select an option');
-      expect(picker).toHaveAttribute('role', 'combobox');
-    });
-
-    it('has proper accessibility role', () => {
-      render(<Select options={basicOptions} accessibilityRole="listbox" />);
-      const picker = screen.getByTestId('picker');
-      expect(picker).toHaveAttribute('role', 'listbox');
-    });
-
-    it('updates accessibility state when disabled', () => {
-      render(<Select options={basicOptions} disabled />);
-      const picker = screen.getByTestId('picker');
-      expect(picker).toHaveAttribute('aria-disabled', 'true');
-      expect(picker).toHaveAttribute('disabled');
-    });
-
-    it('updates accessibility state when loading', () => {
-      render(<Select options={basicOptions} loading />);
-      const picker = screen.getByTestId('picker');
-      expect(picker).toHaveAttribute('aria-busy', 'true');
-      expect(picker).toHaveAttribute('aria-disabled', 'true');
-    });
-
-    it('updates accessibility state when readonly', () => {
-      render(<Select options={basicOptions} readonly />);
-      const picker = screen.getByTestId('picker');
-      expect(picker).toHaveAttribute('aria-readonly', 'true');
-      expect(picker).toHaveAttribute('disabled');
-    });
-  });
-
+  
   describe('Style Classes', () => {
     it('applies custom className', () => {
       render(<Select options={basicOptions} className="custom-select" />);

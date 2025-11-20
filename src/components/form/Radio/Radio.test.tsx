@@ -433,32 +433,7 @@ describe('Radio Component', () => {
     });
   });
 
-  describe('Accessibility', () => {
-    it('has proper accessibility attributes', () => {
-      render(<Radio value="option1" accessibilityLabel="Select option 1" />);
-      const radio = screen.getByTestId('radio');
-      expect(radio).toHaveAttribute('aria-label', 'Select option 1');
-    });
-
-    it('has proper accessibility role', () => {
-      render(<Radio value="option1" accessibilityRole="radio" />);
-      const radio = screen.getByTestId('radio');
-      expect(radio).toHaveAttribute('role', 'radio');
-    });
-
-    it('updates accessibility state when checked', () => {
-      render(<Radio value="option1" checked={true} />);
-      const radio = screen.getByTestId('radio');
-      expect(radio).toHaveAttribute('aria-checked', 'true');
-    });
-
-    it('updates accessibility state when disabled', () => {
-      render(<Radio value="option1" disabled />);
-      const radio = screen.getByTestId('radio');
-      expect(radio).toHaveAttribute('aria-disabled', 'true');
-    });
-  });
-
+  
   describe('Style Classes', () => {
     it('applies custom className', () => {
       render(<Radio value="option1" className="custom-radio" />);

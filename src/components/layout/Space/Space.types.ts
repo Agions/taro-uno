@@ -35,15 +35,15 @@ export interface SpaceRef {
   /** 获取当前尺寸 */
   getSize: () => SpaceSize;
   /** 设置方向 */
-  setDirection: (direction: SpaceDirection) => void;
+  setDirection: (_direction: SpaceDirection) => void;
   /** 设置对齐方式 */
-  setAlign: (align: SpaceAlign) => void;
+  setAlign: (_align: SpaceAlign) => void;
   /** 设置换行方式 */
-  setWrap: (wrap: SpaceWrap) => void;
+  setWrap: (_wrap: SpaceWrap) => void;
   /** 设置间距 */
-  setGap: (gap: SpaceGap) => void;
+  setGap: (_gap: SpaceGap) => void;
   /** 设置尺寸 */
-  setSize: (size: SpaceSize) => void;
+  setSize: (_size: SpaceSize) => void;
   /** 滚动到视图 */
   scrollIntoView: (options?: ScrollIntoViewOptions) => void;
 }
@@ -75,11 +75,11 @@ export interface SpaceProps extends BaseComponentProps {
   /** 超出最大行数/列数时显示的省略内容 */
   ellipsis?: ReactNode;
   /** 点击事件 */
-  onClick?: (event: React.MouseEvent) => void;
+  onClick?: (_event: React.MouseEvent) => void;
   /** 子元素点击事件 */
-  onItemHover?: (index: number, event: React.MouseEvent) => void;
+  onItemHover?: (_index: number, event: React.MouseEvent) => void;
   /** 子元素点击事件 */
-  onItemClick?: (index: number, event: ITouchEvent) => void;
+  onItemClick?: (_index: number, event: ITouchEvent) => void;
   /** 响应式断点 */
   responsive?: {
     xs?: Partial<SpaceProps>;

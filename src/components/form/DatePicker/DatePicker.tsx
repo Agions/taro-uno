@@ -28,9 +28,6 @@ export const DatePickerComponent = forwardRef<DatePickerRef, DatePickerProps>((p
     onFocus,
     onBlur,
     onClick,
-    accessible,
-    accessibilityLabel,
-    accessibilityRole,
     dateRender,
     renderExtraFooter,
   } = props;
@@ -255,22 +252,14 @@ export const DatePickerComponent = forwardRef<DatePickerRef, DatePickerProps>((p
     className
   });
 
-  // 生成可访问性属性
-  const accessibilityProps = accessible ? {
-    'aria-label': accessibilityLabel,
-    'aria-disabled': disabled,
-    'aria-readonly': readOnly,
-    role: accessibilityRole,
-  } : {};
-
+  
   return (
     <View
       ref={pickerRef}
       className={`${pickerClassName} taro-uno-h5-datepicker taro-uno-h5-datepicker--${size} taro-uno-h5-datepicker--${variant}${status !== 'normal' ? ` taro-uno-h5-datepicker--${status}` : ''}${disabled || readOnly ? ' taro-uno-h5-datepicker--disabled' : ''}`}
       style={pickerStyle}
       onClick={handleClick}
-      {...accessibilityProps}
-    >
+          >
       {/* 输入区域 */}
       <View
         className="taro-uno-datepicker__input-wrapper"

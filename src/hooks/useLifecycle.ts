@@ -51,7 +51,7 @@ export function useLifecycle(options: LifecycleOptions = {}) {
 // ==================== 一次性执行 ====================
 
 /** 一次性执行hook */
-export function useOnce(callback: () => void | (() => void), dependencies: any[] = []) {
+export function useOnce(callback: () => void | (() => void), dependencies: unknown[] = []) {
   const executedRef = useRef(false);
   const cleanupRef = useRef<(() => void) | null>(null);
 
@@ -76,7 +76,7 @@ export function useOnce(callback: () => void | (() => void), dependencies: any[]
 export function useConditionalEffect(
   callback: () => void | (() => void),
   condition: boolean,
-  dependencies: any[] = []
+  dependencies: unknown[] = [],
 ) {
   const cleanupRef = useRef<(() => void) | null>(null);
 
@@ -96,16 +96,16 @@ export function useConditionalEffect(
 
 // ==================== 异步副作用管理 ====================
 
-interface AsyncEffectOptions {
+interface AsyncEffectOptions<T> {
   onError?: (error: Error) => void;
-  onSuccess?: (result: any) => void;
+  onSuccess?: (result: T) => void;
 }
 
 /** 异步副作用hook */
 export function useAsyncEffect<T>(
   asyncCallback: () => Promise<T> | (() => Promise<T>),
-  options: AsyncEffectOptions = {},
-  dependencies: any[] = []
+  options: AsyncEffectOptions<T> = {},
+  dependencies: unknown[] = [],
 ) {
   const { onError, onSuccess } = options;
   const mountedRef = useRef(true);
@@ -115,7 +115,8 @@ export function useAsyncEffect<T>(
 
     const executeAsync = async () => {
       try {
-        const result = await asyncCallback();
+        const res = asyncCallback();
+        const result = typeof res === 'function' ? await (res as () => Promise<T>)() : await res;
         if (mountedRef.current) {
           onSuccess?.(result);
         }
@@ -141,11 +142,7 @@ interface TimerOptions {
 }
 
 /** 定时器hook */
-export function useTimer(
-  callback: () => void,
-  delay: number,
-  options: TimerOptions = {}
-) {
+export function useTimer(callback: () => void, delay: number, options: TimerOptions = {}) {
   const { immediate = false } = options;
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const [isActive, setIsActive] = useState(false);
@@ -191,11 +188,7 @@ export function useTimer(
 // ==================== 延迟执行 ====================
 
 /** 延迟执行hook */
-export function useDelay<T>(
-  callback: () => T,
-  delay: number,
-  dependencies: any[] = []
-) {
+export function useDelay<T>(callback: () => T, delay: number, dependencies: any[] = []) {
   const [result, setResult] = useState<T | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -232,17 +225,24 @@ export function useNetworkState(): NetworkState {
 
   useEffect(() => {
     const handleOnline = () => {
-      setNetworkState(prev => ({ ...prev, online: true, offline: false }));
+      setNetworkState((prev) => ({ ...prev, online: true, offline: false }));
     };
 
     const handleOffline = () => {
-      setNetworkState(prev => ({ ...prev, online: false, offline: true }));
+      setNetworkState((prev) => ({ ...prev, online: false, offline: true }));
     };
 
     const handleConnectionChange = () => {
-      const connection = (navigator as any).connection;
+      type NavigatorConnection = {
+        effectiveType?: string;
+        downlink?: number;
+        rtt?: number;
+        addEventListener?: (event: string, handler: () => void) => void;
+        removeEventListener?: (event: string, handler: () => void) => void;
+      };
+      const connection = (navigator as Navigator & { connection?: NavigatorConnection }).connection;
       if (connection) {
-        setNetworkState(prev => ({
+        setNetworkState((prev) => ({
           ...prev,
           effectiveType: connection.effectiveType,
           downlink: connection.downlink,
@@ -253,9 +253,9 @@ export function useNetworkState(): NetworkState {
 
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
-    
-    const connection = (navigator as any).connection;
-    if (connection) {
+
+    const connection = (navigator as Navigator & { connection?: NavigatorConnection }).connection;
+    if (connection && typeof connection.addEventListener === 'function') {
       connection.addEventListener('change', handleConnectionChange);
       handleConnectionChange();
     }
@@ -263,8 +263,8 @@ export function useNetworkState(): NetworkState {
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
-      
-      if (connection) {
+
+      if (connection && typeof connection.removeEventListener === 'function') {
         connection.removeEventListener('change', handleConnectionChange);
       }
     };
@@ -367,10 +367,7 @@ interface MediaQueryOptions {
 }
 
 /** 媒体查询监听hook */
-export function useMediaQuery(
-  query: string,
-  options: MediaQueryOptions = {}
-): boolean {
+export function useMediaQuery(query: string, options: MediaQueryOptions = {}): boolean {
   const { defaultMatches = false } = options;
   const [matches, setMatches] = useState(defaultMatches);
 
@@ -393,3 +390,10 @@ export function useMediaQuery(
 
   return matches;
 }
+type NavigatorConnection = {
+  effectiveType?: string;
+  downlink?: number;
+  rtt?: number;
+  addEventListener?: (event: string, handler: () => void) => void;
+  removeEventListener?: (event: string, handler: () => void) => void;
+};

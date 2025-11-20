@@ -1,0 +1,387 @@
+---
+title: Tooltip 提示框
+---
+
+# Tooltip 提示框
+
+Tooltip 组件用于提供鼠标悬停、点击或聚焦时的提示信息，帮助用户更好地理解界面元素的功能和含义。
+
+## 功能特性
+
+- 支持多种触发方式（hover/click/focus/contextMenu）
+- 支持多种位置摆放（12个方位）
+- 可自定义提示内容和样式
+- 支持显示/隐藏动画效果
+- 支持延迟显示和隐藏
+- 支持嵌套使用
+- 提供无障碍支持
+
+## 基本用法
+
+```tsx
+import React from 'react';
+import { Tooltip } from '@taro-uno/components';
+
+export default () => {
+  return (
+    <Tooltip title="这是提示信息">
+      <Button>鼠标悬停查看提示</Button>
+    </Tooltip>
+  );
+};
+```
+
+## 使用示例
+
+### 不同触发方式
+
+```tsx
+import React from 'react';
+import { View } from '@tarojs/components';
+import { Tooltip, Button } from '@taro-uno/components';
+import { Space } from '@taro-uno/components';
+
+export default () => {
+  return (
+    <View>
+      <Space direction="vertical" size="large">
+        <Tooltip title="悬停触发" trigger="hover">
+          <Button type="primary">Hover 触发</Button>
+        </Tooltip>
+        <Tooltip title="点击触发" trigger="click">
+          <Button type="primary">Click 触发</Button>
+        </Tooltip>
+        <Tooltip title="聚焦触发" trigger="focus">
+          <Button type="primary">Focus 触发</Button>
+        </Tooltip>
+        <Tooltip title="右键触发" trigger="contextMenu">
+          <Button type="primary">ContextMenu 触发</Button>
+        </Tooltip>
+        <Tooltip title="多种触发方式" trigger={['hover', 'click']}>
+          <Button type="primary">Hover & Click 触发</Button>
+        </Tooltip>
+      </Space>
+    </View>
+  );
+};
+```
+
+### 不同位置
+
+```tsx
+import React from 'react';
+import { View, Text } from '@tarojs/components';
+import { Tooltip } from '@taro-uno/components';
+
+export default () => {
+  const placements: TooltipPlacement[] = [
+    'top', 'topLeft', 'topRight',
+    'left', 'leftTop', 'leftBottom',
+    'right', 'rightTop', 'rightBottom',
+    'bottom', 'bottomLeft', 'bottomRight'
+  ];
+
+  return (
+    <View>
+      {placements.map(placement => (
+        <Tooltip key={placement} title={`位置：${placement}`} placement={placement}>
+          <View style={{ margin: '20px', padding: '10px', border: '1px solid #ccc' }}>
+            <Text>{placement}</Text>
+          </View>
+        </Tooltip>
+      ))}
+    </View>
+  );
+};
+```
+
+### 自定义样式
+
+```tsx
+import React from 'react';
+import { Tooltip, Button } from '@taro-uno/components';
+
+export default () => {
+  return (
+    <View>
+      <Tooltip 
+        title="自定义背景色" 
+        color="#108ee9"
+      >
+        <Button type="primary">自定义背景色</Button>
+      </Tooltip>
+      <Tooltip 
+        title="自定义样式的提示框" 
+        overlayStyle={{ 
+          backgroundColor: '#f0f0f0', 
+          color: '#333', 
+          border: '1px solid #ddd',
+          borderRadius: '4px',
+          padding: '8px 12px'
+        }}
+      >
+        <Button type="primary" style={{ marginLeft: '20px' }}>
+          自定义样式
+        </Button>
+      </Tooltip>
+    </View>
+  );
+};
+```
+
+### 不同主题
+
+```tsx
+import React from 'react';
+import { View } from '@tarojs/components';
+import { Tooltip, Button } from '@taro-uno/components';
+import { Space } from '@taro-uno/components';
+
+export default () => {
+  return (
+    <View>
+      <Space direction="vertical" size="large">
+        <Tooltip title="默认主题" theme="light">
+          <Button type="primary">默认主题</Button>
+        </Tooltip>
+        <Tooltip title="深色主题" theme="dark">
+          <Button type="primary">深色主题</Button>
+        </Tooltip>
+        <Tooltip title="成功主题" theme="success">
+          <Button type="success">成功主题</Button>
+        </Tooltip>
+        <Tooltip title="警告主题" theme="warning">
+          <Button type="warning">警告主题</Button>
+        </Tooltip>
+        <Tooltip title="错误主题" theme="error">
+          <Button type="error">错误主题</Button>
+        </Tooltip>
+      </Space>
+    </View>
+  );
+};
+```
+
+### 延迟显示和隐藏
+
+```tsx
+import React from 'react';
+import { Tooltip, Button } from '@taro-uno/components';
+
+export default () => {
+  return (
+    <Tooltip 
+      title="延迟显示和隐藏的提示" 
+      mouseEnterDelay={1000} 
+      mouseLeaveDelay={500}
+    >
+      <Button type="primary">延迟 1s 显示，延迟 0.5s 隐藏</Button>
+    </Tooltip>
+  );
+};
+```
+
+### 禁用状态
+
+```tsx
+import React from 'react';
+import { Tooltip, Button } from '@taro-uno/components';
+
+export default () => {
+  return (
+    <View>
+      <Tooltip title="这是提示信息" disabled>
+        <Button type="primary" disabled>
+          禁用状态的提示
+        </Button>
+      </Tooltip>
+    </View>
+  );
+};
+```
+
+### 自定义内容
+
+```tsx
+import React from 'react';
+import { View, Text } from '@tarojs/components';
+import { Tooltip, Button } from '@taro-uno/components';
+
+export default () => {
+  const customTitle = (
+    <View>
+      <Text style={{ color: '#ff4d4f', fontWeight: 'bold' }}>自定义内容</Text>
+      <View style={{ marginTop: '4px' }}>
+        <Text>这是一段多行的自定义提示内容，可以包含任何 React 元素。</Text>
+      </View>
+    </View>
+  );
+
+  return (
+    <Tooltip title={customTitle}>
+      <Button type="primary">自定义提示内容</Button>
+    </Tooltip>
+  );
+};
+```
+
+### 受控模式
+
+```tsx
+import React, { useState } from 'react';
+import { View } from '@tarojs/components';
+import { Tooltip, Button } from '@taro-uno/components';
+import { Space } from '@taro-uno/components';
+
+export default () => {
+  const [visible, setVisible] = useState(false);
+
+  return (
+    <View>
+      <Tooltip 
+        title="受控模式" 
+        visible={visible}
+        onVisibleChange={setVisible}
+      >
+        <Button type="primary">受控模式</Button>
+      </Tooltip>
+      <Space size="large" style={{ marginTop: '20px' }}>
+        <Button 
+          type="primary"
+          onClick={() => setVisible(true)}
+        >
+          显示
+        </Button>
+        <Button 
+          type="primary"
+          onClick={() => setVisible(false)}
+        >
+          隐藏
+        </Button>
+        <Button 
+          type="primary"
+          onClick={() => setVisible(prev => !prev)}
+        >
+          切换
+        </Button>
+      </Space>
+    </View>
+  );
+};
+```
+
+## API
+
+### TooltipProps
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| title | React.ReactNode | - | 提示内容 |
+| trigger | TooltipTrigger \| TooltipTrigger[] | 'hover' | 触发方式，可选值：'hover' \| 'click' \| 'focus' \| 'contextMenu' |
+| placement | TooltipPlacement | 'top' | 提示位置，可选值：'top' \| 'bottom' \| 'left' \| 'right' \| 'topLeft' \| 'topRight' \| 'bottomLeft' \| 'bottomRight' \| 'leftTop' \| 'leftBottom' \| 'rightTop' \| 'rightBottom' |
+| arrow | boolean | true | 是否显示箭头 |
+| visible | boolean | - | 是否显示（受控模式） |
+| defaultVisible | boolean | false | 默认是否显示（非受控模式） |
+| color | string | - | 颜色主题 |
+| theme | string | 'light' | 主题样式，可选值：'light' \| 'dark' |
+| overlayStyle | React.CSSProperties | - | 提示框样式 |
+| overlayClassName | string | - | 提示框类名 |
+| children | React.ReactNode | - | 子元素 |
+| mouseEnterDelay | number | 0 | 鼠标进入延迟显示时间（毫秒） |
+| mouseLeaveDelay | number | 0 | 鼠标离开延迟隐藏时间（毫秒） |
+| clickOutsideToClose | boolean | true | 点击外部是否关闭 |
+| alignPoint | boolean | false | 是否在子元素变化时重新定位 |
+| className | string | - | 自定义类名 |
+| style | React.CSSProperties | - | 自定义样式 |
+| onVisibleChange | (visible: boolean) => void | - | 显示/隐藏变化时的回调 |
+| onShow | () => void | - | 显示时的回调 |
+| onHide | () => void | - | 隐藏时的回调 |
+| accessibilityLabel | string | - | 无障碍标签 |
+| accessibilityRole | string | - | 无障碍角色 |
+| accessibilityHint | string | - | 无障碍提示 |
+| animation | TooltipAnimation | 'fade' | 动画效果，可选值：'fade' \| 'scale' \| 'slide' \| 'none' |
+| showDelay | number | 0 | 显示延迟时间（毫秒） |
+| hideDelay | number | 0 | 隐藏延迟时间（毫秒） |
+| popupStyle | React.CSSProperties | - | 弹出层样式 |
+| disabled | boolean | false | 是否禁用 |
+| nested | boolean | false | 是否支持嵌套 |
+| maxWidth | number | - | 最大宽度 |
+| offset | [number, number] | - | 偏移量 |
+| wrap | boolean | true | 是否包裹子元素 |
+
+### TooltipRef
+
+| 方法 | 类型 | 说明 |
+| --- | --- | --- |
+| show | () => void | 显示提示 |
+| hide | () => void | 隐藏提示 |
+| getVisible | () => boolean | 获取当前显示状态 |
+| updateTitle | (title: React.ReactNode) => void | 更新提示内容 |
+| reposition | () => void | 重新定位 |
+
+### TooltipTrigger
+
+```ts
+type TooltipTrigger = 'hover' | 'click' | 'focus' | 'contextMenu';
+```
+
+### TooltipPlacement
+
+```ts
+type TooltipPlacement = 
+  | 'top' 
+  | 'bottom' 
+  | 'left' 
+  | 'right' 
+  | 'topLeft' 
+  | 'topRight' 
+  | 'bottomLeft' 
+  | 'bottomRight' 
+  | 'leftTop' 
+  | 'leftBottom' 
+  | 'rightTop' 
+  | 'rightBottom';
+```
+
+### TooltipAnimation
+
+```ts
+type TooltipAnimation = 'fade' | 'scale' | 'slide' | 'none';
+```
+
+## 使用提示
+
+1. **触发方式选择**：
+   - 桌面端推荐使用 `hover` 触发
+   - 移动端推荐使用 `click` 触发
+   - 可同时设置多种触发方式，如 `['hover', 'click']`
+
+2. **位置选择**：
+   - 推荐使用 `top`、`bottom`、`left`、`right` 等基本位置
+   - 当空间有限时，组件会自动调整位置以确保可见
+
+3. **性能优化**：
+   - 避免在 Tooltip 中放置过多复杂内容
+   - 对于频繁更新的内容，使用 `updateTitle` 方法而非重新渲染
+
+4. **无障碍支持**：
+   - 为 Tooltip 添加 `accessibilityLabel` 和 `accessibilityHint`
+   - 确保键盘用户可以通过 `focus` 触发 Tooltip
+
+## 浏览器兼容性
+
+| 浏览器 | 版本 |
+| --- | --- |
+| Chrome | 60+ |
+| Firefox | 55+ |
+| Safari | 12+ |
+| Taro 微信小程序 | 基础库 2.24.0+ |
+| Taro 支付宝小程序 | 基础库 2.0.0+ |
+| Taro 百度小程序 | 基础库 3.0.0+ |
+
+## 无障碍支持
+
+- 支持键盘焦点操作
+- 支持屏幕阅读器
+- 可自定义无障碍属性
+- 符合 WAI-ARIA 标准

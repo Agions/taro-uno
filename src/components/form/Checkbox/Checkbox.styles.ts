@@ -21,12 +21,12 @@ export class CheckboxStyles {
     CheckboxSize,
     { fontSize: number; size: number; borderRadius: number; padding: number; iconSize: number }
   > = {
-    xs: { fontSize: 20, size: 16, borderRadius: 3, padding: 4, iconSize: 12 },
-    sm: { fontSize: 24, size: 20, borderRadius: 4, padding: 6, iconSize: 14 },
-    md: { fontSize: 28, size: 24, borderRadius: 5, padding: 8, iconSize: 16 },
-    lg: { fontSize: 32, size: 28, borderRadius: 6, padding: 10, iconSize: 18 },
-    xl: { fontSize: 36, size: 32, borderRadius: 7, padding: 12, iconSize: 20 },
-  };
+      xs: { fontSize: 20, size: 16, borderRadius: 3, padding: 4, iconSize: 12 },
+      sm: { fontSize: 24, size: 20, borderRadius: 4, padding: 6, iconSize: 14 },
+      md: { fontSize: 28, size: 24, borderRadius: 5, padding: 8, iconSize: 16 },
+      lg: { fontSize: 32, size: 28, borderRadius: 6, padding: 10, iconSize: 18 },
+      xl: { fontSize: 36, size: 32, borderRadius: 7, padding: 12, iconSize: 20 },
+    };
 
   /** 状态颜色映射 */
   static readonly STATUS_COLORS: Record<
@@ -39,95 +39,95 @@ export class CheckboxStyles {
       icon: string;
     }
   > = {
-    normal: {
-      backgroundColor: '#ffffff',
-      borderColor: '#d1d5db',
-      checkColor: '#0ea5e9',
-      textColor: '#374151',
-      icon: '✓',
-    },
-    error: {
-      backgroundColor: '#fef2f2',
-      borderColor: '#ef4444',
-      checkColor: '#ef4444',
-      textColor: '#ef4444',
-      icon: '✓',
-    },
-    warning: {
-      backgroundColor: '#fffbeb',
-      borderColor: '#f59e0b',
-      checkColor: '#f59e0b',
-      textColor: '#f59e0b',
-      icon: '✓',
-    },
-    success: {
-      backgroundColor: '#f0fdf4',
-      borderColor: '#22c55e',
-      checkColor: '#22c55e',
-      textColor: '#22c55e',
-      icon: '✓',
-    },
-    disabled: {
-      backgroundColor: '#f9fafb',
-      borderColor: '#e5e7eb',
-      checkColor: '#9ca3af',
-      textColor: '#9ca3af',
-      icon: '✓',
-    },
-  };
+      normal: {
+        backgroundColor: '#ffffff',
+        borderColor: '#d1d5db',
+        checkColor: '#0ea5e9',
+        textColor: '#374151',
+        icon: '✓',
+      },
+      error: {
+        backgroundColor: '#fef2f2',
+        borderColor: '#ef4444',
+        checkColor: '#ef4444',
+        textColor: '#ef4444',
+        icon: '✓',
+      },
+      warning: {
+        backgroundColor: '#fffbeb',
+        borderColor: '#f59e0b',
+        checkColor: '#f59e0b',
+        textColor: '#f59e0b',
+        icon: '✓',
+      },
+      success: {
+        backgroundColor: '#f0fdf4',
+        borderColor: '#22c55e',
+        checkColor: '#22c55e',
+        textColor: '#22c55e',
+        icon: '✓',
+      },
+      disabled: {
+        backgroundColor: '#f9fafb',
+        borderColor: '#e5e7eb',
+        checkColor: '#9ca3af',
+        textColor: '#9ca3af',
+        icon: '✓',
+      },
+    };
 
   /** 变体样式映射 */
   static readonly VARIANT_STYLES: Record<
     CheckboxVariant,
     { backgroundColor: string; borderColor: string; borderWidth: number }
   > = {
-    default: { backgroundColor: '#ffffff', borderColor: '#d1d5db', borderWidth: 2 },
-    filled: { backgroundColor: '#f3f4f6', borderColor: '#d1d5db', borderWidth: 2 },
-    outlined: { backgroundColor: 'transparent', borderColor: '#d1d5db', borderWidth: 2 },
-  };
+      default: { backgroundColor: '#ffffff', borderColor: '#d1d5db', borderWidth: 2 },
+      filled: { backgroundColor: '#f3f4f6', borderColor: '#d1d5db', borderWidth: 2 },
+      outlined: { backgroundColor: 'transparent', borderColor: '#d1d5db', borderWidth: 2 },
+    };
 
   /** 颜色主题映射 */
   static readonly COLOR_THEMES: Record<
     CheckboxColor,
     { primary: string; secondary: string; background: string; border: string }
   > = {
-    primary: {
-      primary: '#0ea5e9',
-      secondary: '#e0f2fe',
-      background: '#ffffff',
-      border: '#0ea5e9',
-    },
-    secondary: {
-      primary: '#6b7280',
-      secondary: '#f3f4f6',
-      background: '#ffffff',
-      border: '#6b7280',
-    },
-    success: {
-      primary: '#22c55e',
-      secondary: '#dcfce7',
-      background: '#ffffff',
-      border: '#22c55e',
-    },
-    warning: {
-      primary: '#f59e0b',
-      secondary: '#fef3c7',
-      background: '#ffffff',
-      border: '#f59e0b',
-    },
-    error: {
-      primary: '#ef4444',
-      secondary: '#fee2e2',
-      background: '#ffffff',
-      border: '#ef4444',
-    },
-    info: {
-      primary: '#3b82f6',
-      secondary: '#dbeafe',
-      background: '#ffffff',
-      border: '#3b82f6',
-    },
-  };
+      primary: {
+        primary: '#0ea5e9',
+        secondary: '#e0f2fe',
+        background: '#ffffff',
+        border: '#0ea5e9',
+      },
+      secondary: {
+        primary: '#6b7280',
+        secondary: '#f3f4f6',
+        background: '#ffffff',
+        border: '#6b7280',
+      },
+      success: {
+        primary: '#22c55e',
+        secondary: '#dcfce7',
+        background: '#ffffff',
+        border: '#22c55e',
+      },
+      warning: {
+        primary: '#f59e0b',
+        secondary: '#fef3c7',
+        background: '#ffffff',
+        border: '#f59e0b',
+      },
+      error: {
+        primary: '#ef4444',
+        secondary: '#fee2e2',
+        background: '#ffffff',
+        border: '#ef4444',
+      },
+      info: {
+        primary: '#3b82f6',
+        secondary: '#dbeafe',
+        background: '#ffffff',
+        border: '#3b82f6',
+      },
+    };
 
   /** 生成复选框类名 */
   static getClassName(props: Partial<CheckboxProps>): string {
@@ -602,96 +602,6 @@ export class CheckboxStyles {
     `;
   }
 
-  /** 生成Tailwind类名 */
-  static getTailwindClasses(props: Partial<CheckboxProps>): string {
-    const {
-      size = 'md',
-      status = 'normal',
-      variant = 'default',
-      color = 'primary',
-      disabled = false,
-      readonly = false,
-      indeterminate = false,
-      bordered = true,
-      rounded = true,
-    } = props;
-
-    const sizeClasses = {
-      xs: 'w-3 h-3 text-xs', // 12px
-      sm: 'w-4 h-4 text-sm', // 16px
-      md: 'w-5 h-5 text-base', // 20px
-      lg: 'w-6 h-6 text-lg', // 24px
-      xl: 'w-7 h-7 text-xl', // 28px
-    };
-
-    const statusClasses = {
-      normal: 'bg-white border-gray-300 hover:border-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200',
-      error:
-        'bg-red-50 border-red-300 text-red-600 hover:border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-200',
-      warning:
-        'bg-yellow-50 border-yellow-300 text-yellow-600 hover:border-yellow-400 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200',
-      success:
-        'bg-green-50 border-green-300 text-green-600 hover:border-green-400 focus:border-green-500 focus:ring-2 focus:ring-green-200',
-      disabled: 'bg-gray-50 border-gray-200 text-gray-400 cursor-not-allowed opacity-50',
-    };
-
-    const variantClasses = {
-      default: 'bg-white shadow-sm',
-      filled: 'bg-gray-100 shadow-inner',
-      outlined: 'bg-transparent shadow-none',
-    };
-
-    const colorClasses = {
-      primary: 'border-blue-500 text-blue-600 checked:bg-blue-500 checked:border-blue-500',
-      secondary: 'border-gray-500 text-gray-600 checked:bg-gray-500 checked:border-gray-500',
-      success: 'border-green-500 text-green-600 checked:bg-green-500 checked:border-green-500',
-      warning: 'border-yellow-500 text-yellow-600 checked:bg-yellow-500 checked:border-yellow-500',
-      error: 'border-red-500 text-red-600 checked:bg-red-500 checked:border-red-500',
-      info: 'border-indigo-500 text-indigo-600 checked:bg-indigo-500 checked:border-indigo-500',
-    };
-
-    const focusClasses = [
-      'focus:outline-none',
-      'focus:ring-2',
-      'focus:ring-offset-2',
-      'transition-all',
-      'duration-200',
-    ];
-
-    const interactionClasses = [
-      'hover:shadow-md',
-      'active:scale-95',
-      'disabled:hover:shadow-none',
-      'disabled:active:scale-100',
-    ];
-
-    const animationClasses = ['transition-all', 'duration-200', 'ease-in-out'];
-
-    const classes = [
-      'inline-flex',
-      'items-center',
-      'justify-center',
-      'border-2',
-      'box-border',
-      'relative',
-      'select-none',
-      ...focusClasses,
-      ...interactionClasses,
-      ...animationClasses,
-      sizeClasses[size],
-      statusClasses[status],
-      variantClasses[variant],
-      colorClasses[color],
-      rounded && 'rounded-md',
-      bordered && 'border',
-      !disabled && !readonly && 'cursor-pointer',
-      disabled && 'cursor-not-allowed',
-      readonly && 'cursor-default',
-      indeterminate && 'bg-gray-200',
-    ].filter(Boolean);
-
-    return classes.join(' ');
-  }
 }
 
 /** 导出样式工具 */

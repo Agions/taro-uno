@@ -47,21 +47,21 @@ export interface UploadProps {
   /** 是否携带cookie */
   withCredentials?: boolean;
   /** 上传前的钩子 */
-  beforeUpload?: (file: File) => Promise<boolean | File> | boolean | File;
+  beforeUpload?: (_file: File) => Promise<boolean | File> | boolean | File;
   /** 自定义上传方法 */
-  customRequest?: (options: UploadRequestOptions) => Promise<void>;
+  customRequest?: (_options: UploadRequestOptions) => Promise<void>;
   /** 文件状态改变的回调 */
-  onChange?: (fileList: UploadFile[]) => void;
+  onChange?: (_fileList: UploadFile[]) => void;
   /** 移除文件的回调 */
-  onRemove?: (file: UploadFile) => void;
+  onRemove?: (_file: UploadFile) => void;
   /** 预览文件的回调 */
-  onPreview?: (file: UploadFile) => void;
+  onPreview?: (_file: UploadFile) => void;
   /** 上传成功的回调 */
-  onSuccess?: (response: any, file: File) => void;
+  onSuccess?: (_response: any, _file: File) => void;
   /** 上传失败的回调 */
-  onError?: (error: Error, file: File) => void;
+  onError?: (_error: Error, _file: File) => void;
   /** 上传进度的回调 */
-  onProgress?: (percent: number, file: File) => void;
+  onProgress?: (_percent: number, _file: File) => void;
   /** 是否显示文件列表 */
   showUploadList?: boolean;
   /** 列表样式 */
@@ -103,11 +103,11 @@ export interface UploadRequestOptions {
   /** 上传地址 */
   action: string;
   /** 进度回调 */
-  onProgress: (percent: number) => void;
+  onProgress: (_percent: number) => void;
   /** 成功回调 */
-  onSuccess: (response: any) => void;
+  onSuccess: (_response: any) => void;
   /** 失败回调 */
-  onError: (error: Error) => void;
+  onError: (_error: Error) => void;
 }
 
 export interface UploadRef {
@@ -152,18 +152,18 @@ export interface UploadUtils {
 export const UploadUtils: UploadUtils = {
   formatFileSize: (bytes: number) => {
     if (bytes === 0) return '0 Bytes';
-    
+
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    
+
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   },
-  
+
   getFileExtension: (filename: string) => {
     return filename.slice((filename.lastIndexOf('.') - 1 >>> 0) + 2);
   },
-  
+
   checkFileType: (file: File, accept: string) => {
     const acceptTypes = accept.split(',').map(type => type.trim());
     return acceptTypes.some(type => {
@@ -177,18 +177,18 @@ export const UploadUtils: UploadUtils = {
       return file.type === type;
     });
   },
-  
+
   checkFileSize: (file: File, maxSize: number) => {
     return file.size <= maxSize;
   },
-  
+
   generatePreviewUrl: (file: File) => {
     return new Promise((resolve, reject) => {
       if (!file.type.startsWith('image/')) {
         reject(new Error('File is not an image'));
         return;
       }
-      
+
       const reader = new FileReader();
       reader.onload = (e) => {
         resolve(e.target?.result as string);

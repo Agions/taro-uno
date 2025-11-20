@@ -57,9 +57,9 @@ export interface RadioProps extends Omit<RadioNativeProps, 'size' | 'onChange' |
   /** 自定义样式类名 */
   className?: string;
   /** 变化事件处理函数 */
-  onChange?: (checked: boolean, event: ITouchEvent) => void;
+  onChange?: (_checked: boolean, event: ITouchEvent) => void;
   /** 点击事件处理函数 */
-  onClick?: (event: ITouchEvent) => void;
+  onClick?: (_event: ITouchEvent) => void;
   /** 自定义样式 */
   style?: React.CSSProperties;
   /** 是否启用无障碍访问 */
@@ -80,14 +80,14 @@ export interface RadioProps extends Omit<RadioNativeProps, 'size' | 'onChange' |
   rules?: Array<{
     required?: boolean;
     message?: string;
-    validator?: (checked: boolean) => boolean | string | Promise<boolean | string>;
+    validator?: (_checked: boolean) => boolean | string | Promise<boolean | string>;
   }>;
   /** 验证触发时机 */
   validateTrigger?: 'onChange' | 'onBlur' | 'onSubmit';
   /** 是否立即验证 */
   immediate?: boolean;
   /** 自定义验证函数 */
-  validator?: (checked: boolean) => boolean | string | Promise<boolean | string>;
+  validator?: (_checked: boolean) => boolean | string | Promise<boolean | string>;
   /** 动画效果 */
   animation?: boolean;
   /** 动画时长 */
@@ -121,21 +121,21 @@ export type RadioRef = {
   /** 获取选中状态 */
   getChecked: () => boolean;
   /** 设置选中状态 */
-  setChecked: (checked: boolean) => void;
+  setChecked: (_checked: boolean) => void;
   /** 切换选中状态 */
   toggle: () => void;
   /** 设置禁用状态 */
-  setDisabled: (disabled: boolean) => void;
+  setDisabled: (_disabled: boolean) => void;
   /** 设置只读状态 */
-  setReadonly: (readonly: boolean) => void;
+  setReadonly: (_readonly: boolean) => void;
   /** 设置单选框状态 */
-  setStatus: (status: RadioStatus) => void;
+  setStatus: (_status: RadioStatus) => void;
   /** 获取单选框状态 */
   getStatus: () => RadioStatus;
   /** 设置单选框尺寸 */
-  setSize: (size: RadioSize) => void;
+  setSize: (_size: RadioSize) => void;
   /** 设置单选框颜色 */
-  setColor: (color: RadioColor) => void;
+  setColor: (_color: RadioColor) => void;
   /** 验证单选框 */
   validate: () => Promise<{ valid: boolean; message?: string }>;
   /** 重置单选框 */
@@ -143,7 +143,7 @@ export type RadioRef = {
   /** 获取单选框数据 */
   getData: () => Record<string, any> | undefined;
   /** 设置单选框数据 */
-  setData: (data: Record<string, any>) => void;
+  setData: (_data: Record<string, any>) => void;
   /** 聚焦单选框 */
   focus: () => void;
   /** 失焦单选框 */
@@ -191,7 +191,7 @@ export interface RadioGroupProps {
     data?: Record<string, any>;
   }>;
   /** 变化事件处理函数 */
-  onChange?: (selectedValue: string | number) => void;
+  onChange?: (_selectedValue: string | number) => void;
   /** 自定义样式类名 */
   className?: string;
   /** 自定义样式 */
@@ -224,15 +224,15 @@ export type RadioGroupRef = {
   /** 获取选中值 */
   getValue: () => string | number | undefined;
   /** 设置选中值 */
-  setValue: (value: string | number) => void;
+  setValue: (_value: string | number) => void;
   /** 清除选择 */
   clear: () => void;
   /** 设置禁用状态 */
-  setDisabled: (disabled: boolean) => void;
+  setDisabled: (_disabled: boolean) => void;
   /** 设置只读状态 */
-  setReadonly: (readonly: boolean) => void;
+  setReadonly: (_readonly: boolean) => void;
   /** 设置组状态 */
-  setStatus: (status: RadioStatus) => void;
+  setStatus: (_status: RadioStatus) => void;
   /** 验证单选框组 */
   validate: () => Promise<{ valid: boolean; message?: string }>;
   /** 重置单选框组 */
@@ -248,11 +248,11 @@ export type RadioGroupRef = {
     data?: Record<string, any>;
   } | null;
   /** 根据值获取选项 */
-  getOptionByValue: (value: string | number) => any;
+  getOptionByValue: (_value: string | number) => any;
   /** 根据值设置选项状态 */
-  setOptionDisabled: (value: string | number, disabled: boolean) => void;
+  setOptionDisabled: (_value: string | number, disabled: boolean) => void;
   /** 批量设置选项状态 */
-  setOptionsDisabled: (values: Array<string | number>, disabled: boolean) => void;
+  setOptionsDisabled: (_values: Array<string | number>, disabled: boolean) => void;
   /** 聚焦组 */
   focus: () => void;
   /** 失焦组 */
@@ -308,7 +308,7 @@ export interface RadioContext {
   /** 布局方向 */
   direction: 'horizontal' | 'vertical';
   /** 变化事件处理函数 */
-  onChange: (checked: boolean, value: string | number) => void;
+  onChange: (_checked: boolean, value: string | number) => void;
   /** 单选框样式配置 */
   styleConfig: RadioStyleConfig;
 }
@@ -328,27 +328,27 @@ export interface RadioValidationResult {
 /** 单选框事件接口 */
 export interface RadioEvents {
   /** 值变化事件 */
-  onChange: (checked: boolean, event: ITouchEvent) => void;
+  onChange: (_checked: boolean, event: ITouchEvent) => void;
   /** 点击事件 */
-  onClick: (event: ITouchEvent) => void;
+  onClick: (_event: ITouchEvent) => void;
   /** 聚焦事件 */
-  onFocus: (event: ITouchEvent) => void;
+  onFocus: (_event: ITouchEvent) => void;
   /** 失焦事件 */
-  onBlur: (event: ITouchEvent) => void;
+  onBlur: (_event: ITouchEvent) => void;
 }
 
 /** 单选框组事件接口 */
 export interface RadioGroupEvents {
   /** 值变化事件 */
-  onChange: (selectedValue: string | number) => void;
+  onChange: (_selectedValue: string | number) => void;
 }
 
 /** 单选框工具函数接口 */
 export interface RadioUtils {
   /** 格式化单选框值 */
-  formatValue: (value: string | number | boolean) => string | number;
+  formatValue: (_value: string | number | boolean) => string | number;
   /** 验证单选框值 */
-  validateValue: (checked: boolean, rules: RadioProps['rules']) => { valid: boolean; message?: string };
+  validateValue: (_checked: boolean, rules: RadioProps['rules']) => { valid: boolean; message?: string };
   /** 获取单选框尺寸映射 */
   getSizeMap: () => Record<RadioSize, { fontSize: number; size: number; borderRadius: number; padding: number }>;
   /** 获取单选框状态映射 */
@@ -358,7 +358,7 @@ export interface RadioUtils {
   /** 生成单选框ID */
   generateId: (prefix?: string) => string;
   /** 生成涟漪效果 */
-  createRipple: (event: ITouchEvent, element: HTMLElement, color?: string) => void;
+  createRipple: (_event: ITouchEvent, element: HTMLElement, color?: string) => void;
 }
 
 /** 单选框选项接口 */

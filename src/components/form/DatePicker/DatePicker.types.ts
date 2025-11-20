@@ -22,9 +22,9 @@ export interface DateRange {
 /** 日期禁用配置 */
 export interface DisabledDate {
   /** 禁用日期函数 */
-  disabledDate?: (date: Date) => boolean;
+  disabledDate?: (_date: Date) => boolean;
   /** 禁用时间函数 */
-  disabledTime?: (date: Date) => { disabledHours?: number[]; disabledMinutes?: number[]; disabledSeconds?: number[] };
+  disabledTime?: (_date: Date) => { disabledHours?: number[]; disabledMinutes?: number[]; disabledSeconds?: number[] };
 }
 
 /** 日期选择器原生属性类型 */
@@ -37,7 +37,7 @@ export interface DatePickerProps extends DatePickerNativeProps {
   /** 默认日期 */
   defaultValue?: Date | null;
   /** 日期变化回调 */
-  onChange?: (date: Date | null, dateString: string) => void;
+  onChange?: (_date: Date | null, dateString: string) => void;
   /** 日期范围选择 */
   range?: boolean;
   /** 日期范围值 */
@@ -45,7 +45,7 @@ export interface DatePickerProps extends DatePickerNativeProps {
   /** 默认日期范围 */
   defaultRangeValue?: DateRange | null;
   /** 日期范围变化回调 */
-  onRangeChange?: (range: DateRange | null, dateStrings: [string, string]) => void;
+  onRangeChange?: (_range: DateRange | null, dateStrings: [string, string]) => void;
   /** 日期格式 */
   format?: DatePickerFormat;
   /** 占位符 */
@@ -73,13 +73,13 @@ export interface DatePickerProps extends DatePickerNativeProps {
   /** 自定义样式 */
   style?: React.CSSProperties;
   /** 获取焦点回调 */
-  onFocus?: (event: ITouchEvent) => void;
+  onFocus?: (_event: ITouchEvent) => void;
   /** 失去焦点回调 */
-  onBlur?: (event: ITouchEvent) => void;
+  onBlur?: (_event: ITouchEvent) => void;
   /** 点击回调 */
-  onClick?: (event: ITouchEvent) => void;
+  onClick?: (_event: ITouchEvent) => void;
   /** 面板打开回调 */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (_open: boolean) => void;
   /** 最小日期 */
   minDate?: Date;
   /** 最大日期 */
@@ -89,7 +89,7 @@ export interface DatePickerProps extends DatePickerNativeProps {
   /** 时间格式 */
   timeFormat?: string;
   /** 自定义日期单元格渲染 */
-  dateRender?: (currentDate: Date) => ReactNode;
+  dateRender?: (_currentDate: Date) => ReactNode;
   /** 自定义面板头部渲染 */
   renderExtraFooter?: () => ReactNode;
   /** 是否启用无障碍访问 */
@@ -105,11 +105,11 @@ export type DatePickerRef = {
   /** 获取当前值 */
   getValue: () => Date | null;
   /** 设置值 */
-  setValue: (value: Date | null) => void;
+  setValue: (_value: Date | null) => void;
   /** 获取范围值 */
   getRangeValue: () => DateRange | null;
   /** 设置范围值 */
-  setRangeValue: (value: DateRange | null) => void;
+  setRangeValue: (_value: DateRange | null) => void;
   /** 获取格式化字符串 */
   getDateString: () => string;
   /** 获取范围格式化字符串 */
@@ -141,23 +141,23 @@ export type DatePickerRef = {
 /** 日期选择器工具函数接口 */
 export interface DatePickerUtils {
   /** 格式化日期 */
-  formatDate: (date: Date, format: DatePickerFormat) => string;
+  formatDate: (_date: Date, format: DatePickerFormat) => string;
   /** 解析日期字符串 */
-  parseDate: (dateString: string, format: DatePickerFormat) => Date | null;
+  parseDate: (_dateString: string, format: DatePickerFormat) => Date | null;
   /** 日期是否在范围内 */
-  isDateInRange: (date: Date, min?: Date, max?: Date) => boolean;
+  isDateInRange: (_date: Date, min?: Date, max?: Date) => boolean;
   /** 日期是否相等 */
-  isSameDate: (date1: Date, date2: Date) => boolean;
+  isSameDate: (_date1: Date, date2: Date) => boolean;
   /** 日期是否在同一月 */
-  isSameMonth: (date1: Date, date2: Date) => boolean;
+  isSameMonth: (_date1: Date, date2: Date) => boolean;
   /** 日期是否在同一年 */
-  isSameYear: (date1: Date, date2: Date) => boolean;
+  isSameYear: (_date1: Date, date2: Date) => boolean;
   /** 获取月份天数 */
-  getDaysInMonth: (year: number, month: number) => number;
+  getDaysInMonth: (_year: number, month: number) => number;
   /** 获取月份第一天 */
-  getFirstDayOfMonth: (year: number, month: number) => Date;
+  getFirstDayOfMonth: (_year: number, month: number) => Date;
   /** 获取月份最后一天 */
-  getLastDayOfMonth: (year: number, month: number) => Date;
+  getLastDayOfMonth: (_year: number, month: number) => Date;
   /** 获取月份信息 */
   getMonthInfo: (
     year: number,
@@ -169,19 +169,19 @@ export interface DatePickerUtils {
     startDay: number;
   };
   /** 日期加减 */
-  addDays: (date: Date, days: number) => Date;
+  addDays: (_date: Date, days: number) => Date;
   /** 月份加减 */
-  addMonths: (date: Date, months: number) => Date;
+  addMonths: (_date: Date, months: number) => Date;
   /** 年份加减 */
-  addYears: (date: Date, years: number) => Date;
+  addYears: (_date: Date, years: number) => Date;
   /** 获取日期范围 */
-  getDateRange: (start: Date, end: Date) => Date[];
+  getDateRange: (_start: Date, end: Date) => Date[];
   /** 验证日期 */
-  isValidDate: (date: Date) => boolean;
+  isValidDate: (_date: Date) => boolean;
   /** 获取时间戳 */
-  getTimestamp: (date: Date) => number;
+  getTimestamp: (_date: Date) => number;
   /** 从时间戳创建日期 */
-  fromDateTimestamp: (timestamp: number) => Date;
+  fromDateTimestamp: (_timestamp: number) => Date;
 }
 
 /** 日期选择器样式配置接口 */
@@ -231,15 +231,15 @@ export interface DatePickerContext {
   /** 最大日期 */
   maxDate?: Date;
   /** 禁用日期函数 */
-  disabledDate?: (date: Date) => boolean;
+  disabledDate?: (_date: Date) => boolean;
   /** 工具函数 */
   utils: DatePickerUtils;
   /** 样式配置 */
   styleConfig: DatePickerStyleConfig;
   /** 设置值 */
-  setValue: (value: Date | null) => void;
+  setValue: (_value: Date | null) => void;
   /** 设置范围值 */
-  setRangeValue: (value: DateRange | null) => void;
+  setRangeValue: (_value: DateRange | null) => void;
   /** 打开面板 */
   openPanel: () => void;
   /** 关闭面板 */

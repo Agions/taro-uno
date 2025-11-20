@@ -43,7 +43,7 @@ export interface TextareaRule {
   /** 最大长度 */
   maxLength?: number;
   /** 自定义验证函数 */
-  validator?: (value: string) => boolean | string | Promise<boolean | string>;
+  validator?: (_value: string) => boolean | string | Promise<boolean | string>;
 }
 
 /** 文本域组件属性接口 */
@@ -114,25 +114,25 @@ export interface TextareaProps
   /** 是否立即验证 */
   immediate?: boolean;
   /** 自定义验证函数 */
-  validator?: (value: string) => boolean | string | Promise<boolean | string>;
+  validator?: (_value: string) => boolean | string | Promise<boolean | string>;
   /** 值变化事件处理函数 */
-  onChange?: (value: string, event: ITouchEvent) => void;
+  onChange?: (_value: string, event: ITouchEvent) => void;
   /** 聚焦事件处理函数 */
-  onFocus?: (event: ITouchEvent) => void;
+  onFocus?: (_event: ITouchEvent) => void;
   /** 失焦事件处理函数 */
-  onBlur?: (event: ITouchEvent) => void;
+  onBlur?: (_event: ITouchEvent) => void;
   /** 输入事件处理函数 */
-  onInput?: (value: string, event: ITouchEvent) => void;
+  onInput?: (_value: string, event: ITouchEvent) => void;
   /** 清除事件处理函数 */
-  onClear?: (event: ITouchEvent) => void;
+  onClear?: (_event: ITouchEvent) => void;
   /** 确认事件处理函数 */
-  onConfirm?: (value: string, event: ITouchEvent) => void;
+  onConfirm?: (_value: string, event: ITouchEvent) => void;
   /** 键盘高度变化事件处理函数 */
-  onKeyboardHeightChange?: (height: number, event: ITouchEvent) => void;
+  onKeyboardHeightChange?: (_height: number, event: ITouchEvent) => void;
   /** 高度变化事件处理函数 */
-  onHeightChange?: (height: number, event: ITouchEvent) => void;
+  onHeightChange?: (_height: number, event: ITouchEvent) => void;
   /** 验证事件处理函数 */
-  onValidate?: (result: TextareaValidationResult) => void;
+  onValidate?: (_result: TextareaValidationResult) => void;
   /** 自定义样式类名 */
   className?: string;
   /** 自定义样式 */
@@ -175,7 +175,7 @@ export type TextareaRef = {
   /** 获取文本域值 */
   getValue: () => string;
   /** 设置文本域值 */
-  setValue: (value: string) => void;
+  setValue: (_value: string) => void;
   /** 聚焦文本域 */
   focus: () => void;
   /** 失焦文本域 */
@@ -183,15 +183,15 @@ export type TextareaRef = {
   /** 选择文本 */
   select: () => void;
   /** 设置选中文本范围 */
-  setSelectionRange: (start: number, end: number) => void;
+  setSelectionRange: (_start: number, end: number) => void;
   /** 获取选中文本范围 */
   getSelectionRange: () => { start: number; end: number };
   /** 设置禁用状态 */
-  setDisabled: (disabled: boolean) => void;
+  setDisabled: (_disabled: boolean) => void;
   /** 设置只读状态 */
-  setReadonly: (readonly: boolean) => void;
+  setReadonly: (_readonly: boolean) => void;
   /** 设置文本域状态 */
-  setStatus: (status: TextareaStatus) => void;
+  setStatus: (_status: TextareaStatus) => void;
   /** 获取文本域状态 */
   getStatus: () => TextareaStatus;
   /** 验证文本域值 */
@@ -285,17 +285,17 @@ export interface TextareaStyleConfig {
 /** 文本域工具函数接口 */
 export interface TextareaUtils {
   /** 格式化文本值 */
-  formatValue: (value: string, maxLength?: number) => string;
+  formatValue: (_value: string, maxLength?: number) => string;
   /** 验证文本值 */
-  validateValue: (value: string, rules?: TextareaRule[]) => Promise<TextareaValidationResult>;
+  validateValue: (_value: string, rules?: TextareaRule[]) => Promise<TextareaValidationResult>;
   /** 计算字符长度 */
-  calculateLength: (value: string) => number;
+  calculateLength: (_value: string) => number;
   /** 计算文本域高度 */
-  calculateHeight: (value: string, rows?: number, minRows?: number, maxRows?: number) => number;
+  calculateHeight: (_value: string, rows?: number, minRows?: number, maxRows?: number) => number;
   /** 格式化计数器文本 */
-  formatCounterText: (current: number, max?: number) => string;
+  formatCounterText: (_current: number, max?: number) => string;
   /** 获取无障碍状态 */
-  getAccessibilityState: (props: TextareaProps, status: TextareaStatus) => any;
+  getAccessibilityState: (_props: TextareaProps, status: TextareaStatus) => any;
   /** 调整文本域高度 */
   adjustTextareaHeight: (
     element: HTMLTextAreaElement,
@@ -309,23 +309,23 @@ export interface TextareaUtils {
 /** 文本域事件接口 */
 export interface TextareaEvents {
   /** 值变化事件 */
-  onChange: (value: string, event: ITouchEvent) => void;
+  onChange: (_value: string, event: ITouchEvent) => void;
   /** 聚焦事件 */
-  onFocus: (event: ITouchEvent) => void;
+  onFocus: (_event: ITouchEvent) => void;
   /** 失焦事件 */
-  onBlur: (event: ITouchEvent) => void;
+  onBlur: (_event: ITouchEvent) => void;
   /** 输入事件 */
-  onInput: (value: string, event: ITouchEvent) => void;
+  onInput: (_value: string, event: ITouchEvent) => void;
   /** 清除事件 */
-  onClear: (event: ITouchEvent) => void;
+  onClear: (_event: ITouchEvent) => void;
   /** 确认事件 */
-  onConfirm: (value: string, event: ITouchEvent) => void;
+  onConfirm: (_value: string, event: ITouchEvent) => void;
   /** 键盘高度变化事件 */
-  onKeyboardHeightChange: (height: number, event: ITouchEvent) => void;
+  onKeyboardHeightChange: (_height: number, event: ITouchEvent) => void;
   /** 高度变化事件 */
-  onHeightChange: (height: number, event: ITouchEvent) => void;
+  onHeightChange: (_height: number, event: ITouchEvent) => void;
   /** 验证事件 */
-  onValidate: (result: TextareaValidationResult) => void;
+  onValidate: (_result: TextareaValidationResult) => void;
 }
 
 /** 文本域组属性接口 */
@@ -355,17 +355,17 @@ export interface TextareaGroupRef {
   /** 获取所有值 */
   getValues: () => Record<string, string>;
   /** 设置值 */
-  setValues: (values: Record<string, string>) => void;
+  setValues: (_values: Record<string, string>) => void;
   /** 获取单个值 */
-  getValue: (name: string) => string;
+  getValue: (_name: string) => string;
   /** 设置单个值 */
-  setValue: (name: string, value: string) => void;
+  setValue: (_name: string, value: string) => void;
   /** 重置所有值 */
   reset: () => void;
   /** 验证所有值 */
   validateAll: () => Promise<Record<string, TextareaValidationResult>>;
   /** 设置禁用状态 */
-  setDisabled: (disabled: boolean) => void;
+  setDisabled: (_disabled: boolean) => void;
   /** 设置只读状态 */
-  setReadonly: (readonly: boolean) => void;
+  setReadonly: (_readonly: boolean) => void;
 }

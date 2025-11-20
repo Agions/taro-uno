@@ -1,236 +1,130 @@
-import '@testing-library/jest-dom';
-import { vi } from 'vitest';
+import '@testing-library/jest-dom'
+;(globalThis as any).ENABLE_INNER_HTML = true
+;(globalThis as any).ENABLE_ADJACENT_HTML = true
+;(globalThis as any).ENABLE_CLONE_NODE = true
+;(globalThis as any).ENABLE_CONTAINS = true
+;(globalThis as any).SUPPORT_TYPED_ARRAY = true
+import { vi } from 'vitest'
+import React from 'react'
 
-// Mock Taro API
-const mockTaro = {
-  getSystemInfoSync: vi.fn(() => ({
-    platform: 'h5',
-    screenWidth: 375,
-    screenHeight: 667,
-    windowWidth: 375,
-    windowHeight: 667,
-    pixelRatio: 2,
-    statusBarHeight: 20,
-    safeArea: {
-      top: 20,
-      left: 0,
-      right: 375,
-      bottom: 647,
-      width: 375,
-      height: 627
+vi.mock('@tarojs/runtime', () => ({ default: {} }))
+
+const filterProps = (props: Record<string, unknown>) => {
+  const {
+    children,
+    className,
+    style,
+    id,
+    role,
+    hidden,
+    dangerouslySetInnerHTML,
+    onClick,
+    onChange,
+    onScroll,
+    onBlur,
+    onFocus,
+    onKeyDown,
+    onSubmit,
+    onReset,
+    value,
+    type,
+    name,
+    placeholder,
+    disabled,
+    readOnly,
+    required,
+    checked,
+    ...rest
+  } = props as any
+  const allowed: Record<string, unknown> = {
+    children,
+    className,
+    style,
+    id,
+    role,
+    hidden,
+    dangerouslySetInnerHTML,
+    onClick,
+    onChange,
+    onScroll,
+    onBlur,
+    onFocus,
+    onKeyDown,
+    onSubmit,
+    onReset,
+    value,
+    type,
+    name,
+    placeholder,
+    disabled,
+    readOnly,
+    required,
+    checked,
+  }
+  Object.keys(rest).forEach((key) => {
+    if (key.startsWith('aria-') || key.startsWith('data-')) {
+      allowed[key] = (rest as any)[key]
     }
-  })),
-  navigateTo: vi.fn(),
-  navigateBack: vi.fn(),
-  redirectTo: vi.fn(),
-  switchTab: vi.fn(),
-  reLaunch: vi.fn(),
-  showToast: vi.fn(),
-  showModal: vi.fn(),
-  showLoading: vi.fn(),
-  hideLoading: vi.fn(),
-  showActionSheet: vi.fn(),
-  setStorageSync: vi.fn(),
-  getStorageSync: vi.fn(),
-  removeStorageSync: vi.fn(),
-  clearStorageSync: vi.fn(),
-  request: vi.fn(),
-  uploadFile: vi.fn(),
-  downloadFile: vi.fn(),
-  createSelectorQuery: vi.fn(() => ({
-    select: vi.fn(() => ({
-      boundingClientRect: vi.fn(() => ({
-        exec: vi.fn((callback) => {
-          callback([
-            {
-              width: 100,
-              height: 100,
-              top: 0,
-              left: 0,
-              right: 100,
-              bottom: 100
-            }
-          ]);
-        })
-      }))
-    }))
-  })),
-  nextTick: vi.fn((callback) => {
-    setTimeout(callback, 0);
-  }),
-  ENV_TYPE: {
-    WEAPP: 'WEAPP',
-    WEB: 'WEB',
-    RN: 'RN',
-    SWAN: 'SWAN',
-    ALIPAY: 'ALIPAY',
-    TT: 'TT',
-    QQ: 'QQ',
-    JD: 'JD'
-  },
-  getEnv: vi.fn(() => 'WEB')
-};
-
-// Mock Taro components
-const mockTaroComponents = {
-  View: 'div',
-  Text: 'span',
-  Button: 'button',
-  Image: 'img',
-  Input: 'input',
-  Textarea: 'textarea',
-  ScrollView: 'div',
-  Swiper: 'div',
-  SwiperItem: 'div',
-  Video: 'video',
-  Canvas: 'canvas',
-  Map: 'div',
-  WebView: 'iframe',
-  CoverView: 'div',
-  CoverImage: 'img',
-  Icon: 'i',
-  RichText: 'div',
-  Progress: 'progress',
-  Checkbox: 'input',
-  CheckboxGroup: 'div',
-  Form: 'form',
-  Label: 'label',
-  Picker: 'select',
-  PickerView: 'div',
-  PickerViewColumn: 'div',
-  Radio: 'input',
-  RadioGroup: 'div',
-  Slider: 'input',
-  Switch: 'input',
-  Navigator: 'a',
-  Audio: 'audio',
-  Camera: 'div',
-  LivePlayer: 'video',
-  LivePusher: 'video',
-  FunctionalPageNavigator: 'div',
-  OfficialAccount: 'div',
-  OpenData: 'div',
-  NavigationBar: 'div',
-  PageMeta: 'div',
-  PageContainer: 'div',
-  ShareButton: 'button',
-  Ad: 'div',
-  AdContentPage: 'div',
-  CustomWrapper: 'div',
-  Embed: 'iframe',
-  ITouchEvent: {}
-};
-
-vi.mock('@tarojs/components', () => mockTaroComponents);
-vi.mock('@tarojs/components/types/common', () => ({
-  ITouchEvent: {}
-}));
-
-// 全局 Mock
-vi.mock('@tarojs/taro', () => mockTaro);
-
-// Mock IntersectionObserver
-global.IntersectionObserver = vi.fn().mockImplementation(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn()
-}));
-
-// Mock ResizeObserver
-global.ResizeObserver = vi.fn(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn()
-}));
-
-// Mock matchMedia
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: vi.fn().mockImplementation((query) => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: vi.fn(),
-    removeListener: vi.fn(),
-    addEventListener: vi.fn(),
-    removeEventListener: vi.fn(),
-    dispatchEvent: vi.fn()
-  }))
-});
-
-// Mock getComputedStyle
-Object.defineProperty(window, 'getComputedStyle', {
-  value: vi.fn(() => ({
-    getPropertyValue: vi.fn(() => ''),
-    fontSize: '16px',
-    lineHeight: '1.5'
-  }))
-});
-
-// Mock scrollTo
-Object.defineProperty(window, 'scrollTo', {
-  value: vi.fn()
-});
-
-// Mock requestAnimationFrame
-global.requestAnimationFrame = vi.fn((callback) => {
-  setTimeout(callback, 16);
-  return 1;
-});
-
-global.cancelAnimationFrame = vi.fn();
-
-// Mock console methods in test environment
-if (process.env['NODE_ENV'] === 'test') {
-  global.console = {
-    ...console,
-    warn: vi.fn(),
-    error: vi.fn()
-  };
+  })
+  return allowed
 }
 
-// 设置全局测试环境变量
-process.env['NODE_ENV'] = 'test';
-process.env['TARO_ENV'] = 'h5';
+const createComponent = (tag: string) => {
+  const Comp = React.forwardRef<any, Record<string, any>>((props, ref) => {
+    const allowed = filterProps(props)
+    if ((tag === 'input' || tag === 'textarea' || tag === 'select') && 'value' in allowed && !allowed.onChange) {
+      allowed.onChange = () => {}
+    }
+    return React.createElement(tag, { ...allowed, ref }, allowed.children as React.ReactNode)
+  })
+  Comp.displayName = `Mock${String(tag)}`
+  return Comp
+}
 
-// Mock @taro-uno/core package
-vi.mock('@/utils', () => ({
-  PlatformDetector: {
-    isH5: () => true,
-    isWeapp: () => false,
-    isRN: () => false,
-    getPlatform: vi.fn(() => 'h5'),
-    getPlatformInfo: vi.fn(() => ({
-      platform: 'h5',
-      isMiniProgram: false,
-      isH5: true,
-      isRN: false,
-      system: { platform: 'h5' }
-    }))
-  }
-}));
-
-// Mock clipboard API
-Object.assign(navigator, {
-  clipboard: {
-    writeText: vi.fn().mockResolvedValue(undefined),
-    readText: vi.fn().mockResolvedValue('')
-  }
-});
-
-// Mock window.open
-Object.assign(window, {
-  open: vi.fn()
-});
-
-// Mock window.location
-Object.assign(window, {
-  location: {
-    href: ''
-  }
-});
-
-// 清理函数
-afterEach(() => {
-  vi.clearAllMocks();
-});
+vi.mock('@tarojs/components', () => ({
+  View: createComponent('div'),
+  Text: createComponent('span'),
+  Button: createComponent('button'),
+  Image: createComponent('img'),
+  Input: createComponent('input'),
+  Textarea: createComponent('textarea'),
+  ScrollView: createComponent('div'),
+  Swiper: createComponent('div'),
+  SwiperItem: createComponent('div'),
+  Video: createComponent('video'),
+  Canvas: createComponent('canvas'),
+  Map: createComponent('div'),
+  WebView: createComponent('iframe'),
+  CoverView: createComponent('div'),
+  CoverImage: createComponent('img'),
+  Icon: createComponent('i'),
+  RichText: createComponent('div'),
+  Progress: createComponent('progress'),
+  Checkbox: createComponent('input'),
+  CheckboxGroup: createComponent('div'),
+  Form: createComponent('form'),
+  Label: createComponent('label'),
+  Picker: createComponent('select'),
+  PickerView: createComponent('div'),
+  PickerViewColumn: createComponent('div'),
+  Radio: createComponent('input'),
+  RadioGroup: createComponent('div'),
+  Slider: createComponent('input'),
+  Switch: createComponent('input'),
+  Navigator: createComponent('a'),
+  Audio: createComponent('audio'),
+  Camera: createComponent('div'),
+  LivePlayer: createComponent('video'),
+  LivePusher: createComponent('video'),
+  FunctionalPageNavigator: createComponent('div'),
+  OfficialAccount: createComponent('div'),
+  OpenData: createComponent('div'),
+  NavigationBar: createComponent('div'),
+  PageMeta: createComponent('div'),
+  PageContainer: createComponent('div'),
+  ShareButton: createComponent('button'),
+  Ad: createComponent('div'),
+  AdContentPage: createComponent('div'),
+  CustomWrapper: createComponent('div'),
+  Embed: createComponent('iframe'),
+}))

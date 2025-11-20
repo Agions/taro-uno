@@ -1,6 +1,7 @@
 import React from 'react'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { vi } from 'vitest'
+import { vi, describe, it, expect, beforeEach } from 'vitest'
+import '@testing-library/jest-dom'
 import TextComponent from './Text'
 import type { TextProps } from './Text.types'
 
@@ -29,16 +30,14 @@ describe('Text Component', () => {
       const sizes: Array<TextProps['size']> = ['xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl', '4xl']
 
       sizes.forEach(size => {
-        const { container } = render(<Text {...defaultProps} size={size} />)
-        const text = container.querySelector('.taro-uno-h5-text')
+        const { container } = render(<Text {...defaultProps} size={size!} />)
+        const text = container.querySelector('.taro-uno-h5-text') as HTMLElement
         expect(text).toHaveClass(`taro-uno-h5-text--${size}`)
 
         // Verify font size is applied via style attribute
-        if (text) {
-          const fontSize = text.style.fontSize
-          expect(fontSize).toBeTruthy()
-          expect(fontSize).toMatch(/\d+px/)
-        }
+        const fontSize = text.style.fontSize
+        expect(fontSize).toBeTruthy()
+        expect(fontSize).toMatch(/\d+px/)
       })
     })
 
@@ -46,40 +45,38 @@ describe('Text Component', () => {
       const colors: Array<TextProps['color']> = ['primary', 'secondary', 'success', 'warning', 'error', 'info']
 
       colors.forEach(color => {
-        const { container } = render(<Text {...defaultProps} color={color} />)
-        const text = container.querySelector('.taro-uno-h5-text')
+        const { container } = render(<Text {...defaultProps} color={color!} />)
+        const text = container.querySelector('.taro-uno-h5-text') as HTMLElement
         expect(text).toHaveClass(`taro-uno-h5-text--${color}`)
 
         // Verify color is applied via style attribute
-        if (text) {
-          const colorValue = text.style.color
-          expect(colorValue).toBeTruthy()
-          expect(colorValue).toMatch(/^#[0-9a-fA-F]{6}$|rgb(a?\(.*\))|hsl(a?\(.*\))$/)
-        }
+        const colorValue = text.style.color
+        expect(colorValue).toBeTruthy()
+        expect(colorValue).toMatch(/^#[0-9a-fA-F]{6}$|rgb(a?\(.*\))|hsl(a?\(.*\))$/)
       })
     })
 
     it('renders clickable text', () => {
       const { container } = render(<Text {...defaultProps} clickable />)
-      const text = container.querySelector('.taro-uno-h5-text')
+      const text = container.querySelector('.taro-uno-h5-text') as HTMLElement
       expect(text).toHaveClass('taro-uno-h5-text--clickable')
     })
 
     it('renders loading text', () => {
       const { container } = render(<Text {...defaultProps} loading />)
-      const text = container.querySelector('.taro-uno-h5-text')
+      const text = container.querySelector('.taro-uno-h5-text') as HTMLElement
       expect(text).toHaveClass('taro-uno-h5-text--loading')
     })
 
     it('renders disabled text', () => {
       const { container } = render(<Text {...defaultProps} disabled />)
-      const text = container.querySelector('.taro-uno-h5-text')
+      const text = container.querySelector('.taro-uno-h5-text') as HTMLElement
       expect(text).toHaveClass('taro-uno-h5-text--disabled')
     })
 
     it('renders with custom className', () => {
       const { container } = render(<Text {...defaultProps} className="custom-text" />)
-      const text = container.querySelector('.taro-uno-h5-text')
+      const text = container.querySelector('.taro-uno-h5-text') as HTMLElement
       expect(text).toHaveClass('custom-text')
     })
   })
@@ -136,25 +133,55 @@ describe('Text Component', () => {
   })
 
   describe('Accessibility', () => {
-    it('has proper accessibility attributes', () => {
-      render(<Text {...defaultProps} accessibilityLabel="Greeting text" />)
+    it('supports accessibility attributes', () => {
+      render(<Text {...defaultProps} ariaLabel="Greeting text" />)
 
       const text = screen.getByText('Hello World')
       expect(text).toHaveAttribute('aria-label', 'Greeting text')
     })
 
-    it('updates accessibility state when disabled', () => {
-      render(<Text {...defaultProps} disabled />)
+    it('renders with default role', () => {
+      render(<Text {...defaultProps} />)
 
-      const text = screen.getByText('Hello World')
-      expect(text).toHaveAttribute('aria-disabled', 'true')
+      const text = screen.getByText('Hello World') as HTMLElement
+      expect(text).toHaveAttribute('role', 'text')
     })
 
-    it('updates accessibility state when loading', () => {
+    it('renders with custom role and ariaLabel', () => {
+      render(<Text {...defaultProps} ariaLabel="Custom label" role="button" />)
+
+      const text = screen.getByRole('button', { name: 'Custom label' }) as HTMLElement
+      expect(text).toBeInTheDocument()
+      expect(text).toHaveAttribute('role', 'button')
+      expect(text).toHaveAttribute('aria-label', 'Custom label')
+    })
+
+    it('supports accessibilityRole prop', () => {
+      render(<Text {...defaultProps} accessibilityRole="link" />)
+
+      const text = screen.getByText('Hello World') as HTMLElement
+      expect(text).toHaveAttribute('role', 'link')
+    })
+
+    it('has clickable styling when clickable', () => {
+      render(<Text {...defaultProps} clickable />)
+
+      const text = screen.getByText('Hello World') as HTMLElement
+      expect(text).toHaveClass('taro-uno-h5-text--clickable')
+    })
+
+    it('has correct disabled state styling', () => {
+      render(<Text {...defaultProps} disabled />)
+
+      const text = screen.getByText('Hello World') as HTMLElement
+      expect(text).toHaveClass('taro-uno-h5-text--disabled')
+    })
+
+    it('has correct loading state styling', () => {
       render(<Text {...defaultProps} loading />)
 
-      const text = screen.getByText('Hello World')
-      expect(text).toHaveAttribute('aria-busy', 'true')
+      const text = screen.getByText('Hello World') as HTMLElement
+      expect(text).toHaveClass('taro-uno-h5-text--loading')
     })
   })
 
@@ -197,7 +224,6 @@ describe('Text Component', () => {
       await waitFor(() => {
         const text = screen.getByText('Hello World')
         expect(text).toHaveClass('taro-uno-h5-text--disabled')
-        expect(text).toHaveAttribute('aria-disabled', 'true')
       })
     })
 
@@ -211,7 +237,6 @@ describe('Text Component', () => {
       await waitFor(() => {
         const text = screen.getByText('Hello World')
         expect(text).toHaveClass('taro-uno-h5-text--loading')
-        expect(text).toHaveAttribute('aria-busy', 'true')
       })
     })
 

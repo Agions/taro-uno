@@ -71,19 +71,19 @@ export interface InputProps
   /** 自定义样式类名 */
   className?: string;
   /** 值变化事件处理函数 */
-  onChange?: (value: string, event: ITouchEvent) => void;
+  onChange?: (_value: string, event: ITouchEvent) => void;
   /** 聚焦事件处理函数 */
-  onFocus?: (event: ITouchEvent) => void;
+  onFocus?: (_event: ITouchEvent) => void;
   /** 失焦事件处理函数 */
-  onBlur?: (event: ITouchEvent) => void;
+  onBlur?: (_event: ITouchEvent) => void;
   /** 清除事件处理函数 */
-  onClear?: (event: ITouchEvent) => void;
+  onClear?: (_event: ITouchEvent) => void;
   /** 确认事件处理函数 */
-  onConfirm?: (value: string, event: ITouchEvent) => void;
+  onConfirm?: (_value: string, event: ITouchEvent) => void;
   /** 输入事件处理函数 */
-  onInput?: (value: string, event: ITouchEvent) => void;
+  onInput?: (_value: string, event: ITouchEvent) => void;
   /** 键盘输入事件处理函数 */
-  onKeyboardHeightChange?: (height: number, event: ITouchEvent) => void;
+  onKeyboardHeightChange?: (_height: number, event: ITouchEvent) => void;
   /** 自定义输入框样式 */
   style?: React.CSSProperties;
   /** 是否启用无障碍访问 */
@@ -106,7 +106,7 @@ export interface InputProps
     pattern?: RegExp;
     min?: number;
     max?: number;
-    validator?: (value: string) => boolean | string | Promise<boolean | string>;
+    validator?: (_value: string) => boolean | string | Promise<boolean | string>;
   }>;
   /** 验证触发时机 */
   validateTrigger?: 'onChange' | 'onBlur' | 'onSubmit' | 'onFocus';
@@ -121,7 +121,7 @@ export interface InputProps
   /** 是否显示字数统计 */
   showWordLimit?: boolean;
   /** 自定义验证函数 */
-  validator?: (value: string) => boolean | string | Promise<boolean | string>;
+  validator?: (_value: string) => boolean | string | Promise<boolean | string>;
   /** 是否块级显示 */
   block?: boolean;
   /** 容器样式 */
@@ -135,7 +135,7 @@ export type InputRef = {
   /** 获取输入框值 */
   getValue: () => string;
   /** 设置输入框值 */
-  setValue: (value: string) => void;
+  setValue: (_value: string) => void;
   /** 聚焦输入框 */
   focus: () => void;
   /** 失焦输入框 */
@@ -143,15 +143,15 @@ export type InputRef = {
   /** 选择文本 */
   select: () => void;
   /** 设置选中文本范围 */
-  setSelectionRange: (start: number, end: number) => void;
+  setSelectionRange: (_start: number, end: number) => void;
   /** 获取选中文本范围 */
   getSelectionRange: () => { start: number; end: number };
   /** 设置禁用状态 */
-  setDisabled: (disabled: boolean) => void;
+  setDisabled: (_disabled: boolean) => void;
   /** 设置只读状态 */
-  setReadonly: (readonly: boolean) => void;
+  setReadonly: (_readonly: boolean) => void;
   /** 设置输入框状态 */
-  setStatus: (status: InputStatus) => void;
+  setStatus: (_status: InputStatus) => void;
   /** 获取输入框状态 */
   getStatus: () => InputStatus;
   /** 验证输入框值 */
@@ -185,19 +185,19 @@ export interface InputGroupProps {
 /** 输入框工具函数接口 */
 export interface InputUtils {
   /** 格式化输入值 */
-  formatValue: (value: string | number, type: InputType) => string;
+  formatValue: (_value: string | number, type: InputType) => string;
   /** 验证输入值 */
-  validateValue: (value: string, rules: InputProps['rules']) => { valid: boolean; message?: string };
+  validateValue: (_value: string, rules: InputProps['rules']) => { valid: boolean; message?: string };
   /** 计算字符长度 */
-  calculateLength: (value: string, type: InputType) => number;
+  calculateLength: (_value: string, type: InputType) => number;
   /** 格式化手机号 */
-  formatPhone: (phone: string) => string;
+  formatPhone: (_phone: string) => string;
   /** 格式化身份证号 */
-  formatIdCard: (idCard: string) => string;
+  formatIdCard: (_idCard: string) => string;
   /** 格式化金额 */
-  formatMoney: (amount: string) => string;
+  formatMoney: (_amount: string) => string;
   /** 限制输入字符 */
-  restrictInput: (value: string, type: InputType) => string;
+  restrictInput: (_value: string, type: InputType) => string;
   /** 获取输入框类型映射 */
   getTypeMap: () => Record<InputType, { keyboard: string; pattern?: string }>;
   /** 获取输入框尺寸映射 */
@@ -223,19 +223,19 @@ export interface InputValidationResult {
 /** 输入框事件接口 */
 export interface InputEvents {
   /** 值变化事件 */
-  onChange: (value: string, event: ITouchEvent) => void;
+  onChange: (_value: string, event: ITouchEvent) => void;
   /** 聚焦事件 */
-  onFocus: (event: ITouchEvent) => void;
+  onFocus: (_event: ITouchEvent) => void;
   /** 失焦事件 */
-  onBlur: (event: ITouchEvent) => void;
+  onBlur: (_event: ITouchEvent) => void;
   /** 清除事件 */
-  onClear: (event: ITouchEvent) => void;
+  onClear: (_event: ITouchEvent) => void;
   /** 确认事件 */
-  onConfirm: (value: string, event: ITouchEvent) => void;
+  onConfirm: (_value: string, event: ITouchEvent) => void;
   /** 输入事件 */
-  onInput: (value: string, event: ITouchEvent) => void;
+  onInput: (_value: string, event: ITouchEvent) => void;
   /** 键盘高度变化事件 */
-  onKeyboardHeightChange: (height: number, event: ITouchEvent) => void;
+  onKeyboardHeightChange: (_height: number, event: ITouchEvent) => void;
 }
 
 /** 输入框样式配置接口 */

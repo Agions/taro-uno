@@ -1,0 +1,579 @@
+# Transfer 穿梭框
+
+Transfer 是一个双向数据传输组件，用于在两个列表之间移动数据项，支持搜索、分页、全选等功能。
+
+## 功能特性
+
+- 支持双列表数据传输
+- 支持单选和多选操作
+- 支持搜索过滤功能
+- 支持分页显示数据
+- 支持全选和取消全选
+- 支持自定义渲染（选项、搜索框、操作按钮等）
+- 支持不同尺寸和状态
+- 支持水平和垂直布局
+- 支持单向模式
+- 提供丰富的API方法
+
+## 基本用法
+
+```tsx
+import React, { useState } from 'react';
+import { Transfer } from '@taro-uno/components';
+
+const dataSource = [
+  { key: '1', title: '选项 1', description: '这是选项 1 的描述' },
+  { key: '2', title: '选项 2', description: '这是选项 2 的描述' },
+  { key: '3', title: '选项 3', description: '这是选项 3 的描述' },
+  { key: '4', title: '选项 4', description: '这是选项 4 的描述' },
+  { key: '5', title: '选项 5', description: '这是选项 5 的描述' },
+];
+
+export default function App() {
+  const [targetKeys, setTargetKeys] = useState(['2']);
+
+  return (
+    <Transfer
+      dataSource={dataSource}
+      targetKeys={targetKeys}
+      onChange={(newTargetKeys) => setTargetKeys(newTargetKeys)}
+    />
+  );
+}
+```
+
+## 使用示例
+
+### 1. 默认选中项
+
+```tsx
+import React, { useState } from 'react';
+import { Transfer } from '@taro-uno/components';
+
+const dataSource = [
+  { key: '1', title: '选项 1', description: '这是选项 1 的描述' },
+  { key: '2', title: '选项 2', description: '这是选项 2 的描述' },
+  { key: '3', title: '选项 3', description: '这是选项 3 的描述' },
+  { key: '4', title: '选项 4', description: '这是选项 4 的描述' },
+  { key: '5', title: '选项 5', description: '这是选项 5 的描述' },
+];
+
+export default function App() {
+  const [targetKeys, setTargetKeys] = useState(['1', '3']);
+  const [selectedKeys, setSelectedKeys] = useState(['2', '4']);
+
+  return (
+    <Transfer
+      dataSource={dataSource}
+      targetKeys={targetKeys}
+      selectedKeys={selectedKeys}
+      onChange={(newTargetKeys) => setTargetKeys(newTargetKeys)}
+      onSelectChange={(newSourceSelectedKeys, newTargetSelectedKeys) => {
+        setSelectedKeys([...newSourceSelectedKeys, ...newTargetSelectedKeys]);
+      }}
+    />
+  );
+}
+```
+
+### 2. 搜索功能
+
+```tsx
+import React, { useState } from 'react';
+import { Transfer } from '@taro-uno/components';
+
+const dataSource = [
+  { key: '1', title: '选项 1', description: '这是选项 1 的描述' },
+  { key: '2', title: '选项 2', description: '这是选项 2 的描述' },
+  { key: '3', title: '选项 3', description: '这是选项 3 的描述' },
+  { key: '4', title: '选项 4', description: '这是选项 4 的描述' },
+  { key: '5', title: '选项 5', description: '这是选项 5 的描述' },
+];
+
+export default function App() {
+  const [targetKeys, setTargetKeys] = useState([]);
+
+  return (
+    <Transfer
+      dataSource={dataSource}
+      targetKeys={targetKeys}
+      onChange={(newTargetKeys) => setTargetKeys(newTargetKeys)}
+      showSearch
+      searchPlaceholder="请搜索选项"
+    />
+  );
+}
+```
+
+### 3. 自定义过滤函数
+
+```tsx
+import React, { useState } from 'react';
+import { Transfer } from '@taro-uno/components';
+
+const dataSource = [
+  { key: '1', title: '选项 1', description: '这是选项 1 的描述' },
+  { key: '2', title: '选项 2', description: '这是选项 2 的描述' },
+  { key: '3', title: '选项 3', description: '这是选项 3 的描述' },
+  { key: '4', title: '选项 4', description: '这是选项 4 的描述' },
+  { key: '5', title: '选项 5', description: '这是选项 5 的描述' },
+];
+
+export default function App() {
+  const [targetKeys, setTargetKeys] = useState([]);
+
+  const filterOption = (inputValue, option) => {
+    return (
+      option.title.toLowerCase().includes(inputValue.toLowerCase()) ||
+      option.description.toLowerCase().includes(inputValue.toLowerCase())
+    );
+  };
+
+  return (
+    <Transfer
+      dataSource={dataSource}
+      targetKeys={targetKeys}
+      onChange={(newTargetKeys) => setTargetKeys(newTargetKeys)}
+      showSearch
+      filterOption={filterOption}
+    />
+  );
+}
+```
+
+### 4. 分页功能
+
+```tsx
+import React, { useState } from 'react';
+import { Transfer } from '@taro-uno/components';
+
+// 生成大量数据
+const generateData = () => {
+  const data = [];
+  for (let i = 1; i <= 20; i++) {
+    data.push({
+      key: String(i),
+      title: `选项 ${i}`,
+      description: `这是选项 ${i} 的描述`,
+    });
+  }
+  return data;
+};
+
+export default function App() {
+  const [targetKeys, setTargetKeys] = useState([]);
+  const dataSource = generateData();
+
+  return (
+    <Transfer
+      dataSource={dataSource}
+      targetKeys={targetKeys}
+      onChange={(newTargetKeys) => setTargetKeys(newTargetKeys)}
+      pagination
+    />
+  );
+}
+```
+
+### 5. 不同尺寸
+
+```tsx
+import React, { useState } from 'react';
+import { View } from '@tarojs/components';
+import { Transfer } from '@taro-uno/components';
+
+const dataSource = [
+  { key: '1', title: '选项 1', description: '这是选项 1 的描述' },
+  { key: '2', title: '选项 2', description: '这是选项 2 的描述' },
+  { key: '3', title: '选项 3', description: '这是选项 3 的描述' },
+];
+
+export default function App() {
+  const [targetKeysSmall, setTargetKeysSmall] = useState([]);
+  const [targetKeysMedium, setTargetKeysMedium] = useState([]);
+  const [targetKeysLarge, setTargetKeysLarge] = useState([]);
+
+  return (
+    <View>
+      <View style={{ marginBottom: '20px' }}>
+        <Transfer
+          dataSource={dataSource}
+          targetKeys={targetKeysSmall}
+          onChange={(newTargetKeys) => setTargetKeysSmall(newTargetKeys)}
+          size="small"
+        />
+      </View>
+      <View style={{ marginBottom: '20px' }}>
+        <Transfer
+          dataSource={dataSource}
+          targetKeys={targetKeysMedium}
+          onChange={(newTargetKeys) => setTargetKeysMedium(newTargetKeys)}
+          size="medium"
+        />
+      </View>
+      <View>
+        <Transfer
+          dataSource={dataSource}
+          targetKeys={targetKeysLarge}
+          onChange={(newTargetKeys) => setTargetKeysLarge(newTargetKeys)}
+          size="large"
+        />
+      </View>
+    </View>
+  );
+}
+```
+
+### 6. 不同状态
+
+```tsx
+import React, { useState } from 'react';
+import { View } from '@tarojs/components';
+import { Transfer } from '@taro-uno/components';
+
+const dataSource = [
+  { key: '1', title: '选项 1', description: '这是选项 1 的描述' },
+  { key: '2', title: '选项 2', description: '这是选项 2 的描述' },
+  { key: '3', title: '选项 3', description: '这是选项 3 的描述' },
+];
+
+export default function App() {
+  const [targetKeysDefault, setTargetKeysDefault] = useState([]);
+  const [targetKeysError, setTargetKeysError] = useState([]);
+  const [targetKeysWarning, setTargetKeysWarning] = useState([]);
+  const [targetKeysSuccess, setTargetKeysSuccess] = useState([]);
+
+  return (
+    <View>
+      <View style={{ marginBottom: '20px' }}>
+        <Transfer
+          dataSource={dataSource}
+          targetKeys={targetKeysDefault}
+          onChange={(newTargetKeys) => setTargetKeysDefault(newTargetKeys)}
+          status="default"
+        />
+      </View>
+      <View style={{ marginBottom: '20px' }}>
+        <Transfer
+          dataSource={dataSource}
+          targetKeys={targetKeysError}
+          onChange={(newTargetKeys) => setTargetKeysError(newTargetKeys)}
+          status="error"
+        />
+      </View>
+      <View style={{ marginBottom: '20px' }}>
+        <Transfer
+          dataSource={dataSource}
+          targetKeys={targetKeysWarning}
+          onChange={(newTargetKeys) => setTargetKeysWarning(newTargetKeys)}
+          status="warning"
+        />
+      </View>
+      <View>
+        <Transfer
+          dataSource={dataSource}
+          targetKeys={targetKeysSuccess}
+          onChange={(newTargetKeys) => setTargetKeysSuccess(newTargetKeys)}
+          status="success"
+        />
+      </View>
+    </View>
+  );
+}
+```
+
+### 7. 垂直布局
+
+```tsx
+import React, { useState } from 'react';
+import { Transfer } from '@taro-uno/components';
+
+const dataSource = [
+  { key: '1', title: '选项 1', description: '这是选项 1 的描述' },
+  { key: '2', title: '选项 2', description: '这是选项 2 的描述' },
+  { key: '3', title: '选项 3', description: '这是选项 3 的描述' },
+  { key: '4', title: '选项 4', description: '这是选项 4 的描述' },
+  { key: '5', title: '选项 5', description: '这是选项 5 的描述' },
+];
+
+export default function App() {
+  const [targetKeys, setTargetKeys] = useState([]);
+
+  return (
+    <Transfer
+      dataSource={dataSource}
+      targetKeys={targetKeys}
+      onChange={(newTargetKeys) => setTargetKeys(newTargetKeys)}
+      layout="vertical"
+    />
+  );
+}
+```
+
+### 8. 单向模式
+
+```tsx
+import React, { useState } from 'react';
+import { Transfer } from '@taro-uno/components';
+
+const dataSource = [
+  { key: '1', title: '选项 1', description: '这是选项 1 的描述' },
+  { key: '2', title: '选项 2', description: '这是选项 2 的描述' },
+  { key: '3', title: '选项 3', description: '这是选项 3 的描述' },
+  { key: '4', title: '选项 4', description: '这是选项 4 的描述' },
+  { key: '5', title: '选项 5', description: '这是选项 5 的描述' },
+];
+
+export default function App() {
+  const [targetKeys, setTargetKeys] = useState([]);
+
+  return (
+    <Transfer
+      dataSource={dataSource}
+      targetKeys={targetKeys}
+      onChange={(newTargetKeys) => setTargetKeys(newTargetKeys)}
+      oneWay
+    />
+  );
+}
+```
+
+### 9. 自定义渲染
+
+```tsx
+import React, { useState } from 'react';
+import { View, Text } from '@tarojs/components';
+import { Transfer } from '@taro-uno/components';
+
+const dataSource = [
+  { key: '1', title: '选项 1', description: '这是选项 1 的描述', category: '分类 A' },
+  { key: '2', title: '选项 2', description: '这是选项 2 的描述', category: '分类 B' },
+  { key: '3', title: '选项 3', description: '这是选项 3 的描述', category: '分类 A' },
+  { key: '4', title: '选项 4', description: '这是选项 4 的描述', category: '分类 B' },
+  { key: '5', title: '选项 5', description: '这是选项 5 的描述', category: '分类 C' },
+];
+
+export default function App() {
+  const [targetKeys, setTargetKeys] = useState([]);
+
+  const renderItem = (item) => {
+    return (
+      <View>
+        <Text style={{ fontWeight: 'bold' }}>{item.title}</Text>
+        <Text style={{ fontSize: '12px', color: '#999', marginLeft: '8px' }}>{item.category}</Text>
+        <View style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
+          {item.description}
+        </View>
+      </View>
+    );
+  };
+
+  return (
+    <Transfer
+      dataSource={dataSource}
+      targetKeys={targetKeys}
+      onChange={(newTargetKeys) => setTargetKeys(newTargetKeys)}
+      render={renderItem}
+      titles={['源列表', '已选择']}
+      operations={['添加', '移除']}
+    />
+  );
+}
+```
+
+### 10. API 方法调用
+
+```tsx
+import React, { useState, useRef } from 'react';
+import { View, Button } from '@tarojs/components';
+import { Transfer } from '@taro-uno/components';
+
+const dataSource = [
+  { key: '1', title: '选项 1', description: '这是选项 1 的描述' },
+  { key: '2', title: '选项 2', description: '这是选项 2 的描述' },
+  { key: '3', title: '选项 3', description: '这是选项 3 的描述' },
+  { key: '4', title: '选项 4', description: '这是选项 4 的描述' },
+  { key: '5', title: '选项 5', description: '这是选项 5 的描述' },
+];
+
+export default function App() {
+  const [targetKeys, setTargetKeys] = useState([]);
+  const transferRef = useRef(null);
+
+  const handleMoveAllRight = () => {
+    transferRef.current?.moveTo('right', dataSource.map(item => item.key));
+  };
+
+  const handleMoveAllLeft = () => {
+    transferRef.current?.moveTo('left', dataSource.map(item => item.key));
+  };
+
+  const handleReset = () => {
+    transferRef.current?.reset();
+    setTargetKeys([]);
+  };
+
+  return (
+    <View>
+      <Transfer
+        ref={transferRef}
+        dataSource={dataSource}
+        targetKeys={targetKeys}
+        onChange={(newTargetKeys) => setTargetKeys(newTargetKeys)}
+      />
+      <View style={{ marginTop: '20px', display: 'flex', gap: '10px' }}>
+        <Button onClick={handleMoveAllRight}>全部添加到右侧</Button>
+        <Button onClick={handleMoveAllLeft}>全部添加到左侧</Button>
+        <Button onClick={handleReset}>重置</Button>
+      </View>
+    </View>
+  );
+}
+```
+
+## API
+
+### TransferProps
+
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| dataSource | TransferDataSource | - | 数据源 |
+| targetKeys | TransferValue | - | 目标键集合 |
+| defaultTargetKeys | TransferValue | [] | 默认目标键集合 |
+| selectedKeys | TransferValue | - | 选中键集合 |
+| defaultSelectedKeys | TransferValue | [] | 默认选中键集合 |
+| size | TransferSize | 'medium' | 尺寸，可选值：'small'、'medium'、'large' |
+| status | TransferStatus | 'default' | 状态，可选值：'default'、'error'、'warning'、'success' |
+| layout | TransferLayout | 'horizontal' | 布局，可选值：'horizontal'、'vertical' |
+| disabled | boolean | false | 是否禁用 |
+| showSearch | boolean | false | 是否显示搜索框 |
+| showSelectAll | boolean | true | 是否显示全选 |
+| showOperations | boolean | true | 是否显示操作按钮 |
+| oneWay | boolean | false | 是否一列显示 |
+| pagination | boolean \| TransferPaginationConfig | false | 分页 |
+| operations | string[] \| ReactNode[] | ['>', '<'] | 操作按钮文本 |
+| titles | ReactNode[] | ['源列表', '目标列表'] | 标题 |
+| notFoundContent | ReactNode | '无数据' | 无数据文本 |
+| searchPlaceholder | string | '请搜索' | 搜索框占位符 |
+| filterOption | (inputValue: string, option: TransferOption) => boolean | - | 过滤函数 |
+| render | (item: TransferOption) => ReactNode | - | 自定义渲染函数 |
+| footer | (props: { direction: TransferDirection; dataSource: TransferDataSource[] }) => ReactNode | - | 自定义底部渲染 |
+| optionRender | (option: TransferOption) => ReactNode | - | 自定义选项渲染 |
+| rowRender | (item: TransferOption, index: number, direction: TransferDirection) => ReactNode | - | 自定义行渲染 |
+| searchRender | (props: SearchRenderProps) => ReactNode | - | 自定义搜索框渲染 |
+| operationRender | (direction: TransferDirection) => ReactNode | - | 自定义操作按钮渲染 |
+| emptyRender | (direction: TransferDirection) => ReactNode | - | 自定义空状态渲染 |
+| onChange | (targetKeys: TransferValue, direction: TransferDirection, moveKeys: TransferValue) => void | - | 值变化回调 |
+| onSelectChange | (sourceSelectedKeys: TransferValue, targetSelectedKeys: TransferValue) => void | - | 选中变化回调 |
+| onSearch | (direction: TransferDirection, value: string) => void | - | 搜索回调 |
+| onScroll | (direction: TransferDirection, e: React.UIEvent<HTMLDivElement>) => void | - | 滚动回调 |
+| accessible | boolean | true | 无障碍访问 |
+| accessibilityLabel | string | - | 无障碍标签 |
+| accessibilityRole | string | 'application' | 无障碍角色 |
+| accessibilityState | { disabled?: boolean; readonly?: boolean; busy?: boolean } | - | 无障碍状态 |
+| className | string | - | 自定义类名 |
+| style | CSSProperties | - | 自定义样式 |
+
+### TransferRef
+
+| 方法 | 说明 |
+| --- | --- |
+| getTargetKeys | 获取目标键集合 |
+| setTargetKeys | 设置目标键集合 |
+| getSelectedKeys | 获取选中键集合 |
+| setSelectedKeys | 设置选中键集合 |
+| getDataSource | 获取数据源 |
+| setDataSource | 设置数据源 |
+| moveTo | 移动选项 |
+| selectAll | 全选 |
+| clearSelect | 清空选择 |
+| search | 搜索 |
+| clearSearch | 清空搜索 |
+| disable | 禁用 |
+| enable | 启用 |
+| reset | 重置 |
+| getSelectedItems | 获取选中的选项 |
+| getTargetItems | 获取目标选项 |
+| getSourceItems | 获取源选项 |
+
+### 类型定义
+
+```ts
+// 穿梭框选项类型
+export interface TransferOption {
+  key: string | number;
+  title: ReactNode;
+  description?: ReactNode;
+  disabled?: boolean;
+  selected?: boolean;
+  style?: CSSProperties;
+  className?: string;
+  [key: string]: any;
+}
+
+// 穿梭框数据源类型
+export type TransferDataSource = TransferOption[];
+
+// 穿梭框选中值类型
+export type TransferValue = (string | number)[];
+
+// 穿梭框方向类型
+export type TransferDirection = 'left' | 'right';
+
+// 穿梭框尺寸
+export type TransferSize = 'small' | 'medium' | 'large';
+
+// 穿梭框状态
+export type TransferStatus = 'default' | 'error' | 'warning' | 'success';
+
+// 穿梭框布局
+export type TransferLayout = 'horizontal' | 'vertical';
+
+// 分页配置接口
+export interface TransferPaginationConfig {
+  pageSize?: number;
+  simple?: boolean;
+  showSizeChanger?: boolean;
+  showQuickJumper?: boolean;
+  current?: number;
+  total?: number;
+  onChange?: (page: number, pageSize: number) => void;
+}
+
+// 搜索框渲染属性
+export interface SearchRenderProps {
+  placeholder: string;
+  value: string;
+  onChange: (value: string) => void;
+  direction: TransferDirection;
+}
+```
+
+## 使用提示
+
+1. **数据源格式**：数据源必须是包含 `key`、`title` 等属性的对象数组，`key` 必须唯一。
+
+2. **受控与非受控**：支持受控和非受控两种模式，通过 `targetKeys` 和 `defaultTargetKeys` 控制。
+
+3. **搜索功能**：开启搜索功能后，默认按 `title` 和 `description` 进行搜索，也可自定义 `filterOption` 函数。
+
+4. **分页功能**：当数据量较大时，可启用分页功能提高性能。
+
+5. **自定义渲染**：提供丰富的自定义渲染接口，可自定义选项、搜索框、操作按钮等。
+
+6. **无障碍支持**：支持设置无障碍标签、角色和状态，提高可访问性。
+
+## 浏览器兼容性
+
+| 浏览器 | 版本 |
+| --- | --- |
+| Chrome | 最新版 |
+| Firefox | 最新版 |
+| Safari | 最新版 |
+| Taro | 3.x+ |
+
+## 无障碍支持
+
+- 支持设置 `accessibilityLabel`、`accessibilityRole` 和 `accessibilityState`
+- 支持键盘导航和操作
+- 符合 WCAG 2.1 无障碍标准

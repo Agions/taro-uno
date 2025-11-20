@@ -18,7 +18,7 @@ export interface AvatarProps {
   /** 自定义类名 */
   className?: string;
   /** 点击事件 */
-  onClick?: (event: any) => void;
+  onClick?: (_event: any) => void;
 }
 
 export interface AvatarRef {

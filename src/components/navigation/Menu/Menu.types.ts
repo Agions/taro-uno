@@ -82,23 +82,23 @@ export interface MenuProps {
   /** 折叠图标 */
   collapsedIcon?: ReactNode;
   /** 展开图标 */
-  expandIcon?: ReactNode | ((props: { isOpen: boolean; isSubMenu: boolean }) => ReactNode);
+  expandIcon?: ReactNode | ((_props: { isOpen: boolean; isSubMenu: boolean }) => ReactNode);
   /** 是否显示右键菜单 */
   contextMenu?: boolean;
   /** 菜单项点击事件 */
-  onClick?: (key: string, item: MenuItem, event: ITouchEvent) => void;
+  onClick?: (_key: string, item: MenuItem, event: ITouchEvent) => void;
   /** 菜单项选中变化事件 */
-  onSelect?: (selectedKeys: string[], item: MenuItem | null) => void;
+  onSelect?: (_selectedKeys: string[], item: MenuItem | null) => void;
   /** 子菜单展开/收起事件 */
-  onOpenChange?: (openKeys: string[]) => void;
+  onOpenChange?: (_openKeys: string[]) => void;
   /** 折叠状态变化事件 */
-  onCollapse?: (collapsed: boolean) => void;
+  onCollapse?: (_collapsed: boolean) => void;
   /** 右键菜单事件 */
-  onContextMenu?: (key: string, item: MenuItem, event: ITouchEvent) => void;
+  onContextMenu?: (_key: string, item: MenuItem, event: ITouchEvent) => void;
   /** 自定义渲染菜单项 */
-  itemRender?: (item: MenuItem) => ReactNode;
+  itemRender?: (_item: MenuItem) => ReactNode;
   /** 自定义渲染子菜单标题 */
-  subMenuTitleRender?: (item: MenuItem) => ReactNode;
+  subMenuTitleRender?: (_item: MenuItem) => ReactNode;
   /** 自定义样式 */
   style?: React.CSSProperties;
   /** 自定义类名 */
@@ -124,21 +124,21 @@ export interface MenuRef {
   /** 获取当前选中的菜单项 */
   getSelectedKeys: () => string[];
   /** 设置选中的菜单项 */
-  setSelectedKeys: (keys: string[]) => void;
+  setSelectedKeys: (_keys: string[]) => void;
   /** 获取展开的子菜单 */
   getOpenKeys: () => string[];
   /** 设置展开的子菜单 */
-  setOpenKeys: (keys: string[]) => void;
+  setOpenKeys: (_keys: string[]) => void;
   /** 折叠/展开菜单 */
-  setCollapsed: (collapsed: boolean) => void;
+  setCollapsed: (_collapsed: boolean) => void;
   /** 获取菜单项数据 */
-  getItem: (key: string) => MenuItem | null;
+  getItem: (_key: string) => MenuItem | null;
   /** 添加菜单项 */
-  addItem: (item: MenuItem, parentKey?: string) => void;
+  addItem: (_item: MenuItem, parentKey?: string) => void;
   /** 删除菜单项 */
-  removeItem: (key: string) => void;
+  removeItem: (_key: string) => void;
   /** 更新菜单项 */
-  updateItem: (key: string, newItem: Partial<MenuItem>) => void;
+  updateItem: (_key: string, newItem: Partial<MenuItem>) => void;
   /** 展开所有 */
   expandAll: () => void;
   /** 折叠所有 */

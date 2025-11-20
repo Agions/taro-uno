@@ -89,3 +89,8 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 PROJECT_ENHANCEMENT_SUMMARY.md
+
+AGENTS.md
+*storybook.log
+storybook-static
+.specify

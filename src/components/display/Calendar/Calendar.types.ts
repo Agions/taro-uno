@@ -50,21 +50,25 @@ export interface CalendarProps {
   /** 事件数据 */
   events?: CalendarEvent[];
   /** 禁用日期函数 */
-  disabledDate?: (date: Date) => boolean;
+  disabledDate?: (_date: Date) => boolean;
   /** 自定义日期渲染 */
-  dateRender?: (date: CalendarDate) => ReactNode;
+  dateRender?: (_date: CalendarDate) => ReactNode;
   /** 自定义月份渲染 */
-  monthRender?: (month: number, year: number) => ReactNode;
+  monthRender?: (_month: number, year: number) => ReactNode;
   /** 日期选择事件 */
-  onSelect?: (date: Date) => void;
+  onSelect?: (_date: Date) => void;
   /** 日期变化事件 */
-  onChange?: (date: Date) => void;
+  onChange?: (_date: Date) => void;
   /** 模式变化事件 */
-  onModeChange?: (mode: 'month' | 'year') => void;
+  onModeChange?: (_mode: 'month' | 'year') => void;
   /** 自定义样式 */
   style?: CSSProperties;
   /** 自定义类名 */
   className?: string;
+  /** 无障碍标签 */
+  ariaLabel?: string;
+  /** 无障碍角色 */
+  role?: string;
 }
 
 export interface CalendarRef {
@@ -73,11 +77,11 @@ export interface CalendarRef {
   /** 获取当前日期 */
   getCurrentDate: () => Date;
   /** 设置日期 */
-  setDate: (date: Date) => void;
+  setDate: (_date: Date) => void;
   /** 获取显示模式 */
   getMode: () => 'month' | 'year';
   /** 设置显示模式 */
-  setMode: (mode: 'month' | 'year') => void;
+  setMode: (_mode: 'month' | 'year') => void;
   /** 跳转到今天 */
   goToToday: () => void;
   /** 上一个月/年 */

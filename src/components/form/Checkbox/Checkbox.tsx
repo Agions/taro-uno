@@ -36,10 +36,6 @@ export const CheckboxComponent = forwardRef<CheckboxRef, CheckboxProps>((props, 
     className,
     onChange,
     onClick,
-    accessible: _accessible = true,
-    accessibilityLabel: _accessibilityLabel,
-    accessibilityRole: _accessibilityRole = 'checkbox',
-    accessibilityState: _accessibilityState,
     rules,
     validateTrigger = 'onChange',
     immediate = false,
@@ -49,7 +45,6 @@ export const CheckboxComponent = forwardRef<CheckboxRef, CheckboxProps>((props, 
     ripple = false,
     rippleColor,
     autoFocus = false,
-    tabIndex: _tabIndex = 0,
     data,
     style,
     // _restProps - for future use
@@ -406,26 +401,12 @@ export const CheckboxComponent = forwardRef<CheckboxRef, CheckboxProps>((props, 
     className: className || '',
   });
 
-  // 生成Tailwind类名
-  const tailwindClasses = checkboxStyles['getTailwindClasses']({
-    size,
-    status: finalStatus,
-    variant,
-    color,
-    disabled: internalDisabled,
-    readonly: internalReadonly,
-    indeterminate: internalIndeterminate,
-    bordered,
-    rounded,
-  });
-
-  
   return (
     <View style={checkboxStyles['getContainerStyle']({ style: props.containerStyle })}>
       <View style={checkboxStyles['getWrapperStyle']({ style: props.wrapperStyle })}>
         {/* 复选框 */}
         <TaroCheckbox
-          className={`${checkboxClassName} ${tailwindClasses}`}
+          className={checkboxClassName}
           style={checkboxStyle}
           checked={checked}
           disabled={internalDisabled}
@@ -452,19 +433,6 @@ export const CheckboxComponent = forwardRef<CheckboxRef, CheckboxProps>((props, 
           }}
           value={String(_value || '')}
           data-testid="checkbox"
-          accessibilityLabel={(_accessibilityLabel || label) as string}
-          accessibilityRole={_accessibilityRole}
-          accessibilityState={{
-            ..._accessibilityState,
-            checked,
-            disabled: internalDisabled,
-            busy: internalReadonly,
-          }}
-          aria-label={_accessibilityLabel || label}
-          aria-checked={checked}
-          aria-disabled={internalDisabled}
-          aria-readonly={internalReadonly}
-          aria-role={_accessibilityRole}
           data-indeterminate={internalIndeterminate ? 'true' : undefined}
           data-checked={checked ? 'true' : 'false'}
           data-value={_value}

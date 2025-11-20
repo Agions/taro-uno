@@ -34,7 +34,7 @@ export const useTheme = () => {
    * @param key 字体键名
    * @returns 字体配置
    */
-  const getTypography = (key: keyof ThemeConfig['typography']): any => {
+  const getTypography = <T extends keyof ThemeConfig['typography']>(key: T): ThemeConfig['typography'][T] => {
     return theme.typography[key];
   };
 
@@ -61,7 +61,7 @@ export const useTheme = () => {
    * @param key 动画键名
    * @returns 动画配置
    */
-  const getAnimation = (key: keyof ThemeConfig['animation']): any => {
+  const getAnimation = <T extends keyof ThemeConfig['animation']>(key: T): ThemeConfig['animation'][T] => {
     return theme.animation[key];
   };
 
@@ -159,7 +159,7 @@ export const useTheme = () => {
     size: keyof ThemeConfig['typography']['fontSize'] = 'base',
     weight: keyof ThemeConfig['typography']['fontWeight'] = 'normal',
     lineHeight: keyof ThemeConfig['typography']['lineHeight'] = 'normal',
-  ): Record<string, any> => {
+  ): React.CSSProperties => {
     return {
       fontSize: `${theme.typography.fontSize[size]}px`,
       fontWeight: theme.typography.fontWeight[weight],

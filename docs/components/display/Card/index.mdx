@@ -1,0 +1,214 @@
+---
+category: 'display'
+componentType: 'display'
+englishTitle: 'Card'
+chineseTitle: '卡片'
+name: 'Card'
+description: '用于展示结构化信息的卡片组件，支持封面、标题、副标题、内容、操作按钮等多个区域，可配置阴影、边框、悬停效果。'
+---
+
+import { Card } from '@taro-uno/ui';
+import { View, Text } from '@tarojs/components';
+import { Button } from '@taro-uno/ui';
+
+## 功能介绍
+
+Card 组件是一个用于展示结构化信息的卡片容器，提供了丰富的配置选项：
+
+- 支持封面图片或自定义封面内容
+- 包含标题、副标题和额外操作区域
+- 支持底部操作按钮组
+- 可配置阴影效果（无、小、默认、大）
+- 可设置边框显示
+- 支持悬停效果和点击事件
+- 提供加载状态
+- 响应式设计，适配多平台
+
+## 基本用法
+
+```jsx
+<Card>
+  <Text>这是一个基本卡片</Text>
+</Card>
+```
+
+## 使用示例
+
+### 1. 基本卡片
+
+```jsx
+<Card>
+  <Text>这是卡片的内容区域，可以放置任何内容</Text>
+</Card>
+```
+
+### 2. 带封面的卡片
+
+```jsx
+<Card
+  cover={
+    <View style={{ height: 120, backgroundColor: '#f0f0f0', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <Text>封面图片</Text>
+    </View>
+  }
+>
+  <Text>带封面的卡片内容</Text>
+</Card>
+```
+
+### 3. 带标题和副标题的卡片
+
+```jsx
+<Card
+  title="卡片标题"
+  subtitle="卡片副标题"
+>
+  <Text>带标题和副标题的卡片内容</Text>
+</Card>
+```
+
+### 4. 带额外操作区域的卡片
+
+```jsx
+<Card
+  title="卡片标题"
+  extra={<Button size="small">更多</Button>}
+>
+  <Text>带额外操作区域的卡片内容</Text>
+</Card>
+```
+
+### 5. 带操作按钮的卡片
+
+```jsx
+<Card
+  title="带操作按钮的卡片"
+  actions={[
+    <Button size="small">操作1</Button>,
+    <Button size="small" type="primary">操作2</Button>
+  ]}
+>
+  <Text>卡片内容</Text>
+</Card>
+```
+
+### 6. 可点击的卡片
+
+```jsx
+<Card
+  hoverable
+  onPress={() => console.log('Card clicked')}
+  title="可点击的卡片"
+>
+  <Text>点击卡片会触发onPress事件</Text>
+</Card>
+```
+
+### 7. 加载状态的卡片
+
+```jsx
+<Card
+  loading
+  title="加载中的卡片"
+>
+  <Text>加载状态下，内容区域会显示骨架屏</Text>
+</Card>
+```
+
+### 8. 自定义阴影的卡片
+
+```jsx
+<Card
+  shadow="large"
+  title="大阴影卡片"
+>
+  <Text>使用shadow属性可以自定义阴影大小</Text>
+</Card>
+```
+
+### 9. 无边框的卡片
+
+```jsx
+<Card
+  bordered={false}
+  title="无边框卡片"
+>
+  <Text>设置bordered为false可以隐藏边框</Text>
+</Card>
+```
+
+### 10. 完整卡片示例
+
+```jsx
+<Card
+  cover={
+    <View style={{ height: 150, backgroundColor: '#1890ff', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <Text style={{ color: '#fff', fontSize: 20 }}>封面区域</Text>
+    </View>
+  }
+  title="完整卡片示例"
+  subtitle="这是一个包含所有元素的卡片"
+  extra={<Button size="small">编辑</Button>}
+  actions={[
+    <Button size="small">分享</Button>,
+    <Button size="small" type="primary">收藏</Button>,
+    <Button size="small" type="danger">删除</Button>
+  ]}
+  hoverable
+  shadow="large"
+  onPress={() => console.log('Card clicked')}
+>
+  <View style={{ padding: '10px 0' }}>
+    <Text>这是卡片的主要内容区域，可以放置任何类型的内容，如文本、图片、列表等。</Text>
+    <Text style={{ marginTop: 10, display: 'block' }}>卡片组件提供了丰富的配置选项，可以根据需要组合使用各种属性。</Text>
+  </View>
+</Card>
+```
+
+## API
+
+### CardProps
+
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| children | React.ReactNode | - | 卡片内容 |
+| title | React.ReactNode | - | 卡片标题 |
+| subtitle | React.ReactNode | - | 卡片副标题 |
+| extra | React.ReactNode | - | 卡片操作区域 |
+| cover | React.ReactNode | - | 卡片封面 |
+| actions | React.ReactNode[] | - | 卡片操作按钮 |
+| hoverable | boolean | false | 是否可点击 |
+| bordered | boolean | true | 是否显示边框 |
+| shadow | 'none' \| 'small' \| 'default' \| 'large' | 'default' | 阴影级别 |
+| loading | boolean | false | 加载状态 |
+| className | string | - | 自定义类名 |
+| style | React.CSSProperties | - | 自定义样式 |
+| onPress | (event: any) => void | - | 点击事件 |
+| onLongPress | (event: any) => void | - | 长按事件 |
+
+### CardRef
+
+| 方法 | 返回值 | 说明 |
+| --- | --- | --- |
+| getElement | HTMLElement \| null | 获取卡片元素 |
+| getTitle | string \| null | 获取卡片标题 |
+| getContent | HTMLElement \| null | 获取卡片内容 |
+
+## 使用提示
+
+- 卡片组件的各个部分（封面、标题、操作等）都是可选的，可以根据需要组合使用
+- hoverable 属性只有在设置了 onPress 事件时才有效果
+- shadow 属性支持四种阴影级别：none（无阴影）、small（小阴影）、default（默认阴影）、large（大阴影）
+- loading 属性为 true 时，内容区域会显示骨架屏，隐藏实际内容
+- 可以通过 ref 访问卡片的内部方法，如获取元素、标题和内容
+
+## 浏览器兼容性
+
+- 现代浏览器（Chrome, Firefox, Safari, Edge）
+- Taro 支持的小程序平台
+
+## 无障碍支持
+
+- 支持 aria-label 和 aria-describedby 属性
+- 可点击的卡片会添加合适的 aria 角色
+- 遵循 WCAG 2.1 无障碍标准

@@ -1,0 +1,274 @@
+---
+category: 'form'
+componentType: 'form'
+englishTitle: 'Checkbox'
+chineseTitle: '复选框'
+name: 'Checkbox'
+description: '用于提供多个选项中选择一个或多个的组件，支持单选、多选、半选状态和自定义样式。'
+---
+
+import { Checkbox, CheckboxGroup } from '@taro-uno/ui';
+
+## 功能介绍
+
+Checkbox 组件是一个功能丰富的复选框组件，提供完整的选择功能：
+
+- 支持选中、未选中和半选三种状态
+- 多种尺寸、颜色主题和变体可选
+- 支持单个复选框和复选框组两种使用方式
+- 内置表单验证功能
+- 支持自定义图标、标签位置和样式
+- 涟漪效果和动画支持
+- 无障碍访问支持
+
+## 基本用法
+
+### 单个复选框
+
+```jsx
+<Checkbox label="同意协议" />
+```
+
+### 复选框组
+
+```jsx
+<CheckboxGroup options={[
+  { label: '选项一', value: '1' },
+  { label: '选项二', value: '2' },
+  { label: '选项三', value: '3' }
+]} />
+```
+
+## 使用示例
+
+### 1. 基本单个复选框
+
+```jsx
+<Checkbox label="同意用户协议" />
+```
+
+### 2. 默认选中的复选框
+
+```jsx
+<Checkbox label="默认选中" defaultChecked />
+```
+
+### 3. 禁用的复选框
+
+```jsx
+<Checkbox label="禁用选项" disabled />
+```
+
+### 4. 不同尺寸的复选框
+
+```jsx
+<Checkbox label="超小尺寸" size="xs" />
+<Checkbox label="小尺寸" size="sm" />
+<Checkbox label="中尺寸" size="md" />
+<Checkbox label="大尺寸" size="lg" />
+<Checkbox label="超大尺寸" size="xl" />
+```
+
+### 5. 不同颜色主题的复选框
+
+```jsx
+<Checkbox label="主要颜色" color="primary" />
+<Checkbox label="成功颜色" color="success" />
+<Checkbox label="警告颜色" color="warning" />
+<Checkbox label="错误颜色" color="error" />
+<Checkbox label="信息颜色" color="info" />
+```
+
+### 6. 半选状态的复选框
+
+```jsx
+<Checkbox label="半选状态" indeterminate />
+```
+
+### 7. 自定义标签位置
+
+```jsx
+<Checkbox label="标签在左" labelPosition="left" />
+<Checkbox label="标签在右" labelPosition="right" />
+```
+
+### 8. 复选框组的基本使用
+
+```jsx
+<CheckboxGroup
+  options={[
+    { label: '苹果', value: 'apple' },
+    { label: '香蕉', value: 'banana' },
+    { label: '橙子', value: 'orange' }
+  ]}
+  onChange={(values) => console.log('选中的值:', values)}
+/>
+```
+
+### 9. 带有默认值的复选框组
+
+```jsx
+<CheckboxGroup
+  options={[
+    { label: '苹果', value: 'apple' },
+    { label: '香蕉', value: 'banana' },
+    { label: '橙子', value: 'orange' }
+  ]}
+  defaultValue={['apple', 'banana']}
+/>
+```
+
+### 10. 垂直排列的复选框组
+
+```jsx
+<CheckboxGroup
+  options={[
+    { label: '选项一', value: '1' },
+    { label: '选项二', value: '2' },
+    { label: '选项三', value: '3' }
+  ]}
+  direction="vertical"
+/>
+```
+
+## API
+
+### CheckboxProps
+
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| value | string \| number | - | 复选框值 |
+| checked | boolean | - | 是否选中（受控模式） |
+| defaultChecked | boolean | false | 默认选中状态（非受控模式） |
+| size | CheckboxSize | 'md' | 复选框尺寸，可选值：'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' |
+| status | CheckboxStatus | 'normal' | 复选框状态，可选值：'normal' \| 'error' \| 'warning' \| 'success' \| 'disabled' |
+| variant | CheckboxVariant | 'default' | 复选框变体，可选值：'default' \| 'filled' \| 'outlined' |
+| color | CheckboxColor | 'primary' | 复选框颜色主题，可选值：'primary' \| 'secondary' \| 'success' \| 'warning' \| 'error' \| 'info' |
+| disabled | boolean | false | 是否禁用 |
+| readonly | boolean | false | 是否只读 |
+| indeterminate | boolean | false | 是否半选状态 |
+| label | ReactNode | - | 标签文本 |
+| labelPosition | 'left' \| 'right' | 'right' | 标签位置 |
+| helperText | ReactNode | - | 辅助文本 |
+| errorText | ReactNode | - | 错误文本 |
+| bordered | boolean | true | 是否显示边框 |
+| rounded | boolean | true | 是否圆角 |
+| icon | ReactNode | - | 自定义图标 |
+| checkedIcon | ReactNode | - | 选中时的图标 |
+| uncheckedIcon | ReactNode | - | 未选中时的图标 |
+| indeterminateIcon | ReactNode | - | 半选时的图标 |
+| className | string | - | 自定义样式类名 |
+| onChange | (checked: boolean, event: ITouchEvent) => void | - | 变化事件处理函数 |
+| onClick | (event: ITouchEvent) => void | - | 点击事件处理函数 |
+| style | React.CSSProperties | - | 自定义样式 |
+| rules | Array<{ required?: boolean; message?: string; validator?: (checked: boolean) => boolean \| string \| Promise<boolean \| string> }> | - | 表单验证规则 |
+| validateTrigger | 'onChange' \| 'onBlur' \| 'onSubmit' | 'onChange' | 验证触发时机 |
+| immediate | boolean | false | 是否立即验证 |
+| validator | (checked: boolean) => boolean \| string \| Promise<boolean \| string> | - | 自定义验证函数 |
+| animation | boolean | true | 动画效果 |
+| animationDuration | number | 200 | 动画时长 |
+| ripple | boolean | false | 涟漪效果 |
+| rippleColor | string | - | 涟漪颜色 |
+| autoFocus | boolean | false | 自动聚焦 |
+| data | Record<string, any> | - | 数据属性 |
+
+### CheckboxRef
+
+| 方法 | 返回值 | 说明 |
+| --- | --- | --- |
+| getChecked | boolean | 获取选中状态 |
+| setChecked | void | 设置选中状态 |
+| toggle | void | 切换选中状态 |
+| setDisabled | void | 设置禁用状态 |
+| setReadonly | void | 设置只读状态 |
+| setIndeterminate | void | 设置半选状态 |
+| setStatus | void | 设置复选框状态 |
+| getStatus | CheckboxStatus | 获取复选框状态 |
+| setSize | void | 设置复选框尺寸 |
+| setColor | void | 设置复选框颜色 |
+| validate | Promise<{ valid: boolean; message?: string }> | 验证复选框 |
+| reset | void | 重置复选框 |
+| focus | void | 聚焦复选框 |
+| blur | void | 失焦复选框 |
+| getData | Record<string, any> \| undefined | 获取复选框数据 |
+| setData | void | 设置复选框数据 |
+| shake | void | 震动效果 - 用于错误提示 |
+| pulse | void | 脉冲效果 - 用于吸引用户注意 |
+
+### CheckboxGroupProps
+
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| children | ReactNode | - | 复选框组内容 |
+| value | Array<string \| number> | - | 复选框组值（受控模式） |
+| defaultValue | Array<string \| number> | - | 默认值（非受控模式） |
+| size | CheckboxSize | 'md' | 复选框组尺寸 |
+| status | CheckboxStatus | 'normal' | 复选框组状态 |
+| variant | CheckboxVariant | 'default' | 复选框组变体 |
+| color | CheckboxColor | 'primary' | 复选框组颜色主题 |
+| disabled | boolean | false | 是否禁用 |
+| readonly | boolean | false | 是否只读 |
+| direction | 'horizontal' \| 'vertical' | 'horizontal' | 布局方向 |
+| align | 'start' \| 'center' \| 'end' | 'start' | 对齐方式 |
+| spacing | number \| string | - | 间距 |
+| options | Array<{ label: ReactNode; value: string \| number; disabled?: boolean; description?: ReactNode; icon?: ReactNode; color?: CheckboxColor; data?: Record<string, any>; style?: React.CSSProperties; className?: string }> | - | 选项列表 |
+| onChange | (checkedValues: Array<string \| number>) => void | - | 变化事件处理函数 |
+| onAllChange | (checked: boolean) => void | - | 全选变化事件处理函数 |
+| className | string | - | 自定义样式类名 |
+| style | React.CSSProperties | - | 自定义样式 |
+| maxCount | number | - | 最大选择数量 |
+| minCount | number | - | 最小选择数量 |
+| showSelectAll | boolean | false | 是否显示全选按钮 |
+| selectAllText | string | - | 全选按钮文本 |
+| showCount | boolean | false | 是否显示计数 |
+| countText | (selected: number, total: number) => string | - | 计数文本格式 |
+| allowDeselectAll | boolean | true | 是否允许取消全选 |
+| compact | boolean | false | 是否紧凑布局 |
+| block | boolean | false | 是否块级显示 |
+| groupTitle | ReactNode | - | 分组标题 |
+| groupDescription | ReactNode | - | 分组描述 |
+
+### CheckboxGroupRef
+
+| 方法 | 返回值 | 说明 |
+| --- | --- | --- |
+| getValue | Array<string \| number> | 获取选中值 |
+| setValue | void | 设置选中值 |
+| selectAll | void | 全选 |
+| unselectAll | void | 取消全选 |
+| toggleAll | void | 反选 |
+| getCheckedCount | number | 获取选中数量 |
+| getTotalCount | number | 获取总数量 |
+| isAllSelected | boolean | 是否全选 |
+| isIndeterminate | boolean | 是否部分选中 |
+| setDisabled | void | 设置禁用状态 |
+| setReadonly | void | 设置只读状态 |
+| setStatus | void | 设置组状态 |
+| validate | Promise<{ valid: boolean; message?: string }> | 验证复选框组 |
+| reset | void | 重置复选框组 |
+| getSelectedOptions | Array<{ label: ReactNode; value: string \| number; disabled?: boolean; description?: ReactNode; icon?: ReactNode; color?: CheckboxColor; data?: Record<string, any> }> | 获取选中的选项数据 |
+| getOptionByValue | (value: string \| number) => any | 根据值获取选项 |
+| setOptionDisabled | (value: string \| number, disabled: boolean) => void | 根据值设置选项状态 |
+| setOptionsDisabled | (values: Array<string \| number>, disabled: boolean) => void | 批量设置选项状态 |
+| focus | void | 聚焦组 |
+| blur | void | 失焦组 |
+
+## 使用提示
+
+- 当需要从多个选项中选择一个或多个时，应使用 Checkbox 组件
+- 对于单个的是/否选择，也可以使用 Switch 组件
+- 当选项数量较多时，建议使用垂直排列的复选框组
+- 可以通过 `ref` 调用组件的方法进行程序化操作
+- 验证功能可以通过 `rules` 属性或 `validator` 函数实现
+- 半选状态通常用于表示部分子选项被选中
+
+## 浏览器兼容性
+
+- 现代浏览器（Chrome, Firefox, Safari, Edge）
+- Taro 支持的小程序平台
+
+## 无障碍支持
+
+- 提供 `accessibilityLabel` 和 `accessibilityRole` 属性支持无障碍访问
+- 支持键盘导航（Tab 键切换，空格键选择）
+- 遵循 WCAG 2.1 无障碍标准

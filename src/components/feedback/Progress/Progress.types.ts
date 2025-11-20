@@ -39,7 +39,7 @@ export interface ProgressTheme {
 }
 
 export interface ProgressEventHandlers {
-  onChange?: (percent: number) => void;
+  onChange?: (_percent: number) => void;
   onComplete?: () => void;
   onAnimationStart?: () => void;
   onAnimationEnd?: () => void;
@@ -63,7 +63,7 @@ export interface ProgressProps {
   /** 是否显示进度信息 */
   showInfo?: boolean;
   /** 进度信息格式化 */
-  format?: (percent: number) => React.ReactNode;
+  format?: (_percent: number) => React.ReactNode;
   /** 进度条标题 */
   title?: React.ReactNode;
   /** 进度条描述 */
@@ -104,7 +104,7 @@ export interface ProgressRef {
   /** 获取当前进度 */
   getPercent: () => number;
   /** 设置进度 */
-  setPercent: (percent: number) => void;
+  setPercent: (_percent: number) => void;
   /** 重置进度 */
   reset: () => void;
   /** 开始动画 */
@@ -118,7 +118,7 @@ export interface ProgressRef {
   /** 获取当前状态 */
   getStatus: () => ProgressStatus;
   /** 设置状态 */
-  setStatus: (status: ProgressStatus) => void;
+  setStatus: (_status: ProgressStatus) => void;
   /** 是否正在动画中 */
   isAnimating: () => boolean;
 }

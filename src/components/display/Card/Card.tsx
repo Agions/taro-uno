@@ -20,8 +20,6 @@ export const Card = forwardRef<CardRef, CardProps>((props, ref) => {
     style,
     onPress,
     onLongPress,
-    accessibilityLabel,
-    accessibilityRole = 'article',
     ...rest
   } = props;
 
@@ -109,11 +107,7 @@ export const Card = forwardRef<CardRef, CardProps>((props, ref) => {
       style={style}
       onClick={handlePress}
       onLongPress={onLongPress}
-      accessibilityLabel={accessibilityLabel}
-      accessibilityRole={accessibilityRole}
-      aria-label={accessibilityLabel}
-      aria-role={accessibilityRole}
-      data-testid="card"
+            data-testid="card"
       data-shadow={shadow}
       data-bordered={bordered}
       data-hoverable={hoverable}

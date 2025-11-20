@@ -136,7 +136,7 @@ export type FilterArray<T, U> = T extends [infer First, ...infer Rest]
 
 /** 可选参数函数类型 */
 export type OptionalArgs<T extends (...args: any) => any> = (
-  ...args: Partial<FunctionArgs<T>>
+  ...args: Partial<FunctionArgs<T>> & []
 ) => FunctionReturn<T>;
 
 /** 柯里化函数类型 */
@@ -408,5 +408,3 @@ export type InferArgs<T> = T extends (...args: infer A) => any ? A : never;
 export type InferReturn<T> = T extends (...args: any) => infer R ? R : never;
 
 // ==================== 默认导出 ====================
-
-export * from './index';

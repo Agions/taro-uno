@@ -3,6 +3,7 @@ import { ThemeConfig, ThemeMode } from './types';
 import { defaultTheme, darkTheme } from './defaults';
 import { generateStyles } from './styles';
 import { DesignSystemUtils } from './design-system';
+import { isBrowserEnvironment, safeLocalStorage, safeMatchMedia } from '../utils/environment';
 
 interface ThemeContextType {
   theme: ThemeConfig;
@@ -52,95 +53,98 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
 
   // 初始化主题（从本地存储读取）
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const savedTheme = localStorage.getItem(persistKey);
-        if (savedTheme) {
-          const parsed = JSON.parse(savedTheme);
-          setThemeMode((parsed.mode || defaultMode) as ThemeMode);
-          if (parsed.custom) {
-            setCustomTheme(parsed.custom);
-          }
-        } else if (followSystem) {
-          // 检测系统主题偏好
-          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          setIsSystemDark(prefersDark);
-          if (prefersDark && defaultMode === 'auto') {
-            setThemeMode('dark');
-          }
-        }
-      } catch (error) {
-        console.warn('Failed to load theme from localStorage:', error);
-      }
+    if (!isBrowserEnvironment()) {
+      setIsInitialized(true);
+      return;
     }
+
+    try {
+      const savedTheme = safeLocalStorage.getItem(persistKey);
+      if (savedTheme) {
+        const parsed = JSON.parse(savedTheme);
+        setThemeMode((parsed.mode || defaultMode) as ThemeMode);
+        if (parsed.custom) {
+          setCustomTheme(parsed.custom);
+        }
+      } else if (followSystem) {
+        const mediaQuery = safeMatchMedia('(prefers-color-scheme: dark)');
+        const prefersDark = mediaQuery?.matches ?? false;
+        setIsSystemDark(prefersDark);
+        if (prefersDark && defaultMode === 'auto') {
+          setThemeMode('dark');
+        }
+      }
+    } catch (error) {
+      console.warn('Failed to load theme from storage:', error);
+    }
+
     setIsInitialized(true);
   }, [defaultMode, persistKey, followSystem]);
 
   // 保存主题到本地存储
   useEffect(() => {
-    if (isInitialized && typeof window !== 'undefined') {
-      try {
-        const themeData = {
-          mode: themeMode,
-          custom: customTheme,
-        };
-        localStorage.setItem(persistKey, JSON.stringify(themeData));
-      } catch (error) {
-        console.warn('Failed to save theme to localStorage:', error);
-      }
+    if (!isInitialized || !isBrowserEnvironment()) {
+      return;
+    }
+
+    try {
+      const themeData = {
+        mode: themeMode,
+        custom: customTheme,
+      };
+      safeLocalStorage.setItem(persistKey, JSON.stringify(themeData));
+    } catch (error) {
+      console.warn('Failed to save theme to storage:', error);
     }
   }, [themeMode, customTheme, isInitialized, persistKey]);
 
   // 应用主题到DOM
   useEffect(() => {
-    if (typeof document !== 'undefined') {
-      const root = document.documentElement;
-
-      // 设置主题模式属性
-      root.setAttribute('data-theme', themeMode);
-
-      // 移除旧的主题类
-      root.classList.remove('light-theme', 'dark-theme');
-
-      // 添加新的主题类
-      root.classList.add(`${themeMode}-theme`);
-
-      // 生成并应用CSS变量
-      const cssVariables = generateStyles(theme);
-      let styleElement = document.getElementById('theme-variables');
-
-      if (!styleElement) {
-        styleElement = document.createElement('style');
-        styleElement.id = 'theme-variables';
-        document.head.appendChild(styleElement);
-      }
-
-      styleElement.textContent = cssVariables;
+    if (!isBrowserEnvironment()) {
+      return;
     }
-  }, [theme]);
+
+    const root = document.documentElement;
+    root.setAttribute('data-theme', themeMode);
+    root.classList.remove('light-theme', 'dark-theme');
+    root.classList.add(`${themeMode}-theme`);
+
+    const cssVariables = generateStyles(theme);
+    let styleElement = document.getElementById('theme-variables');
+
+    if (!styleElement) {
+      styleElement = document.createElement('style');
+      styleElement.id = 'theme-variables';
+      document.head.appendChild(styleElement);
+    }
+
+    styleElement.textContent = cssVariables;
+  }, [theme, themeMode]);
 
   // 监听系统主题变化
   useEffect(() => {
-    if (followSystem && typeof window !== 'undefined') {
-      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
-      const handleChange = (e: MediaQueryListEvent) => {
-        setIsSystemDark(e.matches);
-        if (defaultMode === 'auto') {
-          setThemeMode(e.matches ? 'dark' : 'light');
-        }
-      };
-
-      // 初始设置
-      setIsSystemDark(mediaQuery.matches);
-      mediaQuery.addEventListener('change', handleChange);
-
-      return () => {
-        mediaQuery.removeEventListener('change', handleChange);
-      };
+    if (!followSystem) {
+      return undefined;
     }
 
-    return undefined;
+    const mediaQuery = safeMatchMedia('(prefers-color-scheme: dark)');
+    if (!mediaQuery) {
+      return undefined;
+    }
+
+    const handleChange = (event: MediaQueryListEvent) => {
+      setIsSystemDark(event.matches);
+      if (defaultMode === 'auto') {
+        setThemeMode(event.matches ? 'dark' : 'light');
+      }
+    };
+
+    setIsSystemDark(mediaQuery.matches);
+    mediaQuery.addEventListener?.('change', handleChange);
+
+    return () => {
+      mediaQuery.removeEventListener?.('change', handleChange);
+    };
   }, [defaultMode, followSystem]);
 
   // 切换主题

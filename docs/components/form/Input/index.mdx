@@ -1,0 +1,273 @@
+---
+category: 'form'
+componentType: 'form'
+englishTitle: 'Input'
+chineseTitle: '输入框'
+name: 'Input'
+description: '用于用户输入内容的基础表单组件，支持多种输入类型、验证和自定义样式。'
+---
+
+import { Input } from '@taro-uno/ui';
+
+## 功能介绍
+
+Input 组件是一个功能丰富的输入框组件，提供完整的用户输入解决方案：
+
+- 支持多种输入类型（文本、密码、数字、邮箱、电话、身份证、数字键盘）
+- 多种尺寸、变体和状态样式可选
+- 内置表单验证功能，支持自定义验证规则
+- 自动清除按钮和密码切换功能
+- 支持前缀和后缀元素
+- 多行输入和自动高度调整
+- 字数统计和限制
+- 无障碍访问支持
+
+## 基本用法
+
+### 单行文本输入
+
+```jsx
+<Input placeholder="请输入文本" />
+```
+
+### 密码输入
+
+```jsx
+<Input type="password" placeholder="请输入密码" showPasswordToggle />
+```
+
+## 使用示例
+
+### 1. 基本输入框
+
+```jsx
+<Input placeholder="请输入内容" />
+```
+
+### 2. 带标签的输入框
+
+```jsx
+<Input label="用户名" placeholder="请输入用户名" />
+```
+
+### 3. 不同尺寸的输入框
+
+```jsx
+<Input placeholder="超小尺寸" size="xs" />
+<Input placeholder="小尺寸" size="sm" />
+<Input placeholder="中尺寸" size="md" />
+<Input placeholder="大尺寸" size="lg" />
+<Input placeholder="超大尺寸" size="xl" />
+```
+
+### 4. 不同类型的输入框
+
+```jsx
+<Input type="text" placeholder="文本输入" />
+<Input type="password" placeholder="密码输入" showPasswordToggle />
+<Input type="number" placeholder="数字输入" />
+<Input type="email" placeholder="邮箱输入" />
+<Input type="tel" placeholder="电话输入" />
+<Input type="idcard" placeholder="身份证输入" />
+```
+
+### 5. 带前缀和后缀的输入框
+
+```jsx
+<Input prefix="🔍" placeholder="搜索" />
+<Input suffix="@example.com" placeholder="邮箱前缀" />
+<Input prefix="¥" suffix="元" placeholder="金额" />
+```
+
+### 6. 带清除按钮的输入框
+
+```jsx
+<Input clearable placeholder="输入后可清除" />
+<Input clearable clearTrigger="always" placeholder="始终显示清除按钮" />
+```
+
+### 7. 带验证的输入框
+
+```jsx
+<Input
+  placeholder="请输入邮箱"
+  rules={[
+    { required: true, message: '邮箱不能为空' },
+    { pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: '邮箱格式不正确' }
+  ]}
+/>
+```
+
+### 8. 带字数限制的输入框
+
+```jsx
+<Input maxLength={20} showCount placeholder="最多输入20个字符" />
+```
+
+### 9. 多行输入框
+
+```jsx
+<Input multiline rows={3} placeholder="多行输入" />
+<Input multiline autoHeight placeholder="自动调整高度" />
+```
+
+### 10. 不同状态的输入框
+
+```jsx
+<Input status="normal" placeholder="正常状态" />
+<Input status="success" placeholder="成功状态" />
+<Input status="warning" placeholder="警告状态" />
+<Input status="error" placeholder="错误状态" />
+<Input disabled placeholder="禁用状态" />
+<Input readonly value="只读内容" />
+```
+
+### 11. 不同变体的输入框
+
+```jsx
+<Input variant="outlined" placeholder="外框变体" />
+<Input variant="filled" placeholder="填充变体" />
+<Input variant="underlined" placeholder="下划线变体" />
+```
+
+## API
+
+### InputProps
+
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| value | string \| number | - | 输入框内容（受控模式） |
+| defaultValue | string \| number | '' | 默认值（非受控模式） |
+| placeholder | string | - | 占位符 |
+| size | InputSize | 'md' | 输入框尺寸，可选值：'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' |
+| type | InputType | 'text' | 输入框类型，可选值：'text' \| 'password' \| 'number' \| 'email' \| 'tel' \| 'idcard' \| 'digit' |
+| variant | InputVariant | 'outlined' | 输入框变体，可选值：'outlined' \| 'filled' \| 'underlined' |
+| status | InputStatus | 'normal' | 输入框状态，可选值：'normal' \| 'error' \| 'warning' \| 'success' \| 'disabled' \| 'loading' |
+| disabled | boolean | false | 是否禁用 |
+| readonly | boolean | false | 是否只读 |
+| clearable | boolean | false | 是否显示清除按钮 |
+| clearTrigger | ClearTrigger | 'focus' | 清除按钮触发时机，可选值：'always' \| 'focus' \| 'never' |
+| maxLength | number | - | 最大长度 |
+| maxlength | number | - | 最大长度 (Taro原生属性) |
+| minLength | number | - | 最小长度 |
+| prefix | ReactNode | - | 前缀图标或文本 |
+| suffix | ReactNode | - | 后缀图标或文本 |
+| label | ReactNode | - | 标签文本 |
+| helperText | ReactNode | - | 辅助文本 |
+| errorText | ReactNode | - | 错误文本 |
+| showCount | boolean | false | 是否显示字符计数器 |
+| autoFocus | boolean | false | 是否自动聚焦 |
+| bordered | boolean | true | 是否显示边框 |
+| showPasswordToggle | boolean | false | 是否显示密码切换按钮 |
+| className | string | - | 自定义样式类名 |
+| onChange | (value: string, event: ITouchEvent) => void | - | 值变化事件处理函数 |
+| onFocus | (event: ITouchEvent) => void | - | 聚焦事件处理函数 |
+| onBlur | (event: ITouchEvent) => void | - | 失焦事件处理函数 |
+| onClear | (event: ITouchEvent) => void | - | 清除事件处理函数 |
+| onConfirm | (value: string, event: ITouchEvent) => void | - | 确认事件处理函数 |
+| onInput | (value: string, event: ITouchEvent) => void | - | 输入事件处理函数 |
+| onKeyboardHeightChange | (height: number, event: ITouchEvent) => void | - | 键盘高度变化事件处理函数 |
+| style | React.CSSProperties | - | 自定义输入框样式 |
+| accessible | boolean | - | 是否启用无障碍访问 |
+| accessibilityLabel | string | - | 无障碍标签 |
+| accessibilityRole | string | - | 无障碍角色 |
+| accessibilityState | { disabled?: boolean; readonly?: boolean; required?: boolean; invalid?: boolean } | - | 无障碍状态 |
+| rules | Array<{ required?: boolean; message?: string; pattern?: RegExp; min?: number; max?: number; validator?: (value: string) => boolean \| string \| Promise<boolean \| string> }> | - | 表单验证规则 |
+| validateTrigger | 'onChange' \| 'onBlur' \| 'onSubmit' \| 'onFocus' | 'onBlur' | 验证触发时机 |
+| immediate | boolean | false | 是否立即验证 |
+| multiline | boolean | false | 是否多行输入 |
+| rows | number | 3 | 行数（多行输入时） |
+| autoHeight | boolean | false | 自动调整高度（多行输入时） |
+| showWordLimit | boolean | false | 是否显示字数统计 |
+| validator | (value: string) => boolean \| string \| Promise<boolean \| string> | - | 自定义验证函数 |
+| block | boolean | false | 是否块级显示 |
+| containerStyle | React.CSSProperties | - | 容器样式 |
+
+### InputRef
+
+| 方法 | 返回值 | 说明 |
+| --- | --- | --- |
+| element | HTMLInputElement \| HTMLTextAreaElement \| null | 输入框元素 |
+| getValue | () => string | 获取输入框值 |
+| setValue | (value: string) => void | 设置输入框值 |
+| focus | () => void | 聚焦输入框 |
+| blur | () => void | 失焦输入框 |
+| select | () => void | 选择文本 |
+| setSelectionRange | (start: number, end: number) => void | 设置选中文本范围 |
+| getSelectionRange | () => { start: number; end: number } | 获取选中文本范围 |
+| setDisabled | (disabled: boolean) => void | 设置禁用状态 |
+| setReadonly | (readonly: boolean) => void | 设置只读状态 |
+| setStatus | (status: InputStatus) => void | 设置输入框状态 |
+| getStatus | () => InputStatus | 获取输入框状态 |
+| validate | () => Promise<{ valid: boolean; message?: string }> | 验证输入框值 |
+| clear | () => void | 清除输入框值 |
+| reset | () => void | 重置输入框 |
+
+### InputSize
+
+| 类型 | 说明 |
+| --- | --- |
+| 'xs' | 超小尺寸 |
+| 'sm' | 小尺寸 |
+| 'md' | 中尺寸 |
+| 'lg' | 大尺寸 |
+| 'xl' | 超大尺寸 |
+
+### InputType
+
+| 类型 | 说明 |
+| --- | --- |
+| 'text' | 文本输入 |
+| 'password' | 密码输入 |
+| 'number' | 数字输入 |
+| 'email' | 邮箱输入 |
+| 'tel' | 电话输入 |
+| 'idcard' | 身份证输入 |
+| 'digit' | 数字键盘输入 |
+
+### InputVariant
+
+| 类型 | 说明 |
+| --- | --- |
+| 'outlined' | 外框变体 |
+| 'filled' | 填充变体 |
+| 'underlined' | 下划线变体 |
+
+### InputStatus
+
+| 类型 | 说明 |
+| --- | --- |
+| 'normal' | 正常状态 |
+| 'error' | 错误状态 |
+| 'warning' | 警告状态 |
+| 'success' | 成功状态 |
+| 'disabled' | 禁用状态 |
+| 'loading' | 加载状态 |
+
+### ClearTrigger
+
+| 类型 | 说明 |
+| --- | --- |
+| 'always' | 始终显示清除按钮 |
+| 'focus' | 聚焦时显示清除按钮 |
+| 'never' | 从不显示清除按钮 |
+
+## 使用提示
+
+- 选择合适的输入类型以获得更好的用户体验和输入验证
+- 使用 `rules` 属性添加表单验证规则
+- 对于密码输入，建议启用 `showPasswordToggle` 以提高可用性
+- 当输入框内容需要格式化时（如手机号、身份证号），可以使用 `validator` 属性自定义验证逻辑
+- 对于长文本输入，使用 `multiline` 属性开启多行输入
+- 使用 `prefix` 和 `suffix` 属性添加辅助信息，提高用户理解
+
+## 浏览器兼容性
+
+- 现代浏览器（Chrome, Firefox, Safari, Edge）
+- Taro 支持的小程序平台
+
+## 无障碍支持
+
+- 提供 `accessibilityLabel` 和 `accessibilityRole` 属性支持无障碍访问
+- 支持键盘导航（Tab 键切换）
+- 遵循 WCAG 2.1 无障碍标准

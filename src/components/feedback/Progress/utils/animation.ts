@@ -1,4 +1,4 @@
-import { rafThrottle } from '../../../../utils/performance';
+import { rafThrottle } from '@/utils/performance/performance';
 
 export interface AnimationOptions {
   duration: number;
@@ -151,9 +151,10 @@ export function createProgressAnimation(
 /**
  * 节流化的动画更新函数
  */
-export const throttledAnimationUpdate = rafThrottle((callback: () => void) => {
-  callback();
-});
+export const throttledAnimationUpdate = (callback: () => void) => {
+  const fn = rafThrottle(callback);
+  fn();
+};
 
 /**
  * 批量动画管理器

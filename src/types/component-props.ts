@@ -16,6 +16,8 @@ export type ComponentStatus = 'default' | 'loading' | 'disabled' | 'error' | 'su
 export type ComponentShape = 'default' | 'round' | 'circle' | 'square';
 
 // ==================== 通用组件属性接口 ====================
+import type React from 'react';
+
 export interface BaseComponentProps {
   /** 自定义类名 */
   className?: string;
@@ -287,7 +289,7 @@ export const COMPONENT_STATUS_COLORS: Record<ComponentStatus, StatusColorConfig>
 // ==================== 组件引用类型 ====================
 export interface ComponentRef {
   /** DOM元素 */
-  element: any;
+  element: HTMLElement | null;
   /** 获取组件尺寸 */
   getSize: () => ComponentSize;
   /** 获取组件变体 */
@@ -312,21 +314,4 @@ export interface ComponentRef {
   blur: () => void;
 }
 
-export default {
-  ComponentSize,
-  ComponentVariant,
-  ComponentStatus,
-  ComponentShape,
-  BaseComponentProps,
-  SizeableProps,
-  VariantProps,
-  StatusProps,
-  ShapeProps,
-  DisabledProps,
-  LoadingProps,
-  StandardComponentProps,
-  COMPONENT_SIZE_MAP,
-  COMPONENT_VARIANT_COLORS,
-  COMPONENT_STATUS_COLORS,
-  ComponentRef,
-};
+export {};

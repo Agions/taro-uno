@@ -1,0 +1,233 @@
+---
+title: Tag 标签
+description: 用于标记和分类的小标签组件。
+source: https://github.com/zfkc/taro-uno/blob/main/src/components/display/Tag/Tag.tsx
+examples: TagExample
+---
+
+import TagExample from '/src/examples/display/TagExample';
+
+## 功能介绍
+
+Tag 组件是用于标记和分类的小标签组件，支持多种样式和交互方式，包括：
+
+- 多种颜色主题（默认、主要、成功、警告、危险、信息或自定义颜色）
+- 三种尺寸（小、中、大）
+- 三种变体样式（实心、轮廓、浅色背景）
+- 可关闭功能
+- 可选择模式（类似复选框）
+- 支持自定义图标
+- 支持点击、关闭、选择变化等事件
+
+## 基本用法
+
+### 默认标签
+
+```tsx
+import { Tag } from '@taro-uno/ui';
+
+<Tag>默认标签</Tag>
+```
+
+### 不同颜色的标签
+
+```tsx
+import { Tag } from '@taro-uno/ui';
+
+<View>
+  <Tag color="default">默认</Tag>
+  <Tag color="primary">主要</Tag>
+  <Tag color="success">成功</Tag>
+  <Tag color="warning">警告</Tag>
+  <Tag color="danger">危险</Tag>
+  <Tag color="info">信息</Tag>
+  <Tag color="#1890ff">自定义颜色</Tag>
+</View>
+```
+
+### 不同尺寸的标签
+
+```tsx
+import { Tag } from '@taro-uno/ui';
+
+<View>
+  <Tag size="small">小标签</Tag>
+  <Tag size="medium">中标签</Tag>
+  <Tag size="large">大标签</Tag>
+</View>
+```
+
+### 不同变体的标签
+
+```tsx
+import { Tag } from '@taro-uno/ui';
+
+<View>
+  <Tag color="primary" variant="solid">实心</Tag>
+  <Tag color="primary" variant="outline">轮廓</Tag>
+  <Tag color="primary" variant="light">浅色</Tag>
+</View>
+```
+
+### 可关闭的标签
+
+```tsx
+import { Tag, useState } from '@taro-uno/ui';
+
+const [visible, setVisible] = useState(true);
+
+{visible && (
+  <Tag 
+    closable 
+    onClose={() => setVisible(false)}
+  >
+    可关闭标签
+  </Tag>
+)}
+```
+
+### 可选择的标签
+
+```tsx
+import { Tag, useState } from '@taro-uno/ui';
+
+const [checked, setChecked] = useState(false);
+
+<Tag 
+  checkable 
+  checked={checked} 
+  onCheckedChange={setChecked}
+>
+  {checked ? '已选中' : '未选中'}
+</Tag>
+```
+
+### 带图标的标签
+
+```tsx
+import { Tag } from '@taro-uno/ui';
+import { Star } from '@taro-uno/icons';
+
+<Tag icon={<Star />}>
+  收藏标签
+</Tag>
+```
+
+### 点击事件
+
+```tsx
+import { Tag, Toast } from '@taro-uno/ui';
+
+const handleClick = () => {
+  Toast.show({ message: '标签被点击了' });
+};
+
+<Tag onClick={handleClick}>
+  点击我
+</Tag>
+```
+
+### 组合使用
+
+```tsx
+import { Tag } from '@taro-uno/ui';
+import { Star } from '@taro-uno/icons';
+
+<View>
+  <Tag color="success" size="large" variant="outline">
+    大型轮廓成功标签
+  </Tag>
+  <Tag color="danger" closable icon={<Star />}>
+    带图标可关闭危险标签
+  </Tag>
+  <Tag color="warning" checkable variant="light">
+    可选择浅色警告标签
+  </Tag>
+</View>
+```
+
+## API 参数
+
+### TagProps
+
+| 参数 | 类型 | 默认值 | 必填 | 说明 |
+| --- | --- | --- | --- | --- |
+| children | ReactNode | - | 否 | 标签内容 |
+| color | 'default' \| 'primary' \| 'success' \| 'warning' \| 'danger' \| 'info' \| string | 'default' | 否 | 标签颜色 |
+| size | 'small' \| 'medium' \| 'large' | 'medium' | 否 | 标签大小 |
+| variant | 'solid' \| 'outline' \| 'light' | 'solid' | 否 | 标签变体 |
+| closable | boolean | false | 否 | 是否可关闭 |
+| checkable | boolean | false | 否 | 是否可选择 |
+| checked | boolean | false | 否 | 是否选中（可选择模式下） |
+| icon | ReactNode | - | 否 | 标签图标 |
+| onClick | (event: any) => void | - | 否 | 点击事件 |
+| onClose | (event: any) => void | - | 否 | 关闭事件 |
+| onCheckedChange | (checked: boolean) => void | - | 否 | 选择变化事件 |
+| style | CSSProperties | - | 否 | 自定义样式 |
+| className | string | - | 否 | 自定义类名 |
+
+### TagRef
+
+| 方法 | 类型 | 说明 |
+| --- | --- | --- |
+| element | any | DOM 元素 |
+| getColor | () => string | 获取标签颜色 |
+| getSize | () => 'small' \| 'medium' \| 'large' | 获取标签大小 |
+| isClosable | () => boolean | 检查是否可关闭 |
+| isCheckable | () => boolean | 检查是否可选择 |
+| isChecked | () => boolean | 检查是否选中 |
+| setChecked | (checked: boolean) => void | 设置选中状态 |
+| close | () => void | 关闭标签 |
+
+## 使用提示
+
+1. **颜色选择**：
+   - 建议使用预设的颜色主题（default、primary、success、warning、danger、info）以保持一致的视觉风格
+   - 也可以使用自定义颜色值（如十六进制颜色代码）
+
+2. **尺寸选择**：
+   - 小尺寸（small）适合在紧凑的布局中使用
+   - 中尺寸（medium）是默认尺寸，适合大多数场景
+   - 大尺寸（large）适合需要突出显示的标签
+
+3. **变体选择**：
+   - 实心（solid）是默认样式，具有强烈的视觉效果
+   - 轮廓（outline）样式适合在背景复杂的场景中使用
+   - 浅色（light）样式适合次要信息的标签
+
+4. **可关闭标签**：
+   - 当标签需要用户手动移除时使用 closable 属性
+   - 关闭时会触发 onClose 事件，可以在该事件中更新状态
+
+5. **可选择标签**：
+   - 可选择标签可以作为轻量级的复选框使用
+   - 使用 checked 属性和 onCheckedChange 事件可以实现受控模式
+
+6. **自定义图标**：
+   - 可以在标签前添加图标，增强视觉表达
+   - 建议使用与标签颜色协调的图标
+
+7. **性能优化**：
+   - 对于大量标签的场景，建议使用虚拟列表
+   - 当标签不可见时，组件会自动从 DOM 中移除
+
+## 浏览器兼容性
+
+- 微信小程序：✅ 支持
+- 支付宝小程序：✅ 支持
+- 百度小程序：✅ 支持
+- H5：✅ 支持
+- React Native：✅ 支持
+
+## 无障碍支持
+
+- 支持键盘导航
+- 支持屏幕阅读器
+- 提供适当的 ARIA 属性
+
+## 更新日志
+
+- v0.1.0: 初始版本，支持基本标签功能
+- v0.2.0: 新增多种颜色、尺寸和变体样式
+- v0.3.0: 新增可关闭和可选择功能
+- v0.4.0: 优化样式和性能，支持自定义图标

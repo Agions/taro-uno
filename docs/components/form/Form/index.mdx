@@ -1,0 +1,488 @@
+---
+title: Form 表单
+description: 用于收集、验证和提交用户输入的数据，支持多种布局和验证规则。
+category: Form
+---
+
+import { Form as FormComponent } from '@taro-uno/components'
+import { Code } from '@taro-uno/docs'
+
+## 介绍
+
+Form 组件是一个功能强大的表单解决方案，提供了表单验证、布局管理、字段联动等功能，帮助开发者快速构建用户友好的表单界面。
+
+### 特性
+
+- ✅ 支持多种布局方式（水平、垂直、内联）
+- ✅ 强大的表单验证功能（内置规则 + 自定义验证）
+- ✅ 支持同步/异步验证
+- ✅ 表单字段联动
+- ✅ 多种尺寸和样式变体
+- ✅ 完整的无障碍支持
+- ✅ 响应式设计
+
+## 基本用法
+
+```tsx
+import { Form, Input, Button } from '@taro-uno/components'
+
+function BasicForm() {
+  const formRef = React.useRef(null)
+
+  const handleSubmit = async () => {
+    const result = await formRef.current.validate()
+    if (result.valid) {
+      console.log('表单验证通过:', result.values)
+    } else {
+      console.log('表单验证失败:', result.errors)
+    }
+  }
+
+  const rules = {
+    username: [
+      { required: true, message: '请输入用户名', trigger: 'onBlur' },
+      { min: 3, max: 20, message: '用户名长度在 3-20 个字符之间', trigger: 'onChange' }
+    ],
+    password: [
+      { required: true, message: '请输入密码', trigger: 'onBlur' },
+      { pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, message: '密码至少包含 8 个字符，必须包含字母和数字', trigger: 'onChange' }
+    ]
+  }
+
+  return (
+    <Form ref={formRef} rules={rules} onFinishFailed={(errors) => console.log('提交失败:', errors)}>
+      <Form.Item label="用户名" name="username">
+        <Input placeholder="请输入用户名" />
+      </Form.Item>
+      <Form.Item label="密码" name="password">
+        <Input placeholder="请输入密码" type="password" />
+      </Form.Item>
+      <Form.Item>
+        <Button type="primary" onClick={handleSubmit}>
+          提交
+        </Button>
+      </Form.Item>
+    </Form>
+  )
+}
+```
+
+## 示例
+
+### 表单布局
+
+```tsx
+// 水平布局
+<Form layout="horizontal" labelWidth={100}>
+  {/* 表单内容 */}
+</Form>
+
+// 垂直布局
+<Form layout="vertical">
+  {/* 表单内容 */}
+</Form>
+
+// 内联布局
+<Form layout="inline">
+  {/* 表单内容 */}
+</Form>
+```
+
+### 标签对齐方式
+
+```tsx
+// 标签左对齐
+<Form labelAlign="left" labelWidth={120}>
+  {/* 表单内容 */}
+</Form>
+
+// 标签右对齐
+<Form labelAlign="right" labelWidth={120}>
+  {/* 表单内容 */}
+</Form>
+
+// 标签顶部对齐
+<Form labelAlign="top">
+  {/* 表单内容 */}
+</Form>
+```
+
+### 表单尺寸
+
+```tsx
+// 小尺寸
+<Form size="sm">
+  {/* 表单内容 */}
+</Form>
+
+// 中尺寸
+<Form size="md">
+  {/* 表单内容 */}
+</Form>
+
+// 大尺寸
+<Form size="lg">
+  {/* 表单内容 */}
+</Form>
+```
+
+### 自定义验证
+
+```tsx
+const rules = {
+  email: [
+    { required: true, message: '请输入邮箱地址', trigger: 'onBlur' },
+    { pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: '请输入有效的邮箱地址', trigger: 'onChange' }
+  ],
+  age: [
+    { required: true, message: '请输入年龄', trigger: 'onBlur' },
+    { minValue: 18, maxValue: 120, message: '年龄必须在 18-120 岁之间', trigger: 'onChange' }
+  ],
+  custom: [
+    { 
+      validator: (value, form) => {
+        if (value !== form.password) {
+          return '两次输入的密码不一致'
+        }
+        return true
+      }, 
+      message: '两次输入的密码不一致', 
+      trigger: 'onChange' 
+    }
+  ]
+}
+
+<Form rules={rules}>
+  {/* 表单内容 */}
+</Form>
+```
+
+### 异步验证
+
+```tsx
+const rules = {
+  username: [
+    { required: true, message: '请输入用户名', trigger: 'onBlur' },
+    { 
+      asyncValidator: async (value) => {
+        // 模拟异步验证请求
+        const response = await fetch(`/api/check-username?username=${value}`)
+        const data = await response.json()
+        if (!data.available) {
+          return '用户名已存在'
+        }
+        return true
+      }, 
+      message: '用户名已存在', 
+      trigger: 'onBlur' 
+    }
+  ]
+}
+
+<Form rules={rules}>
+  {/* 表单内容 */}
+</Form>
+```
+
+### 初始值
+
+```tsx
+const initialValues = {
+  username: 'testuser',
+  email: 'test@example.com',
+  gender: 'male',
+  agree: true
+}
+
+<Form initialValues={initialValues}>
+  {/* 表单内容 */}
+</Form>
+```
+
+### 字段联动
+
+```tsx
+const [showAdvanced, setShowAdvanced] = React.useState(false)
+
+<Form
+  onValuesChange={(changedValues, allValues) => {
+    // 根据某些字段的值显示/隐藏其他字段
+    if (changedValues.needAdvanced) {
+      setShowAdvanced(changedValues.needAdvanced)
+    }
+  }}
+>
+  <Form.Item label="是否需要高级设置" name="needAdvanced">
+    <Switch />
+  </Form.Item>
+
+  {showAdvanced && (
+    <Form.Item label="高级选项" name="advancedOption">
+      <Input placeholder="请输入高级选项" />
+    </Form.Item>
+  )}
+</Form>
+```
+
+### 表单重置
+
+```tsx
+const formRef = React.useRef(null)
+
+const handleReset = () => {
+  formRef.current.resetFields()
+}
+
+<Form ref={formRef}>
+  {/* 表单内容 */}
+  <Form.Item>
+    <Button onClick={handleReset}>
+      重置
+    </Button>
+  </Form.Item>
+</Form>
+```
+
+### 错误处理
+
+```tsx
+<Form
+  showValidateMessage
+  scrollToFirstError
+  onFinishFailed={(errors, values) => {
+    console.log('表单验证失败:', errors)
+    console.log('当前表单值:', values)
+  }}
+>
+  {/* 表单内容 */}
+</Form>
+```
+
+### 禁用表单
+
+```tsx
+<Form disabled>
+  {/* 表单内容 */}
+</Form>
+```
+
+## API
+
+### FormProps
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| initialValues | `FormValues` | - | 表单初始值 |
+| layout | `FormLayout` | `horizontal` | 表单布局方式，可选值：`horizontal`、`vertical`、`inline` |
+| labelAlign | `FormLabelAlign` | `right` | 标签对齐方式，可选值：`left`、`right`、`top` |
+| size | `FormSize` | `md` | 表单尺寸，可选值：`xs`、`sm`、`md`、`lg`、`xl` |
+| labelWidth | `number \| string` | - | 标签宽度 |
+| labelSuffix | `ReactNode` | - | 标签后缀 |
+| colon | `boolean` | `false` | 是否显示冒号 |
+| requiredMark | `boolean \| 'optional'` | `true` | 是否显示必填标记 |
+| rules | `Record<string, FormRule[]>` | - | 验证规则 |
+| validateTrigger | `'onChange' \| 'onBlur' \| 'onSubmit'` | `onChange` | 验证触发时机 |
+| immediate | `boolean` | `false` | 是否立即验证 |
+| onSubmit | `(values: FormValues, event: ITouchEvent) => void \| Promise<void>` | - | 提交事件处理函数 |
+| onReset | `(values: FormValues, event: ITouchEvent) => void` | - | 重置事件处理函数 |
+| onValuesChange | `(changedValues: FormValues, allValues: FormValues) => void` | - | 值变化事件处理函数 |
+| onFieldsChange | `(changedFields: FormFieldInfo[], allFields: FormFieldInfo[]) => void` | - | 字段变化事件处理函数 |
+| onFinishFailed | `(errors: FormErrors, values: FormValues) => void` | - | 验证失败事件处理函数 |
+| className | `string` | - | 自定义样式类名 |
+| style | `React.CSSProperties` | - | 自定义样式 |
+| accessible | `boolean` | `true` | 是否启用无障碍访问 |
+| accessibilityLabel | `string` | - | 无障碍标签 |
+| accessibilityRole | `string` | - | 无障碍角色 |
+| role | `string` | - | HTML role 属性 |
+| aria-label | `string` | - | HTML aria-label 属性 |
+| disabled | `boolean` | `false` | 是否禁用表单 |
+| readonly | `boolean` | `false` | 是否只读表单 |
+| showValidateMessage | `boolean` | `true` | 是否显示验证信息 |
+| scrollToFirstError | `boolean` | `false` | 是否滚动到第一个错误字段 |
+| preserve | `boolean` | `false` | 是否保留未提交的值 |
+| children | `ReactNode` | - | 子元素 |
+
+### FormItemProps
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| name | `string` | - | 字段名 |
+| label | `ReactNode` | - | 标签 |
+| helperText | `ReactNode` | - | 辅助文本 |
+| errorText | `ReactNode` | - | 错误文本 |
+| rules | `FormRule[]` | - | 验证规则 |
+| validateTrigger | `'onChange' \| 'onBlur' \| 'onSubmit'` | - | 验证触发时机 |
+| immediate | `boolean` | - | 是否立即验证 |
+| required | `boolean` | - | 是否必填 |
+| showRequiredMark | `boolean` | - | 是否显示必填标记 |
+| labelWidth | `number \| string` | - | 标签宽度 |
+| labelAlign | `FormLabelAlign` | - | 标签对齐方式 |
+| className | `string` | - | 自定义样式类名 |
+| style | `React.CSSProperties` | - | 自定义样式 |
+| children | `ReactNode` | - | 子元素 |
+| showValidateMessage | `boolean` | - | 是否显示验证信息 |
+| onChange | `(value: any, name: string) => void` | - | 值变化事件处理函数 |
+| onStatusChange | `(status: FormFieldStatus, name: string) => void` | - | 字段状态变化事件处理函数 |
+
+### FormRef
+
+| 方法 | 类型 | 说明 |
+| --- | --- | --- |
+| getValues | `() => FormValues` | 获取表单值 |
+| setValues | `(values: Partial<FormValues>) => void` | 设置表单值 |
+| getFieldValue | `(name: string) => any` | 获取字段值 |
+| setFieldValue | `(name: string, value: any) => void` | 设置字段值 |
+| resetFields | `(fields?: string[]) => void` | 重置表单 |
+| submit | `() => Promise<void>` | 提交表单 |
+| validate | `(fields?: string[]) => Promise<{ valid: boolean; errors: FormErrors; values: FormValues }>` | 验证表单 |
+| validateField | `(name: string) => Promise<{ valid: boolean; errors: string[]; value: any }>` | 验证字段 |
+| validateFields | `(names: string[]) => Promise<{ valid: boolean; errors: FormErrors; values: FormValues }>` | 验证多个字段 |
+| clearErrors | `(fields?: string[]) => void` | 清除字段错误 |
+| setErrors | `(errors: FormErrors) => void` | 设置字段错误 |
+| getFieldError | `(name: string) => string[]` | 获取字段错误 |
+| getErrors | `() => FormErrors` | 获取表单错误 |
+| setFields | `(fields: Partial<FormFieldInfo>[]) => void` | 设置字段 |
+| getFields | `() => FormFieldInfo[]` | 获取所有字段信息 |
+| getFieldInfo | `(name: string) => FormFieldInfo \| null` | 获取字段信息 |
+| setFieldsTouched | `(touched: Record<string, boolean>) => void` | 设置字段 touched 状态 |
+| setFieldsValidating | `(validating: Record<string, boolean>) => void` | 设置字段 validating 状态 |
+| addFieldRules | `(name: string, rules: FormRule[]) => void` | 添加字段规则 |
+| removeFieldRules | `(name: string) => void` | 移除字段规则 |
+| getFieldRules | `(name: string) => FormRule[]` | 获取字段规则 |
+| setStatus | `(status: FormStatus) => void` | 设置表单状态 |
+| getStatus | `() => FormStatus` | 获取表单状态 |
+| setDisabled | `(disabled: boolean) => void` | 设置表单禁用状态 |
+| setReadonly | `(readonly: boolean) => void` | 设置表单只读状态 |
+| scrollToField | `(name: string) => void` | 滚动到字段 |
+| getFormInstance | `() => FormInstance` | 获取表单实例 |
+
+### 类型定义
+
+#### FormLayout
+
+```ts
+type FormLayout = 'horizontal' | 'vertical' | 'inline'
+```
+
+#### FormLabelAlign
+
+```ts
+type FormLabelAlign = 'left' | 'right' | 'top'
+```
+
+#### FormSize
+
+```ts
+type FormSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+```
+
+#### FormStatus
+
+```ts
+type FormStatus = 'normal' | 'error' | 'warning' | 'success' | 'loading'
+```
+
+#### FormFieldStatus
+
+```ts
+type FormFieldStatus = 'normal' | 'error' | 'warning' | 'success' | 'validating'
+```
+
+#### FormRule
+
+```ts
+interface FormRule {
+  name?: string
+  required?: boolean
+  message?: string
+  pattern?: RegExp
+  min?: number
+  max?: number
+  minValue?: number
+  maxValue?: number
+  enum?: Array<string | number>
+  validator?: (value: any, form: FormValues) => boolean | string | Promise<boolean | string>
+  trigger?: 'onChange' | 'onBlur' | 'onSubmit'
+  asyncValidator?: (value: any, form: FormValues) => Promise<boolean | string>
+  defaultValue?: any
+  transform?: (value: any) => any
+  dependencies?: string[]
+}
+```
+
+#### FormValues
+
+```ts
+interface FormValues {
+  [key: string]: any
+}
+```
+
+#### FormErrors
+
+```ts
+interface FormErrors {
+  [key: string]: string | string[]
+}
+```
+
+#### FormTouched
+
+```ts
+interface FormTouched {
+  [key: string]: boolean
+}
+```
+
+#### FormFieldInfo
+
+```ts
+interface FormFieldInfo {
+  name: string
+  value: any
+  errors: string[]
+  touched: boolean
+  validating: boolean
+  rules: FormRule[]
+}
+```
+
+## 使用提示
+
+1. **表单验证**：
+   - 优先使用内置验证规则，如 `required`、`pattern`、`min`、`max` 等
+   - 对于复杂验证，使用 `validator` 自定义验证函数
+   - 对于需要异步检查的场景（如用户名唯一性验证），使用 `asyncValidator`
+
+2. **性能优化**：
+   - 避免在 `onValuesChange` 中执行复杂计算
+   - 对于大量字段的表单，考虑使用 `preserve` 属性保留未提交的值
+   - 使用 `disabled` 或 `readonly` 属性减少不必要的验证
+
+3. **无障碍支持**：
+   - 为每个表单字段提供清晰的 `label`
+   - 使用 `helperText` 提供额外的说明信息
+   - 确保错误信息清晰、具体，并与对应的字段关联
+
+4. **最佳实践**：
+   - 将表单拆分为多个逻辑部分，使用 `Form.Item` 包裹每个字段
+   - 使用 `initialValues` 设置初始值，避免直接修改表单值
+   - 使用 `ref` 调用表单方法，如 `validate`、`resetFields` 等
+   - 为复杂表单使用状态管理库（如 Redux、MobX）管理表单状态
+
+## 浏览器兼容性
+
+| 浏览器 | 版本 |
+| --- | --- |
+| Chrome | ≥80 |
+| Firefox | ≥75 |
+| Safari | ≥13 |
+| Edge | ≥80 |
+
+## 无障碍支持
+
+- 支持键盘导航
+- 支持屏幕阅读器
+- 符合 WCAG 2.1 AA 标准
+- 提供清晰的焦点状态
+- 错误信息可访问

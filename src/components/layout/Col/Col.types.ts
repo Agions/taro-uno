@@ -22,11 +22,11 @@ export interface ColRef {
   /** 获取当前排序 */
   getOrder: () => ColOrder;
   /** 设置跨度 */
-  setSpan: (span: ColSpan) => void;
+  setSpan: (_span: ColSpan) => void;
   /** 设置偏移量 */
-  setOffset: (offset: ColOffset) => void;
+  setOffset: (_offset: ColOffset) => void;
   /** 设置排序 */
-  setOrder: (order: ColOrder) => void;
+  setOrder: (_order: ColOrder) => void;
   /** 滚动到视图 */
   scrollIntoView: (options?: ScrollIntoViewOptions) => void;
 }
@@ -46,7 +46,7 @@ export interface ColProps extends BaseComponentProps {
   /** 柔性布局 */
   flex?: number | 'auto' | 'none';
   /** 点击事件 */
-  onClick?: (event: React.MouseEvent) => void;
+  onClick?: (_event: React.MouseEvent) => void;
   /** 响应式断点 */
   responsive?: {
     xs?: Partial<ColProps>;

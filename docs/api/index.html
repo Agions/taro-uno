@@ -1,0 +1,143 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="./"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>@taro-uno/ui - v1.0.0</title><meta name="description" content="Documentation for @taro-uno/ui"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script><script async src="assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><a href="index.html" class="title">@taro-uno/ui - v1.0.0</a><div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/><ul role="listbox" id="tsd-search-results"></ul><div id="tsd-search-status" aria-live="polite" aria-atomic="true"><div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-menu"></use></svg></a></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><h1>@taro-uno/ui - v1.0.0</h1></div><div class="tsd-panel tsd-typography"><h1 id="taro-uno" class="tsd-anchor-link">Taro Uno<a href="#taro-uno" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1><p>Taro Uno 是一个基于 Taro 框架的跨平台组件库，提供丰富的 UI 组件和表单控件，支持微信小程序、H5、React Native 等多端开发。</p>
+<h2 id="特性" class="tsd-anchor-link">特性<a href="#特性" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><ul>
+<li><strong>跨平台兼容</strong>：支持微信小程序、H5、React Native 等多端环境</li>
+<li><strong>丰富组件</strong>：提供完整的 UI 组件和表单控件</li>
+<li><strong>TypeScript 支持</strong>：完整的类型定义，提供良好的开发体验</li>
+<li><strong>主题定制</strong>：支持自定义主题和样式变量</li>
+<li><strong>易于扩展</strong>：组件设计遵循可组合、可扩展原则</li>
+<li><strong>完善文档</strong>：详细的使用文档和示例</li>
+</ul>
+<h2 id="安装" class="tsd-anchor-link">安装<a href="#安装" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><pre><code class="bash"><span class="hl-0"># 使用 npm</span><br/><span class="hl-1">npm</span><span class="hl-2"> </span><span class="hl-3">install</span><span class="hl-2"> </span><span class="hl-3">taro-uno</span><br/><br/><span class="hl-0"># 使用 yarn</span><br/><span class="hl-1">yarn</span><span class="hl-2"> </span><span class="hl-3">add</span><span class="hl-2"> </span><span class="hl-3">taro-uno</span><br/><br/><span class="hl-0"># 使用 pnpm</span><br/><span class="hl-1">pnpm</span><span class="hl-2"> </span><span class="hl-3">add</span><span class="hl-2"> </span><span class="hl-3">taro-uno</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="快速开始" class="tsd-anchor-link">快速开始<a href="#快速开始" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="引入样式" class="tsd-anchor-link">引入样式<a href="#引入样式" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>在项目入口文件中引入全局样式：</p>
+<pre><code class="tsx"><span class="hl-0">// app.tsx 或 app.jsx</span><br/><span class="hl-4">import</span><span class="hl-2"> </span><span class="hl-3">&#39;taro-uno/dist/styles/index.css&#39;</span><span class="hl-2">;</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="引入组件" class="tsd-anchor-link">引入组件<a href="#引入组件" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><pre><code class="tsx"><span class="hl-4">import</span><span class="hl-2"> </span><span class="hl-5">React</span><span class="hl-2"> </span><span class="hl-4">from</span><span class="hl-2"> </span><span class="hl-3">&#39;react&#39;</span><span class="hl-2">;</span><br/><span class="hl-4">import</span><span class="hl-2"> { </span><span class="hl-5">View</span><span class="hl-2"> } </span><span class="hl-4">from</span><span class="hl-2"> </span><span class="hl-3">&#39;@tarojs/components&#39;</span><span class="hl-2">;</span><br/><span class="hl-4">import</span><span class="hl-2"> { </span><span class="hl-5">Button</span><span class="hl-2">, </span><span class="hl-5">Input</span><span class="hl-2"> } </span><span class="hl-4">from</span><span class="hl-2"> </span><span class="hl-3">&#39;taro-uno&#39;</span><span class="hl-2">;</span><br/><br/><span class="hl-6">const</span><span class="hl-2"> </span><span class="hl-1">App</span><span class="hl-2"> = () </span><span class="hl-6">=&gt;</span><span class="hl-2"> {</span><br/><span class="hl-2">  </span><span class="hl-4">return</span><span class="hl-2"> (</span><br/><span class="hl-2">    </span><span class="hl-7">&lt;</span><span class="hl-8">View</span><span class="hl-7">&gt;</span><br/><span class="hl-2">      </span><span class="hl-7">&lt;</span><span class="hl-8">Input</span><span class="hl-2"> </span><span class="hl-9">placeholder</span><span class="hl-2">=</span><span class="hl-3">&quot;请输入内容&quot;</span><span class="hl-2"> </span><span class="hl-7">/&gt;</span><br/><span class="hl-2">      </span><span class="hl-7">&lt;</span><span class="hl-8">Button</span><span class="hl-2"> </span><span class="hl-9">type</span><span class="hl-2">=</span><span class="hl-3">&quot;primary&quot;</span><span class="hl-7">&gt;</span><span class="hl-2">点击我</span><span class="hl-7">&lt;/</span><span class="hl-8">Button</span><span class="hl-7">&gt;</span><br/><span class="hl-2">    </span><span class="hl-7">&lt;/</span><span class="hl-8">View</span><span class="hl-7">&gt;</span><br/><span class="hl-2">  );</span><br/><span class="hl-2">};</span><br/><br/><span class="hl-4">export</span><span class="hl-2"> </span><span class="hl-4">default</span><span class="hl-2"> </span><span class="hl-5">App</span><span class="hl-2">;</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="组件分类" class="tsd-anchor-link">组件分类<a href="#组件分类" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="基础组件-basic" class="tsd-anchor-link">基础组件 (Basic)<a href="#基础组件-basic" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li>Button - 按钮</li>
+<li>Icon - 图标</li>
+<li>Typography - 排版</li>
+</ul>
+<h3 id="表单组件-form" class="tsd-anchor-link">表单组件 (Form)<a href="#表单组件-form" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li>Input - 输入框</li>
+<li>Select - 选择器</li>
+<li>Checkbox - 复选框</li>
+<li>Radio - 单选框</li>
+<li>Switch - 开关</li>
+<li>Slider - 滑块</li>
+<li>Upload - 上传</li>
+<li>DatePicker - 日期选择器</li>
+<li>TimePicker - 时间选择器</li>
+<li>Cascader - 级联选择器</li>
+<li>Textarea - 多行文本输入</li>
+</ul>
+<h3 id="布局组件-layout" class="tsd-anchor-link">布局组件 (Layout)<a href="#布局组件-layout" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li>Grid - 网格</li>
+<li>Space - 间距</li>
+<li>Divider - 分割线</li>
+<li>Container - 容器</li>
+</ul>
+<h3 id="显示组件-display" class="tsd-anchor-link">显示组件 (Display)<a href="#显示组件-display" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li>Card - 卡片</li>
+<li>Table - 表格</li>
+<li>List - 列表</li>
+<li>Badge - 徽标</li>
+<li>Avatar - 头像</li>
+</ul>
+<h3 id="反馈组件-feedback" class="tsd-anchor-link">反馈组件 (Feedback)<a href="#反馈组件-feedback" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li>Modal - 对话框</li>
+<li>Message - 消息提示</li>
+<li>Notification - 通知提醒</li>
+<li>Toast - 轻提示</li>
+<li>Loading - 加载</li>
+</ul>
+<h3 id="导航组件-navigation" class="tsd-anchor-link">导航组件 (Navigation)<a href="#导航组件-navigation" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li>Tabs - 标签页</li>
+<li>Pagination - 分页</li>
+<li>Steps - 步骤条</li>
+</ul>
+<h2 id="文档" class="tsd-anchor-link">文档<a href="#文档" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="组件文档" class="tsd-anchor-link">组件文档<a href="#组件文档" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>每个组件都配有详细的中文文档，包含：</p>
+<ul>
+<li>功能介绍</li>
+<li>基本用法</li>
+<li>API 参数说明</li>
+<li>事件说明</li>
+<li>使用示例</li>
+</ul>
+<h3 id="文档结构" class="tsd-anchor-link">文档结构<a href="#文档结构" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>组件文档位于 <code>docs/components/</code> 目录下，按组件类型分类：</p>
+<ul>
+<li><code>docs/components/basic/</code> - 基础组件文档</li>
+<li><code>docs/components/form/</code> - 表单组件文档</li>
+<li><code>docs/components/layout/</code> - 布局组件文档</li>
+<li><code>docs/components/display/</code> - 显示组件文档</li>
+<li><code>docs/components/feedback/</code> - 反馈组件文档</li>
+<li><code>docs/components/navigation/</code> - 导航组件文档</li>
+</ul>
+<h3 id="示例代码" class="tsd-anchor-link">示例代码<a href="#示例代码" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>每个组件的文档目录中包含 <code>examples</code> 文件夹，提供可运行的示例代码，方便开发者快速了解组件的使用方法。</p>
+<h3 id="文档生成" class="tsd-anchor-link">文档生成<a href="#文档生成" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>我们提供了自动化的文档生成工具：</p>
+<pre><code class="bash"><span class="hl-0"># 生成所有文档</span><br/><span class="hl-1">node</span><span class="hl-2"> </span><span class="hl-3">scripts/generate-docs.js</span><span class="hl-2"> </span><span class="hl-3">all</span><br/><br/><span class="hl-0"># 生成组件文档</span><br/><span class="hl-1">node</span><span class="hl-2"> </span><span class="hl-3">scripts/generate-docs.js</span><span class="hl-2"> </span><span class="hl-3">components</span><br/><br/><span class="hl-0"># 生成 API 文档</span><br/><span class="hl-1">node</span><span class="hl-2"> </span><span class="hl-3">scripts/generate-docs.js</span><span class="hl-2"> </span><span class="hl-3">api</span><br/><br/><span class="hl-0"># 生成类型文档</span><br/><span class="hl-1">node</span><span class="hl-2"> </span><span class="hl-3">scripts/generate-docs.js</span><span class="hl-2"> </span><span class="hl-3">types</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="文档验证" class="tsd-anchor-link">文档验证<a href="#文档验证" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>使用文档验证工具确保文档质量：</p>
+<pre><code class="bash"><span class="hl-0"># 验证文档</span><br/><span class="hl-1">node</span><span class="hl-2"> </span><span class="hl-3">scripts/validate-docs.js</span><br/><br/><span class="hl-0"># 更新文档</span><br/><span class="hl-1">node</span><span class="hl-2"> </span><span class="hl-3">scripts/update-docs.js</span><span class="hl-2"> </span><span class="hl-6">--commit</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="文档部署" class="tsd-anchor-link">文档部署<a href="#文档部署" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>文档自动化部署到 GitHub Pages：</p>
+<ul>
+<li>每次代码提交自动构建和部署</li>
+<li>支持多环境部署</li>
+<li>自动生成文档统计和报告</li>
+</ul>
+<h3 id="本地开发" class="tsd-anchor-link">本地开发<a href="#本地开发" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><pre><code class="bash"><span class="hl-0"># 启动文档开发服务器</span><br/><span class="hl-1">cd</span><span class="hl-2"> </span><span class="hl-3">docs</span><br/><span class="hl-1">pnpm</span><span class="hl-2"> </span><span class="hl-3">install</span><br/><span class="hl-1">pnpm</span><span class="hl-2"> </span><span class="hl-3">dev</span><br/><br/><span class="hl-0"># 构建文档</span><br/><span class="hl-1">pnpm</span><span class="hl-2"> </span><span class="hl-3">build</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="开发指南" class="tsd-anchor-link">开发指南<a href="#开发指南" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="开发环境设置" class="tsd-anchor-link">开发环境设置<a href="#开发环境设置" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ol>
+<li>克隆仓库</li>
+</ol>
+<pre><code class="bash"><span class="hl-1">git</span><span class="hl-2"> </span><span class="hl-3">clone</span><span class="hl-2"> </span><span class="hl-3">https://github.com/agions/taro-uno.git</span><br/><span class="hl-1">cd</span><span class="hl-2"> </span><span class="hl-3">taro-uno</span>
+</code><button type="button">Copy</button></pre>
+
+<ol start="2">
+<li>安装依赖</li>
+</ol>
+<pre><code class="bash"><span class="hl-1">pnpm</span><span class="hl-2"> </span><span class="hl-3">install</span>
+</code><button type="button">Copy</button></pre>
+
+<ol start="3">
+<li>启动开发服务器</li>
+</ol>
+<pre><code class="bash"><span class="hl-0"># H5</span><br/><span class="hl-1">pnpm</span><span class="hl-2"> </span><span class="hl-3">dev:h5</span><br/><br/><span class="hl-0"># 微信小程序</span><br/><span class="hl-1">pnpm</span><span class="hl-2"> </span><span class="hl-3">dev:weapp</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="构建" class="tsd-anchor-link">构建<a href="#构建" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><pre><code class="bash"><span class="hl-0"># 构建 H5</span><br/><span class="hl-1">pnpm</span><span class="hl-2"> </span><span class="hl-3">build:h5</span><br/><br/><span class="hl-0"># 构建微信小程序</span><br/><span class="hl-1">pnpm</span><span class="hl-2"> </span><span class="hl-3">build:weapp</span><br/><br/><span class="hl-0"># 构建所有平台</span><br/><span class="hl-1">pnpm</span><span class="hl-2"> </span><span class="hl-3">build:all</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="测试" class="tsd-anchor-link">测试<a href="#测试" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><pre><code class="bash"><span class="hl-0"># 运行单元测试</span><br/><span class="hl-1">pnpm</span><span class="hl-2"> </span><span class="hl-3">test</span><br/><br/><span class="hl-0"># 运行 ESLint 检查</span><br/><span class="hl-1">pnpm</span><span class="hl-2"> </span><span class="hl-3">lint</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="🤝-贡献指南" class="tsd-anchor-link">🤝 贡献指南<a href="#🤝-贡献指南" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>我们欢迎所有形式的贡献！请阅读 <a href="media/CONTRIBUTING.md">贡献指南</a> 了解详情。</p>
+<h3 id="开发流程" class="tsd-anchor-link">开发流程<a href="#开发流程" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ol>
+<li>Fork 本仓库</li>
+<li>创建特性分支 (<code>git checkout -b feature/AmazingFeature</code>)</li>
+<li>提交更改 (<code>git commit -m 'Add some AmazingFeature'</code>)</li>
+<li>推送到分支 (<code>git push origin feature/AmazingFeature</code>)</li>
+<li>创建 Pull Request</li>
+</ol>
+<h3 id="代码规范" class="tsd-anchor-link">代码规范<a href="#代码规范" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li>使用 TypeScript 编写代码</li>
+<li>遵循 ESLint 和 Prettier 规范</li>
+<li>编写完整的单元测试</li>
+<li>添加详细的 JSDoc 注释</li>
+<li>遵循 Git 提交规范</li>
+</ul>
+<h2 id="许可证" class="tsd-anchor-link">许可证<a href="#许可证" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>本项目采用 MIT 许可证 - 查看 <a href="media/LICENSE">LICENSE</a> 文件了解详情</p>
+<h2 id="更新日志" class="tsd-anchor-link">更新日志<a href="#更新日志" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>详细的更新日志请查看 <a href="media/CHANGELOG.md">CHANGELOG.md</a></p>
+<h2 id="联系我们" class="tsd-anchor-link">联系我们<a href="#联系我们" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><ul>
+<li>GitHub: <a href="https://github.com/your-org/taro-uno">https://github.com/your-org/taro-uno</a></li>
+<li>Issues: <a href="https://github.com/your-org/taro-uno/issues">https://github.com/your-org/taro-uno/issues</a></li>
+</ul>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#taro-uno"><span>Taro <wbr/>Uno</span></a><ul><li><a href="#特性"><span>特性</span></a></li><li><a href="#安装"><span>安装</span></a></li><li><a href="#快速开始"><span>快速开始</span></a></li><li><ul><li><a href="#引入样式"><span>引入样式</span></a></li><li><a href="#引入组件"><span>引入组件</span></a></li></ul></li><li><a href="#组件分类"><span>组件分类</span></a></li><li><ul><li><a href="#基础组件-basic"><span>基础组件 (<wbr/>Basic)</span></a></li><li><a href="#表单组件-form"><span>表单组件 (<wbr/>Form)</span></a></li><li><a href="#布局组件-layout"><span>布局组件 (<wbr/>Layout)</span></a></li><li><a href="#显示组件-display"><span>显示组件 (<wbr/>Display)</span></a></li><li><a href="#反馈组件-feedback"><span>反馈组件 (<wbr/>Feedback)</span></a></li><li><a href="#导航组件-navigation"><span>导航组件 (<wbr/>Navigation)</span></a></li></ul></li><li><a href="#文档"><span>文档</span></a></li><li><ul><li><a href="#组件文档"><span>组件文档</span></a></li><li><a href="#文档结构"><span>文档结构</span></a></li><li><a href="#示例代码"><span>示例代码</span></a></li><li><a href="#文档生成"><span>文档生成</span></a></li><li><a href="#文档验证"><span>文档验证</span></a></li><li><a href="#文档部署"><span>文档部署</span></a></li><li><a href="#本地开发"><span>本地开发</span></a></li></ul></li><li><a href="#开发指南"><span>开发指南</span></a></li><li><ul><li><a href="#开发环境设置"><span>开发环境设置</span></a></li><li><a href="#构建"><span>构建</span></a></li><li><a href="#测试"><span>测试</span></a></li></ul></li><li><a href="#🤝-贡献指南"><span>🤝 贡献指南</span></a></li><li><ul><li><a href="#开发流程"><span>开发流程</span></a></li><li><a href="#代码规范"><span>代码规范</span></a></li></ul></li><li><a href="#许可证"><span>许可证</span></a></li><li><a href="#更新日志"><span>更新日志</span></a></li><li><a href="#联系我们"><span>联系我们</span></a></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="modules.html">@taro-uno/ui - v1.0.0</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div></body></html>

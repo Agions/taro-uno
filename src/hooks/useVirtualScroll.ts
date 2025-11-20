@@ -8,7 +8,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 export interface VirtualScrollItem {
   id: string | number;
   height: number;
-  data: any;
+  data: unknown;
 }
 
 export interface VirtualScrollOptions {

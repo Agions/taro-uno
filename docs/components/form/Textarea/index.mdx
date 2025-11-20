@@ -1,0 +1,395 @@
+# Textarea 文本域
+
+文本域组件用于多行文本输入，支持自动高度调整、字符计数、清除按钮等功能。
+
+## 功能特性
+
+- 支持多行文本输入
+- 自动高度调整
+- 字符计数与限制
+- 清除按钮
+- 自定义前缀/后缀
+- 多种尺寸和变体样式
+- 表单验证支持
+- 无障碍支持
+
+## 基本用法
+
+```tsx
+import { Textarea } from '@taro-uno/components'
+
+function BasicTextarea() {
+  return (
+    <Textarea placeholder="请输入内容" />
+  )
+}
+```
+
+## 使用示例
+
+### 受控模式
+
+```tsx
+import { useState } from 'react'
+import { Textarea } from '@taro-uno/components'
+
+function ControlledTextarea() {
+  const [value, setValue] = useState('')
+
+  return (
+    <Textarea
+      value={value}
+      onChange={setValue}
+      placeholder="请输入内容"
+    />
+  )
+}
+```
+
+### 自动调整高度
+
+```tsx
+import { Textarea } from '@taro-uno/components'
+
+function AutoHeightTextarea() {
+  return (
+    <Textarea
+      autoHeight
+      placeholder="自动调整高度"
+      rows={2}
+      minRows={2}
+      maxRows={5}
+    />
+  )
+}
+```
+
+### 字符计数
+
+```tsx
+import { Textarea } from '@taro-uno/components'
+
+function TextareaWithCounter() {
+  return (
+    <Textarea
+      maxLength={100}
+      showCount
+      placeholder="最多输入100个字符"
+    />
+  )
+}
+```
+
+### 清除按钮
+
+```tsx
+import { Textarea } from '@taro-uno/components'
+
+function TextareaWithClearButton() {
+  return (
+    <Textarea
+      clearable
+      clearTrigger="focus"
+      placeholder="带清除按钮"
+    />
+  )
+}
+```
+
+### 前缀和后缀
+
+```tsx
+import { Textarea } from '@taro-uno/components'
+
+function TextareaWithPrefixSuffix() {
+  return (
+    <Textarea
+      prefix={<span>📝</span>}
+      suffix={<span>字符</span>}
+      placeholder="带前缀和后缀"
+    />
+  )
+}
+```
+
+### 不同尺寸
+
+```tsx
+import { Textarea } from '@taro-uno/components'
+
+function TextareaSizes() {
+  return (
+    <>
+      <Textarea size="sm" placeholder="小尺寸" />
+      <Textarea size="md" placeholder="中等尺寸" />
+      <Textarea size="lg" placeholder="大尺寸" />
+    </>
+  )
+}
+```
+
+### 不同变体
+
+```tsx
+import { Textarea } from '@taro-uno/components'
+
+function TextareaVariants() {
+  return (
+    <>
+      <Textarea variant="outlined" placeholder="轮廓样式" />
+      <Textarea variant="filled" placeholder="填充样式" />
+      <Textarea variant="underlined" placeholder="下划线样式" />
+    </>
+  )
+}
+```
+
+### 禁用和只读
+
+```tsx
+import { Textarea } from '@taro-uno/components'
+
+function DisabledReadonlyTextarea() {
+  return (
+    <>
+      <Textarea disabled value="禁用状态" />
+      <Textarea readonly value="只读状态" />
+    </>
+  )
+}
+```
+
+### 表单验证
+
+```tsx
+import { useState } from 'react'
+import { Textarea } from '@taro-uno/components'
+
+function ValidatedTextarea() {
+  return (
+    <Textarea
+      rules={[
+        { required: true, message: '内容不能为空' },
+        { minLength: 5, message: '最少输入5个字符' }
+      ]}
+      validateTrigger="onBlur"
+      placeholder="带验证规则"
+    />
+  )
+}
+```
+
+### 自定义样式
+
+```tsx
+import { Textarea } from '@taro-uno/components'
+
+function CustomStyledTextarea() {
+  return (
+    <Textarea
+      bordered={false}
+      resize="both"
+      placeholder="自定义样式"
+      style={{ borderRadius: '8px', backgroundColor: '#f5f5f5' }}
+    />
+  )
+}
+```
+
+## API
+
+### TextareaProps
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| value | `string` | - | 文本域内容（受控模式） |
+| defaultValue | `string` | `''` | 默认值（非受控模式） |
+| placeholder | `string` | - | 占位符 |
+| size | `TextareaSize` | `'md'` | 文本域尺寸 |
+| variant | `TextareaVariant` | `'outlined'` | 文本域变体 |
+| status | `TextareaStatus` | `'normal'` | 文本域状态 |
+| disabled | `boolean` | `false` | 是否禁用 |
+| readonly | `boolean` | `false` | 是否只读 |
+| clearable | `boolean` | `false` | 是否显示清除按钮 |
+| clearTrigger | `ClearTrigger` | `'focus'` | 清除按钮触发时机 |
+| maxLength | `number` | - | 最大长度 |
+| minLength | `number` | - | 最小长度 |
+| rows | `number` | `3` | 行数 |
+| minRows | `number` | `1` | 最小行数 |
+| maxRows | `number` | `10` | 最大行数 |
+| autoHeight | `boolean` | `false` | 是否自动调整高度 |
+| autoHeightStrategy | `AutoHeightStrategy` | `'content'` | 自动调整高度策略 |
+| resize | `TextareaResize` | `'vertical'` | 调整大小方式 |
+| showCount | `boolean` | `false` | 是否显示字符计数 |
+| counterPosition | `CounterPosition` | `'bottom-right'` | 字符计数显示位置 |
+| showWordLimit | `boolean` | `false` | 是否显示字数限制 |
+| autoFocus | `boolean` | `false` | 是否自动获取焦点 |
+| bordered | `boolean` | `true` | 是否显示边框 |
+| label | `ReactNode` | - | 标签文本 |
+| helperText | `ReactNode` | - | 辅助文本 |
+| errorText | `ReactNode` | - | 错误文本 |
+| prefix | `ReactNode` | - | 前缀图标或文本 |
+| suffix | `ReactNode` | - | 后缀图标或文本 |
+| rules | `TextareaRule[]` | - | 验证规则 |
+| validateTrigger | `'onChange' \| 'onBlur' \| 'onFocus' \| 'onSubmit'` | `'onBlur'` | 验证触发时机 |
+| immediate | `boolean` | `false` | 是否立即验证 |
+| validator | `(value: string) => boolean \| string \| Promise<boolean \| string>` | - | 自定义验证函数 |
+| onChange | `(value: string, event: ITouchEvent) => void` | - | 值变化事件处理函数 |
+| onFocus | `(event: ITouchEvent) => void` | - | 聚焦事件处理函数 |
+| onBlur | `(event: ITouchEvent) => void` | - | 失焦事件处理函数 |
+| onInput | `(value: string, event: ITouchEvent) => void` | - | 输入事件处理函数 |
+| onClear | `(event: ITouchEvent) => void` | - | 清除事件处理函数 |
+| onConfirm | `(value: string, event: ITouchEvent) => void` | - | 确认事件处理函数 |
+| onKeyboardHeightChange | `(height: number, event: ITouchEvent) => void` | - | 键盘高度变化事件处理函数 |
+| onHeightChange | `(height: number, event: ITouchEvent) => void` | - | 高度变化事件处理函数 |
+| onValidate | `(result: TextareaValidationResult) => void` | - | 验证事件处理函数 |
+| className | `string` | - | 自定义样式类名 |
+| style | `CSSProperties` | - | 自定义样式 |
+| containerClassName | `string` | - | 容器样式类名 |
+| containerStyle | `CSSProperties` | - | 容器样式 |
+| block | `boolean` | `true` | 是否块级显示 |
+| accessible | `boolean` | `true` | 无障碍支持 |
+| accessibilityLabel | `string` | - | 无障碍标签 |
+| accessibilityRole | `string` | `'textbox'` | 无障碍角色 |
+| accessibilityState | `object` | - | 无障碍状态 |
+
+### TextareaRef
+
+| 方法 | 类型 | 说明 |
+| --- | --- | --- |
+| getValue | `() => string` | 获取文本域值 |
+| setValue | `(value: string) => void` | 设置文本域值 |
+| focus | `() => void` | 聚焦文本域 |
+| blur | `() => void` | 失焦文本域 |
+| select | `() => void` | 选择文本 |
+| setSelectionRange | `(start: number, end: number) => void` | 设置选中文本范围 |
+| getSelectionRange | `() => { start: number; end: number }` | 获取选中文本范围 |
+| setDisabled | `(disabled: boolean) => void` | 设置禁用状态 |
+| setReadonly | `(readonly: boolean) => void` | 设置只读状态 |
+| setStatus | `(status: TextareaStatus) => void` | 设置文本域状态 |
+| getStatus | `() => TextareaStatus` | 获取文本域状态 |
+| validate | `() => Promise<TextareaValidationResult>` | 验证文本域值 |
+| clear | `() => void` | 清除文本域值 |
+| reset | `() => void` | 重置文本域 |
+| adjustHeight | `() => void` | 调整高度 |
+| getHeight | `() => number` | 获取当前高度 |
+| getScrollHeight | `() => number` | 获取滚动高度 |
+| scrollToBottom | `() => void` | 滚动到底部 |
+| scrollToTop | `() => void` | 滚动到顶部 |
+| getValidationResult | `() => TextareaValidationResult \| null` | 获取验证结果 |
+
+### 类型定义
+
+#### TextareaSize
+
+```ts
+type TextareaSize = 'sm' | 'md' | 'lg'
+```
+
+#### TextareaVariant
+
+```ts
+type TextareaVariant = 'outlined' | 'filled' | 'underlined'
+```
+
+#### TextareaStatus
+
+```ts
+type TextareaStatus = 'normal' | 'error' | 'warning' | 'success' | 'disabled'
+```
+
+#### TextareaResize
+
+```ts
+type TextareaResize = 'none' | 'both' | 'horizontal' | 'vertical' | 'auto'
+```
+
+#### AutoHeightStrategy
+
+```ts
+type AutoHeightStrategy = 'content' | 'rows' | 'max-rows'
+```
+
+#### CounterPosition
+
+```ts
+type CounterPosition = 'top-right' | 'bottom-right' | 'top-left' | 'bottom-left'
+```
+
+#### ClearTrigger
+
+```ts
+type ClearTrigger = 'always' | 'focus' | 'never'
+```
+
+#### TextareaRule
+
+```ts
+interface TextareaRule {
+  required?: boolean
+  message?: string
+  pattern?: RegExp
+  minLength?: number
+  maxLength?: number
+  validator?: (value: string) => boolean | string | Promise<boolean | string>
+}
+```
+
+#### TextareaValidationResult
+
+```ts
+interface TextareaValidationResult {
+  valid: boolean
+  message?: string
+  ruleIndex?: number
+  timestamp: number
+  value: string
+}
+```
+
+## 使用提示
+
+1. **受控与非受控模式**：
+   - 使用 `value` 和 `onChange` 实现受控模式
+   - 使用 `defaultValue` 实现非受控模式
+
+2. **自动高度调整**：
+   - 设置 `autoHeight` 为 `true` 启用自动高度调整
+   - 使用 `minRows` 和 `maxRows` 限制高度范围
+
+3. **表单验证**：
+   - 使用 `rules` 属性定义验证规则
+   - 自定义验证函数 `validator` 支持异步验证
+   - 通过 `validateTrigger` 控制验证时机
+
+4. **性能优化**：
+   - 对于长文本输入，考虑限制 `maxLength`
+   - 自动高度调整在大量文本时可能影响性能，可适当限制 `maxRows`
+
+5. **无障碍支持**：
+   - 设置 `accessible` 为 `true` 启用无障碍支持
+   - 使用 `accessibilityLabel` 提供屏幕阅读器支持
+   - `accessibilityState` 可设置额外的无障碍状态
+
+## 浏览器兼容性
+
+| 浏览器 | 版本 |
+| --- | --- |
+| Chrome | ✅ 支持 |
+| Firefox | ✅ 支持 |
+| Safari | ✅ 支持 |
+| Edge | ✅ 支持 |
+| 微信小程序 | ✅ 支持 |
+| 支付宝小程序 | ✅ 支持 |
+| 百度小程序 | ✅ 支持 |
+| 抖音小程序 | ✅ 支持 |
+| QQ小程序 | ✅ 支持 |
+
+## 无障碍支持
+
+- 支持键盘导航
+- 提供屏幕阅读器支持
+- 支持无障碍标签和角色
+- 支持无障碍状态管理
+
+Textarea 组件遵循 WAI-ARIA 标准，提供良好的无障碍体验。

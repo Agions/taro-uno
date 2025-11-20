@@ -18,13 +18,13 @@ export interface ToastRef {
   /** 获取显示状态 */
   isVisible: () => boolean;
   /** 设置消息 */
-  setMessage: (message: ReactNode) => void;
+  setMessage: (_message: ReactNode) => void;
   /** 设置类型 */
-  setType: (type: ToastType) => void;
+  setType: (_type: ToastType) => void;
   /** 设置位置 */
-  setPosition: (position: ToastPosition) => void;
+  setPosition: (_position: ToastPosition) => void;
   /** 设置持续时间 */
-  setDuration: (duration: number) => void;
+  setDuration: (_duration: number) => void;
 }
 
 /** Toast组件属性 */
@@ -60,7 +60,7 @@ export interface ToastProps extends BaseComponentProps {
   /** 关闭事件 */
   onClose?: () => void;
   /** 点击事件 */
-  onClick?: (event: React.MouseEvent) => void;
+  onClick?: (_event: React.MouseEvent) => void;
 }
 
 /** Toast方法配置 */
@@ -82,5 +82,5 @@ export interface ToastMethodConfig {
   /** 关闭事件 */
   onClose?: () => void;
   /** 点击事件 */
-  onClick?: (event: React.MouseEvent) => void;
+  onClick?: (_event: React.MouseEvent) => void;
 }

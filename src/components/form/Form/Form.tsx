@@ -56,11 +56,7 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
     Object.entries(restProps).filter(([key]) => !key.startsWith('on') || key.includes('Click') || key.includes('Touch'))
   );
 
-  // Handle aria attributes
-  const ariaProps = Object.fromEntries(
-    Object.entries(restProps).filter(([key]) => key.startsWith('aria-'))
-  );
-
+  
   const [formInstance, setFormInstance] = useState<FormInstance>({
     values: { ...initialValues },
     errors: {},
@@ -684,11 +680,7 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
         style={formStyle}
         onSubmit={handleSubmit}
         onReset={handleReset}
-        role={accessibilityRole}
-        aria-label={accessibilityLabel}
-        accessible={accessible}
         {...filteredProps}
-        {...ariaProps}
       >
         {children}
       </TaroForm>

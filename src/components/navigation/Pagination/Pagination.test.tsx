@@ -1,7 +1,8 @@
 import React from 'react'
 import { render, screen, fireEvent, act } from '@testing-library/react'
 import { Pagination } from '../Pagination'
-import type { PaginationProps, PaginationRef } from '../Pagination.types'
+import type { PaginationProps, PaginationRef } from './Pagination.types'
+import { vi } from 'vitest'
 
 // Mock Taro components
 vi.mock('@tarojs/components', () => ({

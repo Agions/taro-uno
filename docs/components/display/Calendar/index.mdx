@@ -1,0 +1,189 @@
+---
+category: 'display'
+componentType: 'display'
+englishTitle: 'Calendar'
+chineseTitle: '日历'
+name: 'Calendar'
+description: '用于显示日历和选择日期的组件，支持月/年视图切换、日期选择、事件显示和自定义渲染。'
+---
+
+import { Calendar } from '@taro-uno/ui';
+
+## 功能介绍
+
+Calendar 组件是一个功能丰富的日历组件，提供完整的日期选择和显示功能：
+
+- 支持月视图和年视图切换
+- 可自定义日期选择范围
+- 支持显示事件标记
+- 提供丰富的自定义渲染能力
+- 响应式设计，适配多平台
+- 支持无障碍访问
+
+## 基本用法
+
+```jsx
+<Calendar />
+```
+
+## 使用示例
+
+### 1. 基本日历
+
+```jsx
+<Calendar />
+```
+
+### 2. 带日期选择功能
+
+```jsx
+<Calendar
+  onSelect={(date) => console.log('Selected date:', date)}
+/>
+```
+
+### 3. 设置默认选中日期
+
+```jsx
+<Calendar defaultValue={new Date('2023-10-15')} />
+```
+
+### 4. 禁用特定日期
+
+```jsx
+<Calendar
+  disabledDate={(date) => {
+    // 禁用过去的日期
+    return date < new Date();
+  }}
+/>
+```
+
+### 5. 显示事件
+
+```jsx
+const events = [
+  {
+    id: '1',
+    title: '会议',
+    startTime: '2023-10-15T10:00:00',
+    color: '#ff4d4f'
+  },
+  {
+    id: '2',
+    title: '生日',
+    startTime: '2023-10-20T18:00:00',
+    color: '#52c41a'
+  }
+];
+
+<Calendar showEvents events={events} />
+```
+
+### 6. 自定义日期渲染
+
+```jsx
+<Calendar
+  dateRender={(date) => {
+    if (date.isToday) {
+      return (
+        <View style={{ backgroundColor: '#1890ff', color: '#fff', borderRadius: '50%', textAlign: 'center' }}>
+          {date.day}
+        </View>
+      );
+    }
+    return date.day;
+  }}
+/>
+```
+
+### 7. 隐藏今天按钮
+
+```jsx
+<Calendar showToday={false} />
+```
+
+### 8. 初始年视图
+
+```jsx
+<Calendar mode="year" />
+```
+
+## API
+
+### CalendarProps
+
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| value | Date | - | 当前选中日期 |
+| defaultValue | Date | - | 默认日期 |
+| mode | 'month' \| 'year' | 'month' | 显示模式 |
+| showToday | boolean | true | 是否显示今天按钮 |
+| showEvents | boolean | false | 是否显示事件 |
+| events | CalendarEvent[] | [] | 事件数据 |
+| disabledDate | (date: Date) => boolean | - | 禁用日期函数 |
+| dateRender | (date: CalendarDate) => ReactNode | - | 自定义日期渲染 |
+| monthRender | (month: number, year: number) => ReactNode | - | 自定义月份渲染 |
+| onSelect | (date: Date) => void | - | 日期选择事件 |
+| onChange | (date: Date) => void | - | 日期变化事件 |
+| onModeChange | (mode: 'month' \| 'year') => void | - | 模式变化事件 |
+| style | CSSProperties | - | 自定义样式 |
+| className | string | - | 自定义类名 |
+| ariaLabel | string | - | 无障碍标签 |
+| role | string | - | 无障碍角色 |
+
+### CalendarEvent
+
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| id | string | - | 事件ID |
+| title | string | - | 事件标题 |
+| description | string | - | 事件描述 |
+| type | 'default' \| 'primary' \| 'success' \| 'warning' \| 'danger' | 'default' | 事件类型 |
+| color | string | - | 事件颜色 |
+| startTime | string | - | 开始时间 |
+| endTime | string | - | 结束时间 |
+
+### CalendarDate
+
+| 属性 | 类型 | 说明 |
+| --- | --- | --- |
+| year | number | 年份 |
+| month | number | 月份 (1-12) |
+| day | number | 日期 (1-31) |
+| isCurrentMonth | boolean | 是否为当前月 |
+| isToday | boolean | 是否为今天 |
+| isSelected | boolean | 是否被选中 |
+| disabled | boolean | 是否禁用 |
+| events | CalendarEvent[] | 事件数据 |
+
+### CalendarRef
+
+| 方法 | 返回值 | 说明 |
+| --- | --- | --- |
+| getCurrentDate | Date | 获取当前日期 |
+| setDate | void | 设置日期 |
+| getMode | 'month' \| 'year' | 获取显示模式 |
+| setMode | void | 设置显示模式 |
+| goToToday | void | 跳转到今天 |
+| goPrev | void | 上一个月/年 |
+| goNext | void | 下一个月/年 |
+
+## 使用提示
+
+- 点击日历头部标题可以切换月/年视图
+- 可以通过 ref 调用组件的方法进行程序化操作
+- 事件显示最多只显示前3个事件的标记点
+- 自定义日期渲染时，需要确保返回的内容是有效的 React 节点
+- 禁用日期函数返回 true 表示该日期不可选
+
+## 浏览器兼容性
+
+- 现代浏览器（Chrome, Firefox, Safari, Edge）
+- Taro 支持的小程序平台
+
+## 无障碍支持
+
+- 提供 `ariaLabel` 和 `role` 属性支持无障碍访问
+- 支持键盘导航（上/下/左/右箭头键选择日期）
+- 遵循 WCAG 2.1 无障碍标准

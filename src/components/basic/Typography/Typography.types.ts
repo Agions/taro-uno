@@ -82,7 +82,7 @@ export interface TypographyProps {
   /**
    * 点击事件
    */
-  onClick?: (e: React.MouseEvent) => void;
+  onClick?: (_e: React.MouseEvent) => void;
   
   /**
    * 文本大小
@@ -122,7 +122,7 @@ export interface TypographyProps {
   /**
    * 编辑回调
    */
-  onEdit?: (text: string) => void;
+  onEdit?: (_text: string) => void;
 }
 
 /**
@@ -142,7 +142,7 @@ export interface TypographyRef {
   /**
    * 编辑文本
    */
-  edit: (text: string) => void;
+  edit: (_text: string) => void;
 }
 
 /**
@@ -167,17 +167,17 @@ export interface TypographyUtils {
   /**
    * 计算文本样式
    */
-  calculateStyles: (props: TypographyProps) => React.CSSProperties;
+  calculateStyles: (_props: TypographyProps) => React.CSSProperties;
   
   /**
    * 格式化文本
    */
-  formatText: (text: string, variant: TypographyProps['variant']) => string;
+  formatText: (_text: string, variant: TypographyProps['variant']) => string;
   
   /**
    * 复制到剪贴板
    */
-  copyToClipboard: (text: string) => Promise<void>;
+  copyToClipboard: (_text: string) => Promise<void>;
 }
 
 /**
@@ -292,5 +292,5 @@ export interface LinkProps extends TypographyProps {
   /**
    * 点击事件
    */
-  onClick?: (e: React.MouseEvent) => void;
+  onClick?: (_e: React.MouseEvent) => void;
 }

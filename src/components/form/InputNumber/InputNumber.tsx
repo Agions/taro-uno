@@ -52,10 +52,6 @@ export const InputNumberComponent = forwardRef<InputNumberRef, InputNumberProps>
     containerClassName,
     containerStyle,
     block = true,
-    accessible = true,
-    accessibilityLabel,
-    accessibilityRole = 'spinbutton',
-    accessibilityState,
     ...restProps
   } = props;
 
@@ -183,19 +179,7 @@ export const InputNumberComponent = forwardRef<InputNumberRef, InputNumberProps>
     className,
   });
 
-  // 无障碍状态（修复了无障碍属性名称）
-  const finalAccessibilityState = {
-    disabled: internalDisabled,
-    readonly: internalReadonly,
-    required: rules?.some((rule: any) => rule.required),
-    invalid: validationResult?.valid === false,
-    valueNow: value !== null ? value : undefined,
-    valueMin: min,
-    valueMax: max,
-    valueStep: step,
-    ...accessibilityState,
-  };
-
+  
   // 暴露给外部的引用方法
   React.useImperativeHandle(
     ref,
@@ -344,10 +328,6 @@ export const InputNumberComponent = forwardRef<InputNumberRef, InputNumberProps>
           onFocus={handleFocus as any}
           onBlur={handleBlur as any}
           onInput={(e) => handleTextChange(e.detail.value, e as any)}
-          accessible={accessible}
-          accessibilityLabel={accessibilityLabel}
-          accessibilityRole={accessibilityRole}
-          accessibilityState={finalAccessibilityState}
           {...restProps}
         />
 

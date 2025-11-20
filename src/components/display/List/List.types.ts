@@ -9,7 +9,7 @@ export interface ListProps {
     [key: string]: any;
   }>;
   /** 渲染函数 */
-  renderItem?: (item: any, index: number) => React.ReactNode;
+  renderItem?: (_item: any, index: number) => React.ReactNode;
   /** 列表头部 */
   header?: React.ReactNode;
   /** 列表底部 */
@@ -46,16 +46,16 @@ export interface ListItemProps {
   /** 自定义样式 */
   style?: React.CSSProperties;
   /** 点击事件 */
-  onPress?: (event: any) => void;
+  onPress?: (_event: any) => void;
   /** 长按事件 */
-  onLongPress?: (event: any) => void;
+  onLongPress?: (_event: any) => void;
 }
 
 export interface ListRef {
   /** 获取列表项 */
-  getItem: (index: number) => HTMLElement | null;
+  getItem: (_index: number) => HTMLElement | null;
   /** 滚动到指定项 */
-  scrollToItem: (index: number) => void;
+  scrollToItem: (_index: number) => void;
   /** 获取列表项数量 */
   getItemCount: () => number;
 }

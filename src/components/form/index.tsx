@@ -119,31 +119,3 @@ export const FormLibraryUtils = {
     return FORM_CONFIG.components[category as keyof typeof FORM_CONFIG.components] || [];
   },
 };
-
-// 默认导出
-export default {
-  // 表单组件
-  Form: require('./Form').Form,
-  Input: require('./Input').Input,
-  Select: require('./Select').Select,
-  DatePicker: require('./DatePicker').DatePicker,
-  Checkbox: require('./Checkbox').Checkbox,
-  Radio: require('./Radio').Radio,
-  Switch: require('./Switch').Switch,
-  Rate: require('./Rate').Rate,
-  Slider: require('./Slider').Slider,
-  Upload: require('./Upload').Upload,
-  AutoComplete: require('./AutoComplete').AutoComplete,
-  Textarea: require('./Textarea').Textarea,
-  InputNumber: require('./InputNumber').InputNumber,
-  TimePicker: require('./TimePicker').TimePicker,
-  Cascader: require('./Cascader').Cascader,
-  Transfer: require('./Transfer').Transfer,
-
-  // 工具函数
-  Utils: FormLibraryUtils,
-
-  // 配置
-  CONFIG: FORM_CONFIG,
-  VERSION: FORM_VERSION,
-};

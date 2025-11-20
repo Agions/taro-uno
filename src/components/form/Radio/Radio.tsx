@@ -19,10 +19,6 @@ export const RadioComponent = forwardRef<RadioRef, RadioProps>((props, ref) => {
     className,
     onChange,
     style,
-    accessible = true,
-    accessibilityLabel,
-    accessibilityRole = 'radio',
-    accessibilityState,
     rules,
     validateTrigger = 'onChange',
     immediate = false,
@@ -155,13 +151,13 @@ export const RadioComponent = forwardRef<RadioRef, RadioProps>((props, ref) => {
       getSize: () => props.size || 'md',
       setSize: (newSize: RadioSize) => {
         // Radio size is controlled by parent, this is just for consistency
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+         
         newSize;
       },
       getColor: () => props.color || 'primary',
       setColor: (newColor: RadioColor) => {
         // Radio color is controlled by parent, this is just for consistency
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+         
         newColor;
       },
       getStatus: () => finalStatus,
@@ -178,7 +174,7 @@ export const RadioComponent = forwardRef<RadioRef, RadioProps>((props, ref) => {
       getData: () => props.data,
       setData: (newData: Record<string, any>) => {
         // Radio data is controlled by parent, this is just for consistency
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+         
         newData;
       },
       focus: () => {
@@ -189,12 +185,12 @@ export const RadioComponent = forwardRef<RadioRef, RadioProps>((props, ref) => {
       },
       shake: () => {
         // Shake animation implementation would go here
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+         
         console.log('shake animation');
       },
       pulse: () => {
         // Pulse animation implementation would go here
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+         
         console.log('pulse animation');
       },
     }),
@@ -240,19 +236,6 @@ export const RadioComponent = forwardRef<RadioRef, RadioProps>((props, ref) => {
               props.onChange(checked, e as ITouchEvent);
             }
             handleChange(e as ITouchEvent);
-          }}
-          // Accessibility attributes
-          aria-label={accessibilityLabel}
-          aria-checked={checked}
-          aria-disabled={internalDisabled}
-          role={accessibilityRole}
-          accessible={accessible}
-          accessibilityLabel={accessibilityLabel}
-          accessibilityRole={accessibilityRole}
-          accessibilityState={{
-            checked,
-            disabled: internalDisabled,
-            ...accessibilityState,
           }}
           {...(restProps as any)}
         />

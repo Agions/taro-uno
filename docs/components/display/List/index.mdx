@@ -1,0 +1,321 @@
+---
+category: 'display'
+componentType: 'display'
+englishTitle: 'List'
+chineseTitle: '列表'
+name: 'List'
+description: '用于展示列表数据的组件，支持多种配置选项，包括头部/底部、加载状态、边框、分割线等，提供灵活的使用方式。'
+---
+
+import { List, ListItem } from '@taro-uno/ui';
+import { View, Text } from '@tarojs/components';
+
+## 功能介绍
+
+List 组件是一个灵活的列表展示组件，适用于各种需要展示列表数据的场景：
+
+- 支持 `children` 和 `dataSource` 两种使用方式
+- 可配置列表头部和底部
+- 支持显示边框和分割线
+- 提供加载状态展示
+- 支持多种尺寸（小、中、大）
+- 列表项支持可点击和禁用状态
+- 响应式设计，适配多平台
+
+## 基本用法
+
+```jsx
+// 使用 children 方式
+<List>
+  <ListItem>
+    <Text>列表项 1</Text>
+  </ListItem>
+  <ListItem>
+    <Text>列表项 2</Text>
+  </ListItem>
+  <ListItem>
+    <Text>列表项 3</Text>
+  </ListItem>
+</List>
+
+// 使用 dataSource 方式
+<List
+  dataSource={[
+    { key: '1', text: '列表项 1' },
+    { key: '2', text: '列表项 2' },
+    { key: '3', text: '列表项 3' }
+  ]}
+  renderItem={(item) => <Text>{item.text}</Text>}
+/>
+```
+
+## 使用示例
+
+### 1. 基本列表
+
+```jsx
+<List>
+  <ListItem>
+    <Text>列表项 1</Text>
+  </ListItem>
+  <ListItem>
+    <Text>列表项 2</Text>
+  </ListItem>
+  <ListItem>
+    <Text>列表项 3</Text>
+  </ListItem>
+</List>
+```
+
+### 2. 带头部和底部的列表
+
+```jsx
+<List
+  header={<Text style={{ padding: '12px 16px', fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>列表头部</Text>}
+  footer={<Text style={{ padding: '12px 16px', color: '#888', fontSize: '12px' }}>列表底部</Text>}
+>
+  <ListItem>
+    <Text>列表项 1</Text>
+  </ListItem>
+  <ListItem>
+    <Text>列表项 2</Text>
+  </ListItem>
+  <ListItem>
+    <Text>列表项 3</Text>
+  </ListItem>
+</List>
+```
+
+### 3. 无边框列表
+
+```jsx
+<List bordered={false}>
+  <ListItem>
+    <Text>列表项 1</Text>
+  </ListItem>
+  <ListItem>
+    <Text>列表项 2</Text>
+  </ListItem>
+  <ListItem>
+    <Text>列表项 3</Text>
+  </ListItem>
+</List>
+```
+
+### 4. 无分割线列表
+
+```jsx
+<List split={false}>
+  <ListItem>
+    <Text>列表项 1</Text>
+  </ListItem>
+  <ListItem>
+    <Text>列表项 2</Text>
+  </ListItem>
+  <ListItem>
+    <Text>列表项 3</Text>
+  </ListItem>
+</List>
+```
+
+### 5. 加载状态列表
+
+```jsx
+<List loading>
+  <ListItem>
+    <Text>列表项 1</Text>
+  </ListItem>
+  <ListItem>
+    <Text>列表项 2</Text>
+  </ListItem>
+  <ListItem>
+    <Text>列表项 3</Text>
+  </ListItem>
+</List>
+```
+
+### 6. 不同尺寸列表
+
+```jsx
+<View style={{ marginBottom: 20 }}>
+  <Text style={{ marginBottom: 8 }}>小尺寸列表</Text>
+  <List size="small">
+    <ListItem>
+      <Text>小尺寸列表项</Text>
+    </ListItem>
+    <ListItem>
+      <Text>小尺寸列表项</Text>
+    </ListItem>
+  </List>
+</View>
+
+<View style={{ marginBottom: 20 }}>
+  <Text style={{ marginBottom: 8 }}>默认尺寸列表</Text>
+  <List size="default">
+    <ListItem>
+      <Text>默认尺寸列表项</Text>
+    </ListItem>
+    <ListItem>
+      <Text>默认尺寸列表项</Text>
+    </ListItem>
+  </List>
+</View>
+
+<View style={{ marginBottom: 20 }}>
+  <Text style={{ marginBottom: 8 }}>大尺寸列表</Text>
+  <List size="large">
+    <ListItem>
+      <Text>大尺寸列表项</Text>
+    </ListItem>
+    <ListItem>
+      <Text>大尺寸列表项</Text>
+    </ListItem>
+  </List>
+</View>
+```
+
+### 7. 可点击列表项
+
+```jsx
+<List>
+  <ListItem clickable onPress={() => console.log('点击了列表项 1')}>
+    <Text>可点击列表项 1</Text>
+  </ListItem>
+  <ListItem clickable onPress={() => console.log('点击了列表项 2')}>
+    <Text>可点击列表项 2</Text>
+  </ListItem>
+  <ListItem clickable onPress={() => console.log('点击了列表项 3')}>
+    <Text>可点击列表项 3</Text>
+  </ListItem>
+</List>
+```
+
+### 8. 禁用状态列表项
+
+```jsx
+<List>
+  <ListItem disabled>
+    <Text style={{ color: '#ccc' }}>禁用列表项 1</Text>
+  </ListItem>
+  <ListItem disabled clickable>
+    <Text style={{ color: '#ccc' }}>禁用且可点击列表项 2</Text>
+  </ListItem>
+  <ListItem>
+    <Text>正常列表项 3</Text>
+  </ListItem>
+</List>
+```
+
+### 9. 使用 dataSource 方式
+
+```jsx
+const data = [
+  { key: '1', title: '标题 1', description: '这是描述信息 1' },
+  { key: '2', title: '标题 2', description: '这是描述信息 2' },
+  { key: '3', title: '标题 3', description: '这是描述信息 3' }
+];
+
+<List dataSource={data}>
+  {(item) => (
+    <ListItem key={item.key}>
+      <View>
+        <Text style={{ fontWeight: 'bold' }}>{item.title}</Text>
+        <Text style={{ fontSize: 12, color: '#888', marginTop: 4 }}>{item.description}</Text>
+      </View>
+    </ListItem>
+  )}
+</List>
+```
+
+### 10. 复杂列表项
+
+```jsx
+<List>
+  <ListItem>
+    <View style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+      <View>
+        <Text style={{ fontWeight: 'bold' }}>列表项标题</Text>
+        <Text style={{ fontSize: 12, color: '#888', marginTop: 4 }}>2023-10-01</Text>
+      </View>
+      <Text style={{ color: '#1890ff' }}>查看详情</Text>
+    </View>
+  </ListItem>
+  <ListItem>
+    <View style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+      <View>
+        <Text style={{ fontWeight: 'bold' }}>列表项标题</Text>
+        <Text style={{ fontSize: 12, color: '#888', marginTop: 4 }}>2023-10-02</Text>
+      </View>
+      <Text style={{ color: '#1890ff' }}>查看详情</Text>
+    </View>
+  </ListItem>
+</List>
+```
+
+## API
+
+### ListProps
+
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| children | ReactNode | - | 列表内容 |
+| dataSource | Array<{ key?: string \| number; [key: string]: any }> | - | 数据源 |
+| renderItem | (item: any, index: number) => ReactNode | - | 渲染函数 |
+| header | ReactNode | - | 列表头部 |
+| footer | ReactNode | - | 列表底部 |
+| bordered | boolean | true | 是否显示边框 |
+| split | boolean | true | 是否显示分割线 |
+| loading | boolean | false | 加载状态 |
+| size | 'small' \| 'default' \| 'large' | 'default' | 列表尺寸 |
+| className | string | - | 自定义类名 |
+| style | CSSProperties | - | 自定义样式 |
+
+### ListItemProps
+
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| children | ReactNode | - | 列表项内容 |
+| index | number | - | 索引 |
+| size | 'small' \| 'default' \| 'large' | 'default' | 列表项尺寸 |
+| split | boolean | true | 是否显示分割线 |
+| disabled | boolean | false | 是否禁用 |
+| clickable | boolean | false | 是否可点击 |
+| className | string | - | 自定义类名 |
+| style | CSSProperties | - | 自定义样式 |
+| onPress | (event: any) => void | - | 点击事件 |
+| onLongPress | (event: any) => void | - | 长按事件 |
+
+### ListRef
+
+| 方法 | 返回值 | 说明 |
+| --- | --- | --- |
+| getItem | HTMLElement \| null | 获取列表项 |
+| scrollToItem | void | 滚动到指定项 |
+| getItemCount | number | 获取列表项数量 |
+
+### ListItemRef
+
+| 方法 | 返回值 | 说明 |
+| --- | --- | --- |
+| getElement | HTMLElement \| null | 获取列表项元素 |
+| getIndex | number | 获取索引 |
+
+## 使用提示
+
+- 当同时提供 `children` 和 `dataSource` 时，`dataSource` 会优先使用
+- `bordered` 属性控制整个列表的外边框，`split` 属性控制列表项之间的分割线
+- 可点击列表项会显示点击反馈效果
+- 禁用状态的列表项不会响应点击事件
+- 加载状态下，列表内容会被加载占位符替换
+- 建议为 `dataSource` 中的每个项提供唯一的 `key` 属性以优化性能
+
+## 浏览器兼容性
+
+- 现代浏览器（Chrome, Firefox, Safari, Edge）
+- Taro 支持的小程序平台
+
+## 无障碍支持
+
+- 支持键盘导航
+- 提供适当的 aria 标签
+- 遵循 WCAG 2.1 无障碍标准

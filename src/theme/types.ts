@@ -5,7 +5,6 @@
 export type ThemeMode = 'light' | 'dark' | 'auto';
 
 export interface ThemeColors {
-  // 基础颜色
   primary: string;
   secondary: string;
   success: string;
@@ -13,28 +12,23 @@ export interface ThemeColors {
   error: string;
   info: string;
 
-  // 文本颜色
   text: string;
   textSecondary: string;
   textDisabled: string;
   textInverse: string;
 
-  // 背景颜色
   background: string;
   backgroundCard: string;
   backgroundInput: string;
   backgroundMask: string;
 
-  // 边框颜色
   border: string;
   borderLight: string;
   borderFocus: string;
 
-  // 阴影颜色
   shadow: string;
   shadowLight: string;
 
-  // 特殊颜色
   brand: string;
   accent: string;
   link: string;
@@ -181,4 +175,14 @@ export interface ThemeConfig {
     isQq: boolean;
     isRn: boolean;
   };
+  // 主题元数据
+  metadata?: {
+    version: string;
+    author?: string;
+    description?: string;
+    created: string;
+    modified?: string;
+  };
+  // 自定义主题配置
+  custom?: Record<string, unknown>;
 }

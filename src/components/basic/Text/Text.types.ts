@@ -1,5 +1,5 @@
 import type { ReactNode, HTMLAttributes } from 'react';
-
+import React from "react"
 /** 文本尺寸 */
 export type TextSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl' | '8xl' | '9xl';
 
@@ -110,7 +110,6 @@ export interface TextProps extends Omit<TextNativeProps, 'size' | 'color' | 'wei
   clickable?: boolean;
   /** 是否显示加载状态 */
   loading?: boolean;
-  /** 是否禁用 */
   disabled?: boolean;
   /** 是否块级显示 */
   block?: boolean;
@@ -125,7 +124,7 @@ export interface TextProps extends Omit<TextNativeProps, 'size' | 'color' | 'wei
   /** 自定义样式类名 */
   className?: string;
   /** 点击事件处理函数 */
-  onClick?: (event: React.MouseEvent) => void;
+  onClick?: (_event: React.MouseEvent) => void;
   /** 自定义样式 */
   style?: React.CSSProperties;
   /** 最大行数 */
@@ -189,6 +188,18 @@ export interface TextProps extends Omit<TextNativeProps, 'size' | 'color' | 'wei
   writingMode?: 'horizontal-tb' | 'vertical-rl' | 'vertical-lr';
   /** 文本渲染优化 */
   textRendering?: 'auto' | 'optimizeSpeed' | 'optimizeLegibility' | 'geometricPrecision';
+  ariaLabel?: string;
+  // React native props
+  numberOfLines?: number;
+  ellipsizeMode?: 'head' | 'middle' | 'tail' | 'clip';
+  // Accessibility
+  role?: string;
+  // 排除可能与Taro组件冲突的React属性
+  dangerouslySetInnerHTML?: { __html: string };
+  suppressContentEditableWarning?: boolean;
+  suppressHydrationWarning?: boolean;
+  // Native props
+  // ...React.HTMLAttributes<HTMLElement>;
 }
 
 /** 文本组件引用类型 */
@@ -198,15 +209,15 @@ export type TextRef = {
   /** 获取文本内容 */
   getText: () => string;
   /** 设置文本内容 */
-  setText: (text: string) => void;
+  setText: (_text: string) => void;
   /** 复制文本 */
   copy: () => Promise<void>;
   /** 选择文本 */
   select: () => void;
   /** 设置禁用状态 */
-  setDisabled: (disabled: boolean) => void;
+  setDisabled: (_disabled: boolean) => void;
   /** 设置加载状态 */
-  setLoading: (loading: boolean) => void;
+  setLoading: (_loading: boolean) => void;
   /** 获取文本状态 */
   getStatus: () => TextStatus;
   /** 获取文本尺寸 */
@@ -214,11 +225,11 @@ export type TextRef = {
   /** 获取文本颜色 */
   getColor: () => string;
   /** 设置文本颜色 */
-  setColor: (color: string) => void;
+  setColor: (_color: string) => void;
   /** 设置文本尺寸 */
-  setSize: (size: TextSize) => void;
+  setSize: (_size: TextSize) => void;
   /** 设置文本权重 */
-  setWeight: (weight: TextWeight) => void;
+  setWeight: (_weight: TextWeight) => void;
   /** 滚动到视图 */
   scrollIntoView: (options?: ScrollIntoViewOptions) => void;
 };
@@ -226,9 +237,9 @@ export type TextRef = {
 /** 文本工具函数接口 */
 export interface TextUtils {
   /** 获取文本样式类名 */
-  getTextClassName: (props: Partial<TextProps>) => string;
+  getTextClassName: (_props: Partial<TextProps>) => string;
   /** 获取文本样式对象 */
-  getTextStyle: (props: Partial<TextProps>) => React.CSSProperties;
+  getTextStyle: (_props: Partial<TextProps>) => React.CSSProperties;
   /** 获取文本尺寸映射 */
   getSizeMap: () => Record<TextSize, { fontSize: number; lineHeight: number }>;
   /** 获取文本权重映射 */
@@ -236,33 +247,33 @@ export interface TextUtils {
   /** 获取文本颜色映射 */
   getColorMap: () => Record<TextColor, string>;
   /** 验证文本属性 */
-  validateTextProps: (props: TextProps) => boolean;
+  validateTextProps: (_props: TextProps) => boolean;
   /** 格式化文本尺寸 */
-  formatTextSize: (size: TextSize) => string;
+  formatTextSize: (_size: TextSize) => string;
   /** 格式化文本权重 */
-  formatTextWeight: (weight: TextWeight) => string;
+  formatTextWeight: (_weight: TextWeight) => string;
   /** 格式化文本颜色 */
-  formatTextColor: (color: TextColor) => string;
+  formatTextColor: (_color: TextColor) => string;
   /** 截断文本 */
-  truncateText: (text: string, maxLength: number, suffix?: string) => string;
+  truncateText: (_text: string, maxLength: number, suffix?: string) => string;
   /** 高亮文本 */
-  highlightText: (text: string, highlight: string, highlightColor?: string) => ReactNode;
+  highlightText: (_text: string, highlight: string, highlightColor?: string) => ReactNode;
   /** 格式化数字 */
-  formatNumber: (num: number, options?: Intl.NumberFormatOptions) => string;
+  formatNumber: (_num: number, options?: Intl.NumberFormatOptions) => string;
   /** 格式化日期 */
-  formatDate: (date: Date | string | number, format?: string) => string;
+  formatDate: (_date: Date | string | number, format?: string) => string;
   /** 格式化货币 */
-  formatCurrency: (amount: number, currency?: string, locale?: string) => string;
+  formatCurrency: (_amount: number, currency?: string, locale?: string) => string;
   /** 计算文本长度 */
-  calculateTextLength: (text: string, options?: { fontSize: number; fontFamily: string }) => number;
+  calculateTextLength: (_text: string, options?: { fontSize: number; fontFamily: string }) => number;
   /** 检测文本语言 */
-  detectLanguage: (text: string) => string;
+  detectLanguage: (_text: string) => string;
   /** 清理文本 */
-  sanitizeText: (text: string) => string;
+  sanitizeText: (_text: string) => string;
   /** 转换HTML实体 */
-  escapeHtml: (text: string) => string;
+  escapeHtml: (_text: string) => string;
   /** 反转换HTML实体 */
-  unescapeHtml: (text: string) => string;
+  unescapeHtml: (_text: string) => string;
 }
 
 /** 打字机效果属性 */

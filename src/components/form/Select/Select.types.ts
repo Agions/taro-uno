@@ -85,13 +85,13 @@ export interface SelectProps extends Omit<SelectNativeProps, 'size' | 'onChange'
   /** 标签最大数量 */
   maxTagCount?: number;
   /** 标签渲染函数 */
-  tagRender?: (props: { value: string | number; label: ReactNode; onClose: () => void }) => ReactNode;
+  tagRender?: (_props: { value: string | number; label: ReactNode; onClose: () => void }) => ReactNode;
   /** 选项列表 */
   options?: Array<SelectOption | SelectOptionGroup>;
   /** 选项过滤函数 */
-  filterOption?: (input: string, option: SelectOption) => boolean;
+  filterOption?: (_input: string, option: SelectOption) => boolean;
   /** 选项排序函数 */
-  sortOption?: (a: SelectOption, b: SelectOption) => number;
+  sortOption?: (_a: SelectOption, b: SelectOption) => number;
   /** 前缀图标或文本 */
   prefix?: ReactNode;
   /** 后缀图标或文本 */
@@ -115,19 +115,19 @@ export interface SelectProps extends Omit<SelectNativeProps, 'size' | 'onChange'
   /** 自定义样式类名 */
   className?: string;
   /** 值变化事件处理函数 */
-  onChange?: (value: string | number | Array<string | number>, option: SelectOption | SelectOption[]) => void;
+  onChange?: (_value: string | number | Array<string | number>, option: SelectOption | SelectOption[]) => void;
   /** 聚焦事件处理函数 */
-  onFocus?: (event: ITouchEvent) => void;
+  onFocus?: (_event: ITouchEvent) => void;
   /** 失焦事件处理函数 */
-  onBlur?: (event: ITouchEvent) => void;
+  onBlur?: (_event: ITouchEvent) => void;
   /** 下拉框打开事件处理函数 */
-  onDropdownVisibleChange?: (open: boolean) => void;
+  onDropdownVisibleChange?: (_open: boolean) => void;
   /** 搜索事件处理函数 */
-  onSearch?: (value: string) => void;
+  onSearch?: (_value: string) => void;
   /** 清除事件处理函数 */
-  onClear?: (event: ITouchEvent) => void;
+  onClear?: (_event: ITouchEvent) => void;
   /** 选项滚动事件处理函数 */
-  onPopupScroll?: (event: ITouchEvent) => void;
+  onPopupScroll?: (_event: ITouchEvent) => void;
   /** 自定义选择器样式 */
   style?: React.CSSProperties;
   /** 是否块级显示 */
@@ -152,7 +152,7 @@ export interface SelectProps extends Omit<SelectNativeProps, 'size' | 'onChange'
   rules?: Array<{
     required?: boolean;
     message?: string;
-    validator?: (value: string | number | Array<string | number>) => boolean | string | Promise<boolean | string>;
+    validator?: (_value: string | number | Array<string | number>) => boolean | string | Promise<boolean | string>;
   }>;
   /** 验证触发时机 */
   validateTrigger?: 'onChange' | 'onBlur' | 'onSubmit';
@@ -163,7 +163,7 @@ export interface SelectProps extends Omit<SelectNativeProps, 'size' | 'onChange'
   /** 选项最小数量 */
   minCount?: number;
   /** 自定义验证函数 */
-  validator?: (value: string | number | Array<string | number>) => boolean | string | Promise<boolean | string>;
+  validator?: (_value: string | number | Array<string | number>) => boolean | string | Promise<boolean | string>;
   /** 虚拟滚动配置 */
   virtual?: boolean;
   /** 虚拟滚动高度 */
@@ -179,11 +179,11 @@ export interface SelectProps extends Omit<SelectNativeProps, 'size' | 'onChange'
   /** 自定义空状态 */
   notFoundRender?: () => ReactNode;
   /** 自定义下拉渲染 */
-  dropdownRender?: (menu: ReactNode) => ReactNode;
+  dropdownRender?: (_menu: ReactNode) => ReactNode;
   /** 自定义选项渲染 */
-  optionRender?: (option: SelectOption) => ReactNode;
+  optionRender?: (_option: SelectOption) => ReactNode;
   /** 自定义选项组渲染 */
-  optionGroupRender?: (group: SelectOptionGroup) => ReactNode;
+  optionGroupRender?: (_group: SelectOptionGroup) => ReactNode;
 }
 
 /** 选择器组件引用类型 */
@@ -193,7 +193,7 @@ export type SelectRef = {
   /** 获取选择器值 */
   getValue: () => string | number | Array<string | number>;
   /** 设置选择器值 */
-  setValue: (value: string | number | Array<string | number>) => void;
+  setValue: (_value: string | number | Array<string | number>) => void;
   /** 聚焦选择器 */
   focus: () => void;
   /** 失焦选择器 */
@@ -205,11 +205,11 @@ export type SelectRef = {
   /** 切换下拉框 */
   toggleDropdown: () => void;
   /** 设置禁用状态 */
-  setDisabled: (disabled: boolean) => void;
+  setDisabled: (_disabled: boolean) => void;
   /** 设置只读状态 */
-  setReadonly: (readonly: boolean) => void;
+  setReadonly: (_readonly: boolean) => void;
   /** 设置选择器状态 */
-  setStatus: (status: SelectStatus) => void;
+  setStatus: (_status: SelectStatus) => void;
   /** 获取选择器状态 */
   getStatus: () => SelectStatus;
   /** 验证选择器值 */
@@ -221,9 +221,9 @@ export type SelectRef = {
   /** 获取选中选项 */
   getSelectedOptions: () => SelectOption[];
   /** 搜索选项 */
-  searchOptions: (keyword: string) => SelectOption[];
+  searchOptions: (_keyword: string) => SelectOption[];
   /** 滚动到指定选项 */
-  scrollToOption: (value: string | number) => void;
+  scrollToOption: (_value: string | number) => void;
 };
 
 /** 选择器组属性接口 */
@@ -265,13 +265,13 @@ export interface SelectUtils {
     filterOption?: SelectProps['filterOption'],
   ) => SelectOption[];
   /** 排序选项 */
-  sortOptions: (options: SelectOption[], sortOption?: SelectProps['sortOption']) => SelectOption[];
+  sortOptions: (_options: SelectOption[], sortOption?: SelectProps['sortOption']) => SelectOption[];
   /** 分组选项 */
-  groupOptions: (options: SelectOption[]) => Array<SelectOption | SelectOptionGroup>;
+  groupOptions: (_options: SelectOption[]) => Array<SelectOption | SelectOptionGroup>;
   /** 扁平化选项 */
-  flattenOptions: (options: Array<SelectOption | SelectOptionGroup>) => SelectOption[];
+  flattenOptions: (_options: Array<SelectOption | SelectOptionGroup>) => SelectOption[];
   /** 查找选项 */
-  findOption: (options: Array<SelectOption | SelectOptionGroup>, value: string | number) => SelectOption | null;
+  findOption: (_options: Array<SelectOption | SelectOptionGroup>, value: string | number) => SelectOption | null;
   /** 查找选项组 */
   findOptionGroup: (
     options: Array<SelectOption | SelectOptionGroup>,
@@ -300,19 +300,19 @@ export interface SelectValidationResult {
 /** 选择器事件接口 */
 export interface SelectEvents {
   /** 值变化事件 */
-  onChange: (value: string | number | Array<string | number>, option: SelectOption | SelectOption[]) => void;
+  onChange: (_value: string | number | Array<string | number>, option: SelectOption | SelectOption[]) => void;
   /** 聚焦事件 */
-  onFocus: (event: ITouchEvent) => void;
+  onFocus: (_event: ITouchEvent) => void;
   /** 失焦事件 */
-  onBlur: (event: ITouchEvent) => void;
+  onBlur: (_event: ITouchEvent) => void;
   /** 下拉框打开/关闭事件 */
-  onDropdownVisibleChange: (open: boolean) => void;
+  onDropdownVisibleChange: (_open: boolean) => void;
   /** 搜索事件 */
-  onSearch: (value: string) => void;
+  onSearch: (_value: string) => void;
   /** 清除事件 */
-  onClear: (event: ITouchEvent) => void;
+  onClear: (_event: ITouchEvent) => void;
   /** 选项滚动事件 */
-  onPopupScroll: (event: ITouchEvent) => void;
+  onPopupScroll: (_event: ITouchEvent) => void;
 }
 
 /** 选择器样式配置接口 */

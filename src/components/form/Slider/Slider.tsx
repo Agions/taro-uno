@@ -23,10 +23,6 @@ export const SliderComponent = forwardRef<SliderRef, SliderProps>((props, ref) =
     style,
     onChange,
     onChangeComplete,
-    accessible = true,
-    accessibilityLabel,
-    accessibilityRole = 'slider',
-    accessibilityState,
     ...restProps
   } = props;
 
@@ -109,24 +105,27 @@ export const SliderComponent = forwardRef<SliderRef, SliderProps>((props, ref) =
   const handleDrag = useCallback(
     (event: ITouchEvent) => {
       if (!dragging || internalDisabled) return;
-      
+
       const rect = (event.currentTarget as any).getBoundingClientRect();
       const clientX = event.detail?.x || 0;
       const clientY = event.detail?.y || 0;
-      
-      const percentage = vertical 
-        ? reverse 
+
+      const percentage = vertical
+        ? reverse
           ? 1 - ((clientY - rect.top) / rect.height)
           : (clientY - rect.top) / rect.height
-        : reverse 
+        : reverse
           ? 1 - ((clientX - rect.left) / rect.width)
           : (clientX - rect.left) / rect.width;
-      
+
       const newValue = Math.round((min + percentage * (max - min)) / step) * step;
       handleChange(newValue, event);
     },
     [dragging, internalDisabled, vertical, reverse, min, max, step, handleChange],
   );
+
+  // 处理键盘交互
+  
 
   // 处理拖拽结束
   const handleDragEnd = useCallback(() => {
@@ -174,7 +173,9 @@ export const SliderComponent = forwardRef<SliderRef, SliderProps>((props, ref) =
       getValue: () => value,
       setValue: (newValue: number) => {
         if (!isControlled) {
-          setInternalValue(Math.max(min, Math.min(max, newValue)));
+          const clampedValue = Math.max(min, Math.min(max, newValue));
+          setInternalValue(clampedValue);
+          onChange?.(clampedValue);
         }
       },
       disable: () => {
@@ -186,13 +187,22 @@ export const SliderComponent = forwardRef<SliderRef, SliderProps>((props, ref) =
       isDisabled: () => internalDisabled,
       isDragging: () => dragging,
       getPercentage: () => getPercentage(value),
+      getPercentageFromValue: (val: number) => getPercentage(val),
+      getValueFromPercentage: (percentage: number) => min + (percentage / 100) * (max - min),
       reset: () => {
         if (!isControlled) {
           setInternalValue(defaultValue);
+          onChange?.(defaultValue);
         }
       },
+      focus: () => {
+        
+      },
+      blur: () => {
+        
+      },
     }),
-    [value, isControlled, internalDisabled, dragging, min, max, defaultValue, getPercentage],
+    [value, isControlled, internalDisabled, dragging, min, max, defaultValue, getPercentage, onChange],
   );
 
   // 生成容器样式
@@ -261,15 +271,7 @@ export const SliderComponent = forwardRef<SliderRef, SliderProps>((props, ref) =
     marginLeft: vertical ? '4px' : 0,
   };
 
-  // 无障碍状态
-  const finalAccessibilityState = {
-    disabled: internalDisabled,
-    minValue: min,
-    maxValue: max,
-    currentValue: value,
-    ...accessibilityState,
-  };
-
+  
   return (
     <View
       ref={containerRef}
@@ -277,10 +279,14 @@ export const SliderComponent = forwardRef<SliderRef, SliderProps>((props, ref) =
       onClick={handleClick}
       onTouchMove={(e) => handleDrag(e as unknown as ITouchEvent)}
       onTouchEnd={() => handleDragEnd()}
-      accessible={accessible}
-      ariaLabel={accessibilityLabel}
-      role={accessibilityRole}
-      accessibilityState={finalAccessibilityState}
+      
+      role="slider"
+      aria-valuemin={min}
+      aria-valuemax={max}
+      aria-valuenow={value}
+      accessibilityLabel={restProps.accessibilityLabel || 'Slider'}
+      aria-disabled={internalDisabled}
+      
       {...restProps}
     >
       <View style={trackStyle}>

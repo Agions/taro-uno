@@ -1,0 +1,155 @@
+import { ErrorBoundary } from '@taro-uno/ui';
+import ErrorBoundaryExample from './examples/index';
+
+<Meta title="通用组件 / ErrorBoundary 错误边界" description="用于捕获和处理组件渲染过程中发生的错误" />
+
+<Description>
+  ErrorBoundary 组件用于捕获和处理其子组件树中发生的 JavaScript 错误，防止错误导致整个应用崩溃，并提供友好的错误提示界面。
+</Description>
+
+<CodeExample title="基本用法">
+  <ErrorBoundaryExample />
+  <ExampleCode>
+  ```tsx
+  import React from 'react';
+  import { ErrorBoundary } from '@taro-uno/ui';
+  
+  // 会抛出错误的组件
+  const BuggyComponent = () => {
+    throw new Error('测试错误');
+    return <View>这个组件有错误</View>;
+  };
+  
+  export default function ErrorBoundaryExample() {
+    return (
+      <ErrorBoundary>
+        <BuggyComponent />
+      </ErrorBoundary>
+    );
+  }
+  ```
+  </ExampleCode>
+</CodeExample>
+
+## 功能介绍
+
+ErrorBoundary 组件提供了以下核心功能：
+
+### 错误捕获
+- 捕获组件渲染过程中的 JavaScript 错误
+- 捕获子组件树中的错误
+
+### 错误处理
+- 记录错误日志
+- 提供默认的错误提示界面
+- 支持自定义错误界面
+
+### 交互功能
+- 提供重试机制
+- 支持自定义错误处理回调
+
+### 开发友好
+- 开发环境下显示详细的错误信息和组件栈
+- 生产环境下显示友好的错误提示
+
+## API
+
+### ErrorBoundaryProps
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| children | ReactNode | - | 需要包裹的子组件 |
+| fallback | ReactNode | - | 自定义错误提示界面 |
+| onError | (error: Error, errorInfo: ErrorInfo) => void | - | 错误处理回调函数 |
+
+## 使用示例
+
+### 基本用法
+
+```tsx
+<ErrorBoundary>
+  <BuggyComponent />
+</ErrorBoundary>
+```
+
+### 自定义错误界面
+
+```tsx
+<ErrorBoundary
+  fallback={
+    <View className="custom-error">
+      <Text className="custom-error__title">哎呀，出错了！</Text>
+      <Text className="custom-error__message">很抱歉，页面出现了问题。</Text>
+      <Button onClick={() => window.location.reload()}>重新加载</Button>
+    </View>
+  }
+>
+  <BuggyComponent />
+</ErrorBoundary>
+```
+
+### 自定义错误处理
+
+```tsx
+<ErrorBoundary
+  onError={(error, errorInfo) => {
+    // 发送错误信息到监控系统
+    console.error('组件错误:', error);
+    console.error('错误详情:', errorInfo);
+  }}
+>
+  <BuggyComponent />
+</ErrorBoundary>
+```
+
+### 错误边界嵌套
+
+```tsx
+// 外层错误边界
+<ErrorBoundary
+  fallback={<View>应用级错误</View>}
+  onError={(error) => console.error('应用级错误:', error)}
+>
+  <View>
+    <Text>应用内容</Text>
+    {/* 内层错误边界 */}
+    <ErrorBoundary
+      fallback={<View>组件级错误</View>}
+      onError={(error) => console.error('组件级错误:', error)}
+    >
+      <BuggyComponent />
+    </ErrorBoundary>
+  </View>
+</ErrorBoundary>
+```
+
+## 使用提示
+
+1. **合理使用**：只在可能会抛出错误的组件周围使用错误边界，不要过度使用。
+
+2. **嵌套使用**：可以嵌套使用错误边界，实现不同层级的错误处理。
+
+3. **错误恢复**：提供重试机制，允许用户在错误发生后恢复应用状态。
+
+4. **错误监控**：结合 `onError` 回调，将错误信息发送到监控系统，便于问题追踪和修复。
+
+5. **用户体验**：自定义友好的错误提示界面，避免向用户展示技术错误信息。
+
+6. **开发调试**：在开发环境下使用默认的错误界面，可以获取详细的错误信息和组件栈，便于调试。
+
+## 浏览器兼容性
+
+| 浏览器 | 版本 | 支持情况 |
+| --- | --- | --- |
+| Chrome | 80+ | ✅ |
+| Firefox | 75+ | ✅ |
+| Safari | 13+ | ✅ |
+| Edge | 80+ | ✅ |
+| 微信小程序 | 基础库 2.10+ | ✅ |
+| 支付宝小程序 | 基础库 2.7+ | ✅ |
+
+## 无障碍支持
+
+- 支持屏幕阅读器
+- 提供清晰的错误信息
+- 支持键盘导航

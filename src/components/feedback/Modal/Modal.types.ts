@@ -39,15 +39,15 @@ export interface ModalRef {
   /** 获取显示状态 */
   isVisible: () => boolean;
   /** 设置标题 */
-  setTitle: (title: ReactNode) => void;
+  setTitle: (_title: ReactNode) => void;
   /** 设置内容 */
-  setContent: (content: ReactNode) => void;
+  setContent: (_content: ReactNode) => void;
   /** 设置按钮 */
-  setButtons: (buttons: ModalButton[]) => void;
+  setButtons: (_buttons: ModalButton[]) => void;
   /** 添加按钮 */
-  addButton: (button: ModalButton) => void;
+  addButton: (_button: ModalButton) => void;
   /** 移除按钮 */
-  removeButton: (key: string) => void;
+  removeButton: (_key: string) => void;
   /** 聚焦 */
   focus: () => void;
 }
@@ -95,7 +95,7 @@ export interface ModalProps extends BaseComponentProps {
   /** 获取容器 */
   getContainer?: () => HTMLElement;
   /** 点击遮罩事件 */
-  onMaskClick?: (event: React.MouseEvent) => void;
+  onMaskClick?: (_event: React.MouseEvent) => void;
   /** 显示事件 */
   onShow?: () => void;
   /** 隐藏事件 */
@@ -105,7 +105,7 @@ export interface ModalProps extends BaseComponentProps {
   /** 取消事件 */
   onCancel?: () => void;
   /** 按钮点击事件 */
-  onButtonClick?: (button: ModalButton) => void;
+  onButtonClick?: (_button: ModalButton) => void;
   /** 关闭事件 */
   onClose?: () => void;
 }

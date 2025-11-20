@@ -101,12 +101,6 @@ export interface StandardComponentProps
           DisabledProps, ReadonlyProps, LoadingProps, ClickableProps {
   /** 组件唯一标识 */
   id?: string;
-  /** 无障碍标签 */
-  ariaLabel?: string;
-  /** 无障碍描述 */
-  ariaDescribedBy?: string;
-  /** 无障碍角色 */
-  ariaRole?: string;
   /** 数据属性 */
   data?: Record<string, any>;
 }
@@ -548,45 +542,3 @@ export type ExtractComponentProps<T> = T extends React.ComponentType<infer P> ? 
 export type ExtractComponentRef<T> = T extends React.RefObject<infer R> ? R : never;
 
 // ==================== 导出 ====================
-
-export default {
-  ComponentSize,
-  ComponentVariant,
-  ComponentStatus,
-  ComponentShape,
-  ComponentDirection,
-  ComponentAlign,
-  ComponentPosition,
-  BaseComponentProps,
-  SizeableProps,
-  VariantProps,
-  StatusProps,
-  ShapeProps,
-  DisabledProps,
-  ReadonlyProps,
-  LoadingProps,
-  ClickableProps,
-  StandardComponentProps,
-  FormComponentProps,
-  LayoutComponentProps,
-  DisplayComponentProps,
-  EventHandler,
-  ClickHandler,
-  InputHandler,
-  ChangeHandler,
-  FocusHandler,
-  SelectHandler,
-  ScrollHandler,
-  CustomEventHandler,
-  BaseComponentRef,
-  FormComponentRef,
-  LayoutComponentRef,
-  STANDARD_SIZE_MAP,
-  STANDARD_VARIANT_COLORS,
-  STANDARD_STATUS_COLORS,
-  MergeComponentProps,
-  OptionalComponentProps,
-  RequiredComponentProps,
-  ExtractComponentProps,
-  ExtractComponentRef,
-};

@@ -15,16 +15,16 @@ interface DebounceOptions {
 }
 
 /** 防抖事件处理hook */
-export function useDebounce<T extends (...args: any[]) => any>(
+export function useDebounce<T extends (...args: unknown[]) => unknown>(
   callback: T,
-  options: DebounceOptions = {}
+  options: DebounceOptions = {},
 ): T & { cancel: () => void } {
   const { delay = 300, leading = false, trailing = true } = options;
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastCallTime = useRef<number>(0);
 
   return useMemo(() => {
-    const debounced = function (this: any, ...args: Parameters<T>) {
+    const debounced = function (this: unknown, ...args: Parameters<T>) {
       const now = Date.now();
       const shouldCallLeading = leading && !timeoutRef.current;
 
@@ -37,15 +37,18 @@ export function useDebounce<T extends (...args: any[]) => any>(
         lastCallTime.current = now;
       }
 
-      timeoutRef.current = setTimeout(() => {
-        if (trailing && !leading) {
-          callback.apply(this, args);
-        }
-        timeoutRef.current = null;
-      }, delay - (now - lastCallTime.current));
+      timeoutRef.current = setTimeout(
+        () => {
+          if (trailing && !leading) {
+            callback.apply(this, args);
+          }
+          timeoutRef.current = null;
+        },
+        delay - (now - lastCallTime.current),
+      );
     } as T;
 
-    (debounced as any).cancel = () => {
+    (debounced as unknown as { cancel: () => void }).cancel = () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
         timeoutRef.current = null;
@@ -65,16 +68,16 @@ interface ThrottleOptions {
 }
 
 /** 节流事件处理hook */
-export function useThrottle<T extends (...args: any[]) => any>(
+export function useThrottle<T extends (...args: unknown[]) => unknown>(
   callback: T,
-  options: ThrottleOptions = {}
+  options: ThrottleOptions = {},
 ): T & { cancel: () => void } {
   const { delay = 300, leading = true, trailing = false } = options;
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastCallTime = useRef<number>(0);
 
   return useMemo(() => {
-    const throttled = function (this: any, ...args: Parameters<T>) {
+    const throttled = function (this: unknown, ...args: Parameters<T>) {
       const now = Date.now();
       const timeSinceLastCall = now - lastCallTime.current;
 
@@ -94,7 +97,7 @@ export function useThrottle<T extends (...args: any[]) => any>(
       }
     } as T;
 
-    (throttled as any).cancel = () => {
+    (throttled as unknown as { cancel: () => void }).cancel = () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
         timeoutRef.current = null;
@@ -117,10 +120,7 @@ interface ClickOptions {
 }
 
 /** 点击事件处理hook */
-export function useClickHandler(
-  onClick?: (event: ITouchEvent) => void,
-  options: ClickOptions = {}
-) {
+export function useClickHandler(onClick?: (event: ITouchEvent) => void, options: ClickOptions = {}) {
   const {
     disabled = false,
     stopPropagation = false,
@@ -133,47 +133,54 @@ export function useClickHandler(
   const clickCount = useRef(0);
   const clickTimer = useRef<NodeJS.Timeout | null>(null);
 
-  const handleClick = useCallback((event: ITouchEvent) => {
-    if (disabled) return;
+  const handleClick = useCallback(
+    (event: ITouchEvent) => {
+      if (disabled) return;
 
-    if (stopPropagation) {
-      event.stopPropagation();
-    }
+      if (stopPropagation) {
+        event.stopPropagation();
+      }
 
-    if (preventDefault) {
-      event.preventDefault();
-    }
+      if (preventDefault) {
+        event.preventDefault();
+      }
 
-    // 处理双击
-    clickCount.current++;
-    if (clickCount.current === 2) {
-      clickCount.current = 0;
+      // 处理双击
+      clickCount.current++;
+      if (clickCount.current === 2) {
+        clickCount.current = 0;
+        if (clickTimer.current) {
+          clearTimeout(clickTimer.current);
+          clickTimer.current = null;
+        }
+        onClick?.(event);
+        return;
+      }
+
       if (clickTimer.current) {
         clearTimeout(clickTimer.current);
-        clickTimer.current = null;
       }
-      onClick?.(event);
-      return;
-    }
 
-    if (clickTimer.current) {
-      clearTimeout(clickTimer.current);
-    }
-
-    clickTimer.current = setTimeout(() => {
-      clickCount.current = 0;
-      onClick?.(event);
-      clickTimer.current = null;
-    }, doubleClickDelay);
-  }, [disabled, stopPropagation, preventDefault, onClick, doubleClickDelay]);
+      clickTimer.current = setTimeout(() => {
+        clickCount.current = 0;
+        onClick?.(event);
+        clickTimer.current = null;
+      }, doubleClickDelay);
+    },
+    [disabled, stopPropagation, preventDefault, onClick, doubleClickDelay],
+  );
 
   // 应用防抖或节流
   const finalHandler = useMemo(() => {
     if (debounceTime > 0) {
-      return useDebounce(handleClick, { delay: debounceTime });
+      return useDebounce<(...args: unknown[]) => unknown>((...args) => handleClick(args[0] as ITouchEvent), {
+        delay: debounceTime,
+      });
     }
     if (throttleTime > 0) {
-      return useThrottle(handleClick, { delay: throttleTime });
+      return useThrottle<(...args: unknown[]) => unknown>((...args) => handleClick(args[0] as ITouchEvent), {
+        delay: throttleTime,
+      });
     }
     return handleClick;
   }, [handleClick, debounceTime, throttleTime]);
@@ -199,55 +206,62 @@ interface LongPressOptions {
 }
 
 /** 长按事件处理hook */
-export function useLongPress(
-  options: LongPressOptions = {}
-) {
+export function useLongPress(options: LongPressOptions = {}) {
   const { delay = 500, moveThreshold = 10, onLongPress, onLongPressEnd } = options;
-  
+
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const isPressedRef = useRef(false);
   const startPositionRef = useRef({ x: 0, y: 0 });
 
-  const handleTouchStart = useCallback((event: ITouchEvent) => {
-    const touch = event.touches[0];
-    if (!touch) return;
-    startPositionRef.current = { x: touch.clientX, y: touch.clientY };
+  const handleTouchStart = useCallback(
+    (event: ITouchEvent) => {
+      const touch = event.touches[0];
+      if (!touch) return;
+      startPositionRef.current = { x: touch.clientX, y: touch.clientY };
 
-    timerRef.current = setTimeout(() => {
-      isPressedRef.current = true;
-      onLongPress?.(event);
-    }, delay);
-  }, [delay, onLongPress]);
+      timerRef.current = setTimeout(() => {
+        isPressedRef.current = true;
+        onLongPress?.(event);
+      }, delay);
+    },
+    [delay, onLongPress],
+  );
 
-  const handleTouchMove = useCallback((event: ITouchEvent) => {
-    if (!timerRef.current) return;
+  const handleTouchMove = useCallback(
+    (event: ITouchEvent) => {
+      if (!timerRef.current) return;
 
-    const touch = event.touches[0];
-    if (!touch) return;
-    const distance = Math.sqrt(
-      Math.pow(touch.clientX - startPositionRef.current.x, 2) +
-      Math.pow(touch.clientY - startPositionRef.current.y, 2)
-    );
+      const touch = event.touches[0];
+      if (!touch) return;
+      const distance = Math.sqrt(
+        Math.pow(touch.clientX - startPositionRef.current.x, 2) +
+          Math.pow(touch.clientY - startPositionRef.current.y, 2),
+      );
 
-    if (distance > moveThreshold) {
+      if (distance > moveThreshold) {
+        if (timerRef.current) {
+          clearTimeout(timerRef.current);
+          timerRef.current = null;
+        }
+      }
+    },
+    [moveThreshold],
+  );
+
+  const handleTouchEnd = useCallback(
+    (event: ITouchEvent) => {
       if (timerRef.current) {
         clearTimeout(timerRef.current);
         timerRef.current = null;
       }
-    }
-  }, [moveThreshold]);
 
-  const handleTouchEnd = useCallback((event: ITouchEvent) => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-      timerRef.current = null;
-    }
-    
-    if (isPressedRef.current) {
-      isPressedRef.current = false;
-      onLongPressEnd?.(event);
-    }
-  }, [onLongPressEnd]);
+      if (isPressedRef.current) {
+        isPressedRef.current = false;
+        onLongPressEnd?.(event);
+      }
+    },
+    [onLongPressEnd],
+  );
 
   useEffect(() => {
     return () => {
@@ -276,47 +290,56 @@ interface DragOptions {
 /** 拖拽事件处理hook */
 export function useDrag(options: DragOptions = {}) {
   const { onDragStart, onDragMove, onDragEnd, threshold = 5 } = options;
-  
+
   const isDraggingRef = useRef(false);
   const startPositionRef = useRef({ x: 0, y: 0 });
   const lastPositionRef = useRef({ x: 0, y: 0 });
 
-  const handleTouchStart = useCallback((event: ITouchEvent) => {
-    const touch = event.touches[0];
-    if (!touch) return;
-    startPositionRef.current = { x: touch.clientX, y: touch.clientY };
-    lastPositionRef.current = { x: touch.clientX, y: touch.clientY };
-    onDragStart?.(event);
-  }, [onDragStart]);
+  const handleTouchStart = useCallback(
+    (event: ITouchEvent) => {
+      const touch = event.touches[0];
+      if (!touch) return;
+      startPositionRef.current = { x: touch.clientX, y: touch.clientY };
+      lastPositionRef.current = { x: touch.clientX, y: touch.clientY };
+      onDragStart?.(event);
+    },
+    [onDragStart],
+  );
 
-  const handleTouchMove = useCallback((event: ITouchEvent) => {
-    const touch = event.touches[0];
-    if (!touch) return;
-    const deltaX = touch.clientX - lastPositionRef.current.x;
-    const deltaY = touch.clientY - lastPositionRef.current.y;
+  const handleTouchMove = useCallback(
+    (event: ITouchEvent) => {
+      const touch = event.touches[0];
+      if (!touch) return;
+      const deltaX = touch.clientX - lastPositionRef.current.x;
+      const deltaY = touch.clientY - lastPositionRef.current.y;
 
-    // 检查是否超过阈值
-    if (!isDraggingRef.current) {
-      const distance = Math.sqrt(
-        Math.pow(touch.clientX - startPositionRef.current.x, 2) +
-        Math.pow(touch.clientY - startPositionRef.current.y, 2)
-      );
+      // 检查是否超过阈值
+      if (!isDraggingRef.current) {
+        const distance = Math.sqrt(
+          Math.pow(touch.clientX - startPositionRef.current.x, 2) +
+            Math.pow(touch.clientY - startPositionRef.current.y, 2),
+        );
 
-      if (distance >= threshold) {
-        isDraggingRef.current = true;
-      } else {
-        return;
+        if (distance >= threshold) {
+          isDraggingRef.current = true;
+        } else {
+          return;
+        }
       }
-    }
 
-    lastPositionRef.current = { x: touch.clientX, y: touch.clientY };
-    onDragMove?.(event, { x: deltaX, y: deltaY });
-  }, [threshold, onDragMove]);
+      lastPositionRef.current = { x: touch.clientX, y: touch.clientY };
+      onDragMove?.(event, { x: deltaX, y: deltaY });
+    },
+    [threshold, onDragMove],
+  );
 
-  const handleTouchEnd = useCallback((event: ITouchEvent) => {
-    isDraggingRef.current = false;
-    onDragEnd?.(event);
-  }, [onDragEnd]);
+  const handleTouchEnd = useCallback(
+    (event: ITouchEvent) => {
+      isDraggingRef.current = false;
+      onDragEnd?.(event);
+    },
+    [onDragEnd],
+  );
 
   return {
     onTouchStart: handleTouchStart,
@@ -339,10 +362,7 @@ interface KeyboardOptions {
 }
 
 /** 键盘事件处理hook */
-export function useKeyboard(
-  onKeyPress?: (event: KeyboardEvent) => void,
-  options: KeyboardOptions = {}
-) {
+export function useKeyboard(onKeyPress?: (event: KeyboardEvent) => void, options: KeyboardOptions = {}) {
   const {
     key,
     keyCode,
@@ -354,25 +374,28 @@ export function useKeyboard(
     stopPropagation = false,
   } = options;
 
-  const handleKeyDown = useCallback((event: KeyboardEvent) => {
-    // 检查按键匹配
-    if (key && event.key !== key) return;
-    if (keyCode && event.keyCode !== keyCode) return;
-    if (ctrlKey && !event.ctrlKey) return;
-    if (shiftKey && !event.shiftKey) return;
-    if (altKey && !event.altKey) return;
-    if (metaKey && !event.metaKey) return;
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      // 检查按键匹配
+      if (key && event.key !== key) return;
+      if (keyCode && event.keyCode !== keyCode) return;
+      if (ctrlKey && !event.ctrlKey) return;
+      if (shiftKey && !event.shiftKey) return;
+      if (altKey && !event.altKey) return;
+      if (metaKey && !event.metaKey) return;
 
-    if (preventDefault) {
-      event.preventDefault();
-    }
+      if (preventDefault) {
+        event.preventDefault();
+      }
 
-    if (stopPropagation) {
-      event.stopPropagation();
-    }
+      if (stopPropagation) {
+        event.stopPropagation();
+      }
 
-    onKeyPress?.(event);
-  }, [key, keyCode, ctrlKey, shiftKey, altKey, metaKey, preventDefault, stopPropagation, onKeyPress]);
+      onKeyPress?.(event);
+    },
+    [key, keyCode, ctrlKey, shiftKey, altKey, metaKey, preventDefault, stopPropagation, onKeyPress],
+  );
 
   useEffect(() => {
     document.addEventListener('keydown', handleKeyDown);
@@ -393,21 +416,24 @@ interface EventDelegateOptions {
 export function useEventDelegate<T extends keyof DocumentEventMap>(
   eventType: T,
   handler: (event: DocumentEventMap[T]) => void,
-  options: EventDelegateOptions = {}
+  options: EventDelegateOptions = {},
 ) {
   const { selector, filter } = options;
 
-  const handleEvent = useCallback((event: DocumentEventMap[T]) => {
-    if (selector) {
-      const target = event.target as Element;
-      const element = target.closest(selector);
-      if (element && (!filter || filter(element))) {
+  const handleEvent = useCallback(
+    (event: DocumentEventMap[T]) => {
+      if (selector) {
+        const target = event.target as Element;
+        const element = target.closest(selector);
+        if (element && (!filter || filter(element))) {
+          handler(event);
+        }
+      } else {
         handler(event);
       }
-    } else {
-      handler(event);
-    }
-  }, [selector, filter, handler]);
+    },
+    [selector, filter, handler],
+  );
 
   useEffect(() => {
     document.addEventListener(eventType, handleEvent);

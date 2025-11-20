@@ -28,7 +28,7 @@ export type SwitchLoadingType = 'spinner' | 'dots' | 'pulse';
 export interface SwitchRule {
   required?: boolean;
   message?: string;
-  validator?: (value: boolean) => boolean | string | Promise<boolean | string>;
+  validator?: (_value: boolean) => boolean | string | Promise<boolean | string>;
 }
 
 // 开关组件属性
@@ -84,19 +84,19 @@ export interface SwitchProps {
   /** 是否立即验证 */
   immediate?: boolean;
   /** 自定义验证函数 */
-  validator?: (value: boolean) => boolean | string | Promise<boolean | string>;
+  validator?: (_value: boolean) => boolean | string | Promise<boolean | string>;
   /** 值变化回调 */
-  onChange?: (checked: boolean, event: ITouchEvent) => void;
+  onChange?: (_checked: boolean, event: ITouchEvent) => void;
   /** 聚焦回调 */
-  onFocus?: (event: ITouchEvent) => void;
+  onFocus?: (_event: ITouchEvent) => void;
   /** 失焦回调 */
-  onBlur?: (event: ITouchEvent) => void;
+  onBlur?: (_event: ITouchEvent) => void;
   /** 点击回调 */
-  onClick?: (checked: boolean, event: ITouchEvent) => void;
+  onClick?: (_checked: boolean, event: ITouchEvent) => void;
   /** 加载状态变化回调 */
-  onLoadingChange?: (loading: boolean) => void;
+  onLoadingChange?: (_loading: boolean) => void;
   /** 验证回调 */
-  onValidate?: (result: SwitchValidationResult) => void;
+  onValidate?: (_result: SwitchValidationResult) => void;
   /** 自定义样式类名 */
   className?: string;
   /** 自定义样式 */
@@ -139,7 +139,7 @@ export interface SwitchRef {
   /** 获取值 */
   getValue: () => boolean;
   /** 设置值 */
-  setValue: (value: boolean) => void;
+  setValue: (_value: boolean) => void;
   /** 切换值 */
   toggle: () => void;
   /** 聚焦 */
@@ -147,13 +147,13 @@ export interface SwitchRef {
   /** 失焦 */
   blur: () => void;
   /** 设置禁用状态 */
-  setDisabled: (disabled: boolean) => void;
+  setDisabled: (_disabled: boolean) => void;
   /** 设置只读状态 */
-  setReadonly: (readonly: boolean) => void;
+  setReadonly: (_readonly: boolean) => void;
   /** 设置加载状态 */
-  setLoading: (loading: boolean) => void;
+  setLoading: (_loading: boolean) => void;
   /** 设置状态 */
-  setStatus: (status: SwitchStatus) => void;
+  setStatus: (_status: SwitchStatus) => void;
   /** 获取状态 */
   getStatus: () => SwitchStatus;
   /** 验证 */
@@ -288,31 +288,31 @@ export interface SwitchStyleConfig {
 // 工具函数类型
 export interface SwitchUtils {
   /** 获取颜色值 */
-  getColor: (color: SwitchColor, checked: boolean, disabled: boolean) => string;
+  getColor: (_color: SwitchColor, checked: boolean, disabled: boolean) => string;
   /** 获取尺寸值 */
-  getSize: (size: SwitchSize) => SwitchStyleConfig['sizes'][keyof SwitchStyleConfig['sizes']];
+  getSize: (_size: SwitchSize) => SwitchStyleConfig['sizes'][keyof SwitchStyleConfig['sizes']];
   /** 格式化标签文本 */
-  formatLabel: (label: string, checked: boolean) => string;
+  formatLabel: (_label: string, checked: boolean) => string;
   /** 验证开关值 */
-  validateValue: (value: boolean, rules?: SwitchRule[]) => Promise<SwitchValidationResult>;
+  validateValue: (_value: boolean, rules?: SwitchRule[]) => Promise<SwitchValidationResult>;
   /** 获取无障碍状态 */
-  getAccessibilityState: (props: SwitchProps, status: SwitchStatus) => any;
+  getAccessibilityState: (_props: SwitchProps, status: SwitchStatus) => any;
 }
 
 // 事件类型
 export interface SwitchEvents {
   /** 值变化事件 */
-  onChange: (checked: boolean, event: ITouchEvent) => void;
+  onChange: (_checked: boolean, event: ITouchEvent) => void;
   /** 聚焦事件 */
-  onFocus: (event: ITouchEvent) => void;
+  onFocus: (_event: ITouchEvent) => void;
   /** 失焦事件 */
-  onBlur: (event: ITouchEvent) => void;
+  onBlur: (_event: ITouchEvent) => void;
   /** 点击事件 */
-  onClick: (checked: boolean, event: ITouchEvent) => void;
+  onClick: (_checked: boolean, event: ITouchEvent) => void;
   /** 加载状态变化事件 */
-  onLoadingChange: (loading: boolean) => void;
+  onLoadingChange: (_loading: boolean) => void;
   /** 验证事件 */
-  onValidate: (result: SwitchValidationResult) => void;
+  onValidate: (_result: SwitchValidationResult) => void;
 }
 
 // 开关组属性
@@ -332,7 +332,7 @@ export interface SwitchGroupProps {
   /** 只读整个组 */
   readonly?: boolean;
   /** 值变化回调 */
-  onChange?: (values: Record<string, boolean>) => void;
+  onChange?: (_values: Record<string, boolean>) => void;
   /** 自定义样式类名 */
   className?: string;
   /** 自定义样式 */
@@ -344,17 +344,17 @@ export interface SwitchGroupRef {
   /** 获取所有值 */
   getValues: () => Record<string, boolean>;
   /** 设置值 */
-  setValues: (values: Record<string, boolean>) => void;
+  setValues: (_values: Record<string, boolean>) => void;
   /** 获取单个值 */
-  getValue: (name: string) => boolean;
+  getValue: (_name: string) => boolean;
   /** 设置单个值 */
-  setValue: (name: string, value: boolean) => void;
+  setValue: (_name: string, value: boolean) => void;
   /** 重置所有值 */
   reset: () => void;
   /** 设置禁用状态 */
-  setDisabled: (disabled: boolean) => void;
+  setDisabled: (_disabled: boolean) => void;
   /** 设置只读状态 */
-  setReadonly: (readonly: boolean) => void;
+  setReadonly: (_readonly: boolean) => void;
 }
 
 // 开关组项属性
@@ -382,5 +382,5 @@ export interface SwitchGroupItemProps {
   /** 验证规则 */
   rules?: SwitchRule[];
   /** 值变化回调 */
-  onChange?: (checked: boolean, event: ITouchEvent) => void;
+  onChange?: (_checked: boolean, event: ITouchEvent) => void;
 }

@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 import { BaseComponentProps, Size } from '../../../types';
-import { AccessibilityProps } from '../../../types/accessibility';
 
 /** 表格尺寸 */
 export type TableSize = Size | 'small' | 'medium' | 'large';
@@ -23,7 +22,7 @@ export interface TableFilterConfig {
   /** 默认值 */
   defaultSelectedValues?: any[];
   /** 筛选回调 */
-  onFilter?: (value: any, record: any) => boolean;
+  onFilter?: (_value: any, record: any) => boolean;
 }
 
 /** 表格列配置 */
@@ -45,13 +44,13 @@ export interface TableColumn<T = any> {
   /** 排序字段 */
   sortField?: string;
   /** 排序回调 */
-  onSort?: (field: string, order: TableSortOrder) => void;
+  onSort?: (_field: string, order: TableSortOrder) => void;
   /** 筛选配置 */
   filter?: TableFilterConfig;
   /** 自定义渲染 */
-  render?: (value: any, record: T, index: number) => ReactNode;
+  render?: (_value: any, record: T, index: number) => ReactNode;
   /** 自定义标题渲染 */
-  titleRender?: (column: TableColumn<T>) => ReactNode;
+  titleRender?: (_column: TableColumn<T>) => ReactNode;
   /** 是否显示 */
   visible?: boolean;
   /** 是否省略 */
@@ -89,11 +88,11 @@ export interface TableRowSelection<T = any> {
   /** 选中行键值 */
   selectedRowKeys?: string[];
   /** 行选择变化回调 */
-  onChange?: (selectedRowKeys: string[], selectedRows: T[]) => void;
+  onChange?: (_selectedRowKeys: string[], selectedRows: T[]) => void;
   /** 行是否可展开 */
-  rowExpandable?: (record: T) => boolean;
+  rowExpandable?: (_record: T) => boolean;
   /** 获取复选框属性 */
-  getCheckboxProps?: (record: T) => { disabled?: boolean };
+  getCheckboxProps?: (_record: T) => { disabled?: boolean };
   /** 是否默认选中所有行 */
   defaultSelectedAll?: boolean;
   /** 是否禁用选择 */
@@ -103,15 +102,15 @@ export interface TableRowSelection<T = any> {
 /** 表格展开配置 */
 export interface TableExpandable<T = any> {
   /** 展开行渲染 */
-  expandedRowRender?: (record: T, index: number) => ReactNode;
+  expandedRowRender?: (_record: T, index: number) => ReactNode;
   /** 行是否可展开 */
-  rowExpandable?: (record: T) => boolean;
+  rowExpandable?: (_record: T) => boolean;
   /** 默认展开的行键值 */
   defaultExpandedRowKeys?: string[];
   /** 展开的行键值 */
   expandedRowKeys?: string[];
   /** 展开变化回调 */
-  onExpand?: (expanded: boolean, record: T) => void;
+  onExpand?: (_expanded: boolean, record: T) => void;
   /** 展开图标 */
   expandIcon?: ReactNode;
   /** 展开图标位置 */
@@ -139,9 +138,9 @@ export interface TablePaginationConfig {
   /** 显示页码选择器 */
   showSizeChanger?: boolean;
   /** 页码改变事件 */
-  onChange?: (current: number, pageSize: number) => void;
+  onChange?: (_current: number, pageSize: number) => void;
   /** 每页条数改变事件 */
-  onShowSizeChange?: (current: number, pageSize: number) => void;
+  onShowSizeChange?: (_current: number, pageSize: number) => void;
 }
 
 /** 表格引用 */
@@ -161,23 +160,23 @@ export interface TableRef<T = any> {
   /** 获取筛选值 */
   getFilterValues: () => Record<string, any[]>;
   /** 设置数据 */
-  setData: (data: T[]) => void;
+  setData: (_data: T[]) => void;
   /** 设置选中行 */
-  setSelectedRows: (keys: string[]) => void;
+  setSelectedRows: (_keys: string[]) => void;
   /** 设置排序 */
-  setSort: (field: string, order: TableSortOrder) => void;
+  setSort: (_field: string, order: TableSortOrder) => void;
   /** 设置筛选 */
-  setFilter: (field: string, values: any[]) => void;
+  setFilter: (_field: string, values: any[]) => void;
   /** 刷新数据 */
   refresh: () => void;
   /** 重置状态 */
   reset: () => void;
   /** 滚动到指定行 */
-  scrollToRow: (key: string) => void;
+  scrollToRow: (_key: string) => void;
 }
 
 /** 表格组件属性 */
-export interface TableProps<T = any> extends BaseComponentProps, AccessibilityProps {
+export interface TableProps<T = any> extends BaseComponentProps {
   /** 表格数据 */
   data?: T[];
   /** 数据源（兼容属性） */
@@ -185,7 +184,7 @@ export interface TableProps<T = any> extends BaseComponentProps, AccessibilityPr
   /** 列配置 */
   columns: TableColumn<T>[];
   /** 行键值字段 */
-  rowKey?: string | ((record: T) => string);
+  rowKey?: string | ((_record: T) => string);
   /** 表格尺寸 */
   size?: TableSize;
   /** 表格边框 */
@@ -199,7 +198,7 @@ export interface TableProps<T = any> extends BaseComponentProps, AccessibilityPr
   /** 是否可展开 */
   expandable?: boolean | TableExpandable<T>;
   /** 展开行渲染 */
-  expandedRowRender?: (record: T, index: number) => ReactNode;
+  expandedRowRender?: (_record: T, index: number) => ReactNode;
   /** 是否可选择 */
   selectable?: boolean;
   /** 选择类型 */
@@ -209,23 +208,23 @@ export interface TableProps<T = any> extends BaseComponentProps, AccessibilityPr
   /** 选中行键值 */
   selectedRowKeys?: string[];
   /** 行选择事件 */
-  onRowSelect?: (selectedRowKeys: string[], selectedRows: T[]) => void;
+  onRowSelect?: (_selectedRowKeys: string[], selectedRows: T[]) => void;
   /** 行选择配置 */
   rowSelection?: TableRowSelection<T>;
   /** 表格变化事件 */
-  onChange?: (pagination: TablePaginationConfig, filters: any, sorter: any) => void;
+  onChange?: (_pagination: TablePaginationConfig, filters: any, sorter: any) => void;
   /** 行配置 - Taro.js compatible */
-  onRow?: (record: T, index: number) => Record<string, any>;
+  onRow?: (_record: T, index: number) => Record<string, any>;
   /** 表头行配置 - Taro.js compatible */
-  onHeaderRow?: (columns: TableColumn<T>[], index: number) => Record<string, any>;
+  onHeaderRow?: (_columns: TableColumn<T>[], index: number) => Record<string, any>;
   /** 行点击事件 - Taro.js compatible */
-  onRowClick?: (record: T, index: number, event: any) => void;
+  onRowClick?: (_record: T, index: number, event: any) => void;
   /** 行双击事件 - not supported in Taro.js */
-  onRowDoubleClick?: (record: T, index: number, event: any) => void;
+  onRowDoubleClick?: (_record: T, index: number, event: any) => void;
   /** 排序事件 */
-  onSort?: (field: string, order: TableSortOrder) => void;
+  onSort?: (_field: string, order: TableSortOrder) => void;
   /** 筛选事件 */
-  onFilter?: (filters: Record<string, any[]>) => void;
+  onFilter?: (_filters: Record<string, any[]>) => void;
   /** 分页配置 */
   pagination?: TablePaginationConfig | boolean;
   /** 是否显示表头 */
@@ -239,17 +238,17 @@ export interface TableProps<T = any> extends BaseComponentProps, AccessibilityPr
   /** 空数据渲染 */
   emptyText?: ReactNode;
   /** 行样式 */
-  rowStyle?: (record: T, index: number) => React.CSSProperties;
+  rowStyle?: (_record: T, index: number) => React.CSSProperties;
   /** 行类名 */
-  rowClassName?: (record: T, index: number) => string;
+  rowClassName?: (_record: T, index: number) => string;
   /** 单元格样式 */
-  cellStyle?: (value: any, record: T, column: TableColumn<T>, index: number) => React.CSSProperties;
+  cellStyle?: (_value: any, record: T, column: TableColumn<T>, index: number) => React.CSSProperties;
   /** 单元格类名 */
-  cellClassName?: (value: any, record: T, column: TableColumn<T>, index: number) => string;
+  cellClassName?: (_value: any, record: T, column: TableColumn<T>, index: number) => string;
   /** 自定义行渲染 */
-  rowRender?: (record: T, index: number) => ReactNode;
+  rowRender?: (_record: T, index: number) => ReactNode;
   /** 自定义单元格渲染 */
-  cellRender?: (value: any, record: T, column: TableColumn<T>, index: number) => ReactNode;
+  cellRender?: (_value: any, record: T, column: TableColumn<T>, index: number) => ReactNode;
 }
 
 /** 表格分页类型别名 */

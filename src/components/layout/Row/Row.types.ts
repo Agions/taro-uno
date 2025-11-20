@@ -25,11 +25,11 @@ export interface RowRef {
   /** 获取当前间距 */
   getGutter: () => RowGutter;
   /** 设置对齐方式 */
-  setAlign: (align: RowAlign) => void;
+  setAlign: (_align: RowAlign) => void;
   /** 设置对齐方式 */
-  setJustify: (justify: RowJustify) => void;
+  setJustify: (_justify: RowJustify) => void;
   /** 设置间距 */
-  setGutter: (gutter: RowGutter) => void;
+  setGutter: (_gutter: RowGutter) => void;
   /** 滚动到视图 */
   scrollIntoView: (options?: ScrollIntoViewOptions) => void;
 }
@@ -47,7 +47,7 @@ export interface RowProps extends BaseComponentProps {
   /** 是否换行 */
   wrap?: boolean;
   /** 点击事件 */
-  onClick?: (event: React.MouseEvent) => void;
+  onClick?: (_event: React.MouseEvent) => void;
   /** 响应式断点 */
   responsive?: {
     xs?: Partial<RowProps>;

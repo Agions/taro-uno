@@ -28,9 +28,9 @@ export interface CarouselProps {
   /** 默认活动索引 */
   defaultActiveIndex?: number;
   /** 切换前回调 */
-  beforeChange?: (from: number, to: number) => void;
+  beforeChange?: (_from: number, to: number) => void;
   /** 切换后回调 */
-  afterChange?: (current: number) => void;
+  afterChange?: (_current: number) => void;
   /** 自定义样式 */
   style?: CSSProperties;
   /** 自定义类名 */
@@ -43,7 +43,7 @@ export interface CarouselRef {
   /** 获取当前索引 */
   getCurrentIndex: () => number;
   /** 跳转到指定索引 */
-  goTo: (index: number) => void;
+  goTo: (_index: number) => void;
   /** 上一张 */
   prev: () => void;
   /** 下一张 */

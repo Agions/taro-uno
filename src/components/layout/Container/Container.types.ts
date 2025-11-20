@@ -18,11 +18,11 @@ export interface ContainerRef {
   /** 获取当前最大宽度 */
   getMaxWidth: () => number | string;
   /** 设置尺寸 */
-  setSize: (size: ContainerSize) => void;
+  setSize: (_size: ContainerSize) => void;
   /** 设置对齐方式 */
-  setAlign: (align: ContainerAlign) => void;
+  setAlign: (_align: ContainerAlign) => void;
   /** 设置最大宽度 */
-  setMaxWidth: (maxWidth: number | string) => void;
+  setMaxWidth: (_maxWidth: number | string) => void;
   /** 滚动到视图 */
   scrollIntoView: (options?: ScrollIntoViewOptions) => void;
 }
@@ -48,9 +48,9 @@ export interface ContainerProps extends BaseComponentProps {
   /** 滚动方向 */
   scrollDirection?: 'horizontal' | 'vertical' | 'both';
   /** 点击事件 */
-  onClick?: (event: React.MouseEvent) => void;
+  onClick?: (_event: React.MouseEvent) => void;
   /** 滚动事件 */
-  onScroll?: (event: React.UIEvent) => void;
+  onScroll?: (_event: React.UIEvent) => void;
   /** 响应式断点 */
   responsive?: {
     xs?: Partial<ContainerProps>;

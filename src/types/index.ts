@@ -15,8 +15,6 @@ export * from './utils';
 // 导出Button组件专用类型
 export * from './button';
 
-// 导出无障碍属性类型
-export * from './accessibility';
 
 // 导出标准化组件类型
 export * from './standardized-components';

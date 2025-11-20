@@ -37,7 +37,7 @@ export interface InputNumberRule {
   /** 最大值 */
   max?: number;
   /** 自定义验证函数 */
-  validator?: (value: number) => boolean | string | Promise<boolean | string>;
+  validator?: (_value: number) => boolean | string | Promise<boolean | string>;
 }
 
 /** 数字格式化配置 */
@@ -55,9 +55,9 @@ export interface InputNumberFormatConfig {
   /** 货币符号位置 */
   currencySymbolPosition?: 'prefix' | 'suffix';
   /** 自定义格式化函数 */
-  customFormatter?: (value: number) => string;
+  customFormatter?: (_value: number) => string;
   /** 自定义解析函数 */
-  customParser?: (text: string) => number;
+  customParser?: (_text: string) => number;
 }
 
 /** 数字输入框组件属性接口 */
@@ -120,21 +120,21 @@ export interface InputNumberProps
   /** 是否立即验证 */
   immediate?: boolean;
   /** 自定义验证函数 */
-  validator?: (value: number) => boolean | string | Promise<boolean | string>;
+  validator?: (_value: number) => boolean | string | Promise<boolean | string>;
   /** 值变化事件处理函数 */
-  onChange?: (value: number | null, event: ITouchEvent) => void;
+  onChange?: (_value: number | null, event: ITouchEvent) => void;
   /** 聚焦事件处理函数 */
-  onFocus?: (event: ITouchEvent) => void;
+  onFocus?: (_event: ITouchEvent) => void;
   /** 失焦事件处理函数 */
-  onBlur?: (event: ITouchEvent) => void;
+  onBlur?: (_event: ITouchEvent) => void;
   /** 输入事件处理函数 */
-  onInput?: (value: number | null, event: ITouchEvent) => void;
+  onInput?: (_value: number | null, event: ITouchEvent) => void;
   /** 清除事件处理函数 */
-  onClear?: (event: ITouchEvent) => void;
+  onClear?: (_event: ITouchEvent) => void;
   /** 步进事件处理函数 */
-  onStep?: (value: number, direction: 'up' | 'down', event: ITouchEvent) => void;
+  onStep?: (_value: number, direction: 'up' | 'down', event: ITouchEvent) => void;
   /** 验证事件处理函数 */
-  onValidate?: (result: InputNumberValidationResult) => void;
+  onValidate?: (_result: InputNumberValidationResult) => void;
   /** 自定义样式类名 */
   className?: string;
   /** 自定义样式 */
@@ -180,7 +180,7 @@ export type InputNumberRef = {
   /** 获取输入框值 */
   getValue: () => number | null;
   /** 设置输入框值 */
-  setValue: (value: number | null) => void;
+  setValue: (_value: number | null) => void;
   /** 聚焦输入框 */
   focus: () => void;
   /** 失焦输入框 */
@@ -188,15 +188,15 @@ export type InputNumberRef = {
   /** 选择文本 */
   select: () => void;
   /** 设置选中文本范围 */
-  setSelectionRange: (start: number, end: number) => void;
+  setSelectionRange: (_start: number, end: number) => void;
   /** 获取选中文本范围 */
   getSelectionRange: () => { start: number; end: number };
   /** 设置禁用状态 */
-  setDisabled: (disabled: boolean) => void;
+  setDisabled: (_disabled: boolean) => void;
   /** 设置只读状态 */
-  setReadonly: (readonly: boolean) => void;
+  setReadonly: (_readonly: boolean) => void;
   /** 设置输入框状态 */
-  setStatus: (status: InputNumberStatus) => void;
+  setStatus: (_status: InputNumberStatus) => void;
   /** 获取输入框状态 */
   getStatus: () => InputNumberStatus;
   /** 验证输入框值 */
@@ -286,33 +286,33 @@ export interface InputNumberStyleConfig {
 /** 数字输入框工具函数接口 */
 export interface InputNumberUtils {
   /** 格式化数字值 */
-  formatValue: (value: number | null, config: InputNumberFormatConfig) => string;
+  formatValue: (_value: number | null, config: InputNumberFormatConfig) => string;
   /** 解析数字值 */
-  parseValue: (text: string, config: InputNumberFormatConfig) => number | null;
+  parseValue: (_text: string, config: InputNumberFormatConfig) => number | null;
   /** 验证数字值 */
-  validateValue: (value: number | null, rules?: InputNumberRule[]) => Promise<InputNumberValidationResult>;
+  validateValue: (_value: number | null, rules?: InputNumberRule[]) => Promise<InputNumberValidationResult>;
   /** 限制数字范围 */
-  clampValue: (value: number, min?: number, max?: number) => number;
+  clampValue: (_value: number, min?: number, max?: number) => number;
   /** 四舍五入到指定精度 */
-  roundValue: (value: number, precision: number) => number;
+  roundValue: (_value: number, precision: number) => number;
   /** 获取无障碍状态 */
-  getAccessibilityState: (props: InputNumberProps, status: InputNumberStatus) => any;
+  getAccessibilityState: (_props: InputNumberProps, status: InputNumberStatus) => any;
 }
 
 /** 数字输入框事件接口 */
 export interface InputNumberEvents {
   /** 值变化事件 */
-  onChange: (value: number | null, event: ITouchEvent) => void;
+  onChange: (_value: number | null, event: ITouchEvent) => void;
   /** 聚焦事件 */
-  onFocus: (event: ITouchEvent) => void;
+  onFocus: (_event: ITouchEvent) => void;
   /** 失焦事件 */
-  onBlur: (event: ITouchEvent) => void;
+  onBlur: (_event: ITouchEvent) => void;
   /** 输入事件 */
-  onInput: (value: number | null, event: ITouchEvent) => void;
+  onInput: (_value: number | null, event: ITouchEvent) => void;
   /** 清除事件 */
-  onClear: (event: ITouchEvent) => void;
+  onClear: (_event: ITouchEvent) => void;
   /** 步进事件 */
-  onStep: (value: number, direction: 'up' | 'down', event: ITouchEvent) => void;
+  onStep: (_value: number, direction: 'up' | 'down', event: ITouchEvent) => void;
   /** 验证事件 */
-  onValidate: (result: InputNumberValidationResult) => void;
+  onValidate: (_result: InputNumberValidationResult) => void;
 }

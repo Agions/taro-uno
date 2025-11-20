@@ -1,0 +1,303 @@
+---
+category: 'display'
+componentType: 'display'
+englishTitle: 'Carousel'
+chineseTitle: '轮播图'
+name: 'Carousel'
+description: '用于展示轮播内容的组件，支持自动播放、指示器、箭头导航、无限循环等功能，提供滑动和淡入淡出两种切换效果。'
+---
+
+import { Carousel } from '@taro-uno/ui';
+import { View, Text } from '@tarojs/components';
+
+## 功能介绍
+
+Carousel 组件是一个功能丰富的轮播图组件，适用于展示图片、广告、产品展示等场景：
+
+- 支持自动播放和手动切换
+- 提供滑动（slide）和淡入淡出（fade）两种切换效果
+- 可配置指示器和箭头导航
+- 支持无限循环播放
+- 支持垂直轮播模式
+- 可同时展示多个轮播项
+- 提供丰富的回调函数
+- 支持响应式设计，适配多平台
+
+## 基本用法
+
+```jsx
+<Carousel autoplay>
+  <View style={{ height: 200, backgroundColor: '#1890ff', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 1</Text>
+  </View>
+  <View style={{ height: 200, backgroundColor: '#52c41a', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 2</Text>
+  </View>
+  <View style={{ height: 200, backgroundColor: '#faad14', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 3</Text>
+  </View>
+</Carousel>
+```
+
+## 使用示例
+
+### 1. 基本轮播图
+
+```jsx
+<Carousel autoplay>
+  <View style={{ height: 200, backgroundColor: '#1890ff', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 1</Text>
+  </View>
+  <View style={{ height: 200, backgroundColor: '#52c41a', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 2</Text>
+  </View>
+  <View style={{ height: 200, backgroundColor: '#faad14', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 3</Text>
+  </View>
+</Carousel>
+```
+
+### 2. 淡入淡出效果
+
+```jsx
+<Carousel autoplay effect="fade">
+  <View style={{ height: 200, backgroundColor: '#1890ff', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 1</Text>
+  </View>
+  <View style={{ height: 200, backgroundColor: '#52c41a', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 2</Text>
+  </View>
+  <View style={{ height: 200, backgroundColor: '#faad14', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 3</Text>
+  </View>
+</Carousel>
+```
+
+### 3. 自定义指示器位置
+
+```jsx
+<Carousel autoplay dotsPosition="top">
+  <View style={{ height: 200, backgroundColor: '#1890ff', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 1</Text>
+  </View>
+  <View style={{ height: 200, backgroundColor: '#52c41a', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 2</Text>
+  </View>
+  <View style={{ height: 200, backgroundColor: '#faad14', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 3</Text>
+  </View>
+</Carousel>
+```
+
+### 4. 隐藏指示器和箭头
+
+```jsx
+<Carousel autoplay showDots={false} showArrows={false}>
+  <View style={{ height: 200, backgroundColor: '#1890ff', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 1</Text>
+  </View>
+  <View style={{ height: 200, backgroundColor: '#52c41a', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 2</Text>
+  </View>
+  <View style={{ height: 200, backgroundColor: '#faad14', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 3</Text>
+  </View>
+</Carousel>
+```
+
+### 5. 垂直轮播
+
+```jsx
+<Carousel autoplay vertical>
+  <View style={{ height: 200, backgroundColor: '#1890ff', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 1</Text>
+  </View>
+  <View style={{ height: 200, backgroundColor: '#52c41a', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 2</Text>
+  </View>
+  <View style={{ height: 200, backgroundColor: '#faad14', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 3</Text>
+  </View>
+</Carousel>
+```
+
+### 6. 同时展示多个轮播项
+
+```jsx
+<Carousel autoplay slidesToShow={2} slidesToScroll={1}>
+  <View style={{ height: 200, backgroundColor: '#1890ff', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 1</Text>
+  </View>
+  <View style={{ height: 200, backgroundColor: '#52c41a', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 2</Text>
+  </View>
+  <View style={{ height: 200, backgroundColor: '#faad14', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 3</Text>
+  </View>
+  <View style={{ height: 200, backgroundColor: '#f5222d', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 4</Text>
+  </View>
+</Carousel>
+```
+
+### 7. 非无限循环
+
+```jsx
+<Carousel autoplay infinite={false}>
+  <View style={{ height: 200, backgroundColor: '#1890ff', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 1</Text>
+  </View>
+  <View style={{ height: 200, backgroundColor: '#52c41a', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 2</Text>
+  </View>
+  <View style={{ height: 200, backgroundColor: '#faad14', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 3</Text>
+  </View>
+</Carousel>
+```
+
+### 8. 自定义自动播放间隔
+
+```jsx
+<Carousel autoplay interval={5000}>
+  <View style={{ height: 200, backgroundColor: '#1890ff', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 1</Text>
+  </View>
+  <View style={{ height: 200, backgroundColor: '#52c41a', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 2</Text>
+  </View>
+  <View style={{ height: 200, backgroundColor: '#faad14', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 3</Text>
+  </View>
+</Carousel>
+```
+
+### 9. 带回调函数的轮播
+
+```jsx
+<Carousel
+  autoplay
+  beforeChange={(from, to) => console.log(`从 ${from} 切换到 ${to}`)}
+  afterChange={(current) => console.log(`当前索引: ${current}`)}
+>
+  <View style={{ height: 200, backgroundColor: '#1890ff', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 1</Text>
+  </View>
+  <View style={{ height: 200, backgroundColor: '#52c41a', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 2</Text>
+  </View>
+  <View style={{ height: 200, backgroundColor: '#faad14', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 3</Text>
+  </View>
+</Carousel>
+```
+
+### 10. 使用Ref控制轮播
+
+```jsx
+import React, { useRef } from 'react';
+import { Button } from '@taro-uno/ui';
+
+const CarouselWithRef = () => {
+  const carouselRef = useRef(null);
+
+  const handleGoTo = () => {
+    carouselRef.current?.goTo(2); // 跳转到第三个幻灯片（索引从0开始）
+  };
+
+  const handlePrev = () => {
+    carouselRef.current?.prev();
+  };
+
+  const handleNext = () => {
+    carouselRef.current?.next();
+  };
+
+  const handlePlay = () => {
+    carouselRef.current?.play();
+  };
+
+  const handlePause = () => {
+    carouselRef.current?.pause();
+  };
+
+  return (
+    <View>
+      <Carousel ref={carouselRef} autoplay>
+        <View style={{ height: 200, backgroundColor: '#1890ff', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 1</Text>
+        </View>
+        <View style={{ height: 200, backgroundColor: '#52c41a', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 2</Text>
+        </View>
+        <View style={{ height: 200, backgroundColor: '#faad14', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={{ color: '#fff', fontSize: 24 }}>幻灯片 3</Text>
+        </View>
+      </Carousel>
+      <View style={{ display: 'flex', gap: 10, marginTop: 20 }}>
+        <Button onClick={handlePrev}>上一张</Button>
+        <Button onClick={handleNext}>下一张</Button>
+        <Button onClick={handleGoTo}>跳转到第3张</Button>
+        <Button onClick={handlePause}>暂停</Button>
+        <Button onClick={handlePlay}>播放</Button>
+      </View>
+    </View>
+  );
+};
+```
+
+## API
+
+### CarouselProps
+
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| children | ReactNode | - | 轮播项 |
+| autoplay | boolean | false | 是否自动播放 |
+| interval | number | 3000 | 自动播放间隔时间（毫秒） |
+| showDots | boolean | true | 是否显示指示器 |
+| showArrows | boolean | true | 是否显示箭头 |
+| infinite | boolean | true | 是否无限循环 |
+| effect | 'slide' \| 'fade' | 'slide' | 切换效果 |
+| dotsPosition | 'bottom' \| 'top' \| 'left' \| 'right' | 'bottom' | 指示器位置 |
+| slidesToShow | number | 1 | 每次滚动的项目数 |
+| slidesToScroll | number | 1 | 每次滚动移动的项目数 |
+| vertical | boolean | false | 垂直模式 |
+| activeIndex | number | - | 当前活动索引 |
+| defaultActiveIndex | number | 0 | 默认活动索引 |
+| beforeChange | (from: number, to: number) => void | - | 切换前回调 |
+| afterChange | (current: number) => void | - | 切换后回调 |
+| style | CSSProperties | - | 自定义样式 |
+| className | string | - | 自定义类名 |
+
+### CarouselRef
+
+| 方法 | 返回值 | 说明 |
+| --- | --- | --- |
+| getCurrentIndex | number | 获取当前索引 |
+| goTo | void | 跳转到指定索引 |
+| prev | void | 上一张 |
+| next | void | 下一张 |
+| play | void | 开始自动播放 |
+| pause | void | 停止自动播放 |
+| getTotal | number | 获取总数 |
+
+## 使用提示
+
+- 轮播图的高度需要手动设置或通过内部内容自适应
+- 当 `slidesToShow > 1` 时，会同时显示多个轮播项
+- `slidesToScroll` 控制每次点击箭头或自动播放时滚动的项目数
+- 垂直轮播时，建议设置固定高度
+- 使用 `ref` 可以获取轮播图实例，调用其方法进行程序化控制
+- 在 Taro 小程序环境中，某些浏览器特性可能不受支持
+
+## 浏览器兼容性
+
+- 现代浏览器（Chrome, Firefox, Safari, Edge）
+- Taro 支持的小程序平台
+
+## 无障碍支持
+
+- 支持键盘导航（上/下/左/右箭头键控制轮播）
+- 提供适当的 aria 标签和角色
+- 遵循 WCAG 2.1 无障碍标准

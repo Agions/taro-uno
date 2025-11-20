@@ -2,6 +2,7 @@ import React, { forwardRef, useRef, useState, useEffect, useCallback } from 'rea
 import { Input as TaroInput, Text, View } from '@tarojs/components';
 import type { ITouchEvent } from '@tarojs/components';
 import { inputStyles } from './Input.styles';
+import { utils } from '@/utils';
 import type { InputProps, InputRef, InputStatus } from './Input.types';
 
 /** 输入框组件 */
@@ -38,10 +39,6 @@ export const InputComponent = forwardRef<InputRef, InputProps>((props, ref) => {
     onInput,
     onKeyboardHeightChange,
     style,
-    accessible = true,
-    accessibilityLabel,
-    accessibilityRole = 'textbox',
-    accessibilityState,
     rules,
     validateTrigger = 'onBlur',
     immediate = false,
@@ -154,19 +151,20 @@ export const InputComponent = forwardRef<InputRef, InputProps>((props, ref) => {
   // 格式化输入值
   const formatInputValue = useCallback(
     (inputValue: string): string => {
-      let formattedValue = inputValue;
+      // 首先进行XSS防护
+      let formattedValue = utils.security.sanitizeText(inputValue);
 
       // 根据类型格式化输入
       switch (type) {
         case 'number':
         case 'digit':
-          formattedValue = inputValue.replace(/[^\d.-]/g, '');
+          formattedValue = formattedValue.replace(/[^\d.-]/g, '');
           break;
         case 'tel':
-          formattedValue = inputValue.replace(/[^\d]/g, '');
+          formattedValue = formattedValue.replace(/[^\d]/g, '');
           break;
         case 'idcard':
-          formattedValue = inputValue.replace(/[^\dxX]/g, '');
+          formattedValue = formattedValue.replace(/[^\dxX]/g, '');
           break;
         case 'email':
           // 不自动格式化邮箱，让用户自由输入
@@ -315,7 +313,7 @@ export const InputComponent = forwardRef<InputRef, InputProps>((props, ref) => {
       element: nativeInputRef.current,
       getValue: () => {
         // Always return the current internal value for uncontrolled components
-        return isControlled ? (controlledValue as string) : internalValue;
+        return String(isControlled ? (controlledValue as string) : internalValue);
       },
       setValue: (newValue: string) => {
         if (!isControlled) {
@@ -422,15 +420,7 @@ export const InputComponent = forwardRef<InputRef, InputProps>((props, ref) => {
       })
     : {};
 
-  // 无障碍状态
-  const finalAccessibilityState = JSON.stringify({
-    disabled: internalDisabled,
-    readonly: internalReadonly,
-    required: rules?.some((rule) => rule.required),
-    invalid: validationResult?.valid === false,
-    ...accessibilityState,
-  });
-
+  
   // 计算字符长度
   const calculateLength = (text: string) => {
     if (!text) return 0;
@@ -485,9 +475,9 @@ export const InputComponent = forwardRef<InputRef, InputProps>((props, ref) => {
           onFocus={(e) => handleFocus(e as unknown as ITouchEvent)}
           onBlur={(e) => handleBlur(e as unknown as ITouchEvent)}
           onConfirm={(e) => handleConfirm(e as unknown as ITouchEvent)}
-          onKeyDown={(e) => {
+          onKeyDown={(e: any) => {
             // Handle standard keyDown events for Enter key
-            if ((e as any).key === 'Enter') {
+            if (e.key === 'Enter') {
               handleConfirm(e as unknown as ITouchEvent);
             }
           }}
@@ -497,13 +487,6 @@ export const InputComponent = forwardRef<InputRef, InputProps>((props, ref) => {
             handleValueChange(inputValue, e as unknown as ITouchEvent);
           }}
           onKeyboardHeightChange={(e) => onKeyboardHeightChange?.((e as any).detail?.height, e as unknown as ITouchEvent)}
-          aria-label={accessibilityLabel}
-          aria-role={accessibilityRole}
-          aria-state={finalAccessibilityState}
-          aria-disabled={internalDisabled ? 'true' : 'false'}
-          aria-readonly={internalReadonly ? 'true' : 'false'}
-          aria-invalid={validationResult?.valid === false ? 'true' : 'false'}
-          aria-required={rules?.some((rule) => rule.required) ? 'true' : 'false'}
           {...(restProps as any)}
         />
 

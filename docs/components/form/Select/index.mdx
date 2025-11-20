@@ -1,0 +1,370 @@
+import { Select, Space, Button } from '@taro-uno/ui';
+
+# Select 选择器
+
+Select 组件用于从预设的选项中进行选择，支持单选、多选、搜索、标签等多种功能。
+
+## 功能特性
+
+- 支持单选、多选和标签模式
+- 提供多种尺寸和变体样式
+- 支持搜索过滤功能
+- 支持选项分组
+- 支持自定义选项渲染
+- 支持表单验证
+- 支持虚拟滚动（大数据量场景）
+- 完整的无障碍支持
+
+## 基本用法
+
+```tsx
+<Select
+  placeholder="请选择"
+  options={[
+    { value: '1', label: '选项一' },
+    { value: '2', label: '选项二' },
+    { value: '3', label: '选项三' },
+  ]}
+  onChange={(value, option) => {
+    console.log('选择值:', value);
+    console.log('选择选项:', option);
+  }}
+/>
+```
+
+## 使用示例
+
+### 单选模式
+
+```tsx
+<Select
+  placeholder="单选模式"
+  options={[
+    { value: '1', label: '选项一' },
+    { value: '2', label: '选项二' },
+    { value: '3', label: '选项三' },
+  ]}
+/>
+```
+
+### 多选模式
+
+```tsx
+<Select
+  mode="multiple"
+  placeholder="多选模式"
+  options={[
+    { value: '1', label: '选项一' },
+    { value: '2', label: '选项二' },
+    { value: '3', label: '选项三' },
+    { value: '4', label: '选项四' },
+  ]}
+/>
+```
+
+### 标签模式
+
+```tsx
+<Select
+  mode="tags"
+  placeholder="标签模式"
+  options={[
+    { value: '1', label: '标签一' },
+    { value: '2', label: '标签二' },
+    { value: '3', label: '标签三' },
+  ]}
+/>
+```
+
+### 带搜索功能
+
+```tsx
+<Select
+  showSearch
+  placeholder="带搜索功能"
+  options={[
+    { value: '1', label: '苹果' },
+    { value: '2', label: '香蕉' },
+    { value: '3', label: '橙子' },
+    { value: '4', label: '葡萄' },
+    { value: '5', label: '西瓜' },
+  ]}
+  onSearch={(value) => {
+    console.log('搜索值:', value);
+  }}
+/>
+```
+
+### 选项分组
+
+```tsx
+<Select
+  placeholder="选项分组"
+  options={[
+    { label: '水果', options: [{ value: '1', label: '苹果' }, { value: '2', label: '香蕉' }] },
+    { label: '蔬菜', options: [{ value: '3', label: '西红柿' }, { value: '4', label: '黄瓜' }] },
+  ]}
+/>
+```
+
+### 不同尺寸
+
+```tsx
+<Space direction="vertical" size="medium">
+  <Select
+    size="xs"
+    placeholder="超小尺寸"
+    options={[{ value: '1', label: '选项一' }, { value: '2', label: '选项二' }]}
+  />
+  <Select
+    size="sm"
+    placeholder="小尺寸"
+    options={[{ value: '1', label: '选项一' }, { value: '2', label: '选项二' }]}
+  />
+  <Select
+    size="md"
+    placeholder="中尺寸"
+    options={[{ value: '1', label: '选项一' }, { value: '2', label: '选项二' }]}
+  />
+  <Select
+    size="lg"
+    placeholder="大尺寸"
+    options={[{ value: '1', label: '选项一' }, { value: '2', label: '选项二' }]}
+  />
+  <Select
+    size="xl"
+    placeholder="超大尺寸"
+    options={[{ value: '1', label: '选项一' }, { value: '2', label: '选项二' }]}
+  />
+</Space>
+```
+
+### 不同变体
+
+```tsx
+<Space direction="vertical" size="medium">
+  <Select
+    variant="outlined"
+    placeholder="描边变体"
+    options={[{ value: '1', label: '选项一' }, { value: '2', label: '选项二' }]}
+  />
+  <Select
+    variant="filled"
+    placeholder="填充变体"
+    options={[{ value: '1', label: '选项一' }, { value: '2', label: '选项二' }]}
+  />
+  <Select
+    variant="underlined"
+    placeholder="下划线变体"
+    options={[{ value: '1', label: '选项一' }, { value: '2', label: '选项二' }]}
+  />
+</Space>
+```
+
+### 表单验证
+
+```tsx
+<Select
+  placeholder="必填项"
+  rules={[{ required: true, message: '请选择一个选项' }]}
+  options={[
+    { value: '1', label: '选项一' },
+    { value: '2', label: '选项二' },
+    { value: '3', label: '选项三' },
+  ]}
+/>
+```
+
+### 自定义选项渲染
+
+```tsx
+<Select
+  placeholder="自定义选项"
+  options={[
+    { value: '1', label: '苹果', icon: '🍎' },
+    { value: '2', label: '香蕉', icon: '🍌' },
+    { value: '3', label: '橙子', icon: '🍊' },
+  ]}
+  optionRender={(option) => (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <span>{option.icon}</span>
+      <span>{option.label}</span>
+    </div>
+  )}
+/>
+```
+
+### 带标签和辅助文本
+
+```tsx
+<Select
+  label="选择器标签"
+  helperText="这是一个辅助文本说明"
+  placeholder="带标签和辅助文本"
+  options={[
+    { value: '1', label: '选项一' },
+    { value: '2', label: '选项二' },
+    { value: '3', label: '选项三' },
+  ]}
+/>
+```
+
+## API
+
+### SelectProps
+
+| 属性 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| value | string \| number \| Array<string \| number> | - | 选择器值（受控模式） |
+| defaultValue | string \| number \| Array<string \| number> | - | 默认值（非受控模式） |
+| placeholder | string | - | 占位符 |
+| size | 'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' | 'md' | 选择器尺寸 |
+| variant | 'outlined' \| 'filled' \| 'underlined' | 'outlined' | 选择器变体 |
+| status | 'normal' \| 'error' \| 'warning' \| 'success' \| 'disabled' \| 'loading' | 'normal' | 选择器状态 |
+| mode | 'single' \| 'multiple' \| 'tags' | 'single' | 选择器模式 |
+| disabled | boolean | false | 是否禁用 |
+| readonly | boolean | false | 是否只读 |
+| bordered | boolean | true | 是否显示边框 |
+| allowClear | boolean | false | 是否允许清除 |
+| showSearch | boolean | false | 是否支持搜索 |
+| searchPlaceholder | string | - | 搜索框占位符 |
+| showTags | boolean | false | 是否支持标签输入 |
+| maxTagCount | number | - | 最大显示标签数量 |
+| tagRender | (props: TagRenderProps) => ReactNode | - | 标签渲染函数 |
+| options | Array<SelectOption \| SelectOptionGroup> | [] | 选项列表 |
+| filterOption | (input: string, option: SelectOption) => boolean | - | 选项过滤函数 |
+| sortOption | (a: SelectOption, b: SelectOption) => number | - | 选项排序函数 |
+| prefix | ReactNode | - | 前缀图标或文本 |
+| suffix | ReactNode | - | 后缀图标或文本 |
+| label | ReactNode | - | 标签文本 |
+| helperText | ReactNode | - | 辅助文本 |
+| errorText | ReactNode | - | 错误文本 |
+| showArrow | boolean | true | 是否显示箭头 |
+| dropdownStyle | React.CSSProperties | - | 下拉框自定义样式 |
+| dropdownClassName | string | - | 下拉框自定义类名 |
+| dropdownMatchSelectWidth | boolean | true | 下拉框是否匹配选择器宽度 |
+| placement | 'bottomLeft' \| 'bottomRight' \| 'topLeft' \| 'topRight' | 'bottomLeft' | 下拉框位置 |
+| className | string | - | 自定义类名 |
+| style | React.CSSProperties | - | 自定义样式 |
+| block | boolean | false | 是否块级显示 |
+| containerStyle | React.CSSProperties | - | 容器样式 |
+| accessible | boolean | true | 是否启用无障碍访问 |
+| accessibilityLabel | string | - | 无障碍标签 |
+| accessibilityRole | string | - | 无障碍角色 |
+| accessibilityState | { disabled?: boolean; readonly?: boolean; required?: boolean; expanded?: boolean; busy?: boolean; } | - | 无障碍状态 |
+| rules | Array<{ required?: boolean; message?: string; validator?: (value: any) => boolean \| string \| Promise<boolean \| string>; }> | [] | 表单验证规则 |
+| validateTrigger | 'onChange' \| 'onBlur' \| 'onSubmit' | 'onChange' | 验证触发时机 |
+| immediate | boolean | false | 是否立即验证 |
+| maxCount | number | - | 选项最大数量（多选模式） |
+| minCount | number | - | 选项最小数量（多选模式） |
+| validator | (value: any) => boolean \| string \| Promise<boolean \| string> | - | 自定义验证函数 |
+| virtual | boolean | false | 是否启用虚拟滚动 |
+| listHeight | number | 256 | 虚拟滚动列表高度 |
+| listItemHeight | number | 32 | 虚拟滚动列表项高度 |
+| loading | boolean | false | 是否显示加载状态 |
+| loadingText | string | - | 加载中文本 |
+| notFoundContent | ReactNode | '无匹配选项' | 空状态文本 |
+| notFoundRender | () => ReactNode | - | 自定义空状态渲染 |
+| dropdownRender | (menu: ReactNode) => ReactNode | - | 自定义下拉框渲染 |
+| optionRender | (option: SelectOption) => ReactNode | - | 自定义选项渲染 |
+| optionGroupRender | (group: SelectOptionGroup) => ReactNode | - | 自定义选项组渲染 |
+
+### SelectRef
+
+| 方法 | 类型 | 说明 |
+|------|------|------|
+| element | HTMLSelectElement \| null | 选择器元素 |
+| getValue | () => string \| number \| Array<string \| number> | 获取选择器值 |
+| setValue | (value: string \| number \| Array<string \| number>) => void | 设置选择器值 |
+| focus | () => void | 聚焦选择器 |
+| blur | () => void | 失焦选择器 |
+| openDropdown | () => void | 打开下拉框 |
+| closeDropdown | () => void | 关闭下拉框 |
+| toggleDropdown | () => void | 切换下拉框 |
+| setDisabled | (disabled: boolean) => void | 设置禁用状态 |
+| setReadonly | (readonly: boolean) => void | 设置只读状态 |
+| setStatus | (status: SelectStatus) => void | 设置选择器状态 |
+| getStatus | () => SelectStatus | 获取选择器状态 |
+| validate | () => Promise<{ valid: boolean; message?: string }> | 验证选择器值 |
+| clear | () => void | 清除选择器值 |
+| reset | () => void | 重置选择器 |
+| getSelectedOptions | () => SelectOption[] | 获取选中选项 |
+| searchOptions | (keyword: string) => SelectOption[] | 搜索选项 |
+| scrollToOption | (value: string \| number) => void | 滚动到指定选项 |
+
+### SelectOption
+
+| 属性 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| value | string \| number | - | 选项值 |
+| label | ReactNode | - | 选项标签 |
+| description | ReactNode | - | 选项描述 |
+| disabled | boolean | false | 选项是否禁用 |
+| group | string | - | 选项分组 |
+| icon | ReactNode | - | 选项图标 |
+| color | string | - | 选项颜色 |
+| style | React.CSSProperties | - | 自定义样式 |
+| className | string | - | 自定义类名 |
+
+### SelectOptionGroup
+
+| 属性 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| label | ReactNode | - | 分组标签 |
+| options | SelectOption[] | - | 分组选项 |
+| disabled | boolean | false | 分组是否禁用 |
+| style | React.CSSProperties | - | 自定义样式 |
+| className | string | - | 自定义类名 |
+
+### SelectGroupProps
+
+| 属性 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| children | ReactNode | - | 选择器组内容 |
+| size | SelectSize | - | 选择器组尺寸 |
+| variant | SelectVariant | - | 选择器组变体 |
+| status | SelectStatus | - | 选择器组状态 |
+| compact | boolean | false | 是否紧凑布局 |
+| block | boolean | false | 是否块级显示 |
+| className | string | - | 自定义类名 |
+| style | React.CSSProperties | - | 自定义样式 |
+
+## 事件
+
+| 事件名称 | 类型 | 说明 |
+|----------|------|------|
+| onChange | (value: string \| number \| Array<string \| number>, option: SelectOption \| SelectOption[]) => void | 值变化事件 |
+| onFocus | (event: ITouchEvent) => void | 聚焦事件 |
+| onBlur | (event: ITouchEvent) => void | 失焦事件 |
+| onDropdownVisibleChange | (open: boolean) => void | 下拉框显示/隐藏事件 |
+| onSearch | (value: string) => void | 搜索事件 |
+| onClear | (event: ITouchEvent) => void | 清除事件 |
+| onPopupScroll | (event: ITouchEvent) => void | 下拉框滚动事件 |
+
+## 使用提示
+
+1. **性能优化**：当选项数量较多（超过100个）时，建议启用`virtual`属性开启虚拟滚动，提高渲染性能。
+
+2. **自定义样式**：可以通过`dropdownStyle`和`dropdownClassName`自定义下拉框样式，通过`optionRender`自定义选项渲染。
+
+3. **表单验证**：使用`rules`属性设置验证规则，支持必填验证和自定义验证函数。
+
+4. **无障碍访问**：组件默认启用无障碍支持，可通过`accessible`属性关闭，通过`accessibilityLabel`设置无障碍标签。
+
+5. **选项加载**：当选项需要异步加载时，可以使用`loading`属性显示加载状态，`loadingText`设置加载文本。
+
+## 浏览器兼容性
+
+| 浏览器 | 版本 |
+|--------|------|
+| Chrome | 80+ |
+| Firefox | 75+ |
+| Safari | 13+ |
+| Edge | 80+ |
+
+## 无障碍支持
+
+- 支持键盘导航（上下箭头、回车、ESC）
+- 支持屏幕阅读器
+- 符合 WCAG 2.1 标准
+- 支持 ARIA 属性

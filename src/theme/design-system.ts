@@ -19,7 +19,14 @@ export interface DesignSystemColors {
   // 语义化颜色
   text: SemanticColors;
   background: SemanticColors;
-  border: SemanticColors;
+  border: {
+    default: string;
+    light: string;
+    focus?: string;
+    error?: string;
+    success?: string;
+    warning?: string;
+  };
   shadow: ShadowColors;
   status: StatusColors;
   interactive: InteractiveColors;
@@ -43,10 +50,15 @@ export interface SemanticColors {
   primary: string;
   secondary: string;
   tertiary: string;
-  disabled: string;
-  inverse: string;
-  placeholder: string;
-  link: string;
+  disabled?: string;
+  inverse?: string;
+  placeholder?: string;
+  link?: string;
+  card?: string;
+  input?: string;
+  mask?: string;
+  hover?: string;
+  active?: string;
 }
 
 export interface ShadowColors {
@@ -241,8 +253,8 @@ export interface DesignSystemBorderRadius {
   button: ComponentBorderRadius;
   input: ComponentBorderRadius;
   card: ComponentBorderRadius;
-  modal: ComponentBorderRadius;
-  dropdown: ComponentBorderRadius;
+  modal: string;
+  dropdown: string;
 }
 
 export interface ComponentBorderRadius {
@@ -431,7 +443,7 @@ export class DesignSystemUtils {
    * 获取间距值
    */
   static getSpacing(key: string): string {
-    return designSystem.spacing[key as keyof DesignSystemSpacing] || '0';
+    return String(designSystem.spacing[key as keyof DesignSystemSpacing] || '0');
   }
 
   /**
@@ -452,14 +464,14 @@ export class DesignSystemUtils {
    * 获取圆角值
    */
   static getBorderRadius(key: string): string {
-    return designSystem.borderRadius[key as keyof DesignSystemBorderRadius] || '0';
+    return String(designSystem.borderRadius[key as keyof DesignSystemBorderRadius] || '0');
   }
 
   /**
    * 获取阴影值
    */
   static getShadow(key: string): string {
-    return designSystem.shadow[key as keyof DesignSystemShadow] || 'none';
+    return String(designSystem.shadow[key as keyof DesignSystemShadow] || 'none');
   }
 
   /**

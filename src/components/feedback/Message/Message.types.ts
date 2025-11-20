@@ -33,5 +33,5 @@ export interface MessageRef {
   /** 隐藏消息 */
   hide: () => void;
   /** 更新消息内容 */
-  update: (props: Partial<MessageProps>) => void;
+  update: (_props: Partial<MessageProps>) => void;
 }

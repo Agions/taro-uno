@@ -30,9 +30,6 @@ export const Tooltip = forwardRef<TooltipRef, TooltipProps>((props, ref) => {
     onVisibleChange,
     onShow,
     onHide,
-    accessibilityLabel,
-    accessibilityRole = 'tooltip',
-    accessibilityHint,
     animation: _animation, // Extract to avoid conflict with Taro.js View
     showDelay,
     hideDelay,
@@ -274,10 +271,6 @@ export const Tooltip = forwardRef<TooltipRef, TooltipProps>((props, ref) => {
       {...rest}
       aria-describedby={visible ? "tooltip-content" : undefined}
       aria-expanded={visible}
-      accessibilityRole={accessibilityRole}
-      accessibilityLabel={accessibilityLabel}
-      accessibilityHint={accessibilityHint}
-      accessible={true}
     >
       {children}
       {renderTooltip()}

@@ -1,0 +1,349 @@
+# Result 结果
+
+结果页用于反馈一系列操作任务的处理结果，当有重要操作需要告知用户处理结果，且反馈内容较为复杂时使用。
+
+## 功能特性
+
+- ✅ 支持多种状态展示（成功、失败、警告、信息、加载中、404、403、500）
+- ✅ 可自定义标题和副标题
+- ✅ 支持自定义图标
+- ✅ 可配置额外操作区
+- ✅ 提供三种尺寸选择
+- ✅ 支持通过Ref控制组件状态
+
+## 基本用法
+
+```tsx
+import { Result } from '@taro-uno/ui';
+
+function BasicResult() {
+  return (
+    <Result
+      status="success"
+      title="操作成功"
+      subTitle="您的订单已提交成功，我们将尽快为您处理"
+      extra={
+        <Button type="primary">返回首页</Button>
+      }
+    />
+  );
+}
+```
+
+## 使用示例
+
+### 1. 不同状态的结果
+
+```tsx
+import { Result, Button } from '@taro-uno/ui';
+import { View } from '@tarojs/components';
+
+function ResultStatus() {
+  return (
+    <View className="result-status-container">
+      <Result
+        status="success"
+        title="操作成功"
+        subTitle="内容已经成功保存"
+        extra={<Button type="primary">返回列表</Button>}
+      />
+      
+      <Result
+        status="error"
+        title="操作失败"
+        subTitle="抱歉，提交失败，请稍后重试"
+        extra={<Button type="primary">重新提交</Button>}
+      />
+      
+      <Result
+        status="warning"
+        title="警告信息"
+        subTitle="请检查您的输入信息"
+        extra={<Button type="default">修改信息</Button>}
+      />
+      
+      <Result
+        status="info"
+        title="提示信息"
+        subTitle="这是一条普通的提示信息"
+      />
+    </View>
+  );
+}
+```
+
+### 2. 加载中状态
+
+```tsx
+import { Result } from '@taro-uno/ui';
+
+function LoadingResult() {
+  return (
+    <Result
+      status="loading"
+      title="数据加载中"
+      subTitle="请稍候..."
+    />
+  );
+}
+```
+
+### 3. 错误状态（404/403/500）
+
+```tsx
+import { Result, Button } from '@taro-uno/ui';
+import { View } from '@tarojs/components';
+
+function ErrorResult() {
+  return (
+    <View className="error-result-container">
+      <Result
+        status="404"
+        title="页面不存在"
+        subTitle="抱歉，您访问的页面不存在或已被删除"
+        extra={<Button type="primary">返回首页</Button>}
+      />
+      
+      <Result
+        status="403"
+        title="无访问权限"
+        subTitle="抱歉，您没有权限访问此页面"
+      />
+      
+      <Result
+        status="500"
+        title="服务器错误"
+        subTitle="抱歉，服务器出现错误，请稍后重试"
+      />
+    </View>
+  );
+}
+```
+
+### 4. 自定义图标
+
+```tsx
+import { Result, Button } from '@taro-uno/ui';
+import { Icon } from '@tarojs/components';
+
+function CustomIconResult() {
+  return (
+    <Result
+      status="info"
+      title="自定义图标"
+      subTitle="使用自定义图标展示结果"
+      icon={<Icon name="checkmark-circle" size="48" color="#007aff" />}
+      extra={<Button type="primary">继续</Button>}
+    />
+  );
+}
+```
+
+### 5. 三种尺寸
+
+```tsx
+import { Result, Button } from '@taro-uno/ui';
+import { View } from '@tarojs/components';
+
+function ResultSize() {
+  return (
+    <View className="result-size-container">
+      <Result
+        status="success"
+        title="小型尺寸"
+        subTitle="这是小型尺寸的结果页"
+        size="small"
+        extra={<Button size="small" type="primary">确定</Button>}
+      />
+      
+      <Result
+        status="success"
+        title="中等尺寸"
+        subTitle="这是中等尺寸的结果页"
+        size="medium"
+        extra={<Button type="primary">确定</Button>}
+      />
+      
+      <Result
+        status="success"
+        title="大型尺寸"
+        subTitle="这是大型尺寸的结果页"
+        size="large"
+        extra={<Button size="large" type="primary">确定</Button>}
+      />
+    </View>
+  );
+}
+```
+
+### 6. 无额外操作
+
+```tsx
+import { Result } from '@taro-uno/ui';
+
+function NoExtraResult() {
+  return (
+    <Result
+      status="success"
+      title="操作成功"
+      subTitle="您的操作已完成，无需其他操作"
+    />
+  );
+}
+```
+
+### 7. 复杂内容
+
+```tsx
+import { Result, Button, View } from '@taro-uno/ui';
+
+function ComplexResult() {
+  return (
+    <Result
+      status="success"
+      title="订单提交成功"
+      subTitle="订单号：202305201314520"
+      extra={
+        <View className="complex-extra">
+          <View className="order-info">
+            <View className="info-item">
+              <View className="info-label">商品名称：</View>
+              <View className="info-value">iPhone 14 Pro</View>
+            </View>
+            <View className="info-item">
+              <View className="info-label">订单金额：</View>
+              <View className="info-value">¥9,999.00</View>
+            </View>
+            <View className="info-item">
+              <View className="info-label">支付方式：</View>
+              <View className="info-value">微信支付</View>
+            </View>
+          </View>
+          <View className="result-buttons">
+            <Button type="default" style={{ marginRight: 12 }}>查看订单</Button>
+            <Button type="primary">联系客服</Button>
+          </View>
+        </View>
+      }
+    />
+  );
+}
+```
+
+### 8. 通过Ref控制
+
+```tsx
+import { Result, Button } from '@taro-uno/ui';
+import { useRef } from 'react';
+
+function RefResult() {
+  const resultRef = useRef(null);
+
+  const handleChangeStatus = () => {
+    if (resultRef.current) {
+      resultRef.current.setStatus('error');
+      resultRef.current.setTitle('操作失败');
+      resultRef.current.setSubTitle('抱歉，操作失败，请重试');
+    }
+  };
+
+  const handleReset = () => {
+    if (resultRef.current) {
+      resultRef.current.reset();
+    }
+  };
+
+  return (
+    <View>
+      <Result
+        ref={resultRef}
+        status="success"
+        title="操作成功"
+        subTitle="初始状态"
+      />
+      <View className="result-buttons">
+        <Button type="primary" style={{ marginRight: 12 }} onClick={handleChangeStatus}>
+          改变状态
+        </Button>
+        <Button type="default" onClick={handleReset}>
+          重置
+        </Button>
+      </View>
+    </View>
+  );
+}
+```
+
+## API
+
+### ResultProps
+
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| status | `ResultStatus` | `'info'` | 结果状态 |
+| title | `string` | - | 结果标题 |
+| subTitle | `string` | - | 结果副标题 |
+| icon | `ReactNode` | - | 自定义图标 |
+| extra | `ReactNode` | - | 额外操作区 |
+| size | `ResultSize` | `'medium'` | 尺寸大小 |
+| className | `string` | - | 自定义类名 |
+| style | `CSSProperties` | - | 自定义样式 |
+
+### ResultStatus
+
+```ts
+type ResultStatus = 'info' | 'success' | 'error' | 'warning' | 'loading' | '404' | '403' | '500';
+```
+
+### ResultSize
+
+```ts
+type ResultSize = 'small' | 'medium' | 'large';
+```
+
+### ResultRef
+
+| 方法 | 说明 | 参数 | 返回值 |
+| --- | --- | --- | --- |
+| getStatus | 获取当前状态 | - | `ResultStatus` |
+| setStatus | 设置状态 | `status: ResultStatus` | - |
+| setTitle | 设置标题 | `title: string` | - |
+| setSubTitle | 设置副标题 | `subTitle: string` | - |
+| reset | 重置组件到初始状态 | - | - |
+
+## 使用提示
+
+1. **状态选择**：根据实际业务场景选择合适的状态，如操作成功使用 `success`，操作失败使用 `error`，页面不存在使用 `404` 等。
+
+2. **内容设计**：
+   - 标题应简洁明了，直接传达核心信息
+   - 副标题可提供更详细的说明或下一步操作建议
+   - 复杂内容可通过 `extra` 属性添加
+
+3. **尺寸选择**：
+   - `small`：适用于移动端或空间有限的场景
+   - `medium`：默认尺寸，适用于大多数场景
+   - `large`：适用于桌面端或需要突出显示的场景
+
+4. **自定义图标**：当默认图标不满足需求时，可以通过 `icon` 属性传入自定义图标组件。
+
+5. **状态切换**：通过 Ref 可以动态切换组件状态，适用于异步操作的结果展示。
+
+## 浏览器兼容性
+
+| 浏览器 | 版本 |
+| --- | --- |
+| Chrome | ≥ 64 |
+| Firefox | ≥ 67 |
+| Safari | ≥ 12 |
+| iOS Safari | ≥ 12 |
+| Android Browser | ≥ 6.0 |
+| Taro 小程序 | 支持 |
+| H5 | 支持 |
+
+## 无障碍支持
+
+- 已实现语义化结构，使用 `role="status"` 和 `aria-label`
+- 支持键盘导航和屏幕阅读器
+- 确保状态变化时有适当的视觉反馈
+- 颜色对比度符合 WCAG 2.1 AA 标准

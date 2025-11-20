@@ -1,0 +1,235 @@
+import { Typography } from '@taro-uno/ui';
+import TypographyExample from './examples/index';
+
+<Meta title="基础组件 / Typography 排版" description="用于文本排版的组件，支持标题、段落、文本等多种形式" />
+
+<Description>
+  Typography 组件是一个功能丰富的排版组件，提供了标题、段落、文本等多种形式，支持各种样式设置和交互功能。
+</Description>
+
+<CodeExample title="基本用法">
+  <TypographyExample />
+  <ExampleCode>
+  ```tsx
+  import React from 'react';
+  import { Typography } from '@taro-uno/ui';
+  
+  export default function TypographyExample() {
+    return (
+      <View>
+        <Typography variant="h1">一级标题</Typography>
+        <Typography variant="h2">二级标题</Typography>
+        <Typography variant="p">这是一个段落</Typography>
+        <Typography variant="span" color="primary">这是一段文本</Typography>
+      </View>
+    );
+  }
+  ```
+  </ExampleCode>
+</CodeExample>
+
+## 功能介绍
+
+Typography 组件提供了以下核心功能：
+
+### 文本变体
+- 支持 h1-h6 标题
+- 支持 p 段落
+- 支持 span 文本
+
+### 样式定制
+- 多种文本类型（primary、secondary、success、warning、danger）
+- 文本对齐方式（left、center、right、justify）
+- 文本装饰（underline、delete、code、keyboard）
+- 文本样式（strong、italic）
+- 文本大小、颜色和权重
+
+### 交互功能
+- 可复制文本
+- 可编辑文本
+- 点击事件
+
+### 高级特性
+- 文本省略号
+- 最大行数控制
+- 文本换行设置
+
+## API
+
+### TypographyProps
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| children | ReactNode | - | 文本内容 |
+| type | 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | - | 文本类型 |
+| variant | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'span' | 'p' | 文本变体 |
+| align | 'left' | 'center' | 'right' | 'justify' | - | 文本对齐 |
+| disabled | boolean | false | 是否禁用 |
+| copyable | boolean | false | 是否可复制 |
+| editable | boolean | false | 是否可编辑 |
+| delete | boolean | false | 删除线 |
+| underline | boolean | false | 下划线 |
+| code | boolean | false | 代码样式 |
+| keyboard | boolean | false | 键盘样式 |
+| strong | boolean | false | 粗体 |
+| italic | boolean | false | 斜体 |
+| className | string | - | 自定义类名 |
+| style | React.CSSProperties | - | 自定义样式 |
+| onClick | (e: React.MouseEvent) => void | - | 点击事件 |
+| size | TypographySize | - | 文本大小 |
+| color | TypographyColor | - | 文本颜色 |
+| weight | TypographyWeight | - | 文本权重 |
+| ellipsis | boolean | false | 省略号 |
+| maxRows | number | - | 最大行数 |
+| wrap | boolean | true | 换行 |
+| onCopy | () => void | - | 复制回调 |
+| onEdit | (text: string) => void | - | 编辑回调 |
+
+### TypographyRef
+
+| 方法 | 类型 | 说明 |
+| --- | --- | --- |
+| getText | () => string | 获取文本内容 |
+| copy | () => void | 复制文本 |
+| edit | (text: string) => void | 编辑文本 |
+
+### TypographySize
+
+| 值 | 说明 |
+| --- | --- |
+| xs | 超小 |
+| sm | 小 |
+| md | 中等 |
+| lg | 大 |
+| xl | 超大 |
+| xxl | 特大 |
+
+### TypographyColor
+
+| 值 | 说明 |
+| --- | --- |
+| primary | 主色调 |
+| secondary | 次要色调 |
+| success | 成功 |
+| warning | 警告 |
+| danger | 错误 |
+| inherit | 继承 |
+
+### TypographyWeight
+
+| 值 | 说明 |
+| --- | --- |
+| normal | 正常 |
+| medium | 中等 |
+| semibold | 半粗体 |
+| bold | 粗体 |
+
+## 使用示例
+
+### 标题
+
+```tsx
+<Typography variant="h1">一级标题</Typography>
+<Typography variant="h2">二级标题</Typography>
+<Typography variant="h3">三级标题</Typography>
+<Typography variant="h4">四级标题</Typography>
+<Typography variant="h5">五级标题</Typography>
+<Typography variant="h6">六级标题</Typography>
+```
+
+### 段落
+
+```tsx
+<Typography variant="p">这是一个段落，用于展示文本内容。</Typography>
+<Typography variant="p" type="secondary">这是一个次要段落。</Typography>
+```
+
+### 文本类型
+
+```tsx
+<Typography variant="span" type="primary">主要文本</Typography>
+<Typography variant="span" type="secondary">次要文本</Typography>
+<Typography variant="span" type="success">成功文本</Typography>
+<Typography variant="span" type="warning">警告文本</Typography>
+<Typography variant="span" type="danger">错误文本</Typography>
+```
+
+### 文本装饰
+
+```tsx
+<Typography variant="span" underline>下划线</Typography>
+<Typography variant="span" delete>删除线</Typography>
+<Typography variant="span" code>代码样式</Typography>
+<Typography variant="span" keyboard>键盘样式</Typography>
+```
+
+### 文本样式
+
+```tsx
+<Typography variant="span" strong>粗体</Typography>
+<Typography variant="span" italic>斜体</Typography>
+<Typography variant="span" strong italic>粗体斜体</Typography>
+```
+
+### 可复制文本
+
+```tsx
+<Typography variant="span" copyable onCopy={() => console.log('复制成功')}>
+  可复制的文本
+</Typography>
+```
+
+### 可编辑文本
+
+```tsx
+<Typography variant="span" editable onEdit={(text) => console.log('编辑后的文本:', text)}>
+  可编辑的文本
+</Typography>
+```
+
+### 文本对齐
+
+```tsx
+<Typography variant="p" align="left">左对齐</Typography>
+<Typography variant="p" align="center">居中对齐</Typography>
+<Typography variant="p" align="right">右对齐</Typography>
+<Typography variant="p" align="justify">两端对齐</Typography>
+```
+
+### 文本省略
+
+```tsx
+<Typography variant="p" ellipsis maxRows={2}>
+  这是一段很长的文本，将会在第二行末尾显示省略号。这是一段很长的文本，将会在第二行末尾显示省略号。
+</Typography>
+```
+
+## 使用提示
+
+1. **语义化**：根据内容的语义选择合适的变体（h1-h6、p、span），有助于提高SEO和可访问性。
+
+2. **样式一致性**：使用统一的文本类型和大小，保持页面风格的一致性。
+
+3. **交互设计**：对于需要用户交互的文本，使用 `copyable` 或 `editable` 属性提供便捷的操作方式。
+
+4. **性能优化**：对于大量文本内容，避免使用过多的装饰效果，以提高渲染性能。
+
+5. **响应式设计**：结合CSS媒体查询或ResponsiveContainer组件，实现不同屏幕尺寸下的文本适配。
+
+## 浏览器兼容性
+
+| 浏览器 | 版本 | 支持情况 |
+| --- | --- | --- |
+| Chrome | 80+ | ✅ |
+| Firefox | 75+ | ✅ |
+| Safari | 13+ | ✅ |
+| Edge | 80+ | ✅ |
+| 微信小程序 | 基础库 2.10+ | ✅ |
+| 支付宝小程序 | 基础库 2.7+ | ✅ |
+
+## 无障碍支持
+
+- 支持屏幕阅读器
+- 支持键盘导航
+- 提供适当的颜色对比度
+- 使用语义化的HTML元素

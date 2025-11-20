@@ -1,0 +1,126 @@
+---
+category: 'display'
+componentType: 'display'
+englishTitle: 'Avatar'
+chineseTitle: '头像'
+name: 'Avatar'
+description: '用于显示用户头像的组件，支持图片、图标或文字形式，并提供不同尺寸和形状的选项。'
+---
+
+import { Avatar } from '@taro-uno/ui';
+
+## 功能介绍
+
+Avatar 组件是用于显示用户头像的通用组件，支持多种显示形式和自定义选项：
+
+- 支持图片、图标和文字三种头像形式
+- 提供圆形和方形两种形状选择
+- 支持预设尺寸（小、中、大）和自定义尺寸
+- 响应式设计，适配多平台显示
+
+## 基本用法
+
+```jsx
+<Avatar src="https://example.com/avatar.jpg" alt="用户头像" />
+<Avatar icon={<UserOutlined />} />
+<Avatar>U</Avatar>
+```
+
+## 使用示例
+
+### 1. 图片头像
+
+```jsx
+<Avatar src="https://example.com/avatar.jpg" alt="用户头像" />
+```
+
+### 2. 图标头像
+
+```jsx
+<Avatar icon={<UserOutlined />} />
+```
+
+### 3. 文字头像
+
+```jsx
+<Avatar>张三</Avatar>
+<Avatar>U</Avatar>
+```
+
+### 4. 不同尺寸
+
+```jsx
+<Avatar size="small" src="https://example.com/avatar.jpg" />
+<Avatar size="medium" src="https://example.com/avatar.jpg" />
+<Avatar size="large" src="https://example.com/avatar.jpg" />
+<Avatar size={80} src="https://example.com/avatar.jpg" />
+```
+
+### 5. 不同形状
+
+```jsx
+<Avatar shape="circle" src="https://example.com/avatar.jpg" />
+<Avatar shape="square" src="https://example.com/avatar.jpg" />
+```
+
+### 6. 自定义样式
+
+```jsx
+<Avatar
+  src="https://example.com/avatar.jpg"
+  style={{ border: '2px solid #1890ff', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)' }}
+/>
+```
+
+### 7. 带点击事件
+
+```jsx
+<Avatar
+  src="https://example.com/avatar.jpg"
+  onClick={() => console.log('Avatar clicked')}
+/>
+```
+
+## API
+
+### AvatarProps
+
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| src | string | - | 头像图片地址 |
+| alt | string | - | 图片无法显示时的替代文本 |
+| size | 'small' \| 'medium' \| 'large' \| number | 'medium' | 头像尺寸 |
+| shape | 'circle' \| 'square' | 'circle' | 头像形状 |
+| icon | React.ReactNode | - | 头像图标 |
+| children | React.ReactNode | - | 子节点（通常用于文字头像） |
+| style | CSSProperties | - | 自定义样式 |
+| className | string | - | 自定义类名 |
+| onClick | (event: any) => void | - | 点击事件 |
+
+### AvatarRef
+
+| 方法 | 返回值 | 说明 |
+| --- | --- | --- |
+| getSize | number | 获取头像尺寸 |
+| getShape | 'circle' \| 'square' | 获取头像形状 |
+| hasImage | boolean | 检查是否有图片 |
+| hasIcon | boolean | 检查是否有图标 |
+| hasText | boolean | 检查是否有文字 |
+
+## 使用提示
+
+- 当同时提供 `src`、`icon` 和 `children` 时，优先级为：`src` > `icon` > `children`
+- 如果图片加载失败，组件会尝试显示图标或文字
+- 对于文字头像，建议使用 1-2 个字符以保证最佳显示效果
+- 自定义尺寸时，建议使用偶数像素值以保证显示效果
+
+## 浏览器兼容性
+
+- 现代浏览器（Chrome, Firefox, Safari, Edge）
+- Taro 支持的小程序平台
+
+## 无障碍支持
+
+- 提供 `alt` 属性确保屏幕阅读器可访问
+- 支持键盘焦点和点击事件
+- 遵循 WCAG 2.1 无障碍标准

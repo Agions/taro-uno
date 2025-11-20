@@ -1,7 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react';
-import type { AccessibilityProps } from '../../../types/accessibility.d';
 
-export interface ButtonProps extends AccessibilityProps {
+export interface ButtonProps {
   /** 按钮类型 */
   type?: 'default' | 'primary' | 'success' | 'warning' | 'danger';
   /** 按钮尺寸 */
@@ -19,7 +18,7 @@ export interface ButtonProps extends AccessibilityProps {
   /** 图标 */
   icon?: ReactNode;
   /** 点击事件 */
-  onClick?: (event: any) => void;
+  onClick?: (_event: any) => void;
   /** 自定义样式 */
   style?: CSSProperties;
   /** 自定义类名 */
@@ -42,5 +41,5 @@ export interface ButtonRef {
   /** 启用按钮 */
   enable: () => void;
   /** 设置加载状态 */
-  setLoading: (loading: boolean) => void;
+  setLoading: (_loading: boolean) => void;
 }

@@ -11,30 +11,21 @@ export const useThemeUtils = () => {
    * 获取颜色值
    */
   const getColor = (colorPath: string): string => {
-    const keys = colorPath.split('.');
-    let value: any = theme.colors;
-
-    for (const key of keys) {
-      if (value && typeof value === 'object' && key in value) {
-        value = value[key];
-      } else {
-        // 回退到默认颜色
-        return getDefaultColor(colorPath);
-      }
+    if (colorPath in theme.colors) {
+      const key = colorPath as keyof typeof theme.colors;
+      const value = theme.colors[key];
+      return typeof value === 'string' ? value : getDefaultColor(colorPath);
     }
-
-    return typeof value === 'string' ? value : getDefaultColor(colorPath);
+    return getDefaultColor(colorPath);
   };
 
   /**
    * 获取间距值
    */
   const getSpacing = (spacingKey: string): string => {
-    const spacing = theme.spacing[spacingKey as keyof typeof theme.spacing];
-    if (typeof spacing === 'string') {
-      return spacing;
-    }
-    // 回退到默认间距
+    const v = theme.spacing[spacingKey as keyof typeof theme.spacing];
+    if (typeof v === 'number') return `${v}px`;
+    if (spacingKey === 'breakpoints') return '';
     return getDefaultSpacing(spacingKey);
   };
 
@@ -42,11 +33,8 @@ export const useThemeUtils = () => {
    * 获取字体大小
    */
   const getFontSize = (sizeKey: string): string => {
-    const fontSize = theme.typography.fontSizes[sizeKey as keyof typeof theme.typography.fontSizes];
-    if (typeof fontSize === 'string') {
-      return fontSize;
-    }
-    // 回退到默认字体大小
+    const v = theme.typography.fontSize[sizeKey as keyof typeof theme.typography.fontSize];
+    if (typeof v === 'number') return `${v}px`;
     return getDefaultFontSize(sizeKey);
   };
 
@@ -54,11 +42,8 @@ export const useThemeUtils = () => {
    * 获取行高
    */
   const getLineHeight = (lineHeightKey: string): string => {
-    const lineHeight = theme.typography.lineHeights[lineHeightKey as keyof typeof theme.typography.lineHeights];
-    if (typeof lineHeight === 'string') {
-      return lineHeight;
-    }
-    // 回退到默认行高
+    const v = theme.typography.lineHeight[lineHeightKey as keyof typeof theme.typography.lineHeight];
+    if (typeof v === 'number') return String(v);
     return getDefaultLineHeight(lineHeightKey);
   };
 
@@ -66,11 +51,8 @@ export const useThemeUtils = () => {
    * 获取边框圆角
    */
   const getBorderRadius = (radiusKey: string): string => {
-    const radius = theme.borderRadius[radiusKey as keyof typeof theme.borderRadius];
-    if (typeof radius === 'string') {
-      return radius;
-    }
-    // 回退到默认圆角
+    const v = theme.borderRadius[radiusKey as keyof typeof theme.borderRadius];
+    if (typeof v === 'number') return `${v}px`;
     return getDefaultBorderRadius(radiusKey);
   };
 
@@ -78,11 +60,8 @@ export const useThemeUtils = () => {
    * 获取阴影
    */
   const getShadow = (shadowKey: string): string => {
-    const shadow = theme.shadows[shadowKey as keyof typeof theme.shadows];
-    if (typeof shadow === 'string') {
-      return shadow;
-    }
-    // 回退到默认阴影
+    const v = theme.shadow[shadowKey as keyof typeof theme.shadow];
+    if (typeof v === 'string') return v;
     return getDefaultShadow(shadowKey);
   };
 
@@ -90,11 +69,8 @@ export const useThemeUtils = () => {
    * 获取过渡时间
    */
   const getTransition = (transitionKey: string): string => {
-    const transition = theme.transitions[transitionKey as keyof typeof theme.transitions];
-    if (typeof transition === 'string') {
-      return transition;
-    }
-    // 回退到默认过渡时间
+    const v = theme.animation.duration[transitionKey as keyof typeof theme.animation.duration];
+    if (typeof v === 'string') return v;
     return getDefaultTransition(transitionKey);
   };
 
@@ -102,11 +78,6 @@ export const useThemeUtils = () => {
    * 获取Z-index
    */
   const getZIndex = (zIndexKey: string): number => {
-    const zIndex = theme.zIndex[zIndexKey as keyof typeof theme.zIndex];
-    if (typeof zIndex === 'number') {
-      return zIndex;
-    }
-    // 回退到默认z-index
     return getDefaultZIndex(zIndexKey);
   };
 
@@ -114,11 +85,8 @@ export const useThemeUtils = () => {
    * 获取断点
    */
   const getBreakpoint = (breakpointKey: string): string => {
-    const breakpoint = theme.breakpoints[breakpointKey as keyof typeof theme.breakpoints];
-    if (typeof breakpoint === 'string') {
-      return breakpoint;
-    }
-    // 回退到默认断点
+    const v = theme.spacing.breakpoints[breakpointKey as keyof typeof theme.spacing.breakpoints];
+    if (typeof v === 'number') return `${v}px`;
     return getDefaultBreakpoint(breakpointKey);
   };
 
@@ -313,7 +281,6 @@ function getDefaultTransition(transitionKey: string): string {
 
 function getDefaultZIndex(zIndexKey: string): number {
   const defaultZIndex: Record<string, number> = {
-    'auto': 'auto',
     '0': 0,
     '10': 10,
     '20': 20,

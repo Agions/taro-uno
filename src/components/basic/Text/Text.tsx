@@ -2,6 +2,8 @@ import React, { forwardRef, useRef, useState, useEffect, useCallback } from 'rea
 import { Text as TaroText, View } from '@tarojs/components';
 import { textStyles } from './Text.styles';
 import type { TextProps, TextRef } from './Text.types';
+import { useSecurity } from '../../common/SecurityProvider';
+import { useTheme } from '../../common/ThemeProvider';
 
 /** 文本组件 */
 export const TextComponent = forwardRef<TextRef, TextProps>((props, ref) => {
@@ -35,10 +37,6 @@ export const TextComponent = forwardRef<TextRef, TextProps>((props, ref) => {
     maxLines,
     animated = false,
     animationDuration = 300,
-    accessible = true,
-    accessibilityLabel,
-    accessibilityRole = 'text',
-    accessibilityState,
     href,
     target = '_self',
     underline = false,
@@ -58,12 +56,19 @@ export const TextComponent = forwardRef<TextRef, TextProps>((props, ref) => {
     verticalAlign,
     writingMode,
     textRendering,
+    ariaLabel,
+    role = 'text',
     // 排除可能与Taro组件冲突的React属性
     dangerouslySetInnerHTML,
     suppressContentEditableWarning,
     suppressHydrationWarning,
     ...restProps
   } = props;
+
+  const { sanitizeInput } = useSecurity();
+  const { isDark } = useTheme();
+
+  const sanitizedChildren = typeof children === 'string' ? sanitizeInput(children) : children;
 
   const textRef = useRef<HTMLParagraphElement | HTMLSpanElement>(null);
   const [internalStatus, setInternalStatus] = useState(status);
@@ -157,7 +162,7 @@ export const TextComponent = forwardRef<TextRef, TextProps>((props, ref) => {
   };
 
   // 计算最终样式
-  const textStyle = textStyles['getStyle']({
+  const baseStyleProps = {
     size,
     weight,
     color,
@@ -173,7 +178,6 @@ export const TextComponent = forwardRef<TextRef, TextProps>((props, ref) => {
     status: internalStatus,
     loading: internalLoading,
     disabled: internalDisabled,
-    maxLines,
     animated,
     animationDuration,
     underline,
@@ -183,51 +187,59 @@ export const TextComponent = forwardRef<TextRef, TextProps>((props, ref) => {
     ellipsis,
     wrap,
     breakWord,
-    textShadow,
-    textOutline,
-    gradient,
-    fontFamily,
-    wordSpacing,
-    textIndent,
-    whiteSpace,
-    verticalAlign,
-    writingMode,
-    textRendering,
-    style,
-  });
+    style: style ?? {},
+  };
+
+  const optionalStyleProps = {
+    ...(maxLines !== undefined && { maxLines }),
+    ...(textShadow !== undefined && { textShadow }),
+    ...(textOutline !== undefined && { textOutline }),
+    ...(gradient !== undefined && { gradient }),
+    ...(fontFamily !== undefined && { fontFamily }),
+    ...(wordSpacing !== undefined && { wordSpacing }),
+    ...(textIndent !== undefined && { textIndent }),
+    ...(whiteSpace !== undefined && { whiteSpace }),
+    ...(verticalAlign !== undefined && { verticalAlign }),
+    ...(writingMode !== undefined && { writingMode }),
+    ...(textRendering !== undefined && { textRendering }),
+  };
+
+  const getStyleProps = { ...baseStyleProps, ...optionalStyleProps } as Partial<TextProps>;
+  const textStyle = textStyles['getStyle'](getStyleProps);
 
   // 计算最终类名
-  const textClassName = textStyles['getClassName']({
-    size,
-    weight,
-    color,
-    align,
-    decoration,
-    transform,
-    overflow,
-    direction,
-    fontStyle,
-    variant,
-    letterSpacing,
-    lineHeight,
-    status: internalStatus,
-    type,
-    clickable,
-    loading: internalLoading,
-    disabled: internalDisabled,
-    block,
-    inlineBlock,
-    selectable,
-    copyable,
-    animated,
-    underline,
-    strikethrough,
-    highlight,
-    ellipsis,
-    wrap,
-    breakWord,
-    className,
-  });
+  const textClassName =
+    textStyles['getClassName']({
+      size,
+      weight,
+      color,
+      align,
+      decoration,
+      transform,
+      overflow,
+      direction,
+      fontStyle,
+      variant,
+      letterSpacing,
+      lineHeight,
+      status: internalStatus,
+      type,
+      clickable,
+      loading: internalLoading,
+      disabled: internalDisabled,
+      block,
+      inlineBlock,
+      selectable,
+      copyable,
+      animated,
+      underline,
+      strikethrough,
+      highlight,
+      ellipsis,
+      wrap,
+      breakWord,
+      className: className ?? '',
+    }) + ` ${isDark ? 'dark' : 'light'}`;
 
   // 选择渲染元素
   const TextElement = href ? 'a' : block ? 'div' : inlineBlock ? 'span' : TaroText;
@@ -288,13 +300,6 @@ export const TextComponent = forwardRef<TextRef, TextProps>((props, ref) => {
     [internalDisabled, internalLoading, internalStatus, size, color, weight, handleSelect],
   );
 
-  // 无障碍状态
-  const finalAccessibilityState = JSON.stringify({
-    disabled: internalDisabled,
-    busy: internalLoading,
-    ...accessibilityState,
-  });
-
   // 处理链接属性
   const linkProps = href
     ? {
@@ -303,14 +308,6 @@ export const TextComponent = forwardRef<TextRef, TextProps>((props, ref) => {
         rel: target === '_blank' ? 'noopener noreferrer' : undefined,
       }
     : {};
-
-  // 构建无障碍属性
-  const accessibilityProps = {
-    'aria-label': accessibilityLabel,
-    'aria-disabled': internalDisabled ? 'true' : 'false',
-    'aria-busy': internalLoading ? 'true' : 'false',
-    role: href ? 'link' : accessibilityRole,
-  };
 
   return (
     <View className="taro-uno-text-wrapper" style={{ display: 'flex', alignItems: 'center' }}>
@@ -321,16 +318,13 @@ export const TextComponent = forwardRef<TextRef, TextProps>((props, ref) => {
         className={textClassName}
         style={textStyle}
         onClick={handleClick}
-        accessible={accessible}
-        accessibilityLabel={accessibilityLabel}
-        accessibilityRole={href ? 'link' : accessibilityRole}
-        accessibilityState={finalAccessibilityState}
         selectable={selectable}
+        aria-label={ariaLabel}
+        role={role}
         {...linkProps}
-        {...accessibilityProps}
         {...(restProps as any)}
       >
-        {children}
+        {sanitizedChildren}
       </TextElement>
 
       {renderCopyButton()}

@@ -37,15 +37,15 @@ export interface FormRule {
   /** 枚举值 */
   enum?: Array<string | number>;
   /** 自定义验证函数 */
-  validator?: (value: any, form: FormValues) => boolean | string | Promise<boolean | string>;
+  validator?: (_value: any, form: FormValues) => boolean | string | Promise<boolean | string>;
   /** 验证触发时机 */
   trigger?: 'onChange' | 'onBlur' | 'onSubmit';
   /** 是否异步验证 */
-  asyncValidator?: (value: any, form: FormValues) => Promise<boolean | string>;
+  asyncValidator?: (_value: any, form: FormValues) => Promise<boolean | string>;
   /** 默认值 */
   defaultValue?: any;
   /** 转换函数 */
-  transform?: (value: any) => any;
+  transform?: (_value: any) => any;
   /** 依赖字段 */
   dependencies?: string[];
 }
@@ -109,15 +109,15 @@ export interface FormProps extends Omit<FormNativeProps, 'onSubmit' | 'onReset' 
   /** 是否立即验证 */
   immediate?: boolean;
   /** 提交事件处理函数 */
-  onSubmit?: (values: FormValues, event: ITouchEvent) => void | Promise<void>;
+  onSubmit?: (_values: FormValues, event: ITouchEvent) => void | Promise<void>;
   /** 重置事件处理函数 */
-  onReset?: (values: FormValues, event: ITouchEvent) => void;
+  onReset?: (_values: FormValues, event: ITouchEvent) => void;
   /** 值变化事件处理函数 */
-  onValuesChange?: (changedValues: FormValues, allValues: FormValues) => void;
+  onValuesChange?: (_changedValues: FormValues, allValues: FormValues) => void;
   /** 字段变化事件处理函数 */
-  onFieldsChange?: (changedFields: FormFieldInfo[], allFields: FormFieldInfo[]) => void;
+  onFieldsChange?: (_changedFields: FormFieldInfo[], allFields: FormFieldInfo[]) => void;
   /** 验证失败事件处理函数 */
-  onFinishFailed?: (errors: FormErrors, values: FormValues) => void;
+  onFinishFailed?: (_errors: FormErrors, values: FormValues) => void;
   /** 自定义样式类名 */
   className?: string;
   /** 自定义样式 */
@@ -179,9 +179,9 @@ export interface FormItemProps {
   /** 是否显示验证信息 */
   showValidateMessage?: boolean;
   /** 值变化事件处理函数 */
-  onChange?: (value: any, name: string) => void;
+  onChange?: (_value: any, name: string) => void;
   /** 字段状态变化事件处理函数 */
-  onStatusChange?: (status: FormFieldStatus, name: string) => void;
+  onStatusChange?: (_status: FormFieldStatus, name: string) => void;
 }
 
 /** 表单组件引用类型 */
@@ -189,11 +189,11 @@ export type FormRef = {
   /** 获取表单值 */
   getValues: () => FormValues;
   /** 设置表单值 */
-  setValues: (values: Partial<FormValues>) => void;
+  setValues: (_values: Partial<FormValues>) => void;
   /** 获取字段值 */
-  getFieldValue: (name: string) => any;
+  getFieldValue: (_name: string) => any;
   /** 设置字段值 */
-  setFieldValue: (name: string, value: any) => void;
+  setFieldValue: (_name: string, value: any) => void;
   /** 重置表单 */
   resetFields: (fields?: string[]) => void;
   /** 提交表单 */
@@ -201,43 +201,43 @@ export type FormRef = {
   /** 验证表单 */
   validate: (fields?: string[]) => Promise<{ valid: boolean; errors: FormErrors; values: FormValues }>;
   /** 验证字段 */
-  validateField: (name: string) => Promise<{ valid: boolean; errors: string[]; value: any }>;
+  validateField: (_name: string) => Promise<{ valid: boolean; errors: string[]; value: any }>;
   /** 验证多个字段 */
-  validateFields: (names: string[]) => Promise<{ valid: boolean; errors: FormErrors; values: FormValues }>;
+  validateFields: (_names: string[]) => Promise<{ valid: boolean; errors: FormErrors; values: FormValues }>;
   /** 清除字段错误 */
   clearErrors: (fields?: string[]) => void;
   /** 设置字段错误 */
-  setErrors: (errors: FormErrors) => void;
+  setErrors: (_errors: FormErrors) => void;
   /** 获取字段错误 */
-  getFieldError: (name: string) => string[];
+  getFieldError: (_name: string) => string[];
   /** 获取表单错误 */
   getErrors: () => FormErrors;
   /** 设置字段状态 */
-  setFields: (fields: Partial<FormFieldInfo>[]) => void;
+  setFields: (_fields: Partial<FormFieldInfo>[]) => void;
   /** 获取字段信息 */
   getFields: () => FormFieldInfo[];
   /** 获取字段信息 */
-  getFieldInfo: (name: string) => FormFieldInfo | null;
+  getFieldInfo: (_name: string) => FormFieldInfo | null;
   /** 设置字段 touched 状态 */
-  setFieldsTouched: (touched: Record<string, boolean>) => void;
+  setFieldsTouched: (_touched: Record<string, boolean>) => void;
   /** 设置字段 validating 状态 */
-  setFieldsValidating: (validating: Record<string, boolean>) => void;
+  setFieldsValidating: (_validating: Record<string, boolean>) => void;
   /** 添加字段规则 */
-  addFieldRules: (name: string, rules: FormRule[]) => void;
+  addFieldRules: (_name: string, rules: FormRule[]) => void;
   /** 移除字段规则 */
-  removeFieldRules: (name: string) => void;
+  removeFieldRules: (_name: string) => void;
   /** 获取字段规则 */
-  getFieldRules: (name: string) => FormRule[];
+  getFieldRules: (_name: string) => FormRule[];
   /** 设置表单状态 */
-  setStatus: (status: FormStatus) => void;
+  setStatus: (_status: FormStatus) => void;
   /** 获取表单状态 */
   getStatus: () => FormStatus;
   /** 设置表单禁用状态 */
-  setDisabled: (disabled: boolean) => void;
+  setDisabled: (_disabled: boolean) => void;
   /** 设置表单只读状态 */
-  setReadonly: (readonly: boolean) => void;
+  setReadonly: (_readonly: boolean) => void;
   /** 滚动到字段 */
-  scrollToField: (name: string) => void;
+  scrollToField: (_name: string) => void;
   /** 获取表单实例 */
   getFormInstance: () => FormInstance;
 };
@@ -267,37 +267,37 @@ export interface FormInstance {
 /** 表单工具函数接口 */
 export interface FormUtils {
   /** 深度合并对象 */
-  deepMerge: (target: any, source: any) => any;
+  deepMerge: (_target: any, source: any) => any;
   /** 深度克隆对象 */
-  deepClone: (obj: any) => any;
+  deepClone: (_obj: any) => any;
   /** 格式化验证错误 */
-  formatErrors: (errors: Record<string, any>) => FormErrors;
+  formatErrors: (_errors: Record<string, any>) => FormErrors;
   /** 验证规则执行器 */
-  validateRules: (value: any, rules: FormRule[], form: FormValues) => Promise<string[]>;
+  validateRules: (_value: any, rules: FormRule[], form: FormValues) => Promise<string[]>;
   /** 异步验证规则执行器 */
-  validateAsyncRules: (value: any, rules: FormRule[], form: FormValues) => Promise<string[]>;
+  validateAsyncRules: (_value: any, rules: FormRule[], form: FormValues) => Promise<string[]>;
   /** 字段路径解析器 */
-  parseFieldPath: (path: string) => string[];
+  parseFieldPath: (_path: string) => string[];
   /** 字段路径构建器 */
-  buildFieldPath: (path: string[]) => string;
+  buildFieldPath: (_path: string[]) => string;
   /** 字段值获取器 */
-  getFieldValueByPath: (values: FormValues, path: string) => any;
+  getFieldValueByPath: (_values: FormValues, path: string) => any;
   /** 字段值设置器 */
-  setFieldValueByPath: (values: FormValues, path: string, value: any) => void;
+  setFieldValueByPath: (_values: FormValues, path: string, value: any) => void;
   /** 字段值删除器 */
-  deleteFieldValueByPath: (values: FormValues, path: string) => void;
+  deleteFieldValueByPath: (_values: FormValues, path: string) => void;
   /** 字段错误获取器 */
-  getFieldErrorByPath: (errors: FormErrors, path: string) => string[];
+  getFieldErrorByPath: (_errors: FormErrors, path: string) => string[];
   /** 字段错误设置器 */
-  setFieldErrorByPath: (errors: FormErrors, path: string, error: string | string[]) => void;
+  setFieldErrorByPath: (_errors: FormErrors, path: string, error: string | string[]) => void;
   /** 字段错误删除器 */
-  deleteFieldErrorByPath: (errors: FormErrors, path: string) => void;
+  deleteFieldErrorByPath: (_errors: FormErrors, path: string) => void;
   /** 表单值转换器 */
-  transformFormValues: (values: FormValues, transforms: Record<string, (value: any) => any>) => FormValues;
+  transformFormValues: (_values: FormValues, transforms: Record<string, (_value: any) => any>) => FormValues;
   /** 表单值过滤器 */
-  filterFormValues: (values: FormValues, filter: (value: any, name: string) => boolean) => FormValues;
+  filterFormValues: (_values: FormValues, filter: (_value: any, name: string) => boolean) => FormValues;
   /** 表单值映射器 */
-  mapFormValues: (values: FormValues, mapper: (value: any, name: string) => any) => FormValues;
+  mapFormValues: (_values: FormValues, mapper: (_value: any, name: string) => any) => FormValues;
   /** 获取表单尺寸映射 */
   getSizeMap: () => Record<FormSize, { fontSize: number; padding: string; height: number; borderRadius: number }>;
   /** 获取表单布局映射 */
@@ -353,29 +353,29 @@ export interface FormContext {
   /** 表单样式配置 */
   styleConfig: FormStyleConfig;
   /** 注册字段 */
-  registerField: (name: string, info: Partial<FormFieldInfo>) => void;
+  registerField: (_name: string, info: Partial<FormFieldInfo>) => void;
   /** 注销字段 */
-  unregisterField: (name: string) => void;
+  unregisterField: (_name: string) => void;
   /** 更新字段 */
-  updateField: (name: string, info: Partial<FormFieldInfo>) => void;
+  updateField: (_name: string, info: Partial<FormFieldInfo>) => void;
   /** 获取字段 */
-  getField: (name: string) => FormFieldInfo | null;
+  getField: (_name: string) => FormFieldInfo | null;
   /** 设置字段值 */
-  setFieldValue: (name: string, value: any) => void;
+  setFieldValue: (_name: string, value: any) => void;
   /** 获取字段值 */
-  getFieldValue: (name: string) => any;
+  getFieldValue: (_name: string) => any;
   /** 设置字段错误 */
-  setFieldError: (name: string, error: string | string[]) => void;
+  setFieldError: (_name: string, error: string | string[]) => void;
   /** 获取字段错误 */
-  getFieldError: (name: string) => string[];
+  getFieldError: (_name: string) => string[];
   /** 设置字段 touched 状态 */
-  setFieldTouched: (name: string, touched: boolean) => void;
+  setFieldTouched: (_name: string, touched: boolean) => void;
   /** 设置字段 validating 状态 */
-  setFieldValidating: (name: string, validating: boolean) => void;
+  setFieldValidating: (_name: string, validating: boolean) => void;
   /** 验证字段 */
-  validateField: (name: string) => Promise<{ valid: boolean; errors: string[]; value: any }>;
+  validateField: (_name: string) => Promise<{ valid: boolean; errors: string[]; value: any }>;
   /** 重置字段 */
-  resetField: (name: string) => void;
+  resetField: (_name: string) => void;
 }
 
 /** 表单项上下文接口 */

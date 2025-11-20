@@ -1,0 +1,119 @@
+---
+category: 'display'
+componentType: 'display'
+englishTitle: 'Badge'
+chineseTitle: '徽标数'
+name: 'Badge'
+description: '用于在图标或文字右上角显示数字或状态的组件，支持红点模式和数字溢出显示。'
+---
+
+import { Badge } from '@taro-uno/ui';
+
+## 功能介绍
+
+Badge 组件用于在元素右上角显示徽标，通常用于表示未读消息数量或状态提示：
+
+- 支持数字显示和红点模式
+- 可设置数字溢出上限
+- 可配置是否显示零值
+- 灵活的样式自定义
+- 响应式设计，适配多平台
+
+## 基本用法
+
+```jsx
+<Badge count={5}>
+  <Button type="primary">按钮</Button>
+</Badge>
+
+<Badge dot>
+  <Icon type="notification" />
+</Badge>
+```
+
+## 使用示例
+
+### 1. 基本数字徽标
+
+```jsx
+<Badge count={5}>
+  <Button type="primary">按钮</Button>
+</Badge>
+```
+
+### 2. 红点模式
+
+```jsx
+<Badge dot>
+  <Icon type="notification" />
+</Badge>
+```
+
+### 3. 溢出数字显示
+
+```jsx
+<Badge count={120} overflowCount={99}>
+  <Button type="primary">按钮</Button>
+</Badge>
+```
+
+### 4. 显示零值
+
+```jsx
+<Badge count={0} showZero>
+  <Button type="primary">按钮</Button>
+</Badge>
+```
+
+### 5. 自定义样式
+
+```jsx
+<Badge count={5} style={{ backgroundColor: '#ff4d4f' }}>
+  <Button type="primary">按钮</Button>
+</Badge>
+```
+
+### 6. 不带子元素使用
+
+```jsx
+<Badge count={5} />
+```
+
+## API
+
+### BadgeProps
+
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| count | number | - | 显示的数字 |
+| dot | boolean | false | 是否显示为小红点 |
+| overflowCount | number | 99 | 封顶的数字值 |
+| showZero | boolean | false | 当数字为 0 时是否显示 |
+| children | ReactNode | - | 子节点 |
+| style | CSSProperties | - | 自定义样式 |
+| className | string | - | 自定义类名 |
+
+### BadgeRef
+
+| 方法 | 返回值 | 说明 |
+| --- | --- | --- |
+| getCount | number \| undefined | 获取当前计数 |
+| isDot | boolean | 检查是否为点状 |
+| isVisible | boolean | 检查是否显示 |
+
+## 使用提示
+
+- 当 `dot` 为 `true` 时，`count` 属性将被忽略
+- 当 `count` 为 `undefined` 且 `dot` 为 `false` 时，徽标不会显示
+- 建议将 Badge 组件包裹在需要显示徽标的元素外部
+- 可以通过自定义样式调整徽标的位置、颜色和大小
+
+## 浏览器兼容性
+
+- 现代浏览器（Chrome, Firefox, Safari, Edge）
+- Taro 支持的小程序平台
+
+## 无障碍支持
+
+- 遵循 WCAG 2.1 无障碍标准
+- 支持屏幕阅读器访问

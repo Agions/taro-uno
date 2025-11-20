@@ -163,6 +163,36 @@ page {
   text-align: right;
 }
 
+.app {
+  min-height: 100vh;
+  padding: 48px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.app--loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app__greeting {
+  font-size: 36px;
+  font-weight: 600;
+}
+
+.app__platform {
+  font-size: 28px;
+  color: #666;
+}
+
+.app__actions {
+  display: flex;
+  gap: 16px;
+}
+
 .text-primary {
   color: #0ea5e9;
 }

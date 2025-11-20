@@ -59,14 +59,7 @@ export const ContainerComponent = forwardRef<ContainerRef, ContainerProps>((prop
     [onClick],
   );
 
-  // 处理滚动事件
-  const handleScroll = useCallback(
-    (event: React.UIEvent) => {
-      onScroll?.(event);
-    },
-    [onScroll],
-  );
-
+  
   
   // 计算样式
   const containerStyle = containerStyles['getBaseStyle']({
@@ -125,7 +118,6 @@ export const ContainerComponent = forwardRef<ContainerRef, ContainerProps>((prop
       className={containerClassName}
       style={{ ...containerStyle, ...responsiveStyle }}
       onClick={handleClick}
-      onScroll={handleScroll}
       {...restProps}
     >
       {children}

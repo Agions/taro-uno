@@ -1,0 +1,199 @@
+---
+category: 'display'
+componentType: 'display'
+englishTitle: 'Rate'
+chineseTitle: '评分'
+name: 'Rate'
+description: '用于展示和收集用户评分的组件，支持半星评分、自定义字符、工具提示等功能。'
+---
+
+import { Rate } from '@taro-uno/ui';
+import { View, Text } from '@tarojs/components';
+
+## 功能介绍
+
+Rate 组件是一个灵活的评分组件，适用于各种需要用户进行评分或展示评分结果的场景：
+
+- 支持整数评分和半星评分
+- 可自定义星星总数（默认5个）
+- 支持清除评分功能
+- 提供禁用和只读模式
+- 支持三种尺寸（小、中、大）
+- 可自定义评分字符（不限于星星）
+- 支持工具提示功能
+- 响应式设计，适配多平台
+- 支持受控和非受控模式
+
+## 基本用法
+
+```jsx
+// 非受控模式
+<Rate defaultValue={3} />
+
+// 受控模式
+const [value, setValue] = useState(3);
+<Rate value={value} onChange={(newValue) => setValue(newValue)} />
+```
+
+## 使用示例
+
+### 1. 基本评分
+
+```jsx
+<Rate defaultValue={3} />
+```
+
+### 2. 半星评分
+
+```jsx
+<Rate allowHalf defaultValue={2.5} />
+```
+
+### 3. 自定义星星总数
+
+```jsx
+<Rate count={10} defaultValue={7} />
+```
+
+### 4. 禁用状态
+
+```jsx
+<Rate disabled defaultValue={4} />
+```
+
+### 5. 只读状态
+
+```jsx
+<Rate readonly defaultValue={3.5} />
+```
+
+### 6. 不同尺寸
+
+```jsx
+<View style={{ marginBottom: 20 }}>
+  <Text style={{ marginBottom: 8 }}>小尺寸评分</Text>
+  <Rate size="small" defaultValue={3} />
+</View>
+
+<View style={{ marginBottom: 20 }}>
+  <Text style={{ marginBottom: 8 }}>默认尺寸评分</Text>
+  <Rate size="default" defaultValue={3} />
+</View>
+
+<View style={{ marginBottom: 20 }}>
+  <Text style={{ marginBottom: 8 }}>大尺寸评分</Text>
+  <Rate size="large" defaultValue={3} />
+</View>
+```
+
+### 7. 禁止清除
+
+```jsx
+<Rate allowClear={false} defaultValue={3} />
+```
+
+### 8. 自定义颜色
+
+```jsx
+<Rate color="#ff4d4f" unselectedColor="#f5f5f5" defaultValue={3} />
+```
+
+### 9. 自定义字符
+
+```jsx
+// 使用其他字符
+<Rate character="♥" defaultValue={3} />
+
+// 使用React节点
+<Rate character={<Text style={{ color: '#ff4d4f' }}>★</Text>} defaultValue={3} />
+
+// 使用函数返回自定义字符
+<Rate character={(index) => index % 2 === 0 ? '★' : '☆'} defaultValue={3} />
+```
+
+### 10. 带工具提示
+
+```jsx
+const tooltips = ['非常差', '较差', '一般', '良好', '非常好'];
+<Rate tooltips={tooltips} showTooltips defaultValue={3} />
+```
+
+### 11. 带回调函数
+
+```jsx
+const [value, setValue] = useState(3);
+const [hoverValue, setHoverValue] = useState(0);
+
+<View style={{ marginBottom: 10 }}>
+  <Text>当前评分: {value}</Text>
+</View>
+<View style={{ marginBottom: 10 }}>
+  <Text>Hover评分: {hoverValue}</Text>
+</View>
+<Rate
+  value={value}
+  onChange={(newValue) => setValue(newValue)}
+  onHoverChange={(newHoverValue) => setHoverValue(newHoverValue)}
+/>
+```
+
+## API
+
+### RateProps
+
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| value | number | - | 当前评分值（受控模式） |
+| defaultValue | number | 0 | 默认评分值（非受控模式） |
+| count | number | 5 | 星星总数 |
+| allowHalf | boolean | false | 是否允许半星评分 |
+| allowClear | boolean | true | 是否允许清除评分 |
+| disabled | boolean | false | 是否禁用 |
+| readonly | boolean | false | 是否只读 |
+| size | 'small' \| 'medium' \| 'large' | 'medium' | 评分尺寸 |
+| character | RateCharacter \| ((index: number) => RateCharacter) | '★' | 自定义字符 |
+| tooltips | string[] | [] | 提示文案数组 |
+| showTooltips | boolean | false | 是否显示提示文案 |
+| color | string | - | 自定义颜色 |
+| unselectedColor | string | - | 自定义未选中颜色 |
+| autoFocus | boolean | false | 是否自动聚焦 |
+| keyboard | boolean | true | 是否支持键盘导航 |
+| onChange | (value: number) => void | - | 评分改变时的回调 |
+| onHoverChange | (value: number) => void | - | Hover时的回调 |
+| onFocus | () => void | - | 聚焦时的回调 |
+| onBlur | () => void | - | 失焦时的回调 |
+| onKeyDown | (event: any) => void | - | 键盘事件回调 |
+| className | string | - | 自定义类名 |
+| style | CSSProperties | - | 自定义样式 |
+
+### RateRef
+
+| 方法 | 返回值 | 说明 |
+| --- | --- | --- |
+| element | any \| null | 获取元素引用 |
+| getValue | () => number | 获取当前评分值 |
+| setValue | (value: number) => void | 设置评分值 |
+| reset | () => void | 重置评分 |
+| focus | () => void | 聚焦到组件 |
+| blur | () => void | 失焦 |
+
+## 使用提示
+
+- 使用受控模式时，需要通过 `value` 和 `onChange` 来管理评分状态
+- 半星评分时，点击星星的左半部分会选中半星，点击右半部分会选中整星
+- 自定义字符时，可以使用字符串、React节点或函数返回值
+- 工具提示功能需要同时设置 `tooltips` 和 `showTooltips` 属性
+- 禁用状态下，评分组件不可点击，也不会触发 `onChange` 事件
+- 只读状态下，评分组件不可点击，但可以正常显示评分
+- 允许清除功能开启时，点击已选中的评分会将评分重置为0
+
+## 浏览器兼容性
+
+- 现代浏览器（Chrome, Firefox, Safari, Edge）
+- Taro 支持的小程序平台
+
+## 无障碍支持
+
+- 支持键盘导航
+- 提供适当的 aria 标签
+- 遵循 WCAG 2.1 无障碍标准

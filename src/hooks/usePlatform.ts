@@ -1,16 +1,34 @@
 import { useState, useEffect } from 'react';
+import * as Taro from '@tarojs/taro';
 
 /**
  * 获取当前平台信息
  * @returns 当前平台类型
  */
 export const usePlatform = () => {
-  const [platform, setPlatform] = useState < string > ('');
+  const [platform, setPlatform] = useState<string>('');
 
   useEffect(() => {
-    // @ts-ignore
-    const taroEnv = process.env.TARO_ENV;
-    setPlatform(taroEnv || 'h5');
+    const detectEnv = (): string => {
+      try {
+        if (typeof Taro.getEnv === 'function') {
+          const env = String(Taro.getEnv()).toLowerCase();
+          return env as any;
+        }
+      } catch {}
+
+      if (typeof import.meta !== 'undefined' && (import.meta as any)?.env?.TARO_ENV) {
+        return (import.meta as any).env.TARO_ENV as string;
+      }
+
+      if (typeof process !== 'undefined' && process.env && process.env['TARO_ENV']) {
+        return process.env['TARO_ENV'] as string;
+      }
+
+      return 'h5';
+    };
+
+    setPlatform(detectEnv());
   }, []);
 
   return platform;

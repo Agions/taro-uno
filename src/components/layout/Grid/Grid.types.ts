@@ -16,7 +16,7 @@ export type GridGap =
   | [Size | number | `${number}${CSSUnit}`, Size | number | `${number}${CSSUnit}`];
 
 /** Grid组件列数 */
-export type GridCols = number | `${number}`;
+export type GridCols = string | number | `${number}`;
 
 /** Grid组件引用 */
 export interface GridRef {
@@ -31,13 +31,13 @@ export interface GridRef {
   /** 获取当前间距 */
   getGap: () => GridGap;
   /** 设置列数 */
-  setCols: (cols: GridCols) => void;
+  setCols: (_cols: GridCols) => void;
   /** 设置对齐方式 */
-  setAlign: (align: GridAlign) => void;
+  setAlign: (_align: GridAlign) => void;
   /** 设置对齐方式 */
-  setJustify: (justify: GridJustify) => void;
+  setJustify: (_justify: GridJustify) => void;
   /** 设置间距 */
-  setGap: (gap: GridGap) => void;
+  setGap: (_gap: GridGap) => void;
   /** 滚动到视图 */
   scrollIntoView: (options?: ScrollIntoViewOptions) => void;
 }
@@ -49,23 +49,23 @@ export interface GridProps extends BaseComponentProps {
   /** 列数 */
   cols?: GridCols;
   /** 行数 */
-  rows?: number;
+  rows?: number | undefined;
   /** 间距 */
   gap?: GridGap;
   /** 垂直间距 */
-  rowGap?: Size | number | `${number}${CSSUnit}`;
+  rowGap?: Size | number | `${number}${CSSUnit}` | undefined;
   /** 水平间距 */
-  columnGap?: Size | number | `${number}${CSSUnit}`;
+  columnGap?: Size | number | `${number}${CSSUnit}` | undefined;
   /** 对齐方式 */
   align?: GridAlign;
   /** 对齐方式 */
   justify?: GridJustify;
   /** 点击事件 */
-  onClick?: (event: React.MouseEvent) => void;
+  onClick?: (_event: ITouchEvent) => void;
+  /** 子元素悬停事件 */
+  onItemHover?: (_index: number, event: ITouchEvent) => void;
   /** 子元素点击事件 */
-  onItemHover?: (index: number, event: React.MouseEvent) => void;
-  /** 子元素点击事件 */
-  onItemClick?: (index: number, event: ITouchEvent) => void;
+  onItemClick?: (_index: number, event: ITouchEvent) => void;
   /** 响应式断点 */
   responsive?: {
     xs?: Partial<GridProps>;

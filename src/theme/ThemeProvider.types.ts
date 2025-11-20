@@ -5,13 +5,13 @@ import type { ReactNode } from 'react';
 export interface ThemeContextType {
   theme: ThemeConfig;
   themeMode: ThemeMode;
-  setThemeMode: (mode: ThemeMode) => void;
+  setThemeMode: (_mode: ThemeMode) => void;
   toggleTheme: () => void;
   isDark: boolean;
-  setCustomTheme: (theme: Partial<ThemeConfig>) => void;
+  setCustomTheme: (_theme: Partial<ThemeConfig>) => void;
   resetTheme: () => void;
   exportTheme: () => string;
-  importTheme: (themeData: string) => boolean;
+  importTheme: (_themeData: string) => boolean;
 }
 
 export interface ThemeProviderProps {

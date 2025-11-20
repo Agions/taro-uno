@@ -13,9 +13,9 @@ interface MemoizationOptions {
 }
 
 /** 函数记忆化hook */
-export function useMemoizedFunction<T extends (...args: any[]) => any>(
+export function useMemoizedFunction<T extends (...args: unknown[]) => unknown>(
   fn: T,
-  options: MemoizationOptions = {}
+  options: MemoizationOptions = {},
 ): T {
   const { maxSize = 100, ttl = 0 } = options;
   const cacheRef = useRef<Map<string, { result: ReturnType<T>; timestamp: number }>>(new Map());
@@ -32,8 +32,8 @@ export function useMemoizedFunction<T extends (...args: any[]) => any>(
       }
 
       // 计算新结果
-      const result = fn(...args);
-      
+      const result = fn(...args) as ReturnType<T>;
+
       // 清理过期的缓存项
       if (ttl > 0) {
         for (const [cacheKey, value] of cacheRef.current.entries()) {
@@ -62,14 +62,11 @@ export function useMemoizedFunction<T extends (...args: any[]) => any>(
 interface CacheOptions<_T> {
   key?: string;
   ttl?: number;
-  deps?: any[];
+  deps?: unknown[];
 }
 
 /** 计算结果缓存hook */
-export function useComputedCache<T>(
-  compute: () => T,
-  options: CacheOptions<T> = {}
-): T {
+export function useComputedCache<T>(compute: () => T, options: CacheOptions<T> = {}): T {
   const { key = 'default', ttl = 0, deps = [] } = options;
   const cacheRef = useRef<Map<string, { value: T; timestamp: number }>>(new Map());
   const [_, forceUpdate] = useState({});
@@ -86,10 +83,10 @@ export function useComputedCache<T>(
     // 计算新值
     const value = compute();
     cacheRef.current.set(key, { value, timestamp: now });
-    
+
     // 触发更新以使用新值
     forceUpdate({});
-    
+
     return value;
   }, [compute, key, ttl, ...deps]);
 }
@@ -103,21 +100,15 @@ interface VirtualListOptions {
 }
 
 /** 虚拟列表hook */
-export function useVirtualList<T>(
-  items: T[],
-  options: VirtualListOptions
-) {
+export function useVirtualList<T>(items: T[], options: VirtualListOptions) {
   const { itemHeight, overscanCount = 3, containerHeight } = options;
-  
+
   const [scrollTop, setScrollTop] = useState(0);
-  
+
   const visibleRange = useMemo(() => {
     const startIndex = Math.max(0, Math.floor(scrollTop / itemHeight) - overscanCount);
-    const endIndex = Math.min(
-      items.length - 1,
-      Math.ceil((scrollTop + containerHeight) / itemHeight) + overscanCount
-    );
-    
+    const endIndex = Math.min(items.length - 1, Math.ceil((scrollTop + containerHeight) / itemHeight) + overscanCount);
+
     return { startIndex, endIndex };
   }, [scrollTop, itemHeight, containerHeight, overscanCount, items.length]);
 
@@ -155,10 +146,7 @@ interface LazyLoadOptions {
 }
 
 /** 懒加载hook */
-export function useLazyLoad(
-  elementRef: React.RefObject<Element>,
-  options: LazyLoadOptions = {}
-) {
+export function useLazyLoad(elementRef: React.RefObject<Element>, options: LazyLoadOptions = {}) {
   const { threshold = 0, rootMargin = '0px', triggerOnce = true } = options;
   const [isVisible, setIsVisible] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
@@ -179,7 +167,7 @@ export function useLazyLoad(
           observer.unobserve(element);
         }
       },
-      { threshold, rootMargin }
+      { threshold, rootMargin },
     );
 
     observer.observe(element);
@@ -200,9 +188,9 @@ interface RequestCacheOptions {
 }
 
 /** 请求防抖缓存hook */
-export function useRequestCache<T, P extends any[]>(
+export function useRequestCache<T, P extends unknown[]>(
   requestFn: (...params: P) => Promise<T>,
-  options: RequestCacheOptions = {}
+  options: RequestCacheOptions = {},
 ) {
   const { ttl = 5000, dedupe = true } = options;
   const cacheRef = useRef<Map<string, { data: T; timestamp: number }>>(new Map());
@@ -210,43 +198,46 @@ export function useRequestCache<T, P extends any[]>(
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const executeRequest = useCallback(async (...params: P): Promise<T> => {
-    const key = JSON.stringify(params);
-    const now = Date.now();
-    
-    // 检查缓存
-    const cached = cacheRef.current.get(key);
-    if (cached && now - cached.timestamp < ttl) {
-      return cached.data;
-    }
+  const executeRequest = useCallback(
+    async (...params: P): Promise<T> => {
+      const key = JSON.stringify(params);
+      const now = Date.now();
 
-    // 检查是否有正在进行的请求
-    if (dedupe && pendingRequestsRef.current.has(key)) {
-      return pendingRequestsRef.current.get(key)!;
-    }
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      const promise = requestFn(...params);
-      
-      if (dedupe) {
-        pendingRequestsRef.current.set(key, promise);
+      // 检查缓存
+      const cached = cacheRef.current.get(key);
+      if (cached && now - cached.timestamp < ttl) {
+        return cached.data;
       }
 
-      const data = await promise;
-      
-      cacheRef.current.set(key, { data, timestamp: now });
-      return data;
-    } catch (err) {
-      setError(err as Error);
-      throw err;
-    } finally {
-      setLoading(false);
-      pendingRequestsRef.current.delete(key);
-    }
-  }, [requestFn, ttl, dedupe]);
+      // 检查是否有正在进行的请求
+      if (dedupe && pendingRequestsRef.current.has(key)) {
+        return pendingRequestsRef.current.get(key)!;
+      }
+
+      setLoading(true);
+      setError(null);
+
+      try {
+        const promise = requestFn(...params);
+
+        if (dedupe) {
+          pendingRequestsRef.current.set(key, promise);
+        }
+
+        const data = await promise;
+
+        cacheRef.current.set(key, { data, timestamp: now });
+        return data;
+      } catch (err) {
+        setError(err as Error);
+        throw err;
+      } finally {
+        setLoading(false);
+        pendingRequestsRef.current.delete(key);
+      }
+    },
+    [requestFn, ttl, dedupe],
+  );
 
   const clearCache = useCallback(() => {
     cacheRef.current.clear();
@@ -269,30 +260,30 @@ interface BatchUpdateOptions {
 }
 
 /** 批量更新优化hook */
-export function useBatchUpdate<T>(
-  onUpdate: (items: T[]) => void,
-  options: BatchUpdateOptions = {}
-) {
+export function useBatchUpdate<T>(onUpdate: (items: T[]) => void, options: BatchUpdateOptions = {}) {
   const { delay = 100, maxSize = 50 } = options;
   const batchRef = useRef<T[]>([]);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const addItem = useCallback((item: T) => {
-    batchRef.current.push(item);
+  const addItem = useCallback(
+    (item: T) => {
+      batchRef.current.push(item);
 
-    if (batchRef.current.length >= maxSize) {
-      flushBatch();
-    } else if (!timeoutRef.current) {
-      timeoutRef.current = setTimeout(flushBatch, delay);
-    }
-  }, [delay, maxSize]);
+      if (batchRef.current.length >= maxSize) {
+        flushBatch();
+      } else if (!timeoutRef.current) {
+        timeoutRef.current = setTimeout(flushBatch, delay);
+      }
+    },
+    [delay, maxSize],
+  );
 
   const flushBatch = useCallback(() => {
     if (batchRef.current.length > 0) {
       onUpdate(batchRef.current);
       batchRef.current = [];
     }
-    
+
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
@@ -322,7 +313,7 @@ interface PriorityUpdateOptions {
 export function usePriorityUpdates<T>(
   highPriorityUpdate: (value: T) => void,
   lowPriorityUpdate: (value: T) => void,
-  options: PriorityUpdateOptions = {}
+  options: PriorityUpdateOptions = {},
 ) {
   const { highPriorityDelay = 0, lowPriorityDelay = 100 } = options;
   const highPriorityQueueRef = useRef<T[]>([]);
@@ -330,33 +321,39 @@ export function usePriorityUpdates<T>(
   const highPriorityTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lowPriorityTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const addHighPriority = useCallback((value: T) => {
-    highPriorityQueueRef.current.push(value);
-    
-    if (!highPriorityTimeoutRef.current) {
-      highPriorityTimeoutRef.current = setTimeout(() => {
-        const items = highPriorityQueueRef.current;
-        highPriorityQueueRef.current = [];
-        highPriorityTimeoutRef.current = null;
-        
-        items.forEach(highPriorityUpdate);
-      }, highPriorityDelay);
-    }
-  }, [highPriorityUpdate, highPriorityDelay]);
+  const addHighPriority = useCallback(
+    (value: T) => {
+      highPriorityQueueRef.current.push(value);
 
-  const addLowPriority = useCallback((value: T) => {
-    lowPriorityQueueRef.current.push(value);
-    
-    if (!lowPriorityTimeoutRef.current) {
-      lowPriorityTimeoutRef.current = setTimeout(() => {
-        const items = lowPriorityQueueRef.current;
-        lowPriorityQueueRef.current = [];
-        lowPriorityTimeoutRef.current = null;
-        
-        items.forEach(lowPriorityUpdate);
-      }, lowPriorityDelay);
-    }
-  }, [lowPriorityUpdate, lowPriorityDelay]);
+      if (!highPriorityTimeoutRef.current) {
+        highPriorityTimeoutRef.current = setTimeout(() => {
+          const items = highPriorityQueueRef.current;
+          highPriorityQueueRef.current = [];
+          highPriorityTimeoutRef.current = null;
+
+          items.forEach(highPriorityUpdate);
+        }, highPriorityDelay);
+      }
+    },
+    [highPriorityUpdate, highPriorityDelay],
+  );
+
+  const addLowPriority = useCallback(
+    (value: T) => {
+      lowPriorityQueueRef.current.push(value);
+
+      if (!lowPriorityTimeoutRef.current) {
+        lowPriorityTimeoutRef.current = setTimeout(() => {
+          const items = lowPriorityQueueRef.current;
+          lowPriorityQueueRef.current = [];
+          lowPriorityTimeoutRef.current = null;
+
+          items.forEach(lowPriorityUpdate);
+        }, lowPriorityDelay);
+      }
+    },
+    [lowPriorityUpdate, lowPriorityDelay],
+  );
 
   useEffect(() => {
     return () => {
@@ -402,8 +399,8 @@ export function usePerformanceMonitor(_componentName: string) {
   const endMeasure = useCallback(() => {
     const endTime = performance.now();
     const renderTime = endTime - startTimeRef.current;
-    
-    setMetrics(prev => ({
+
+    setMetrics((prev) => ({
       ...prev,
       renderTime,
       updateTime: prev.updateTime + renderTime,
@@ -411,13 +408,16 @@ export function usePerformanceMonitor(_componentName: string) {
 
     // 获取内存使用情况
     if (typeof performance !== 'undefined' && 'memory' in performance) {
-      const memory = (performance as any).memory;
-      setMetrics(prev => ({
+      const memory = (performance as unknown as { memory?: { usedJSHeapSize: number; totalJSHeapSize: number } })
+        .memory;
+      setMetrics((prev) => ({
         ...prev,
-        memoryUsage: {
-          usedJSHeapSize: memory.usedJSHeapSize,
-          totalJSHeapSize: memory.totalJSHeapSize,
-        },
+        memoryUsage: memory
+          ? {
+              usedJSHeapSize: memory.usedJSHeapSize,
+              totalJSHeapSize: memory.totalJSHeapSize,
+            }
+          : prev.memoryUsage,
       }));
     }
   }, []);

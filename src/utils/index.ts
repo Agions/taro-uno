@@ -5,19 +5,22 @@
 
 // ==================== 导入已存在的工具函数 ====================
 
+// 导入安全工具函数
+import * as xssProtection from './security/xss-protection';
+import * as apiSecurity from './security/api-security';
+import { httpClient as defaultHttpClient } from './network/http-client';
+
 // 导入类型工具函数
 import {
   deepEqual,
 } from './typeHelpers';
 
-// 导入无障碍工具函数
-import * as AccessibilityUtils from './accessibility';
 
 // ==================== 创建命名空间和工具类 ====================
 
 /** 平台检测工具类 */
 export class PlatformDetector {
-  private static cache: Map<string, any> = new Map();
+  private static cache: Map<string, unknown> = new Map();
 
   static is(platform: string): boolean {
     return process.env['TARO_ENV'] === platform;
@@ -43,10 +46,16 @@ export class PlatformDetector {
     return this.isMiniProgram() || this.isH5() && window.innerWidth < 768;
   }
 
-  static getPlatformInfo(): any {
+  static getPlatformInfo(): { platform: string; isMiniProgram: boolean; isH5: boolean; isRN: boolean; env: string } {
     const platform = this.getPlatform();
     if (this.cache.has(platform)) {
-      return this.cache.get(platform);
+      return this.cache.get(platform) as {
+        platform: string;
+        isMiniProgram: boolean;
+        isH5: boolean;
+        isRN: boolean;
+        env: string;
+      };
     }
 
     const info = {
@@ -78,6 +87,15 @@ export { PlatformDetector as platform };
 
 /** 通用工具函数 */
 export const utils = {
+  // 安全工具
+  security: {
+    ...xssProtection,
+    api: apiSecurity,
+  },
+  network: {
+    httpClient: defaultHttpClient,
+  },
+
   // 平台工具
   platform: PlatformDetector,
 
@@ -85,9 +103,6 @@ export const utils = {
   types: {
     deepEqual,
   },
-
-  // 无障碍工具
-  accessibility: AccessibilityUtils,
 
   // 工具函数快捷访问
   cn,
@@ -98,4 +113,3 @@ export const utils = {
 export default utils;
 
 // platform已通过export { PlatformDetector as platform }导出
-

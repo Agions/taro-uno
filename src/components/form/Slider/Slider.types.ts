@@ -30,16 +30,16 @@ export interface SliderProps {
     /** 是否显示工具提示 */
     visible?: boolean;
     /** 格式化函数 */
-    formatter?: (value: number) => React.ReactNode;
+    formatter?: (_value: number) => React.ReactNode;
   } | boolean;
   /** 自定义样式类名 */
   className?: string;
   /** 自定义样式 */
   style?: React.CSSProperties;
   /** 值变化时的回调 */
-  onChange?: (value: number) => void;
+  onChange?: (_value: number) => void;
   /** 拖拽结束时的回调 */
-  onChangeComplete?: (value: number) => void;
+  onChangeComplete?: (_value: number) => void;
   /** 是否启用无障碍访问 */
   accessible?: boolean;
   /** 无障碍标签 */
@@ -58,7 +58,7 @@ export interface SliderRef {
   /** 获取当前值 */
   getValue: () => number;
   /** 设置值 */
-  setValue: (value: number) => void;
+  setValue: (_value: number) => void;
   /** 禁用滑块 */
   disable: () => void;
   /** 启用滑块 */
@@ -80,13 +80,13 @@ export interface SliderMark {
 
 export interface SliderUtils {
   /** 计算滑块位置 */
-  calculatePosition: (value: number, min: number, max: number) => number;
+  calculatePosition: (_value: number, min: number, max: number) => number;
   /** 计算对应的值 */
-  calculateValue: (position: number, min: number, max: number) => number;
+  calculateValue: (_position: number, min: number, max: number) => number;
   /** 格式化显示值 */
-  formatValue: (value: number, step: number) => number;
+  formatValue: (_value: number, step: number) => number;
   /** 验证值是否在范围内 */
-  validateValue: (value: number, min: number, max: number) => boolean;
+  validateValue: (_value: number, min: number, max: number) => boolean;
 }
 
 export const SliderUtils: SliderUtils = {

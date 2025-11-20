@@ -3,83 +3,8 @@
  * 提供所有自定义hooks的统一访问入口
  */
 
-import { useState, useCallback, useEffect } from 'react';
-import { useDebounce, useThrottle } from './useEventHandling';
-import { useControlledState } from './useStateManagement';
-import { useMounted } from './useLifecycle';
-
-// ==================== 状态管理相关 ====================
-
-export {
-  useControlledState,
-  useSyncedState,
-  useStateHistory,
-  useValidatedState,
-  useBatchUpdate,
-  usePersistentState,
-  useStateSelector,
-} from './useStateManagement';
-
-// ==================== 事件处理相关 ====================
-
-export {
-  useDebounce,
-  useThrottle,
-  useClickHandler,
-  useLongPress,
-  useDrag,
-  useKeyboard,
-  useEventDelegate,
-} from './useEventHandling';
-
-// ==================== 生命周期管理相关 ====================
-
-export {
-  useMounted,
-  useLifecycle,
-  useOnce,
-  useConditionalEffect,
-  useAsyncEffect,
-  useTimer,
-  useDelay,
-  useNetworkState,
-  usePageVisibility,
-  useWindowSize,
-  useScrollPosition,
-  useMediaQuery,
-} from './useLifecycle';
-
-// ==================== 性能优化相关 ====================
-
-export {
-  useMemoizedFunction,
-  useComputedCache,
-  useVirtualList,
-  useLazyLoad,
-  useRequestCache,
-  useBatchUpdate as usePerformanceBatchUpdate,
-  usePriorityUpdates,
-  usePerformanceMonitor,
-} from './usePerformance';
-
-// ==================== 现有Hooks ====================
-
-export { usePlatform } from './usePlatform';
-export { useTheme } from './useTheme';
-export { usePerformanceMonitor as useExistingPerformanceMonitor } from './usePerformanceMonitor';
-export { useVirtualScroll } from './useVirtualScroll';
-
-// ==================== Hook类型定义 ====================
-
-export type {
-  ValidationResult,
-  ValidationRule,
-  Validator,
-  BatchValidationResult,
-  FormFieldState,
-  AsyncValidator,
-  ValidatorFactory,
-} from '../types/validators';
+import { useState, useEffect, useCallback, useRef } from 'react';
+export * from './useAsync';
 
 // ==================== 通用Hook工具类型 ====================
 
@@ -97,166 +22,89 @@ export type AsyncHookResult<T, E = Error> = {
 
 /** 事件处理Hook返回值类型 */
 export type EventHandlerResult = {
-  handler: (event: any) => void;
+  handler: (event: unknown) => void;
   cancel: () => void;
 };
 
-/** 生命周期Hook返回值类型 */
-export type LifecycleResult = {
-  mounted: boolean;
-  cleanup: () => void;
-};
+// ==================== 便捷Hook ====================
 
-/** 性能监控Hook返回值类型 */
-export type PerformanceResult = {
-  metrics: {
-    renderTime: number;
-    updateTime: number;
-    memoryUsage?: {
-      usedJSHeapSize: number;
-      totalJSHeapSize: number;
-    };
-  };
-  startMeasure: () => void;
-  endMeasure: () => void;
-  resetMetrics: () => void;
-};
+/** 获取最新状态值的Hook */
+export function useLatestState<T>(initialValue: T): [T, (value: T) => void, T] {
+  const [state, setState] = useState<T>(initialValue);
+  const latestRef = useRef<T>(state);
 
-// ==================== Hook工具函数 ====================
+  const setLatestState = useCallback((value: T) => {
+    latestRef.current = value;
+    setState(value);
+  }, []);
 
-/** 创建Hook的工具函数 */
-export const hookUtils = {
-  /** 创建状态管理Hook */
-  createStateHook: <T>(initialValue: T) => {
-    return () => {
-      const [state, setState] = useState(initialValue);
-      return [state, setState] as const;
-    };
-  },
+  return [state, setLatestState, latestRef.current];
+}
 
-  /** 创建异步Hook */
-  createAsyncHook: <T, P extends any[]>(
-    asyncFunction: (...params: P) => Promise<T>,
-    options: {
-      immediate?: boolean;
-      onSuccess?: (data: T) => void;
-      onError?: (error: Error) => void;
-    } = {}
-  ) => {
-    return (...params: P) => {
-      const [data, setData] = useState<T | null>(null);
-      const [loading, setLoading] = useState(false);
-      const [error, setError] = useState<Error | null>(null);
+/** 条件执行的Hook */
+export function useConditionalEffect(
+  effect: React.EffectCallback,
+  deps: React.DependencyList,
+  condition: (deps: React.DependencyList) => boolean
+) {
+  return useEffect(() => {
+    if (condition(deps)) {
+      return effect();
+    }
+  }, deps);
+}
 
-      const execute = useCallback(async () => {
-        setLoading(true);
-        setError(null);
-        
-        try {
-          const result = await asyncFunction(...params);
-          setData(result);
-          options.onSuccess?.(result);
-        } catch (err) {
-          setError(err as Error);
-          options.onError?.(err as Error);
-        } finally {
-          setLoading(false);
-        }
-      }, params);
+// ==================== Hook验证工具 ====================
 
-      const reset = useCallback(() => {
-        setData(null);
-        setLoading(false);
-        setError(null);
-      }, []);
+/** Hook依赖验证 */
+export function useHookDepsValidator(
+  hookName: string,
+  deps: React.DependencyList,
+  validator: (deps: React.DependencyList) => boolean
+): void {
+  useEffect(() => {
+    if (!validator(deps)) {
+      console.warn(`[${hookName}] Invalid dependencies detected`, deps);
+    }
+  }, deps);
+}
 
-      useEffect(() => {
-        if (options.immediate) {
-          execute();
-        }
-      }, [execute, options.immediate]);
+/** Hook性能监控 */
+export function useHookPerformance(hookName: string): void {
+  const startTime = useRef<number>(Date.now());
 
-      return { data, loading, error, execute, reset } as AsyncHookResult<T>;
-    };
-  },
+  useEffect(() => {
+    const endTime = Date.now();
+    const duration = endTime - startTime.current;
 
-  /** 创建事件处理Hook */
-  createEventHook: <T extends (...args: any[]) => any>(
-    handler: T,
-    options: {
-      debounce?: number;
-      throttle?: number;
-      leading?: boolean;
-      trailing?: boolean;
-    } = {}
-  ) => {
-    return () => {
-      const { debounce, throttle, leading = false, trailing = true } = options;
-      
-      if (debounce) {
-        return useDebounce(handler, { delay: debounce, leading, trailing });
-      }
-      
-      if (throttle) {
-        return useThrottle(handler, { delay: throttle, leading, trailing });
-      }
-      
-      return handler;
-    };
-  },
-};
+    if (duration > 16) { // 超过一帧的时间
+      console.warn(`[${hookName}] Hook execution took ${duration}ms`);
+    }
 
-// ==================== 默认导出 ====================
+    startTime.current = Date.now();
+  });
+}
 
-export default {
-  // 状态管理
-  useControlledState,
-  // useSyncedState,
-  // useStateHistory,
-  // useValidatedState,
-  // useBatchUpdate,
-  // usePersistentState,
-  // useStateSelector,
+// ==================== Hook组合模式 ====================
 
-  // 事件处理
-  useDebounce,
-  useThrottle,
-  // useClickHandler,
-  // useLongPress,
-  // useDrag,
-  // useKeyboard,
-  // useEventDelegate,
+/** 组合多个Hook的返回值 */
+export function useCombinedHooks<T extends Record<string, unknown>>(
+  hooks: { [K in keyof T]: () => T[K] }
+): T {
+  const result = {} as T;
 
-  // 生命周期
-  useMounted,
-  // useLifecycle,
-  // useOnce,
-  // useConditionalEffect,
-  // useAsyncEffect,
-  // useTimer,
-  // useDelay,
-  // useNetworkState,
-  // usePageVisibility,
-  // useWindowSize,
-  // useScrollPosition,
-  // useMediaQuery,
+  for (const key in hooks) {
+    result[key] = hooks[key]();
+  }
 
-  // 性能优化
-  // useMemoizedFunction,
-  // useComputedCache,
-  // useVirtualList,
-  // useLazyLoad,
-  // useRequestCache,
-  // usePerformanceBatchUpdate,
-  // usePriorityUpdates,
-  // usePerformanceMonitor,
+  return result;
+}
 
-  // 现有Hooks
-  // usePlatform,
-  // useTheme,
-  // useExistingPerformanceMonitor,
-  // useVirtualScroll,
-
-  // 工具函数
-  hookUtils,
-};
+/** 条件Hook执行 */
+export function useConditionalHook<T>(
+  condition: boolean,
+  hook: () => T,
+  fallback?: () => T
+): T | undefined {
+  return condition ? hook() : fallback?.();
+}

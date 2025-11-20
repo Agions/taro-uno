@@ -31,9 +31,9 @@ export interface DisabledTime {
   /** 禁用小时 */
   disabledHours?: () => number[];
   /** 禁用分钟 */
-  disabledMinutes?: (selectedHour: number) => number[];
+  disabledMinutes?: (_selectedHour: number) => number[];
   /** 禁用秒数 */
-  disabledSeconds?: (selectedHour: number, selectedMinute: number) => number[];
+  disabledSeconds?: (_selectedHour: number, selectedMinute: number) => number[];
 }
 
 /** 时间范围 */
@@ -46,7 +46,7 @@ export interface TimeRange {
 export type TimeRangeValue = TimeRange;
 
 /** 时间禁用函数类型 */
-export type DisabledTimeFunction = (type: 'hours' | 'minutes' | 'seconds', value: number) => boolean;
+export type DisabledTimeFunction = (_type: 'hours' | 'minutes' | 'seconds', value: number) => boolean;
 
 /** 时间值 */
 export interface TimeValue {
@@ -73,9 +73,9 @@ export interface TimeFormatConfig {
   /** 补零 */
   padZero?: boolean;
   /** 自定义格式化函数 */
-  customFormatter?: (time: TimeValue) => string;
+  customFormatter?: (_time: TimeValue) => string;
   /** 自定义解析函数 */
-  customParser?: (text: string) => TimeValue | null;
+  customParser?: (_text: string) => TimeValue | null;
 }
 
 /** 时间选择器组件属性接口 */
@@ -88,7 +88,7 @@ export interface TimePickerProps {
   id?: string;
   title?: string;
   /** 时间变化回调 */
-  onChange?: (time: TimeValue | null, timeString: string) => void;
+  onChange?: (_time: TimeValue | null, timeString: string) => void;
   /** 时间范围选择 */
   range?: boolean;
   /** 时间范围值 */
@@ -96,7 +96,7 @@ export interface TimePickerProps {
   /** 默认时间范围 */
   defaultRangeValue?: TimeRange | null;
   /** 时间范围变化回调 */
-  onRangeChange?: (range: TimeRange | null, timeStrings: [string, string]) => void;
+  onRangeChange?: (_range: TimeRange | null, timeStrings: [string, string]) => void;
   /** 时间格式配置 */
   formatConfig?: TimeFormatConfig;
   /** 占位符 */
@@ -138,7 +138,7 @@ export interface TimePickerProps {
   /** 是否显示确认按钮 */
   showConfirm?: boolean;
   /** 自定义时间选项渲染 */
-  timeRender?: (time: TimeValue, type: TimeUnit) => React.ReactNode;
+  timeRender?: (_time: TimeValue, type: TimeUnit) => React.ReactNode;
   /** 自定义面板头部渲染 */
   renderExtraFooter?: () => React.ReactNode;
   /** 自定义样式类名 */
@@ -152,19 +152,19 @@ export interface TimePickerProps {
   /** 是否块级显示 */
   block?: boolean;
   /** 获取焦点回调 */
-  onFocus?: (event: ITouchEvent) => void;
+  onFocus?: (_event: ITouchEvent) => void;
   /** 失去焦点回调 */
-  onBlur?: (event: ITouchEvent) => void;
+  onBlur?: (_event: ITouchEvent) => void;
   /** 点击回调 */
-  onClick?: (event: ITouchEvent) => void;
+  onClick?: (_event: ITouchEvent) => void;
   /** 面板打开回调 */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (_open: boolean) => void;
   /** 清除回调 */
-  onClear?: (event: ITouchEvent) => void;
+  onClear?: (_event: ITouchEvent) => void;
   /** 确认回调 */
-  onConfirm?: (time: TimeValue | null, timeString: string) => void;
+  onConfirm?: (_time: TimeValue | null, timeString: string) => void;
   /** 当前时间回调 */
-  onNow?: (time: TimeValue, timeString: string) => void;
+  onNow?: (_time: TimeValue, timeString: string) => void;
   /** 是否启用无障碍访问 */
   accessible?: boolean;
   /** 无障碍标签 */
@@ -194,11 +194,11 @@ export type TimePickerRef = {
   /** 获取当前值 */
   getValue: () => TimeValue | null;
   /** 设置值 */
-  setValue: (value: TimeValue | null) => void;
+  setValue: (_value: TimeValue | null) => void;
   /** 获取范围值 */
   getRangeValue: () => TimeRange | null;
   /** 设置范围值 */
-  setRangeValue: (value: TimeRange | null) => void;
+  setRangeValue: (_value: TimeRange | null) => void;
   /** 获取格式化字符串 */
   getTimeString: () => string;
   /** 获取范围格式化字符串 */
@@ -232,35 +232,35 @@ export type TimePickerRef = {
   /** 获取当前时间 */
   getCurrentTime: () => TimeValue;
   /** 验证时间 */
-  validateTime: (time: TimeValue) => boolean;
+  validateTime: (_time: TimeValue) => boolean;
   /** 格式化时间 */
-  formatTime: (time: TimeValue) => string;
+  formatTime: (_time: TimeValue) => string;
   /** 解析时间字符串 */
-  parseTimeString: (timeString: string) => TimeValue | null;
+  parseTimeString: (_timeString: string) => TimeValue | null;
 };
 
 /** 时间选择器工具函数接口 */
 export interface TimePickerUtils {
   /** 格式化时间 */
-  formatTime: (time: TimeValue, config: TimeFormatConfig) => string;
+  formatTime: (_time: TimeValue, config: TimeFormatConfig) => string;
   /** 解析时间字符串 */
-  parseTime: (timeString: string, config: TimeFormatConfig) => TimeValue | null;
+  parseTime: (_timeString: string, config: TimeFormatConfig) => TimeValue | null;
   /** 时间是否相等 */
-  isSameTime: (time1: TimeValue, time2: TimeValue) => boolean;
+  isSameTime: (_time1: TimeValue, time2: TimeValue) => boolean;
   /** 时间是否在范围内 */
-  isTimeInRange: (time: TimeValue, min?: TimeValue, max?: TimeValue) => boolean;
+  isTimeInRange: (_time: TimeValue, min?: TimeValue, max?: TimeValue) => boolean;
   /** 时间比较 */
-  compareTime: (time1: TimeValue, time2: TimeValue) => number;
+  compareTime: (_time1: TimeValue, time2: TimeValue) => number;
   /** 时间加减 */
-  addTime: (time: TimeValue, hours: number, minutes: number, seconds: number) => TimeValue;
+  addTime: (_time: TimeValue, hours: number, minutes: number, seconds: number) => TimeValue;
   /** 获取当前时间 */
   getCurrentTime: () => TimeValue;
   /** 验证时间 */
-  validateTime: (time: TimeValue) => boolean;
+  validateTime: (_time: TimeValue) => boolean;
   /** 24小时制转12小时制 */
-  convertTo12Hour: (time24: TimeValue) => TimeValue;
+  convertTo12Hour: (_time24: TimeValue) => TimeValue;
   /** 12小时制转24小时制 */
-  convertTo24Hour: (time12: TimeValue) => TimeValue;
+  convertTo24Hour: (_time12: TimeValue) => TimeValue;
   /** 生成时间选项 */
   generateTimeOptions: (
     unit: TimeUnit,
@@ -271,9 +271,9 @@ export interface TimePickerUtils {
     selectedTime?: TimeValue
   ) => Array<{ value: number; label: string; disabled: boolean }>;
   /** 计算时间差 */
-  getTimeDifference: (time1: TimeValue, time2: TimeValue) => { hours: number; minutes: number; seconds: number };
+  getTimeDifference: (_time1: TimeValue, time2: TimeValue) => { hours: number; minutes: number; seconds: number };
   /** 格式化时间差 */
-  formatTimeDifference: (difference: { hours: number; minutes: number; seconds: number }) => string;
+  formatTimeDifference: (_difference: { hours: number; minutes: number; seconds: number }) => string;
 }
 
 /** 时间选择器样式配置接口 */
@@ -341,9 +341,9 @@ export interface TimePickerContext {
   /** 样式配置 */
   styleConfig: TimePickerStyleConfig;
   /** 设置值 */
-  setValue: (value: TimeValue | null) => void;
+  setValue: (_value: TimeValue | null) => void;
   /** 设置范围值 */
-  setRangeValue: (value: TimeRange | null) => void;
+  setRangeValue: (_value: TimeRange | null) => void;
   /** 打开面板 */
   openPanel: () => void;
   /** 关闭面板 */
@@ -353,23 +353,23 @@ export interface TimePickerContext {
 /** 时间选择器事件接口 */
 export interface TimePickerEvents {
   /** 时间变化事件 */
-  onChange: (time: TimeValue | null, timeString: string) => void;
+  onChange: (_time: TimeValue | null, timeString: string) => void;
   /** 范围时间变化事件 */
-  onRangeChange: (range: TimeRange | null, timeStrings: [string, string]) => void;
+  onRangeChange: (_range: TimeRange | null, timeStrings: [string, string]) => void;
   /** 聚焦事件 */
-  onFocus: (event: ITouchEvent) => void;
+  onFocus: (_event: ITouchEvent) => void;
   /** 失焦事件 */
-  onBlur: (event: ITouchEvent) => void;
+  onBlur: (_event: ITouchEvent) => void;
   /** 点击事件 */
-  onClick: (event: ITouchEvent) => void;
+  onClick: (_event: ITouchEvent) => void;
   /** 面板打开变化事件 */
-  onOpenChange: (open: boolean) => void;
+  onOpenChange: (_open: boolean) => void;
   /** 清除事件 */
-  onClear: (event: ITouchEvent) => void;
+  onClear: (_event: ITouchEvent) => void;
   /** 确认事件 */
-  onConfirm: (time: TimeValue | null, timeString: string) => void;
+  onConfirm: (_time: TimeValue | null, timeString: string) => void;
   /** 当前时间事件 */
-  onNow: (time: TimeValue, timeString: string) => void;
+  onNow: (_time: TimeValue, timeString: string) => void;
 }
 
 /** 时间选择器选项配置接口 */

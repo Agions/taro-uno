@@ -1,6 +1,7 @@
 import React, { forwardRef, useRef, useState, useEffect, useCallback } from 'react';
 import { Textarea as TaroTextarea, View, Text } from '@tarojs/components';
 import { textareaStyles } from './Textarea.styles';
+import { utils } from '@/utils';
 import type { TextareaProps, TextareaRef, TextareaStatus, TextareaValidationResult, TextareaRule } from './Textarea.types';
 
 /** 文本域组件 */
@@ -209,7 +210,8 @@ export const TextareaComponent = forwardRef<TextareaRef, TextareaProps>((props, 
   // 格式化输入值
   const formatInputValue = useCallback(
     (inputValue: string): string => {
-      let formattedValue = inputValue;
+      // 首先进行XSS防护
+      let formattedValue = utils.security.sanitizeText(inputValue);
 
       // 限制长度
       if (maxLength && formattedValue.length > maxLength) {

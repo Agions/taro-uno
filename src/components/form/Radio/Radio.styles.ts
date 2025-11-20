@@ -1,4 +1,4 @@
-import platform from '@/utils';
+import { platform } from '@/utils';
 import type {
   RadioProps,
   RadioSize,

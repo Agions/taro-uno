@@ -21,8 +21,8 @@ export * from './layout';
 // 导出导航组件
 export * from './navigation';
 
-// 导出工具函数和类型
-export type { BasicComponents, BasicComponentProps, BasicComponentRef } from './basic';
+// 导出通用组件和提供者
+export * from './common';
 
 // 组件库版本
 export const VERSION = '1.0.0';
@@ -36,7 +36,19 @@ export const CONFIG = {
     basic: ['Button', 'Icon', 'Text', 'Divider', 'Typography'],
     display: ['Avatar', 'Badge', 'Card', 'List', 'Rate', 'Table', 'Tag', 'Timeline', 'Calendar', 'Carousel'],
     feedback: ['Modal', 'Message', 'Notification', 'Loading', 'Progress', 'Popconfirm', 'Tooltip', 'Drawer', 'Result'],
-    form: ['Form', 'Input', 'Select', 'DatePicker', 'Radio', 'Checkbox', 'Switch', 'Rate', 'Slider', 'Upload', 'AutoComplete'],
+    form: [
+      'Form',
+      'Input',
+      'Select',
+      'DatePicker',
+      'Radio',
+      'Checkbox',
+      'Switch',
+      'Rate',
+      'Slider',
+      'Upload',
+      'AutoComplete',
+    ],
     layout: ['Grid', 'Layout', 'Space', 'Affix'],
     navigation: ['Menu', 'Tabs', 'Pagination', 'Breadcrumb', 'Steps', 'PageHeader'],
   },
@@ -88,13 +100,42 @@ export const ComponentLibraryUtils = {
   },
 };
 
+
+// 同步获取组件（兼容性处理）
+let cachedComponents: any = null;
+const getComponentsSync = () => {
+  if (!cachedComponents) {
+    try {
+      const basic = require('./basic');
+      cachedComponents = {
+        Button: basic.Button,
+        Icon: basic.Icon,
+        Text: basic.Text,
+        Divider: basic.Divider,
+      };
+    } catch (error) {
+      console.warn('Failed to load basic components synchronously:', error);
+      cachedComponents = {};
+    }
+  }
+  return cachedComponents;
+};
+
 // 默认导出
 export default {
   // 基础组件
-  Button: require('./basic').Button,
-  Icon: require('./basic').Icon,
-  Text: require('./basic').Text,
-  Divider: require('./basic').Divider,
+  get Button() {
+    return getComponentsSync().Button;
+  },
+  get Icon() {
+    return getComponentsSync().Icon;
+  },
+  get Text() {
+    return getComponentsSync().Text;
+  },
+  get Divider() {
+    return getComponentsSync().Divider;
+  },
 
   // 工具函数
   Utils: ComponentLibraryUtils,

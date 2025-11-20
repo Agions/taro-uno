@@ -395,7 +395,7 @@ export const TableComponent = forwardRef<TableRef, TableProps>((props, ref) => {
   });
 
   return (
-    <View ref={tableRef} className={tableClassName} style={tableStyle} {...restProps} aria-label={props.accessibilityLabel} aria-role={props.accessibilityRole}>
+    <View ref={tableRef} className={tableClassName} style={tableStyle} {...restProps}>
       {renderLoading()}
 
       <ScrollView

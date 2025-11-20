@@ -224,7 +224,7 @@ export const CascaderComponent = forwardRef<CascaderRef, CascaderProps>((props, 
     (option: CascaderOption, level: number) => {
       const optionValue = getOptionValue(option);
       const optionLabel = getOptionLabel(option);
-      const isSelected = selectedOptions[level] && getOptionValue(selectedOptions[level]) === optionValue;
+      const isSelected = selectedOptions[level] && getOptionValue(selectedOptions[level]!) === optionValue;
       const isExpanded = expandedValues.some(value => value === optionValue);
       const optionHasChildren = hasChildren(option);
 

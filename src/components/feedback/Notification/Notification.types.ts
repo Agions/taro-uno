@@ -1,6 +1,5 @@
 import React from 'react';
 import { ITouchEvent } from '@tarojs/components';
-import { AccessibilityProps } from '../../../types/accessibility';
 
 /** 通知类型 */
 export type NotificationType = 'success' | 'error' | 'warning' | 'info';
@@ -34,7 +33,7 @@ export interface NotificationItem {
   /** 自定义样式 */
   style?: React.CSSProperties;
   /** 关闭回调 */
-  onClose?: (key: string) => void;
+  onClose?: (_key: string) => void;
   /** 点击回调 */
   onClick?: () => void;
   /** 显示关闭按钮 */
@@ -48,7 +47,7 @@ export interface NotificationItem {
 }
 
 /** 通知组件属性 */
-export interface NotificationProps extends AccessibilityProps {
+export interface NotificationProps {
   /** 通知类型 */
   type?: NotificationType;
   /** 通知标题 */
@@ -98,7 +97,7 @@ export interface NotificationRef {
   /** 隐藏通知 */
   hide: () => boolean;
   /** 更新通知内容 */
-  update: (props: Partial<NotificationProps>) => boolean;
+  update: (_props: Partial<NotificationProps>) => boolean;
   /** 暂停自动关闭 */
   pauseProgress?: () => void;
   /** 恢复自动关闭 */
@@ -112,7 +111,7 @@ export interface NotificationRef {
 }
 
 /** 通知管理器属性 */
-export interface NotificationManagerProps extends AccessibilityProps {
+export interface NotificationManagerProps {
   /** 最大通知数量 */
   maxCount?: number;
   /** 默认位置 */
@@ -142,43 +141,43 @@ export interface NotificationManagerProps extends AccessibilityProps {
   /** 容器类名 */
   containerClassName?: string;
   /** 进入回调 */
-  onEnter?: (key: string) => void;
+  onEnter?: (_key: string) => void;
   /** 离开回调 */
-  onLeave?: (key: string) => void;
+  onLeave?: (_key: string) => void;
   /** 全部关闭回调 */
   onAllClose?: () => void;
   /** 通知配置更新回调 */
-  onUpdate?: (key: string, config: Partial<NotificationItem>) => void;
+  onUpdate?: (_key: string, config: Partial<NotificationItem>) => void;
 }
 
 /** 通知管理器引用 */
 export interface NotificationManagerRef {
   /** 显示通知 */
-  open: (config: Omit<NotificationItem, 'key' | 'createdAt'>) => string;
+  open: (_config: Omit<NotificationItem, 'key' | 'createdAt'>) => string;
   /** 显示成功通知 */
-  success: (config: Omit<NotificationItem, 'key' | 'createdAt' | 'type'>) => string;
+  success: (_config: Omit<NotificationItem, 'key' | 'createdAt' | 'type'>) => string;
   /** 显示信息通知 */
-  info: (config: Omit<NotificationItem, 'key' | 'createdAt' | 'type'>) => string;
+  info: (_config: Omit<NotificationItem, 'key' | 'createdAt' | 'type'>) => string;
   /** 显示警告通知 */
-  warning: (config: Omit<NotificationItem, 'key' | 'createdAt' | 'type'>) => string;
+  warning: (_config: Omit<NotificationItem, 'key' | 'createdAt' | 'type'>) => string;
   /** 显示错误通知 */
-  error: (config: Omit<NotificationItem, 'key' | 'createdAt' | 'type'>) => string;
+  error: (_config: Omit<NotificationItem, 'key' | 'createdAt' | 'type'>) => string;
   /** 关闭指定通知 */
-  close: (key: string) => void;
+  close: (_key: string) => void;
   /** 关闭所有通知 */
   destroyAll: () => void;
   /** 更新通知 */
-  update: (key: string, config: Partial<NotificationItem>) => void;
+  update: (_key: string, config: Partial<NotificationItem>) => void;
   /** 获取所有通知 */
   getNotifications: () => NotificationItem[];
   /** 获取通知数量 */
   getCount: () => number;
   /** 设置最大数量 */
-  setMaxCount: (count: number) => void;
+  setMaxCount: (_count: number) => void;
   /** 设置默认位置 */
-  setDefaultPlacement: (placement: NotificationPlacement) => void;
+  setDefaultPlacement: (_placement: NotificationPlacement) => void;
   /** 设置默认时长 */
-  setDefaultDuration: (duration: number) => void;
+  setDefaultDuration: (_duration: number) => void;
   /** 暂停所有通知自动关闭 */
   pauseAll: () => void;
   /** 恢复所有通知自动关闭 */
@@ -246,13 +245,13 @@ export interface NotificationUtils {
   /** 生成唯一键 */
   generateKey: () => string;
   /** 排序通知 */
-  sortNotifications: (notifications: NotificationItem[]) => NotificationItem[];
+  sortNotifications: (_notifications: NotificationItem[]) => NotificationItem[];
   /** 计算堆叠偏移 */
-  calculateStackOffset: (index: number, baseOffset: number) => number;
+  calculateStackOffset: (_index: number, baseOffset: number) => number;
   /** 格式化持续时间 */
-  formatDuration: (duration: number) => string;
+  formatDuration: (_duration: number) => string;
   /** 验证通知配置 */
-  validateConfig: (config: Partial<NotificationItem>) => { valid: boolean; errors: string[] };
+  validateConfig: (_config: Partial<NotificationItem>) => { valid: boolean; errors: string[] };
 }
 
 /** 默认通知配置 */

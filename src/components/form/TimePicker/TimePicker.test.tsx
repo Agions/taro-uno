@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import { vi } from 'vitest'
 import { TimePicker } from './TimePicker'
 import type { TimePickerProps, TimePickerRef, TimeValue } from './TimePicker.types'
@@ -58,12 +58,12 @@ describe('TimePicker Component', () => {
 
   describe('Value Handling', () => {
     it('handles controlled value', () => {
-      const { rerender } = render(<TimePicker {...defaultProps} value={mockTimeValue} />)
+      const { rerender } = render(<TimePicker {...defaultProps} value={mockTimeValue} readOnly />)
 
       const input = screen.getByRole('textbox')
       expect(input).toBeInTheDocument()
 
-      rerender(<TimePicker {...defaultProps} value={{ ...mockTimeValue, hours: 15 }} />)
+      rerender(<TimePicker {...defaultProps} value={{ ...mockTimeValue, hours: 15 }} readOnly />)
       expect(input).toBeInTheDocument()
     })
 
@@ -86,21 +86,21 @@ describe('TimePicker Component', () => {
 
   describe('Time Format', () => {
     it('renders with HH:mm format', () => {
-      render(<TimePicker {...defaultProps} format="HH:mm" value={mockTimeValue} />)
+      render(<TimePicker {...defaultProps} format="HH:mm" value={mockTimeValue} readOnly />)
 
       const input = screen.getByRole('textbox')
       expect(input).toBeInTheDocument()
     })
 
     it('renders with 12-hour format', () => {
-      render(<TimePicker {...defaultProps} use12Hours={true} value={mockTimeValue} />)
+      render(<TimePicker {...defaultProps} use12Hours={true} value={mockTimeValue} readOnly />)
 
       const input = screen.getByRole('textbox')
       expect(input).toBeInTheDocument()
     })
 
     it('renders with custom format', () => {
-      render(<TimePicker {...defaultProps} format="mm:ss" value={mockTimeValue} />)
+      render(<TimePicker {...defaultProps} format="mm:ss" value={mockTimeValue} readOnly />)
 
       const input = screen.getByRole('textbox')
       expect(input).toBeInTheDocument()
@@ -133,7 +133,9 @@ describe('TimePicker Component', () => {
       render(<TimePicker {...defaultProps} value={mockTimeValue} allowClear={true} onClear={onClear} />)
 
       const clearButton = screen.getByTestId('clear-button')
-      fireEvent.click(clearButton)
+      act(() => {
+        fireEvent.click(clearButton)
+      })
 
       expect(onClear).toHaveBeenCalled()
       expect(defaultProps.onChange).toHaveBeenCalledWith(null, '')
@@ -171,16 +173,20 @@ describe('TimePicker Component', () => {
       const onChange = vi.fn()
       render(<TimePicker {...defaultProps} ref={ref} onChange={onChange} />)
 
-      ref.current?.setValue(mockTimeValue)
+      act(() => {
+        ref.current?.setValue(mockTimeValue)
+      })
       expect(onChange).toHaveBeenCalledWith(mockTimeValue, '10:30:45')
     })
 
     it('clear method works', () => {
       const ref = React.createRef<TimePickerRef>()
       const onChange = vi.fn()
-      render(<TimePicker {...defaultProps} value={mockTimeValue} ref={ref} onChange={onChange} />)
+      render(<TimePicker {...defaultProps} value={mockTimeValue} readOnly ref={ref} onChange={onChange} />)
 
-      ref.current?.clear()
+      act(() => {
+        ref.current?.clear()
+      })
       expect(onChange).toHaveBeenCalledWith(null, '')
     })
 
@@ -189,7 +195,9 @@ describe('TimePicker Component', () => {
       const onChange = vi.fn()
       render(<TimePicker {...defaultProps} ref={ref} onChange={onChange} />)
 
-      ref.current?.setNow()
+      act(() => {
+        ref.current?.setNow()
+      })
       expect(onChange).toHaveBeenCalled()
     })
 
@@ -198,10 +206,14 @@ describe('TimePicker Component', () => {
       const onOpenChange = vi.fn()
       render(<TimePicker {...defaultProps} ref={ref} onOpenChange={onOpenChange} />)
 
-      ref.current?.open()
+      act(() => {
+        ref.current?.open()
+      })
       expect(onOpenChange).toHaveBeenCalledWith(true)
 
-      ref.current?.close()
+      act(() => {
+        ref.current?.close()
+      })
       expect(onOpenChange).toHaveBeenCalledWith(false)
     })
 
@@ -209,10 +221,14 @@ describe('TimePicker Component', () => {
       const ref = React.createRef<TimePickerRef>()
       render(<TimePicker {...defaultProps} ref={ref} />)
 
-      ref.current?.disable()
+      act(() => {
+        ref.current?.disable()
+      })
       expect(ref.current?.isDisabled()).toBe(true)
 
-      ref.current?.enable()
+      act(() => {
+        ref.current?.enable()
+      })
       expect(ref.current?.isDisabled()).toBe(false)
     })
 

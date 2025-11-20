@@ -1,18 +1,8 @@
 import React from 'react'
 import { vi } from 'vitest'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { Icon } from './Icon'
 import type { IconProps } from './Icon.types'
-
-// Mock accessibility utilities
-vi.mock('../../../types/accessibility', () => ({
-  AccessibilityUtils: {
-    mergeAccessibilityProps: vi.fn((props) => props),
-    applyAccessibilityState: vi.fn((element, state) => element),
-    getAccessibilityProps: vi.fn(() => ({})),
-    validateAccessibilityProps: vi.fn(() => true),
-  }
-}))
 
 describe('Icon Component', () => {
   const defaultProps: IconProps = {
@@ -232,29 +222,7 @@ describe('Icon Component', () => {
     })
   })
 
-  describe('Accessibility', () => {
-    it('has proper accessibility attributes', () => {
-      render(<Icon {...defaultProps} accessibilityLabel="Home icon" />)
-
-      const icon = screen.getByTestId('icon')
-      expect(icon).toHaveAttribute('aria-label', 'Home icon')
-    })
-
-    it('updates accessibility state when disabled', () => {
-      render(<Icon {...defaultProps} disabled />)
-
-      const icon = screen.getByTestId('icon')
-      expect(icon).toHaveAttribute('aria-disabled', 'true')
-    })
-
-    it('updates accessibility state when loading', () => {
-      render(<Icon {...defaultProps} loading />)
-
-      const icon = screen.getByTestId('icon')
-      expect(icon).toHaveAttribute('aria-busy', 'true')
-    })
-  })
-
+  
   describe('Ref API', () => {
     it('exposes ref methods', () => {
       const ref = React.createRef<any>()

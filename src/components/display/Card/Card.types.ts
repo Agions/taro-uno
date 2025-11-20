@@ -1,8 +1,7 @@
 import React from 'react';
 import { BaseComponentProps } from '../../../types';
-import { AccessibilityProps } from '../../../types/accessibility';
 
-export interface CardProps extends BaseComponentProps, AccessibilityProps {
+export interface CardProps extends BaseComponentProps {
   /** 卡片内容 */
   children: React.ReactNode;
   /** 卡片标题 */
@@ -28,9 +27,9 @@ export interface CardProps extends BaseComponentProps, AccessibilityProps {
   /** 自定义样式 */
   style?: React.CSSProperties;
   /** 点击事件 */
-  onPress?: (event: any) => void;
+  onPress?: (_event: any) => void;
   /** 长按事件 */
-  onLongPress?: (event: any) => void;
+  onLongPress?: (_event: any) => void;
 }
 
 export interface CardRef {

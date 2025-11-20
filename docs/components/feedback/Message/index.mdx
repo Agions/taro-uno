@@ -1,0 +1,280 @@
+---
+title: Message 消息提示
+---
+
+Message 组件用于显示全局的消息提示，支持多种类型和自定义配置。
+
+## 功能介绍
+
+- 支持四种消息类型：success（成功）、error（错误）、warning（警告）、info（信息）
+- 支持设置标题和内容
+- 支持自定义图标
+- 支持可关闭选项
+- 支持自动关闭时长设置（默认3秒）
+- 支持通过 ref 控制显示、隐藏和更新
+- 提供默认的图标和样式
+
+## 基本用法
+
+```tsx
+import { Message } from '@taro-uno/components';
+
+// 基本使用
+<Message type="info" content="这是一条信息提示" />
+
+// 带标题和内容
+<Message type="success" title="操作成功" content="数据已保存" />
+
+// 可关闭的消息
+<Message type="warning" content="这是一条警告信息" closable />
+
+// 长时间显示（不自动关闭）
+<Message type="error" content="这是一条错误信息" duration={0} />
+
+// 使用 ref 控制
+const messageRef = useRef<MessageRef>(null);
+
+// 显示消息
+messageRef.current?.show();
+
+// 隐藏消息
+messageRef.current?.hide();
+
+// 更新消息内容
+messageRef.current?.update({ type: 'success', content: '更新后的内容' });
+
+<Message ref={messageRef} type="info" content="可控制的消息" />
+```
+
+## 使用示例
+
+### 不同类型
+
+```tsx
+import { Message } from '@taro-uno/components';
+
+function MessageTypes() {
+  return (
+    <View style={{ gap: 10 }}>
+      <Message type="success" content="操作成功" />
+      <Message type="error" content="操作失败" />
+      <Message type="warning" content="警告信息" />
+      <Message type="info" content="提示信息" />
+    </View>
+  );
+}
+```
+
+### 带标题和内容
+
+```tsx
+import { Message } from '@taro-uno/components';
+
+function MessageWithTitle() {
+  return (
+    <View style={{ gap: 10 }}>
+      <Message type="success" title="成功" content="数据保存成功" />
+      <Message type="error" title="错误" content="网络连接失败" />
+      <Message type="warning" title="警告" content="请检查输入信息" />
+      <Message type="info" title="信息" content="系统将于今晚进行维护" />
+    </View>
+  );
+}
+```
+
+### 可关闭的消息
+
+```tsx
+import { Message } from '@taro-uno/components';
+
+function ClosableMessage() {
+  return (
+    <Message type="info" content="这是一条可关闭的消息" closable />
+  );
+}
+```
+
+### 自定义自动关闭时长
+
+```tsx
+import { Message } from '@taro-uno/components';
+
+function CustomDurationMessage() {
+  return (
+    <View style={{ gap: 10 }}>
+      <Message type="info" content="1秒后自动关闭" duration={1000} />
+      <Message type="info" content="5秒后自动关闭" duration={5000} />
+      <Message type="info" content="不自动关闭" duration={0} closable />
+    </View>
+  );
+}
+```
+
+### 自定义图标
+
+```tsx
+import { Message, Icon } from '@taro-uno/components';
+
+function CustomIconMessage() {
+  return (
+    <View style={{ gap: 10 }}>
+      <Message 
+        type="success" 
+        content="自定义图标" 
+        icon={<Icon name="check-circle" size="20" color="#52c41a" />}
+      />
+      <Message 
+        type="error" 
+        content="自定义图标" 
+        icon={<Icon name="close-circle" size="20" color="#f5222d" />}
+      />
+    </View>
+  );
+}
+```
+
+### 通过 Ref 控制
+
+```tsx
+import { Message, Button, View } from '@taro-uno/components';
+import { useRef } from 'react';
+
+function MessageWithRef() {
+  const messageRef = useRef<MessageRef>(null);
+
+  const handleShow = () => {
+    messageRef.current?.show();
+  };
+
+  const handleHide = () => {
+    messageRef.current?.hide();
+  };
+
+  const handleUpdate = () => {
+    messageRef.current?.update({
+      type: 'success',
+      title: '已更新',
+      content: '消息内容已更新'
+    });
+  };
+
+  return (
+    <View style={{ gap: 10 }}>
+      <Button onClick={handleShow}>显示消息</Button>
+      <Button onClick={handleHide}>隐藏消息</Button>
+      <Button onClick={handleUpdate}>更新消息</Button>
+      <Message 
+        ref={messageRef} 
+        type="info" 
+        content="通过 Ref 控制的消息" 
+        duration={0} 
+        closable
+      />
+    </View>
+  );
+}
+```
+
+### 自定义样式
+
+```tsx
+import { Message } from '@taro-uno/components';
+
+function CustomStyleMessage() {
+  return (
+    <Message 
+      type="info" 
+      content="自定义样式的消息" 
+      style={{ 
+        backgroundColor: '#f0f9ff', 
+        borderColor: '#91d5ff', 
+        color: '#096dd9'
+      }}
+    />
+  );
+}
+```
+
+### 关闭回调
+
+```tsx
+import { Message, View } from '@taro-uno/components';
+import { useState } from 'react';
+
+function MessageWithCloseCallback() {
+  const [closed, setClosed] = useState(false);
+
+  const handleClose = () => {
+    setClosed(true);
+    console.log('消息已关闭');
+  };
+
+  return (
+    <View>
+      <Message type="info" content="带关闭回调的消息" closable onClose={handleClose} />
+      {closed && <Text>消息已关闭</Text>}
+    </View>
+  );
+}
+```
+
+## API
+
+### MessageProps
+
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| type | `'success' \| 'error' \| 'warning' \| 'info'` | `'info'` | 消息类型 |
+| title | `ReactNode` | - | 消息标题 |
+| content | `ReactNode` | - | 消息内容 |
+| icon | `ReactNode` | - | 自定义图标 |
+| closable | `boolean` | `false` | 是否可关闭 |
+| duration | `number` | `3000` | 自动关闭时长（毫秒），0 表示不自动关闭 |
+| className | `string` | - | 自定义类名 |
+| style | `React.CSSProperties` | - | 自定义样式 |
+| onClose | `() => void` | - | 关闭回调函数 |
+
+### MessageRef
+
+| 方法名 | 类型 | 说明 |
+| --- | --- | --- |
+| show | `() => void` | 显示消息 |
+| hide | `() => void` | 隐藏消息 |
+| update | `(props: Partial<MessageProps>) => void` | 更新消息内容 |
+
+## 使用提示
+
+1. **消息类型选择**：
+   - `success`：操作成功时使用
+   - `error`：操作失败或错误时使用
+   - `warning`：需要用户注意时使用
+   - `info`：一般信息提示时使用
+
+2. **自动关闭时长**：
+   - 默认3秒自动关闭，可根据消息重要性调整
+   - 重要消息建议设置较长时长或设为0（不自动关闭）
+   - 临时提示可设置较短时长
+
+3. **布局建议**：
+   - 通常放置在页面顶部居中或右上角
+   - 可根据设计需求调整位置
+
+4. **性能优化**：
+   - 避免同时显示过多消息
+   - 对于频繁触发的消息，建议使用队列管理
+
+## 浏览器兼容性
+
+| 浏览器 | 版本 |
+| --- | --- |
+| Chrome | 支持 |
+| Firefox | 支持 |
+| Safari | 支持 |
+| Taro 小程序 | 支持 |
+| Taro H5 | 支持 |
+
+## 无障碍支持
+
+- 支持屏幕阅读器
+- 提供适当的 ARIA 属性
+- 可关闭按钮支持键盘操作

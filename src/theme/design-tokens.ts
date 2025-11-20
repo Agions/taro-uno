@@ -22,6 +22,7 @@ export interface DesignTokens {
       700: string;
       800: string;
       900: string;
+      950: string;
     };
     secondary: {
       50: string;
@@ -34,6 +35,7 @@ export interface DesignTokens {
       700: string;
       800: string;
       900: string;
+      950: string;
     };
     success: {
       50: string;
@@ -46,6 +48,7 @@ export interface DesignTokens {
       700: string;
       800: string;
       900: string;
+      950: string;
     };
     warning: {
       50: string;
@@ -58,6 +61,7 @@ export interface DesignTokens {
       700: string;
       800: string;
       900: string;
+      950: string;
     };
     error: {
       50: string;
@@ -70,6 +74,7 @@ export interface DesignTokens {
       700: string;
       800: string;
       900: string;
+      950: string;
     };
     info: {
       50: string;
@@ -82,6 +87,7 @@ export interface DesignTokens {
       700: string;
       800: string;
       900: string;
+      950: string;
     };
     
     // 中性颜色
@@ -96,12 +102,14 @@ export interface DesignTokens {
       700: string;
       800: string;
       900: string;
+      950: string;
     };
     
     // 语义化颜色
     text: {
       primary: string;
       secondary: string;
+      tertiary: string;
       disabled: string;
       inverse: string;
       link: string;
@@ -142,6 +150,15 @@ export interface DesignTokens {
       offline: string;
       busy: string;
       away: string;
+    };
+
+    // 交互颜色
+    interactive: {
+      hover: string;
+      active: string;
+      focus: string;
+      selected: string;
+      disabled: string;
     };
   };
   
@@ -316,6 +333,9 @@ export interface DesignTokens {
       md: string;
       lg: string;
     };
+
+    modal: string;
+    dropdown: string;
   };
   
   // 阴影令牌
@@ -505,6 +525,7 @@ export const defaultDesignTokens: DesignTokens = {
       700: '#0369a1',
       800: '#075985',
       900: '#0c4a6e',
+      950: '#082f49',
     },
     secondary: {
       50: '#fafafa',
@@ -517,6 +538,7 @@ export const defaultDesignTokens: DesignTokens = {
       700: '#3f3f46',
       800: '#27272a',
       900: '#18181b',
+      950: '#09090b',
     },
     success: {
       50: '#f0fdf4',
@@ -529,6 +551,7 @@ export const defaultDesignTokens: DesignTokens = {
       700: '#15803d',
       800: '#166534',
       900: '#14532d',
+      950: '#052e16',
     },
     warning: {
       50: '#fffbeb',
@@ -541,6 +564,7 @@ export const defaultDesignTokens: DesignTokens = {
       700: '#b45309',
       800: '#92400e',
       900: '#78350f',
+      950: '#451a03',
     },
     error: {
       50: '#fef2f2',
@@ -553,6 +577,7 @@ export const defaultDesignTokens: DesignTokens = {
       700: '#b91c1c',
       800: '#991b1b',
       900: '#7f1d1d',
+      950: '#450a0a',
     },
     info: {
       50: '#eff6ff',
@@ -565,6 +590,7 @@ export const defaultDesignTokens: DesignTokens = {
       700: '#1d4ed8',
       800: '#1e40af',
       900: '#1e3a8a',
+      950: '#172554',
     },
     neutral: {
       50: '#fafafa',
@@ -577,10 +603,12 @@ export const defaultDesignTokens: DesignTokens = {
       700: '#3f3f46',
       800: '#27272a',
       900: '#18181b',
+      950: '#09090b',
     },
     text: {
       primary: '#111827',
       secondary: '#6b7280',
+      tertiary: '#4b5563',
       disabled: '#9ca3af',
       inverse: '#ffffff',
       link: '#0ea5e9',
@@ -616,6 +644,14 @@ export const defaultDesignTokens: DesignTokens = {
       offline: '#6b7280',
       busy: '#ef4444',
       away: '#f59e0b',
+    },
+
+    interactive: {
+      hover: 'rgba(0, 0, 0, 0.05)',
+      active: 'rgba(0, 0, 0, 0.1)',
+      focus: 'rgba(59, 130, 246, 0.1)',
+      selected: 'rgba(59, 130, 246, 0.2)',
+      disabled: 'rgba(0, 0, 0, 0.3)',
     },
   },
   spacing: {
@@ -805,6 +841,9 @@ export const defaultDesignTokens: DesignTokens = {
       md: '12px',
       lg: '16px',
     },
+
+    modal: '12px',
+    dropdown: '8px',
   },
   boxShadow: {
     none: 'none',

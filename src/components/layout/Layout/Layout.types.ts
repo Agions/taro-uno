@@ -33,7 +33,7 @@ export interface LayoutSiderProps extends ViewProps {
   width?: number | string
   collapsed?: boolean
   collapsedWidth?: number | string
-  onCollapse?: (collapsed: boolean) => void
+  onCollapse?: (_collapsed: boolean) => void
 }
 
 export interface LayoutRef {

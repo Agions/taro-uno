@@ -1,0 +1,303 @@
+import { VirtualList } from '@taro-uno/ui';
+import VirtualListExample from './examples/index';
+
+<Meta title="通用组件 / VirtualList 虚拟列表" description="提供高性能的大数据量列表渲染" />
+
+<Description>
+  VirtualList 组件通过虚拟滚动技术，实现了高性能的大数据量列表渲染，只渲染可见区域的内容，显著提升了列表性能。
+</Description>
+
+<CodeExample title="基本用法">
+  <VirtualListExample />
+  <ExampleCode>
+  ```tsx
+  import React from 'react';
+  import { VirtualList } from '@taro-uno/ui';
+  
+  const data = Array.from({ length: 10000 }, (_, i) => ({ id: i, value: `Item ${i}` }));
+  
+  export default function App() {
+    return (
+      <VirtualList
+        data={data}
+        renderItem={({ item }) => <div>{item.value}</div>}
+        itemHeight={40}
+        height={400}
+        itemKey="id"
+      />
+    );
+  }
+  ```
+  </ExampleCode>
+</CodeExample>
+
+## 功能介绍
+
+VirtualList 组件提供了以下核心功能：
+
+### 高性能渲染
+- 只渲染可见区域的内容
+- 支持大量数据（万级以上）
+- 减少DOM节点数量
+
+### 灵活配置
+- 支持固定高度和动态高度
+- 可配置容器高度和宽度
+- 支持预渲染（overscan）
+
+### 交互功能
+- 滚动到指定索引
+- 平滑滚动
+- 滚动事件回调
+- 触底加载
+
+### 状态处理
+- 加载状态
+- 空状态
+- 动态数据更新
+
+## API
+
+### VirtualListProps
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| data | T[] | - | 数据源 |
+| renderItem | (item: T, index: number) => ReactNode | - | 渲染函数 |
+| itemHeight | number \| ((index: number) => number) | - | 项目高度，可以是固定值或函数 |
+| height | number \| string | - | 容器高度 |
+| width | number \| string | '100%' | 容器宽度 |
+| itemKey | string \| ((item: T, index: number) => string) | - | 每个项目的key |
+| overscan | number | 3 | 预渲染的额外项目数 |
+| dynamicHeight | boolean | false | 是否启用动态高度 |
+| scrollToIndex | number | - | 滚动到指定索引 |
+| scrollBehavior | 'auto' \| 'smooth' | 'auto' | 滚动行为 |
+| empty | ReactNode | - | 空状态渲染 |
+| loading | ReactNode | - | 加载状态渲染 |
+| isLoading | boolean | false | 是否正在加载 |
+| onEndReached | () => void | - | 是否到达底部 |
+| onEndReachedThreshold | number | 200 | 距离底部多少像素触发onEndReached |
+| style | CSSProperties | - | 列表样式 |
+| className | string | - | 列表类名 |
+| itemStyle | CSSProperties | - | 项目样式 |
+| itemClassName | string | - | 项目类名 |
+| onScroll | (scrollTop: number, scrollLeft: number) => void | - | 滚动事件回调 |
+
+## 使用示例
+
+### 基本用法
+
+```tsx
+import { VirtualList } from '@taro-uno/ui';
+import { View, Text } from '@tarojs/components';
+import React from 'react';
+
+const data = Array.from({ length: 10000 }, (_, i) => ({ id: i, value: `Item ${i}` }));
+
+function BasicVirtualList() {
+  return (
+    <VirtualList
+      data={data}
+      renderItem={(item, index) => (
+        <View style={{ height: 40, lineHeight: '40px', padding: '0 16px', borderBottom: '1px solid #eee' }}>
+          <Text>Item {index}: {item.value}</Text>
+        </View>
+      )}
+      itemHeight={40}
+      height={400}
+      itemKey="id"
+    />
+  );
+}
+```
+
+### 动态高度
+
+```tsx
+import { VirtualList } from '@taro-uno/ui';
+import { View, Text } from '@tarojs/components';
+import React from 'react';
+
+const data = Array.from({ length: 1000 }, (_, i) => ({
+  id: i,
+  value: `Item ${i}`,
+  height: 40 + (i % 5) * 20, // 动态高度
+}));
+
+function DynamicHeightVirtualList() {
+  return (
+    <VirtualList
+      data={data}
+      renderItem={(item, index) => (
+        <View style={{ padding: '16px', borderBottom: '1px solid #eee' }}>
+          <Text>Item {index}: {item.value}</Text>
+          <Text style={{ fontSize: '12px', color: '#999' }}>Height: {item.height}px</Text>
+        </View>
+      )}
+      itemHeight={(index) => data[index].height}
+      dynamicHeight
+      height={500}
+      itemKey="id"
+    />
+  );
+}
+```
+
+### 触底加载
+
+```tsx
+import { VirtualList } from '@taro-uno/ui';
+import { View, Text, ActivityIndicator } from '@tarojs/components';
+import React, { useState, useEffect } from 'react';
+
+function InfiniteVirtualList() {
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // 初始化数据
+  useEffect(() => {
+    loadMore();
+  }, []);
+
+  const loadMore = () => {
+    setIsLoading(true);
+    // 模拟异步加载
+    setTimeout(() => {
+      const newData = Array.from({ length: 20 }, (_, i) => ({
+        id: data.length + i,
+        value: `Item ${data.length + i}`,
+      }));
+      setData([...data, ...newData]);
+      setIsLoading(false);
+    }, 1000);
+  };
+
+  return (
+    <VirtualList
+      data={data}
+      renderItem={(item, index) => (
+        <View style={{ height: 50, lineHeight: '50px', padding: '0 16px', borderBottom: '1px solid #eee' }}>
+          <Text>Item {index}: {item.value}</Text>
+        </View>
+      )}
+      itemHeight={50}
+      height={400}
+      itemKey="id"
+      onEndReached={loadMore}
+      onEndReachedThreshold={100}
+      isLoading={isLoading}
+      loading={<View style={{ padding: '16px', textAlign: 'center' }}><ActivityIndicator /> 加载中...</View>}
+      empty={<View style={{ padding: '16px', textAlign: 'center' }}>暂无数据</View>}
+    />
+  );
+}
+```
+
+### 滚动到指定索引
+
+```tsx
+import { VirtualList } from '@taro-uno/ui';
+import { View, Text, Button } from '@tarojs/components';
+import React, { useState } from 'react';
+
+const data = Array.from({ length: 1000 }, (_, i) => ({ id: i, value: `Item ${i}` }));
+
+function ScrollToIndexVirtualList() {
+  const [scrollToIndex, setScrollToIndex] = useState(0);
+
+  return (
+    <View>
+      <View style={{ marginBottom: '16px' }}>
+        <Button onClick={() => setScrollToIndex(Math.floor(Math.random() * 1000))}>
+          滚动到随机位置
+        </Button>
+        <Button onClick={() => setScrollToIndex(0)}>
+          滚动到顶部
+        </Button>
+        <Button onClick={() => setScrollToIndex(999)}>
+          滚动到底部
+        </Button>
+      </View>
+      <VirtualList
+        data={data}
+        renderItem={(item, index) => (
+          <View style={{ height: 40, lineHeight: '40px', padding: '0 16px', borderBottom: '1px solid #eee' }}>
+            <Text>Item {index}: {item.value}</Text>
+          </View>
+        )}
+        itemHeight={40}
+        height={400}
+        itemKey="id"
+        scrollToIndex={scrollToIndex}
+        scrollBehavior="smooth"
+      />
+    </View>
+  );
+}
+```
+
+### 自定义样式
+
+```tsx
+import { VirtualList } from '@taro-uno/ui';
+import { View, Text } from '@tarojs/components';
+import React from 'react';
+
+const data = Array.from({ length: 100 }, (_, i) => ({ id: i, value: `Item ${i}` }));
+
+function StyledVirtualList() {
+  return (
+    <VirtualList
+      data={data}
+      renderItem={(item, index) => (
+        <View>
+          <Text style={{ fontSize: '14px', fontWeight: 'bold' }}>Item {index}</Text>
+          <Text style={{ fontSize: '12px', color: '#666' }}>{item.value}</Text>
+        </View>
+      )}
+      itemHeight={60}
+      height={400}
+      width={300}
+      itemKey="id"
+      style={{ backgroundColor: '#f5f5f5', borderRadius: '8px' }}
+      itemStyle={{ padding: '12px', backgroundColor: '#fff', margin: '8px', borderRadius: '4px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
+    />
+  );
+}
+```
+
+## 使用提示
+
+1. **性能优化**：使用虚拟列表可以显著提升大数据量列表的渲染性能，减少DOM节点数量。
+
+2. **固定高度 vs 动态高度**：
+   - 固定高度模式性能更好，推荐优先使用
+   - 动态高度模式需要提供准确的高度计算函数
+
+3. **overscan配置**：适当增加overscan值可以减少滚动时的闪烁，但会增加渲染的DOM节点数量，建议设置为3-5。
+
+4. **触底加载**：使用onEndReached和onEndReachedThreshold可以实现无限滚动功能。
+
+5. **滚动到指定位置**：使用scrollToIndex和scrollBehavior可以实现平滑滚动到指定位置。
+
+6. **空状态和加载状态**：提供empty和loading属性可以提升用户体验。
+
+7. **样式定制**：使用style和itemStyle可以定制列表和列表项的样式。
+
+## 浏览器兼容性
+
+| 浏览器 | 版本 | 支持情况 |
+| --- | --- | --- |
+| Chrome | 80+ | ✅ |
+| Firefox | 75+ | ✅ |
+| Safari | 13+ | ✅ |
+| Edge | 80+ | ✅ |
+| 微信小程序 | 基础库 2.10+ | ✅ |
+| 支付宝小程序 | 基础库 2.7+ | ✅ |
+
+## 无障碍支持
+
+- 支持键盘导航
+- 支持屏幕阅读器
+- 滚动行为符合无障碍标准
+- 空状态和加载状态提供清晰的视觉反馈

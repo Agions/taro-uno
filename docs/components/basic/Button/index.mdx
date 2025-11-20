@@ -1,0 +1,281 @@
+# Button 按钮
+
+常用的操作按钮。
+
+## 功能介绍
+
+Button 组件是最常用的交互组件之一，提供了多种类型、尺寸和状态，适用于各种场景：
+
+- 主要操作按钮（primary）
+- 次要操作按钮（secondary）
+- 文本按钮（text）
+- 链接按钮（link）
+- 危险操作按钮（danger）
+- 多种尺寸和状态
+
+## 基本用法
+
+### 默认按钮
+
+```tsx
+import React from 'react';
+import { Button } from '@/components/basic/Button';
+
+const App = () => {
+  return <Button>默认按钮</Button>;
+};
+
+export default App;
+```
+
+### 按钮类型
+
+```tsx
+import React from 'react';
+import { Button } from '@/components/basic/Button';
+import { View } from '@tarojs/components';
+
+const App = () => {
+  return (
+    <View style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+      <Button type="primary">主要按钮</Button>
+      <Button type="secondary">次要按钮</Button>
+      <Button type="text">文本按钮</Button>
+      <Button type="link">链接按钮</Button>
+      <Button type="danger">危险按钮</Button>
+    </View>
+  );
+};
+
+export default App;
+```
+
+### 按钮尺寸
+
+```tsx
+import React from 'react';
+import { Button } from '@/components/basic/Button';
+import { View } from '@tarojs/components';
+
+const App = () => {
+  return (
+    <View style={{ display: 'flex', gap: 10, flexDirection: 'column' }}>
+      <Button size="large" type="primary">大号按钮</Button>
+      <Button size="medium" type="primary">中号按钮</Button>
+      <Button size="small" type="primary">小号按钮</Button>
+    </View>
+  );
+};
+
+export default App;
+```
+
+### 按钮状态
+
+```tsx
+import React from 'react';
+import { Button } from '@/components/basic/Button';
+import { View } from '@tarojs/components';
+
+const App = () => {
+  return (
+    <View style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+      <Button type="primary" loading>加载中</Button>
+      <Button type="primary" disabled>禁用状态</Button>
+      <Button type="primary" active>激活状态</Button>
+      <Button type="primary" ghost>幽灵按钮</Button>
+    </View>
+  );
+};
+
+export default App;
+```
+
+### 按钮变体
+
+```tsx
+import React from 'react';
+import { Button } from '@/components/basic/Button';
+import { View } from '@tarojs/components';
+
+const App = () => {
+  return (
+    <View style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+      <Button variant="solid" type="primary">实心按钮</Button>
+      <Button variant="outline" type="primary">边框按钮</Button>
+      <Button variant="dashed" type="primary">虚线按钮</Button>
+    </View>
+  );
+};
+
+export default App;
+```
+
+### 按钮形状
+
+```tsx
+import React from 'react';
+import { Button } from '@/components/basic/Button';
+import { View } from '@tarojs/components';
+
+const App = () => {
+  return (
+    <View style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+      <Button shape="default" type="primary">默认形状</Button>
+      <Button shape="circle" type="primary">圆形按钮</Button>
+      <Button shape="round" type="primary">圆角按钮</Button>
+    </View>
+  );
+};
+
+export default App;
+```
+
+### 块级按钮
+
+```tsx
+import React from 'react';
+import { Button } from '@/components/basic/Button';
+import { View } from '@tarojs/components';
+
+const App = () => {
+  return (
+    <View style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <Button block type="primary">块级按钮</Button>
+      <Button block type="secondary">块级次要按钮</Button>
+    </View>
+  );
+};
+
+export default App;
+```
+
+### 事件处理
+
+```tsx
+import React from 'react';
+import { Button } from '@/components/basic/Button';
+import { View } from '@tarojs/components';
+
+const App = () => {
+  const handleClick = () => {
+    console.log('按钮被点击了');
+  };
+
+  const handleLongPress = () => {
+    console.log('按钮被长按了');
+  };
+
+  return (
+    <View style={{ display: 'flex', gap: 10 }}>
+      <Button type="primary" onClick={handleClick}>点击事件</Button>
+      <Button type="primary" onLongPress={handleLongPress}>长按事件</Button>
+    </View>
+  );
+};
+
+export default App;
+```
+
+### 图标按钮
+
+```tsx
+import React from 'react';
+import { Button } from '@/components/basic/Button';
+import { Icon } from '@/components/basic/Icon';
+import { View } from '@tarojs/components';
+
+const App = () => {
+  return (
+    <View style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+      <Button type="primary" icon={<Icon type="search" />}>搜索</Button>
+      <Button type="primary" icon={<Icon type="plus" />} />
+      <Button type="primary" iconPosition="right" icon={<Icon type="arrow-right" />}>下一步</Button>
+    </View>
+  );
+};
+
+export default App;
+```
+
+### 按钮组合
+
+```tsx
+import React from 'react';
+import { Button } from '@/components/basic/Button';
+import { View } from '@tarojs/components';
+
+const App = () => {
+  return (
+    <View style={{ display: 'flex', gap: 0 }}>
+      <Button type="primary" variant="solid">左按钮</Button>
+      <Button type="primary" variant="solid" style={{ borderLeftWidth: 0 }}>中按钮</Button>
+      <Button type="primary" variant="solid" style={{ borderLeftWidth: 0 }}>右按钮</Button>
+    </View>
+  );
+};
+
+export default App;
+```
+
+## API
+
+### ButtonProps
+
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| type | `'primary' \| 'secondary' \| 'text' \| 'link' \| 'danger'` | `'secondary'` | 按钮类型 |
+| size | `'small' \| 'medium' \| 'large'` | `'medium'` | 按钮尺寸 |
+| variant | `'solid' \| 'outline' \| 'dashed' \| 'ghost'` | `'solid'` | 按钮样式变体 |
+| shape | `'default' \| 'circle' \| 'round'` | `'default'` | 按钮形状 |
+| disabled | `boolean` | `false` | 是否禁用按钮 |
+| loading | `boolean` | `false` | 是否显示加载状态 |
+| active | `boolean` | `false` | 是否处于激活状态 |
+| ghost | `boolean` | `false` | 是否为幽灵按钮 |
+| block | `boolean` | `false` | 是否为块级按钮 |
+| icon | `React.ReactNode` | - | 按钮图标 |
+| iconPosition | `'left' \| 'right'` | `'left'` | 图标位置 |
+| onClick | `(e: Taro.TouchEvent) => void` | - | 点击事件回调 |
+| onLongPress | `(e: Taro.TouchEvent) => void` | - | 长按事件回调 |
+| style | `Taro.RNViewStyle` | - | 自定义样式 |
+| className | `string` | - | 自定义类名 |
+
+### 类型定义
+
+```typescript
+type ButtonType = 'primary' | 'secondary' | 'text' | 'link' | 'danger';
+type ButtonSize = 'small' | 'medium' | 'large';
+type ButtonVariant = 'solid' | 'outline' | 'dashed' | 'ghost';
+type ButtonShape = 'default' | 'circle' | 'round';
+type ButtonIconPosition = 'left' | 'right';
+```
+
+## 使用提示
+
+1. **按钮类型选择**：
+   - `primary`：用于主要操作，如提交表单、确认操作等
+   - `secondary`：用于次要操作，如取消、返回等
+   - `text`：用于辅助操作，如查看详情等
+   - `link`：用于链接跳转
+   - `danger`：用于危险操作，如删除、取消等
+
+2. **按钮尺寸**：
+   - `large`：用于需要突出显示的按钮
+   - `medium`：默认尺寸，适用于大多数场景
+   - `small`：用于空间有限的场景
+
+3. **禁用状态**：
+   - 当按钮处于禁用状态时，点击事件不会触发
+   - 禁用状态下的按钮会自动降低透明度，提供视觉反馈
+
+4. **加载状态**：
+   - 当按钮处于加载状态时，点击事件不会触发
+   - 加载状态下会显示加载动画
+
+5. **性能优化**：
+   - 避免在按钮的 `onClick` 事件中执行复杂逻辑
+   - 如果需要执行异步操作，建议使用 `loading` 属性提供反馈
+
+6. **无障碍访问**：
+   - 为按钮添加适当的 `aria-label` 属性
+   - 确保按钮的可点击区域足够大（至少44x44像素）

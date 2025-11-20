@@ -1,0 +1,273 @@
+---
+nav: 表单
+group: 数据输入
+order: 7
+---
+
+# Switch 开关
+
+开关组件用于在两种状态之间进行切换，如启用/禁用某项功能。
+
+## 功能特性
+
+- 支持基本开关切换功能
+- 提供三种尺寸（小、中、大）
+- 支持多种变体样式（实心、描边、幽灵）
+- 支持多种颜色主题
+- 支持禁用、只读和加载状态
+- 可显示标签文本
+- 支持自定义选中/未选中图标
+- 支持表单验证功能
+- 提供丰富的事件和Ref方法
+- 支持受控/非受控模式
+- 支持无障碍访问
+
+## 基本用法
+
+```jsx
+import { useState } from 'react';
+import { Switch } from '@taro-uno/components';
+
+export default function SwitchDemo() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <Switch value={checked} onChange={setChecked} />
+  );
+}
+```
+
+## 使用示例
+
+### 基础开关
+
+```jsx
+<Switch defaultValue={true} />
+```
+
+### 受控模式
+
+```jsx
+import { useState } from 'react';
+import { Switch } from '@taro-uno/components';
+
+export default function SwitchDemo() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <div>
+      <Switch value={checked} onChange={setChecked} />
+      <p>当前状态: {checked ? '开启' : '关闭'}</p>
+    </div>
+  );
+}
+```
+
+### 不同尺寸
+
+```jsx
+<Switch size="sm" defaultValue={true} />
+<Switch size="md" defaultValue={true} />
+<Switch size="lg" defaultValue={true} />
+```
+
+### 不同变体
+
+```jsx
+<Switch variant="solid" defaultValue={true} />
+<Switch variant="outline" defaultValue={true} />
+<Switch variant="ghost" defaultValue={true} />
+```
+
+### 不同颜色
+
+```jsx
+<Switch color="primary" defaultValue={true} />
+<Switch color="success" defaultValue={true} />
+<Switch color="warning" defaultValue={true} />
+<Switch color="error" defaultValue={true} />
+```
+
+### 禁用状态
+
+```jsx
+<Switch disabled defaultValue={true} />
+```
+
+### 加载状态
+
+```jsx
+<Switch loading defaultValue={true} />
+```
+
+### 显示标签
+
+```jsx
+<Switch showLabel checkedLabel="开启" uncheckedLabel="关闭" defaultValue={true} />
+```
+
+### 自定义图标
+
+```jsx
+import { Icon } from '@taro-uno/components';
+
+<Switch
+  checkedIcon={<Icon type="check" />}
+  uncheckedIcon={<Icon type="close" />}
+  defaultValue={true}
+/>
+```
+
+### 表单验证
+
+```jsx
+import { useState } from 'react';
+import { Switch, Button } from '@taro-uno/components';
+
+export default function SwitchDemo() {
+  const [checked, setChecked] = useState(false);
+  const [validationResult, setValidationResult] = useState(null);
+
+  const handleValidate = (result) => {
+    setValidationResult(result);
+  };
+
+  return (
+    <div>
+      <Switch
+        value={checked}
+        onChange={setChecked}
+        rules={[{ required: true, message: '此项必须开启' }]}
+        onValidate={handleValidate}
+      />
+      {validationResult?.valid === false && (
+        <p style={{ color: 'red' }}>{validationResult.message}</p>
+      )}
+    </div>
+  );
+}
+```
+
+## API
+
+### SwitchProps
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| value | `boolean` | - | 当前值，受控模式 |
+| defaultValue | `boolean` | `false` | 默认值，非受控模式 |
+| size | `'sm' | 'md' | 'lg'` | `'md'` | 开关尺寸 |
+| variant | `'solid' | 'outline' | 'ghost'` | `'solid'` | 开关变体 |
+| status | `'normal' | 'checked' | 'unchecked' | 'disabled' | 'loading' | 'error'` | - | 开关状态 |
+| color | `'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'default'` | `'primary'` | 开关颜色 |
+| shape | `'rounded' | 'square'` | `'rounded'` | 开关形状 |
+| disabled | `boolean` | `false` | 是否禁用 |
+| readonly | `boolean` | `false` | 是否只读 |
+| loading | `boolean` | `false` | 是否加载中 |
+| loadingType | `'spinner' | 'dots' | 'pulse'` | `'spinner'` | 加载类型 |
+| loadingText | `string` | - | 加载文本 |
+| autoFocus | `boolean` | `false` | 是否自动获取焦点 |
+| bordered | `boolean` | `true` | 是否显示边框 |
+| showLabel | `boolean` | `false` | 是否显示标签 |
+| checkedLabel | `string` | `'开'` | 选中标签文本 |
+| uncheckedLabel | `string` | `'关'` | 未选中标签文本 |
+| checkedIcon | `ReactNode` | - | 选中图标 |
+| uncheckedIcon | `ReactNode` | - | 未选中图标 |
+| helperText | `string` | - | 辅助文本 |
+| errorText | `string` | - | 错误文本 |
+| showLoadingMask | `boolean` | `true` | 是否显示加载遮罩 |
+| rules | `SwitchRule[]` | `[]` | 验证规则 |
+| validateTrigger | `'onChange' | 'onBlur' | 'onFocus'` | `'onChange'` | 验证触发时机 |
+| immediate | `boolean` | `false` | 是否立即验证 |
+| validator | `(value: boolean) => boolean | string | Promise<boolean | string>` | - | 自定义验证函数 |
+| onChange | `(checked: boolean, event: ITouchEvent) => void` | - | 值变化回调 |
+| onFocus | `(event: ITouchEvent) => void` | - | 聚焦回调 |
+| onBlur | `(event: ITouchEvent) => void` | - | 失焦回调 |
+| onClick | `(checked: boolean, event: ITouchEvent) => void` | - | 点击回调 |
+| onLoadingChange | `(loading: boolean) => void` | - | 加载状态变化回调 |
+| onValidate | `(result: SwitchValidationResult) => void` | - | 验证回调 |
+| className | `string` | - | 自定义样式类名 |
+| style | `CSSProperties` | - | 自定义样式 |
+| containerClassName | `string` | - | 容器样式类名 |
+| containerStyle | `CSSProperties` | - | 容器样式 |
+| block | `boolean` | `false` | 是否块级显示 |
+| accessible | `boolean` | - | 是否启用无障碍访问 |
+| accessibilityLabel | `string` | - | 无障碍标签 |
+| accessibilityRole | `string` | - | 无障碍角色 |
+| accessibilityState | `{ disabled?: boolean; checked?: boolean; busy?: boolean; required?: boolean; invalid?: boolean; }` | - | 无障碍状态 |
+
+### SwitchRef
+
+| 方法 | 类型 | 说明 |
+| --- | --- | --- |
+| element | `HTMLElement | null` | DOM元素引用 |
+| getValue | `() => boolean` | 获取值 |
+| setValue | `(value: boolean) => void` | 设置值 |
+| toggle | `() => void` | 切换值 |
+| focus | `() => void` | 聚焦 |
+| blur | `() => void` | 失焦 |
+| setDisabled | `(disabled: boolean) => void` | 设置禁用状态 |
+| setReadonly | `(readonly: boolean) => void` | 设置只读状态 |
+| setLoading | `(loading: boolean) => void` | 设置加载状态 |
+| setStatus | `(status: SwitchStatus) => void` | 设置状态 |
+| getStatus | `() => SwitchStatus` | 获取状态 |
+| validate | `() => Promise<SwitchValidationResult>` | 验证 |
+| reset | `() => void` | 重置 |
+| getValidationResult | `() => SwitchValidationResult | null` | 获取验证结果 |
+
+### 类型定义
+
+```typescript
+// 开关尺寸
+export type SwitchSize = 'sm' | 'md' | 'lg';
+
+// 开关变体
+export type SwitchVariant = 'solid' | 'outline' | 'ghost';
+
+// 开关状态
+export type SwitchStatus = 'normal' | 'checked' | 'unchecked' | 'disabled' | 'loading' | 'error';
+
+// 开关颜色
+export type SwitchColor = 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'default';
+
+// 开关形状
+export type SwitchShape = 'rounded' | 'square';
+
+// 验证规则
+export interface SwitchRule {
+  required?: boolean;
+  message?: string;
+  validator?: (value: boolean) => boolean | string | Promise<boolean | string>;
+}
+
+// 验证结果
+export interface SwitchValidationResult {
+  valid: boolean;
+  message?: string;
+  value: boolean;
+}
+```
+
+## 使用提示
+
+1. **受控与非受控模式**：通过设置`value`和`onChange`可以使用受控模式，否则为非受控模式。
+2. **尺寸与变体**：可以通过`size`和`variant`属性组合使用不同的样式效果。
+3. **颜色主题**：支持多种颜色主题，可以根据场景选择合适的颜色。
+4. **状态管理**：支持禁用、只读和加载状态，可以根据业务需求进行设置。
+5. **表单验证**：可以通过`rules`属性设置验证规则，实现表单验证功能。
+6. **自定义内容**：可以自定义标签文本和图标，实现个性化的开关效果。
+7. **无障碍访问**：支持无障碍相关属性，提高组件的可访问性。
+
+## 浏览器兼容性
+
+- 微信小程序
+- 支付宝小程序
+- 百度小程序
+- 字节跳动小程序
+- H5
+
+## 无障碍支持
+
+- 支持`accessibilityLabel`和`accessibilityRole`属性
+- 支持`accessibilityState`属性，包含disabled、checked、busy、required、invalid等状态
+- 支持键盘操作和屏幕阅读器

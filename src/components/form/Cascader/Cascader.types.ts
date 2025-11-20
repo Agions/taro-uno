@@ -48,17 +48,17 @@ export interface CascaderNativeProps {
   /** 组件样式 */
   style?: CSSProperties;
   /** 点击事件 */
-  onClick?: (event: ITouchEvent) => void;
+  onClick?: (_event: ITouchEvent) => void;
   /** 长按事件 */
-  onLongPress?: (event: ITouchEvent) => void;
+  onLongPress?: (_event: ITouchEvent) => void;
   /** 触摸开始事件 */
-  onTouchStart?: (event: ITouchEvent) => void;
+  onTouchStart?: (_event: ITouchEvent) => void;
   /** 触摸移动事件 */
-  onTouchMove?: (event: ITouchEvent) => void;
+  onTouchMove?: (_event: ITouchEvent) => void;
   /** 触摸结束事件 */
-  onTouchEnd?: (event: ITouchEvent) => void;
+  onTouchEnd?: (_event: ITouchEvent) => void;
   /** 触摸取消事件 */
-  onTouchCancel?: (event: ITouchEvent) => void;
+  onTouchCancel?: (_event: ITouchEvent) => void;
   /** 数据集属性 */
   dataset?: Record<string, any>;
   /** 自定义属性 */
@@ -146,37 +146,37 @@ export interface CascaderProps extends Omit<CascaderNativeProps, 'onChange' | 'o
     isLeaf?: string;
   };
   /** 加载数据函数 */
-  loadData?: (selectedOptions: CascaderOption[]) => Promise<void>;
+  loadData?: (_selectedOptions: CascaderOption[]) => Promise<void>;
   /** 搜索函数 */
-  filterOption?: (inputValue: string, option: CascaderOption, path: CascaderOption[]) => boolean;
+  filterOption?: (_inputValue: string, option: CascaderOption, path: CascaderOption[]) => boolean;
   /** 自定义选项渲染 */
-  optionRender?: (option: CascaderOption, index: number) => ReactNode;
+  optionRender?: (_option: CascaderOption, index: number) => ReactNode;
   /** 自定义下拉框渲染 */
-  dropdownRender?: (menu: ReactNode) => ReactNode;
+  dropdownRender?: (_menu: ReactNode) => ReactNode;
   /** 自定义标签渲染 */
-  tagRender?: (props: { value: CascaderValue; label: ReactNode; onClose: () => void }) => ReactNode;
+  tagRender?: (_props: { value: CascaderValue; label: ReactNode; onClose: () => void }) => ReactNode;
   /** 自定义显示渲染 */
-  displayRender?: (labels: ReactNode[], selectedOptions: CascaderOption[]) => ReactNode;
+  displayRender?: (_labels: ReactNode[], selectedOptions: CascaderOption[]) => ReactNode;
   /** 值变化回调 */
-  onChange?: (value: CascaderValue | null, selectedOptions: CascaderOption[]) => void;
+  onChange?: (_value: CascaderValue | null, selectedOptions: CascaderOption[]) => void;
   /** 多选值变化回调 */
-  onMultipleChange?: (values: CascaderValue[], selectedOptions: CascaderOption[][]) => void;
+  onMultipleChange?: (_values: CascaderValue[], selectedOptions: CascaderOption[][]) => void;
   /** 搜索回调 */
-  onSearch?: (value: string) => void;
+  onSearch?: (_value: string) => void;
   /** 获得焦点回调 */
-  onFocus?: (event: ITouchEvent) => void;
+  onFocus?: (_event: ITouchEvent) => void;
   /** 失去焦点回调 */
-  onBlur?: (event: ITouchEvent) => void;
+  onBlur?: (_event: ITouchEvent) => void;
   /** 展开状态变化回调 */
-  onDropdownVisibleChange?: (open: boolean) => void;
+  onDropdownVisibleChange?: (_open: boolean) => void;
   /** 清除回调 */
   onClear?: () => void;
   /** 选择回调 */
-  onSelect?: (value: CascaderValue, selectedOptions: CascaderOption[]) => void;
+  onSelect?: (_value: CascaderValue, selectedOptions: CascaderOption[]) => void;
   /** 取消选择回调 */
-  onDeselect?: (value: CascaderValue, selectedOptions: CascaderOption[]) => void;
+  onDeselect?: (_value: CascaderValue, selectedOptions: CascaderOption[]) => void;
   /** 展开回调 */
-  onExpand?: (value: CascaderValue, selectedOptions: CascaderOption[]) => void;
+  onExpand?: (_value: CascaderValue, selectedOptions: CascaderOption[]) => void;
   /** 无障碍访问 */
   accessible?: boolean;
   /** 无障碍标签 */
@@ -200,11 +200,11 @@ export interface CascaderRef {
   /** 获取当前值 */
   getValue: () => CascaderValue | null;
   /** 设置值 */
-  setValue: (value: CascaderValue | null) => void;
+  setValue: (_value: CascaderValue | null) => void;
   /** 获取选中的选项 */
   getSelectedOptions: () => CascaderOption[];
   /** 设置选项 */
-  setOptions: (options: CascaderOption[]) => void;
+  setOptions: (_options: CascaderOption[]) => void;
   /** 聚焦 */
   focus: () => void;
   /** 失焦 */
@@ -220,9 +220,9 @@ export interface CascaderRef {
   /** 启用 */
   enable: () => void;
   /** 搜索 */
-  search: (value: string) => void;
+  search: (_value: string) => void;
   /** 展开到指定路径 */
-  expandToPath: (path: CascaderValue) => void;
+  expandToPath: (_path: CascaderValue) => void;
   /** 重置 */
   reset: () => void;
 }
@@ -262,45 +262,45 @@ export interface CascaderConfig {
 /** 级联选择器工具函数接口 */
 export interface CascaderUtils {
   /** 查找选项路径 */
-  findOptionPath: (options: CascaderOption[], value: CascaderValue, fieldNames?: CascaderProps['fieldNames']) => CascaderOption[];
+  findOptionPath: (_options: CascaderOption[], value: CascaderValue, fieldNames?: CascaderProps['fieldNames']) => CascaderOption[];
   /** 过滤选项 */
-  filterOptions: (options: CascaderOption[], inputValue: string, filterOption?: CascaderProps['filterOption']) => CascaderOption[];
+  filterOptions: (_options: CascaderOption[], inputValue: string, filterOption?: CascaderProps['filterOption']) => CascaderOption[];
   /** 格式化显示值 */
-  formatDisplayValue: (labels: ReactNode[], selectedOptions: CascaderOption[], config?: { showPath?: boolean; pathSeparator?: string }) => ReactNode;
+  formatDisplayValue: (_labels: ReactNode[], selectedOptions: CascaderOption[], config?: { showPath?: boolean; pathSeparator?: string }) => ReactNode;
   /** 验证值 */
-  validateValue: (value: CascaderValue, options: CascaderOption[], fieldNames?: CascaderProps['fieldNames']) => boolean;
+  validateValue: (_value: CascaderValue, options: CascaderOption[], fieldNames?: CascaderProps['fieldNames']) => boolean;
   /** 展平选项 */
-  flattenOptions: (options: CascaderOption[], fieldNames?: CascaderProps['fieldNames']) => CascaderOption[];
+  flattenOptions: (_options: CascaderOption[], fieldNames?: CascaderProps['fieldNames']) => CascaderOption[];
   /** 生成选项树 */
-  generateOptionTree: (options: CascaderOption[], fieldNames?: CascaderProps['fieldNames']) => CascaderOption[];
+  generateOptionTree: (_options: CascaderOption[], fieldNames?: CascaderProps['fieldNames']) => CascaderOption[];
   /** 获取叶子节点 */
-  getLeafOptions: (options: CascaderOption[], fieldNames?: CascaderProps['fieldNames']) => CascaderOption[];
+  getLeafOptions: (_options: CascaderOption[], fieldNames?: CascaderProps['fieldNames']) => CascaderOption[];
   /** 获取禁用选项 */
-  getDisabledOptions: (options: CascaderOption[], fieldNames?: CascaderProps['fieldNames']) => CascaderOption[];
+  getDisabledOptions: (_options: CascaderOption[], fieldNames?: CascaderProps['fieldNames']) => CascaderOption[];
 }
 
 /** 级联选择器事件接口 */
 export interface CascaderEvents {
   /** 值变化事件 */
-  onChange?: (value: CascaderValue | null, selectedOptions: CascaderOption[]) => void;
+  onChange?: (_value: CascaderValue | null, selectedOptions: CascaderOption[]) => void;
   /** 多选值变化事件 */
-  onMultipleChange?: (values: CascaderValue[], selectedOptions: CascaderOption[][]) => void;
+  onMultipleChange?: (_values: CascaderValue[], selectedOptions: CascaderOption[][]) => void;
   /** 搜索事件 */
-  onSearch?: (value: string) => void;
+  onSearch?: (_value: string) => void;
   /** 聚焦事件 */
-  onFocus?: (event: ITouchEvent) => void;
+  onFocus?: (_event: ITouchEvent) => void;
   /** 失焦事件 */
-  onBlur?: (event: ITouchEvent) => void;
+  onBlur?: (_event: ITouchEvent) => void;
   /** 展开状态变化事件 */
-  onDropdownVisibleChange?: (open: boolean) => void;
+  onDropdownVisibleChange?: (_open: boolean) => void;
   /** 清除事件 */
   onClear?: () => void;
   /** 选择事件 */
-  onSelect?: (value: CascaderValue, selectedOptions: CascaderOption[]) => void;
+  onSelect?: (_value: CascaderValue, selectedOptions: CascaderOption[]) => void;
   /** 取消选择事件 */
-  onDeselect?: (value: CascaderValue, selectedOptions: CascaderOption[]) => void;
+  onDeselect?: (_value: CascaderValue, selectedOptions: CascaderOption[]) => void;
   /** 展开事件 */
-  onExpand?: (value: CascaderValue, selectedOptions: CascaderOption[]) => void;
+  onExpand?: (_value: CascaderValue, selectedOptions: CascaderOption[]) => void;
 }
 
 /** 级联选择器样式接口 */
@@ -308,13 +308,13 @@ export interface CascaderStyles {
   /** 获取基础样式 */
   getBaseStyle: () => CSSProperties;
   /** 获取尺寸样式 */
-  getSizeStyle: (size: CascaderSize) => CSSProperties;
+  getSizeStyle: (_size: CascaderSize) => CSSProperties;
   /** 获取变体样式 */
-  getVariantStyle: (variant: CascaderVariant) => CSSProperties;
+  getVariantStyle: (_variant: CascaderVariant) => CSSProperties;
   /** 获取状态样式 */
-  getStatusStyle: (status: CascaderStatus) => CSSProperties;
+  getStatusStyle: (_status: CascaderStatus) => CSSProperties;
   /** 获取输入框样式 */
-  getInputStyle: (size: CascaderSize, disabled?: boolean) => CSSProperties;
+  getInputStyle: (_size: CascaderSize, disabled?: boolean) => CSSProperties;
   /** 获取下拉框样式 */
   getDropdownStyle: () => CSSProperties;
   /** 获取菜单样式 */
@@ -376,9 +376,9 @@ export interface CascaderStyles {
   /** 获取动画关键帧 */
   getAnimations: () => Record<string, CSSProperties>;
   /** 格式化显示值 */
-  formatDisplayValue: (labels: ReactNode[], selectedOptions: CascaderOption[], config?: { showPath?: boolean; pathSeparator?: string }) => ReactNode;
+  formatDisplayValue: (_labels: ReactNode[], selectedOptions: CascaderOption[], config?: { showPath?: boolean; pathSeparator?: string }) => ReactNode;
   /** 获取完整样式 */
-  getStyle: (config: {
+  getStyle: (_config: {
     size?: CascaderSize;
     variant?: CascaderVariant;
     status?: CascaderStatus;
@@ -388,7 +388,7 @@ export interface CascaderStyles {
     style?: CSSProperties;
   }) => CSSProperties;
   /** 获取完整类名 */
-  getClassName: (config: {
+  getClassName: (_config: {
     size?: CascaderSize;
     variant?: CascaderVariant;
     status?: CascaderStatus;
