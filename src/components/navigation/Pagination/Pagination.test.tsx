@@ -1,8 +1,8 @@
 import React from 'react'
-import { render, screen, fireEvent, act } from '@testing-library/react'
+import { render, fireEvent, screen, act } from '@testing-library/react'
 import { Pagination } from '../Pagination'
 import type { PaginationProps, PaginationRef } from './Pagination.types'
-import { vi } from 'vitest'
+import { vi, describe, it, expect, beforeEach } from 'vitest'
 
 // Mock Taro components
 vi.mock('@tarojs/components', () => ({
@@ -14,7 +14,6 @@ vi.mock('@tarojs/components', () => ({
     return (
       <select {...props} role="combobox" onChange={(e) => {
         const selectedIndex = parseInt(e.target.value);
-        const selectedValue = range ? range[selectedIndex] : selectedIndex;
         onChange && onChange({ detail: { value: selectedIndex } });
       }}>
         {range?.map((value, index) => (

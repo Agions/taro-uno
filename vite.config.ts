@@ -48,7 +48,7 @@ export default defineConfig(({ mode }) => {
         entry: path.resolve(__dirname, 'src/index.ts'),
         name: 'TaroUnoUI',
         formats: ['es', 'cjs'],
-        fileName: (format) => `taro-uno-ui.${format}.js`
+        fileName: (format) => `@taro-uno-ui.${format}.js`
       } : undefined,
 
       rollupOptions: {

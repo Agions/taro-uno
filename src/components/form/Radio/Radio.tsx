@@ -186,12 +186,12 @@ export const RadioComponent = forwardRef<RadioRef, RadioProps>((props, ref) => {
       shake: () => {
         // Shake animation implementation would go here
          
-        console.log('shake animation');
+
       },
       pulse: () => {
         // Pulse animation implementation would go here
          
-        console.log('pulse animation');
+
       },
     }),
     [checked, internalDisabled, internalReadonly, validateRadio, onChange, finalStatus],

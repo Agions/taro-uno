@@ -10,7 +10,7 @@ import { readFileSync, existsSync } from 'fs'
 import { join } from 'path'
 import { glob } from 'glob'
 
-interface ComponentAPIContract {
+interface _ComponentAPIContract {
   id: string
   name: string
   category: string
@@ -44,7 +44,7 @@ interface EventDefinition {
 interface MethodDefinition {
   name: string
   description: string
-  parameters: Parameter[]
+  args: PropDefinition[]
   returnType: string
 }
 
@@ -273,7 +273,7 @@ describe('Component API Documentation Contract Tests', () => {
           const href = match[2]
           if (href.startsWith('../')) {
             // Should be a relative link to another component
-            expect(href).toMatch(/\.\.\/[^\/]+\/[^\/]+\/?$/)
+            expect(href).toMatch(/\.\.\/[^/]+\/[^/]+\/?$/)
           }
         }
       }
@@ -289,7 +289,7 @@ describe('Component API Documentation Contract Tests', () => {
       const content = readFileSync(filePath, 'utf-8')
 
       // Extract component name from file path
-      const componentName = filePath.split('/').pop()?.replace('.md', '') || ''
+      const _componentName = filePath.split('/').pop()?.replace('.md', '') || ''
 
       // Props table should have proper headers
       expect(content).toMatch(/\| 参数 \| 说明 \| 类型 \| 默认值 \| 必填 \|/)

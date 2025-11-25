@@ -78,7 +78,7 @@ export interface SliderMark {
   style?: React.CSSProperties;
 }
 
-export interface SliderUtils {
+export interface SliderUtilsType {
   /** 计算滑块位置 */
   calculatePosition: (_value: number, min: number, max: number) => number;
   /** 计算对应的值 */
@@ -89,19 +89,19 @@ export interface SliderUtils {
   validateValue: (_value: number, min: number, max: number) => boolean;
 }
 
-export const SliderUtils: SliderUtils = {
+export const SliderUtils: SliderUtilsType = {
   calculatePosition: (value: number, min: number, max: number) => {
     return ((value - min) / (max - min)) * 100;
   },
-  
+
   calculateValue: (position: number, min: number, max: number) => {
     return min + (position / 100) * (max - min);
   },
-  
+
   formatValue: (value: number, step: number) => {
     return Math.round(value / step) * step;
   },
-  
+
   validateValue: (value: number, min: number, max: number) => {
     return value >= min && value <= max;
   },

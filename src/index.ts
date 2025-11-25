@@ -108,8 +108,7 @@ export { NavBar } from './components/navigation/NavBar';
 export type { NavBarProps, NavBarRef } from './components/navigation/NavBar/NavBar.types';
 export { Steps } from './components/navigation/Steps';
 export type { StepsProps, StepsRef } from './components/navigation/Steps/Steps.types';
-export { Tree } from './components/navigation/Tree';
-export type { TreeProps, TreeRef } from './components/navigation/Tree/Tree.types';
+
 
 // 工具函数
 export * from './utils/index';
@@ -165,7 +164,7 @@ export const CONFIG = {
     feedback: ['Modal', 'Message', 'Notification', 'Loading', 'Progress', 'Tooltip', 'Result'],
     form: ['Form', 'Input', 'Select', 'DatePicker', 'TimePicker', 'Radio', 'Checkbox', 'Switch', 'Slider', 'Textarea', 'InputNumber', 'Cascader', 'Transfer'],
     layout: ['Grid', 'Layout', 'Space', 'Affix', 'Row', 'Col', 'Container'],
-    navigation: ['Menu', 'Tabs', 'Pagination', 'NavBar', 'Steps', 'Tree'],
+    navigation: ['Menu', 'Tabs', 'Pagination', 'NavBar', 'Steps'],
   },
 };
 
@@ -285,7 +284,7 @@ export default {
   Pagination: NavigationComponents.Pagination,
   NavBar: NavigationComponents.NavBar,
   Steps: NavigationComponents.Steps,
-  Tree: NavigationComponents.Tree,
+
 
   // 工具函数
   Utils: ComponentLibraryUtils,

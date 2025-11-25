@@ -16,7 +16,7 @@ export const Step = forwardRef<StepRef, StepProps>(({
   description,
   status = 'wait',
   icon,
-  disabled,
+  disabled: _disabled,
   stepNumber,
   ...props
 }, ref) => {

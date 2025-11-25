@@ -1,28 +1,17 @@
-import React, { forwardRef, useRef, useState, useEffect, useCallback } from 'react';
+import React, { forwardRef, useEffect } from 'react';
 import { Input as TaroInput, Text, View } from '@tarojs/components';
 import type { ITouchEvent } from '@tarojs/components';
 import { inputStyles } from './Input.styles';
-import { utils } from '@/utils';
 import type { InputProps, InputRef, InputStatus } from './Input.types';
+import { useInputLogic } from './useInputLogic';
 
 /** 输入框组件 */
 export const InputComponent = forwardRef<InputRef, InputProps>((props, ref) => {
   const {
-    value: controlledValue,
-    defaultValue = '',
     placeholder,
     size = 'md',
     type = 'text',
     variant = 'outlined',
-    status: propStatus = 'normal',
-    disabled = false,
-    readonly = false,
-    clearable = false,
-    clearTrigger = 'focus',
-    maxLength,
-    minLength,
-    prefix,
-    suffix,
     label,
     helperText,
     errorText,
@@ -31,292 +20,56 @@ export const InputComponent = forwardRef<InputRef, InputProps>((props, ref) => {
     bordered = true,
     showPasswordToggle = false,
     className,
-    onChange,
-    onFocus,
-    onBlur,
-    onClear,
-    onConfirm,
-    onInput,
     onKeyboardHeightChange,
     style,
-    rules,
-    validateTrigger = 'onBlur',
-    immediate = false,
     multiline = false,
     rows = 3,
     autoHeight = false,
     showWordLimit = false,
-    validator,
+    prefix,
+    suffix,
+    maxLength,
     ...restProps
   } = props;
 
-  const nativeInputRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null);
-  const [internalValue, setInternalValue] = useState(defaultValue);
-  const [isFocused, setIsFocused] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [internalStatus, setInternalStatus] = useState<InputStatus>(propStatus);
-  const [internalDisabled, setInternalDisabled] = useState(disabled);
-  const [internalReadonly, setInternalReadonly] = useState(readonly);
-  const [validationResult, setValidationResult] = useState<{ valid: boolean; message?: string } | null>(null);
-
-  // 处理受控/非受控模式
-  const isControlled = controlledValue !== undefined;
-  const value = isControlled ? controlledValue : internalValue;
-
-  // 更新内部状态
-  useEffect(() => {
-    setInternalStatus(propStatus);
-  }, [propStatus]);
-
-  useEffect(() => {
-    setInternalDisabled(disabled);
-  }, [disabled]);
-
-  useEffect(() => {
-    setInternalReadonly(readonly);
-  }, [readonly]);
+  const {
+    nativeInputRef,
+    value,
+    showPassword,
+    internalDisabled,
+    internalReadonly,
+    validationResult,
+    finalStatus,
+    handleValueChange,
+    handleFocus,
+    handleBlur,
+    handleConfirm,
+    handleClear,
+    handlePasswordToggle,
+    shouldShowClear,
+    validateInput,
+    setInternalValue,
+    setInternalStatus,
+    setInternalDisabled,
+    setInternalReadonly,
+    setValidationResult,
+  } = useInputLogic(props);
 
   // 自动聚焦
   useEffect(() => {
     if (autoFocus && nativeInputRef.current) {
       nativeInputRef.current.focus();
     }
-  }, [autoFocus]);
-
-  // 立即验证
-  useEffect(() => {
-    if (immediate && value) {
-      validateInput(String(value));
-    }
-  }, [immediate, value]);
-
-  // 验证输入值
-  const validateInput = useCallback(
-    async (inputValue: string): Promise<{ valid: boolean; message?: string }> => {
-      // 验证长度
-      if (minLength !== undefined && inputValue.length < minLength) {
-        return { valid: false, message: `最少需要${minLength}个字符` };
-      }
-
-      if (maxLength !== undefined && inputValue.length > maxLength) {
-        return { valid: false, message: `最多允许${maxLength}个字符` };
-      }
-
-      // 如果没有规则和验证器，直接返回验证通过
-      if (!rules && !validator) {
-        return { valid: true };
-      }
-
-      // 验证必填
-      if (rules?.some((rule) => rule.required && !inputValue.trim())) {
-        const requiredRule = rules.find((rule) => rule.required);
-        return { valid: false, message: requiredRule?.message || '此字段为必填项' };
-      }
-
-      // 验证规则
-      if (rules) {
-        for (let i = 0; i < rules.length; i++) {
-          const rule = rules[i]!;
-          if (rule.pattern && !rule.pattern.test(inputValue)) {
-            return { valid: false, message: rule.message || '输入格式不正确' };
-          }
-          if (rule.validator) {
-            const result = await rule.validator(inputValue);
-            if (typeof result === 'string') {
-              return { valid: false, message: result };
-            }
-            if (!result) {
-              return { valid: false, message: rule.message || '输入格式不正确' };
-            }
-          }
-        }
-      }
-
-      // 自定义验证函数
-      if (validator) {
-        const result = await validator(inputValue);
-        if (typeof result === 'string') {
-          return { valid: false, message: result };
-        }
-        if (!result) {
-          return { valid: false, message: '验证失败' };
-        }
-      }
-
-      return { valid: true };
-    },
-    [rules, validator, minLength, maxLength],
-  );
-
-  // 格式化输入值
-  const formatInputValue = useCallback(
-    (inputValue: string): string => {
-      // 首先进行XSS防护
-      let formattedValue = utils.security.sanitizeText(inputValue);
-
-      // 根据类型格式化输入
-      switch (type) {
-        case 'number':
-        case 'digit':
-          formattedValue = formattedValue.replace(/[^\d.-]/g, '');
-          break;
-        case 'tel':
-          formattedValue = formattedValue.replace(/[^\d]/g, '');
-          break;
-        case 'idcard':
-          formattedValue = formattedValue.replace(/[^\dxX]/g, '');
-          break;
-        case 'email':
-          // 不自动格式化邮箱，让用户自由输入
-          break;
-        default:
-          break;
-      }
-
-      // 限制长度
-      if (maxLength && formattedValue.length > maxLength) {
-        formattedValue = formattedValue.slice(0, maxLength);
-      }
-
-      return formattedValue;
-    },
-    [type, maxLength],
-  );
-
-  // 处理值变化
-  const handleValueChange = useCallback(
-    async (newValue: string, event: ITouchEvent) => {
-      // Don't process events when disabled or readonly
-      if (internalDisabled || internalReadonly) return;
-
-      const formattedValue = formatInputValue(newValue);
-
-      if (!isControlled) {
-        setInternalValue(formattedValue);
-      }
-
-      // 触发输入事件
-      onInput?.(formattedValue, event);
-
-      // 验证输入
-      if (validateTrigger === 'onChange') {
-        const result = await validateInput(formattedValue);
-        setValidationResult(result);
-        setInternalStatus(result.valid ? 'normal' : 'error');
-      }
-
-      // 触发变化事件
-      onChange?.(formattedValue, event);
-    },
-    [internalDisabled, internalReadonly, isControlled, formatInputValue, onInput, validateTrigger, validateInput, onChange],
-  );
-
-  // 处理聚焦事件
-  const handleFocus = useCallback(
-    async (event: ITouchEvent) => {
-      if (internalDisabled || internalReadonly) return;
-
-      setIsFocused(true);
-      onFocus?.(event);
-
-      // 聚焦时验证
-      if (validateTrigger === 'onFocus') {
-        const result = await validateInput(value as string);
-        setValidationResult(result);
-        setInternalStatus(result.valid ? 'normal' : 'error');
-      }
-    },
-    [internalDisabled, internalReadonly, onFocus, validateTrigger, validateInput, value],
-  );
-
-  // 处理失焦事件
-  const handleBlur = useCallback(
-    async (event: ITouchEvent) => {
-      if (internalDisabled || internalReadonly) return;
-
-      setIsFocused(false);
-      onBlur?.(event);
-
-      // 失焦时验证
-      if (validateTrigger === 'onBlur') {
-        const result = await validateInput(value as string);
-        setValidationResult(result);
-        setInternalStatus(result.valid ? 'normal' : 'error');
-      }
-    },
-    [internalDisabled, internalReadonly, onBlur, validateTrigger, validateInput, value],
-  );
-
-  // 处理确认事件
-  const handleConfirm = useCallback(
-    async (event: ITouchEvent) => {
-      if (internalDisabled || internalReadonly) return;
-
-      onConfirm?.(value as string, event);
-
-      // 确认时验证
-      if (validateTrigger === 'onSubmit') {
-        const result = await validateInput(value as string);
-        setValidationResult(result);
-        setInternalStatus(result.valid ? 'normal' : 'error');
-      }
-    },
-    [internalDisabled, internalReadonly, onConfirm, validateTrigger, validateInput, value],
-  );
-
-  // 处理清除事件
-  const handleClear = useCallback(
-    (event: ITouchEvent) => {
-      if (internalDisabled || internalReadonly) return;
-
-      const emptyValue = '';
-      if (!isControlled) {
-        setInternalValue(emptyValue);
-      }
-
-      setValidationResult(null);
-      setInternalStatus('normal');
-      onClear?.(event);
-      onChange?.(emptyValue, event);
-    },
-    [internalDisabled, internalReadonly, isControlled, onClear, onChange],
-  );
-
-  // 处理密码切换
-  const handlePasswordToggle = useCallback(() => {
-    setShowPassword(!showPassword);
-  }, [showPassword]);
-
-  // 计算是否显示清除按钮
-  const shouldShowClear = useCallback(() => {
-    if (!clearable || internalDisabled || internalReadonly) return false;
-
-    switch (clearTrigger) {
-      case 'always':
-        return !!value;
-      case 'focus':
-        return isFocused && !!value;
-      case 'never':
-        return false;
-      default:
-        return false;
-    }
-  }, [clearable, internalDisabled, internalReadonly, value, isFocused, clearTrigger]);
-
-  // 计算最终状态
-  const finalStatus = internalDisabled ? 'disabled' : validationResult?.valid === false || errorText ? 'error' : internalStatus;
+  }, [autoFocus, nativeInputRef]);
 
   // 暴露给外部的引用方法
   React.useImperativeHandle(
     ref,
     () => ({
       element: nativeInputRef.current,
-      getValue: () => {
-        // Always return the current internal value for uncontrolled components
-        return String(isControlled ? (controlledValue as string) : internalValue);
-      },
+      getValue: () => String(value),
       setValue: (newValue: string) => {
-        if (!isControlled) {
+        if (props.value === undefined) {
           setInternalValue(newValue);
         }
       },
@@ -366,24 +119,17 @@ export const InputComponent = forwardRef<InputRef, InputProps>((props, ref) => {
         return result;
       },
       clear: () => {
-        if (!isControlled) {
-          setInternalValue('');
-        }
-        setValidationResult(null);
-        setInternalStatus('normal');
-        onClear?.({} as ITouchEvent);
-        // For controlled components, we need to call onChange to update the displayed value
-        onChange?.('', {} as ITouchEvent);
+        handleClear({} as ITouchEvent);
       },
       reset: () => {
-        if (!isControlled) {
-          setInternalValue(defaultValue);
+        if (props.value === undefined) {
+          setInternalValue(props.defaultValue || '');
         }
         setValidationResult(null);
         setInternalStatus('normal');
       },
     }),
-    [value, isControlled, internalDisabled, internalReadonly, validateInput, handleClear, defaultValue, finalStatus],
+    [value, props.value, props.defaultValue, internalDisabled, internalReadonly, validateInput, handleClear, finalStatus, setInternalValue, setInternalStatus, setInternalDisabled, setInternalReadonly, setValidationResult, nativeInputRef]
   );
 
   // 生成输入框样式

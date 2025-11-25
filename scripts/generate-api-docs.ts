@@ -285,8 +285,8 @@ class APIDocumentationGenerator {
       if (ts.isVariableStatement(node)) {
         for (const declaration of node.declarationList.declarations) {
           if (ts.isVariableDeclaration(declaration) &&
-              declaration.initializer &&
-              ts.isArrowFunction(declaration.initializer)) {
+            declaration.initializer &&
+            ts.isArrowFunction(declaration.initializer)) {
             // 查找事件处理函数
             const eventName = declaration.name.getText()
             if (eventName.startsWith('on')) {
@@ -463,7 +463,7 @@ version: "{{COMPONENT_VERSION}}"
 ## 使用示例
 
 \`\`\`tsx
-import { {{COMPONENT_NAME}} } from '@taro-uno/ui'
+import { {{COMPONENT_NAME}} } from 'taro-uno-ui'
 
 function App() {
   return (
@@ -537,7 +537,7 @@ function App() {
   }
 
   private generateBasicExample(component: ParsedComponent): string {
-    return `import { ${component.className} } from '@taro-uno/ui'
+    return `import { ${component.className} } from 'taro-uno-ui'
 
 function App() {
   return (

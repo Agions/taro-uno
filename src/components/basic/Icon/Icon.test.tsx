@@ -1,6 +1,6 @@
 import React from 'react'
-import { vi } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { vi, describe, test, expect, beforeEach, it } from 'vitest'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { Icon } from './Icon'
 import type { IconProps } from './Icon.types'
 

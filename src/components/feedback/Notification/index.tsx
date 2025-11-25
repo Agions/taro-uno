@@ -159,6 +159,4 @@ export { notification };
 if (typeof Notification !== 'undefined') {
   (Notification as any).displayName = 'Notification';
 }
-if (typeof NotificationManager !== 'undefined') {
-  (NotificationManager as any).displayName = 'NotificationManager';
-}
+// NotificationManager displayName is set in NotificationManager.tsx

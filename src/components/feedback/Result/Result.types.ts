@@ -57,7 +57,7 @@ export interface ResultConfig {
   extraStyle?: React.CSSProperties;
 }
 
-export interface ResultUtils {
+export interface ResultUtilsType {
   /** 获取状态对应的颜色 */
   getStatusColor: (_status: ResultStatus) => string;
   /** 获取状态对应的图标 */
@@ -70,7 +70,7 @@ export interface ResultUtils {
   validateStatus: (_status: string) => boolean;
 }
 
-export const ResultUtils: ResultUtils = {
+export const ResultUtils: ResultUtilsType = {
   getStatusColor: (status: ResultStatus) => {
     const colorMap = {
       success: '#22c55e',
@@ -84,7 +84,7 @@ export const ResultUtils: ResultUtils = {
     };
     return colorMap[status] || '#6b7280';
   },
-  
+
   getStatusIcon: (status: ResultStatus) => {
     const iconMap = {
       success: '✓',
@@ -98,7 +98,7 @@ export const ResultUtils: ResultUtils = {
     };
     return iconMap[status] || '';
   },
-  
+
   getStatusTitle: (status: ResultStatus) => {
     const titleMap = {
       success: '成功',
@@ -112,7 +112,7 @@ export const ResultUtils: ResultUtils = {
     };
     return titleMap[status] || status;
   },
-  
+
   formatResultData: (data: any) => {
     return {
       ...data,
@@ -120,7 +120,7 @@ export const ResultUtils: ResultUtils = {
       formattedTime: new Date().toLocaleString(),
     };
   },
-  
+
   validateStatus: (status: string) => {
     const validStatuses = ['success', 'error', 'info', 'warning', 'loading', '404', '403', '500'];
     return validStatuses.includes(status);

@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+bower_components/
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+coverage/
+storybook-static/
+
+# Generated files
+docs/api/assets/*.js
+*.min.js
+**/*.bundle.js
+vendor/
+public/assets/*.js
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

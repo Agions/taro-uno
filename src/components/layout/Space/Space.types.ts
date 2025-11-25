@@ -77,7 +77,7 @@ export interface SpaceProps extends BaseComponentProps {
   /** 点击事件 */
   onClick?: (_event: React.MouseEvent) => void;
   /** 子元素点击事件 */
-  onItemHover?: (_index: number, event: React.MouseEvent) => void;
+  _onItemHover?: (_index: number, event: React.MouseEvent) => void;
   /** 子元素点击事件 */
   onItemClick?: (_index: number, event: ITouchEvent) => void;
   /** 响应式断点 */

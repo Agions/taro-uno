@@ -136,7 +136,7 @@ export interface UploadLocale {
   maxCountError: string;
 }
 
-export interface UploadUtils {
+export interface UploadUtilsType {
   /** 格式化文件大小 */
   formatFileSize: (bytes: number) => string;
   /** 获取文件扩展名 */
@@ -149,7 +149,7 @@ export interface UploadUtils {
   generatePreviewUrl: (file: File) => Promise<string>;
 }
 
-export const UploadUtils: UploadUtils = {
+export const UploadUtils: UploadUtilsType = {
   formatFileSize: (bytes: number) => {
     if (bytes === 0) return '0 Bytes';
 

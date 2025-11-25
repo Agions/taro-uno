@@ -261,30 +261,30 @@ interface ModalStatic {
 const Modal = ModalComponent as any as ModalStatic;
 
 /** 静态方法 */
-Modal.confirm = (config: ModalProps) => {
+Modal.confirm = (_config: ModalProps) => {
   // 这里可以实现一个全局的确认框
   // 需要配合全局状态管理或Portal实现
-  console.log('Modal.confirm', config);
+
 };
 
-Modal.info = (config: ModalProps) => {
+Modal.info = (_config: ModalProps) => {
   // 信息提示框
-  console.log('Modal.info', config);
+
 };
 
-Modal.success = (config: ModalProps) => {
+Modal.success = (_config: ModalProps) => {
   // 成功提示框
-  console.log('Modal.success', config);
+
 };
 
-Modal.error = (config: ModalProps) => {
+Modal.error = (_config: ModalProps) => {
   // 错误提示框
-  console.log('Modal.error', config);
+
 };
 
-Modal.warning = (config: ModalProps) => {
+Modal.warning = (_config: ModalProps) => {
   // 警告提示框
-  console.log('Modal.warning', config);
+
 };
 
 export { Modal };

@@ -68,7 +68,7 @@ class XSSProtection {
   escapeAttribute(str: string): string {
     if (!str) return '';
 
-    return str.replace(/[&<>"'`=\/]/g, (match) => {
+    return str.replace(new RegExp('[&<>"\'`=/]', 'g'), (match) => {
       switch (match) {
         case '&': return '&';
         case '<': return '<';
@@ -177,6 +177,7 @@ class XSSProtection {
         // 特殊处理某些属性
         if (attrName === 'href' || attrName === 'src') {
           // 检查URL协议
+          // const reg = new RegExp('^(http:|https:|//)', 'i');
           const url = this.stripQuotes(attrValue || '');
           if (this.isSafeURL(url)) {
             attributes.push(`${attrName}="${this.escapeAttribute(url)}"`);

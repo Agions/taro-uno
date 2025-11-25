@@ -2,7 +2,9 @@ import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { Col } from '../Col'
 import { Row } from '../Row'
-import type { ColProps, ColRef } from '../Col.types'
+import type { ColProps, ColRef } from './Col.types'
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
+import '@testing-library/jest-dom'
 
 // Mock Taro components
 vi.mock('@tarojs/components', () => ({
@@ -13,7 +15,7 @@ vi.mock('@tarojs/components', () => ({
 vi.mock('../Col.styles', () => ({
   colStyles: {
     getBaseStyle: (props: any) => ({
-      flex: `0 0 ${(props.span / 24) * 100}%`,
+      flexBasis: `0 0 ${(props.span / 24) * 100}%`,
       maxWidth: `${(props.span / 24) * 100}%`,
       marginLeft: props.offset > 0 ? `${(props.offset / 24) * 100}%` : '0',
       order: props.order || 0,
@@ -212,7 +214,7 @@ describe('Col Component', () => {
       render(<Col ref={mockRef} data-testid="col">Ref Span Test</Col>)
 
       if (mockRef.current) {
-        expect(() => mockRef.current.setSpan(12)).not.toThrow()
+        expect(() => mockRef.current!.setSpan(12)).not.toThrow()
       }
     })
 
@@ -220,7 +222,7 @@ describe('Col Component', () => {
       render(<Col ref={mockRef} data-testid="col">Ref Offset Test</Col>)
 
       if (mockRef.current) {
-        expect(() => mockRef.current.setOffset(6)).not.toThrow()
+        expect(() => mockRef.current!.setOffset(6)).not.toThrow()
       }
     })
 
@@ -228,7 +230,7 @@ describe('Col Component', () => {
       render(<Col ref={mockRef} data-testid="col">Ref Order Test</Col>)
 
       if (mockRef.current) {
-        expect(() => mockRef.current.setOrder(2)).not.toThrow()
+        expect(() => mockRef.current!.setOrder(2)).not.toThrow()
       }
     })
 

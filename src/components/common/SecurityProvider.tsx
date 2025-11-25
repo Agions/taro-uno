@@ -65,8 +65,12 @@ export const SecurityProvider: React.FC<SecurityProviderProps> = ({
 
   // 全局 fetch 拦截添加安全头部
   useEffect(() => {
+    if (typeof window === 'undefined' || !window.fetch) {
+      return;
+    }
+
     const originalFetch = window.fetch;
-    window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
+    window.fetch = async (input: any, init?: RequestInit) => {
       if (init && init.headers) {
         init.headers = addSecurityHeaders(init.headers as Record<string, string>);
       }

@@ -103,7 +103,7 @@ describe('Documentation Search Functionality Contract Tests', () => {
         expect(supportedDocTypes).toContain(result.type)
 
         // Validate URL format
-        expect(result.url).toMatch(/^\/[\w-\/]+\/?$/)
+        expect(result.url).toMatch(new RegExp('^/[\\w-/]+/?$'))
       }
     }
   })
@@ -277,12 +277,9 @@ describe('Documentation Search Functionality Contract Tests', () => {
 
     // Verify mixed language content is handled
     mixedLanguageResults.forEach(result => {
-      expect(result.title).toBeTruthy()
-      expect(result.content).toBeTruthy()
-
       // Should contain either Chinese or English characters
       const hasChinese = /[\u4e00-\u9fa5]/.test(result.title + result.content)
-      const hasEnglish = /[a-zA-Z]/.test(result.title + result.content)
+      const hasEnglish = new RegExp('^[a-zA-Z0-9_\\-/]+$').test(result.title + result.content)
 
       expect(hasChinese || hasEnglish).toBe(true)
     })

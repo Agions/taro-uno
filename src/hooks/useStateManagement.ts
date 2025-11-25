@@ -206,7 +206,7 @@ export function useValidatedState<T>(
 // ==================== 状态批量更新 ====================
 
 /** 状态批量更新hook */
-export function useBatchUpdate<T extends Record<string, unknown>>(initialState: T) {
+export function useBatchStateUpdate<T extends Record<string, unknown>>(initialState: T) {
   const [state, setState] = useState<T>(initialState);
   const pendingUpdates = useRef<Partial<T>>({});
 

@@ -129,29 +129,41 @@ export default [js.configs.recommended, {
       Parameters: 'readonly',
       // Node.js types
       NodeJS: 'readonly',
+      IntersectionObserverInit: 'readonly',
+      IntersectionObserverEntry: 'readonly',
+      ResizeObserverEntry: 'readonly',
     },
   },
   plugins: {
     '@typescript-eslint': tsPlugin,
-    react: reactPlugin,
+    'react': reactPlugin,
     'react-hooks': reactHooks,
     'react-refresh': reactRefresh,
   },
   rules: {
+    ...tsPlugin.configs.recommended.rules,
+    ...reactPlugin.configs.recommended.rules,
+    ...reactHooks.configs.recommended.rules,
+    // TypeScript rules optimization
+    '@typescript-eslint/no-explicit-any': 'warn',
     '@typescript-eslint/no-unused-vars': ['warn', {
-      argsIgnorePattern: '^_',
-      varsIgnorePattern: '^_',
-      caughtErrorsIgnorePattern: '^_|^e$'
+      'argsIgnorePattern': '^_',
+      'varsIgnorePattern': '^_',
+      'caughtErrorsIgnorePattern': '^_',
+      'destructuredArrayIgnorePattern': '^_'
     }],
-    'no-unused-vars': ['error', {
-      argsIgnorePattern: '^_',
-      varsIgnorePattern: '^_',
-      caughtErrorsIgnorePattern: '^_|^e$'
-    }],
-    '@typescript-eslint/no-var-requires': 'off',
-    'react/prop-types': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'warn',
+    // React rules optimization  
     'react/react-in-jsx-scope': 'off',
-    'react-refresh/only-export-components': 'warn',
+    'react/prop-types': 'off',
+    'react/display-name': 'warn',
+    // Disable low-priority react-refresh warnings
+    'react-refresh/only-export-components': 'off',
+    // Code style
+    'quotes': ['error', 'single', { avoidEscape: true }],
+    'semi': ['error', 'always'],
+    'comma-dangle': ['error', 'always-multiline'],
     'no-prototype-builtins': 'off',
     'no-control-regex': 'off',
   },

@@ -54,7 +54,7 @@ export type Variant = 'default' | 'primary' | 'secondary' | 'success' | 'warning
 export type Status = 'default' | 'loading' | 'disabled' | 'error' | 'success';
 
 /** 通用组件属性接口 */
-export interface BaseComponentProps {
+export interface BaseComponentProps extends Partial<Omit<React.HTMLAttributes<HTMLElement>, 'className' | 'style' | 'children' | 'onClick'>> {
   /** 自定义类名 */
   className?: string;
   /** 自定义样式 */
@@ -415,13 +415,13 @@ export type DeepRequired<T> = {
 /** 递归排除类型 */
 export type RecursiveExclude<T, E> = T extends object
   ? {
-      [P in keyof T as T[P] extends E ? never : P]: RecursiveExclude<T[P], E>;
-    }
+    [P in keyof T as T[P] extends E ? never : P]: RecursiveExclude<T[P], E>;
+  }
   : T;
 
 /** 递归选择类型 */
 export type RecursivePick<T, K extends string> = T extends object
   ? {
-      [P in keyof T as P extends K ? P : never]: RecursivePick<T[P], K>;
-    }
+    [P in keyof T as P extends K ? P : never]: RecursivePick<T[P], K>;
+  }
   : T;

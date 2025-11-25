@@ -44,7 +44,7 @@ export interface ColProps extends BaseComponentProps {
   /** 从父组件Row继承的间距 */
   gutter?: RowGutter;
   /** 柔性布局 */
-  flex?: number | 'auto' | 'none';
+  flex?: number | string | 'auto' | 'none';
   /** 点击事件 */
   onClick?: (_event: React.MouseEvent) => void;
   /** 响应式断点 */

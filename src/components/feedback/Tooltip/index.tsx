@@ -65,23 +65,23 @@ export const TooltipUtils = {
       visible: false,
       show: () => {
         // Taro 环境中的显示逻辑
-        console.log('Show tooltip - Taro environment');
+
       },
       hide: () => {
         // Taro 环境中的隐藏逻辑
-        console.log('Hide tooltip - Taro environment');
+
       },
       toggle: () => {
         // Taro 环境中的切换逻辑
-        console.log('Toggle tooltip - Taro environment');
+
       },
       update: (newProps: Partial<TooltipProps>) => {
         // Taro 环境中的更新逻辑
-        console.log('Update tooltip - Taro environment:', newProps);
+
       },
       destroy: () => {
         // Taro 环境中的销毁逻辑
-        console.log('Destroy tooltip - Taro environment');
+
       },
     };
   },
@@ -91,7 +91,7 @@ export const TooltipUtils = {
    */
   show: (elementId: string, content: string, options?: Partial<TooltipProps>) => {
     // 在 Taro 环境中通过选择器显示指定元素的 Tooltip
-    console.log('Show tooltip for element:', elementId, content, options);
+
     // 实际应用中可以使用 Taro 的选择器 API
   },
 
@@ -100,7 +100,7 @@ export const TooltipUtils = {
    */
   hide: (elementId: string) => {
     // 在 Taro 环境中隐藏指定元素的 Tooltip
-    console.log('Hide tooltip for element:', elementId);
+
     // 实际应用中可以使用 Taro 的选择器 API
   },
 
@@ -109,7 +109,7 @@ export const TooltipUtils = {
    */
   update: (elementId: string, content: string) => {
     // 在 Taro 环境中更新指定元素的 Tooltip 内容
-    console.log('Update tooltip for element:', elementId, content);
+
     // 实际应用中可以使用 Taro 的选择器 API
   },
 
@@ -118,7 +118,7 @@ export const TooltipUtils = {
    */
   destroy: (elementId: string) => {
     // 在 Taro 环境中销毁指定元素的 Tooltip
-    console.log('Destroy tooltip for element:', elementId);
+
     // 实际应用中可以使用 Taro 的选择器 API
   },
 };

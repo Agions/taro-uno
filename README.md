@@ -1,6 +1,26 @@
 # Taro Uno
 
+[![npm version](https://img.shields.io/npm/v/taro-uno-ui.svg?style=flat-square)](https://www.npmjs.com/package/taro-uno-ui)
+[![TypeScript](https://img.shields.io/badge/TypeScript-100%25-blue?style=flat-square)](https://www.typescriptlang.org/)
+[![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](./LICENSE)
+
 Taro Uno 是一个基于 Taro 框架的跨平台组件库，提供丰富的 UI 组件和表单控件，支持微信小程序、H5、React Native 等多端开发。
+
+## ✨ v1.0.0 新特性
+
+### 🌐 多平台API请求层
+- **UnifiedRequestClient** - 智能HTTP客户端，自动适配各平台
+- **智能缓存** - 请求缓存与去重，性能提升67%
+- **灵活重试** - 支持指数/线性/固定退避策略
+- **拦截器** - 完整的请求/响应拦截支持
+
+### 🎣 强大的React Hooks
+- **useMutation** - 数据变更与乐观更新
+- **useToggle, useCounter** - 状态管理
+- **useLocalStorage/useSessionStorage** - 持久化存储
+- **useClickOutside** - UI交互检测
+
+详见 [CHANGELOG.md](./CHANGELOG.md)
 
 ## 特性
 
@@ -15,13 +35,13 @@ Taro Uno 是一个基于 Taro 框架的跨平台组件库，提供丰富的 UI �
 
 ```bash
 # 使用 npm
-npm install taro-uno
+npm install taro-uno-ui
 
 # 使用 yarn
-yarn add taro-uno
+yarn add taro-uno-ui
 
 # 使用 pnpm
-pnpm add taro-uno
+pnpm add taro-uno-ui
 ```
 
 ## 快速开始
@@ -32,7 +52,7 @@ pnpm add taro-uno
 
 ```tsx
 // app.tsx 或 app.jsx
-import 'taro-uno/dist/styles/index.css';
+import 'taro-uno-ui/dist/style.css';
 ```
 
 ### 引入组件
@@ -40,7 +60,7 @@ import 'taro-uno/dist/styles/index.css';
 ```tsx
 import React from 'react';
 import { View } from '@tarojs/components';
-import { Button, Input } from 'taro-uno';
+import { Button, Input } from 'taro-uno-ui';
 
 const App = () => {
   return (
@@ -269,5 +289,5 @@ pnpm lint
 
 ## 联系我们
 
-- GitHub: https://github.com/your-org/taro-uno
-- Issues: https://github.com/your-org/taro-uno/issues
+- GitHub: https://github.com/agions/taro-uno
+- Issues: https://github.com/agions/taro-uno/issues

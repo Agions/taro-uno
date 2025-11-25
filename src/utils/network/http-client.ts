@@ -1,5 +1,8 @@
 import { createApiInterceptor, buildSecureHeaders, isSecureUrl, secureRetry } from '@/utils/security/api-security';
 import { ErrorHandlingManager } from '@/utils/error-handler';
+import { IRequestAdapter, RequestConfig as AdapterRequestConfig } from './types';
+import { WebAdapter } from './web-adapter';
+import { TaroAdapter } from './taro-adapter';
 
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 
@@ -17,6 +20,7 @@ export interface RequestOptions {
 export interface HttpClientConfig {
   baseUrl?: string;
   headers?: Record<string, string>;
+  adapter?: IRequestAdapter;
 }
 
 interface RequestConfig {
@@ -29,12 +33,12 @@ interface RequestConfig {
 interface ResponseData {
   status: number;
   ok: boolean;
-  headers: Headers;
+  headers: Headers | Record<string, string>;
   data: any;
 }
 
-type RequestInterceptor = (config: RequestConfig) => RequestConfig;
-type ResponseInterceptor = (response: ResponseData) => ResponseData;
+type RequestInterceptor = (_config: RequestConfig) => RequestConfig;
+type ResponseInterceptor = (_response: ResponseData) => ResponseData;
 
 export class HttpClient {
   private baseUrl: string;
@@ -43,10 +47,19 @@ export class HttpClient {
   private security = createApiInterceptor();
   private requestInterceptors: RequestInterceptor[] = [];
   private responseInterceptors: ResponseInterceptor[] = [];
+  private adapter: IRequestAdapter;
 
   constructor(config: HttpClientConfig = {}) {
     this.baseUrl = config.baseUrl || '';
     this.defaultHeaders = config.headers || {};
+    this.adapter = config.adapter || this.getDefaultAdapter();
+  }
+
+  private getDefaultAdapter(): IRequestAdapter {
+    if (process.env['TARO_ENV'] === 'h5') {
+      return new WebAdapter();
+    }
+    return new TaroAdapter();
   }
 
   addRequestInterceptor(interceptor: RequestInterceptor) {
@@ -75,34 +88,38 @@ export class HttpClient {
     config = this.security.request.execute(config);
     for (const it of this.requestInterceptors) config = it(config);
 
-    const doFetch = async () => {
-      const controller = new AbortController();
-      const timeout = options.timeout ?? 15000;
-      const timer = setTimeout(() => controller.abort(), timeout);
-      try {
-        const resp = await fetch(config.url, {
-          method: config.method,
-          headers: config.headers,
-          body: config.method === 'GET' ? null : JSON.stringify(config.data ?? {}),
-          signal: controller.signal
-        });
-        const wrapped = { status: resp.status, ok: resp.ok, headers: resp.headers, data: await this.parseBody(resp) };
-        let processed = this.security.response.execute(wrapped);
-        for (const it of this.responseInterceptors) processed = it(processed);
-        if (!resp.ok) {
-          const err = new Error(`HTTP ${resp.status}`);
-          this.errorManager.handleError(err);
-          throw err;
-        }
-        return processed.data as T;
-      } finally {
-        clearTimeout(timer);
+    const doRequest = async () => {
+      const adapterConfig: AdapterRequestConfig = {
+        url: config.url,
+        method: config.method,
+        headers: config.headers,
+        data: config.data,
+        timeout: options.timeout,
+      };
+
+      const resp = await this.adapter.request(adapterConfig);
+
+      const wrapped: ResponseData = {
+        status: resp.statusCode,
+        ok: resp.statusCode >= 200 && resp.statusCode < 300,
+        headers: resp.header,
+        data: resp.data
+      };
+
+      let processed = this.security.response.execute(wrapped);
+      for (const it of this.responseInterceptors) processed = it(processed);
+
+      if (!processed.ok) {
+        const err = new Error(`HTTP ${processed.status}`);
+        this.errorManager.handleError(err);
+        throw err;
       }
+      return processed.data as T;
     };
 
     const retries = options.retries ?? (method === 'GET' ? 3 : 0);
     const retryDelay = options.retryDelay ?? 500;
-    return await secureRetry(doFetch, retries, retryDelay);
+    return await secureRetry(doRequest, retries, retryDelay);
   }
 
   get<T>(url: string, options: Omit<RequestOptions, 'method' | 'data'> = {}): Promise<T> {
@@ -137,13 +154,6 @@ export class HttpClient {
     });
     const sep = path.includes('?') ? '&' : '?';
     return `${path}${sep}${usp.toString()}`;
-  }
-
-  private async parseBody(resp: Response): Promise<any> {
-    const ct = resp.headers.get('content-type') || '';
-    if (ct.includes('application/json')) return resp.json();
-    const text = await resp.text();
-    try { return JSON.parse(text); } catch { return text; }
   }
 }
 

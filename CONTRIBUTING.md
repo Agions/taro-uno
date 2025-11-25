@@ -22,7 +22,7 @@
 
 ### 1. 发现问题
 
-- 检查 [Issues](https://github.com/taro-uno/ui/issues) 列表
+- 检查 [Issues](https://github.com/agions/taro-uno/issues) 列表
 - 确认问题是否已被报告
 - 如果没有，请创建新的 Issue
 
@@ -50,7 +50,7 @@
 
 ```bash
 # 1. 克隆项目
-git clone https://github.com/taro-uno/ui.git
+git clone https://github.com/agions/taro-uno.git
 cd taro-uno
 
 # 2. 安装依赖
@@ -285,8 +285,8 @@ release/v1.0.0
 1. **Fork 项目**
    ```bash
    # Fork 项目到个人仓库
-   git clone https://github.com/your-username/ui.git
-   cd ui
+   git clone https://github.com/your-username/taro-uno.git
+   cd taro-uno
 ```
 
 2. **创建分支**

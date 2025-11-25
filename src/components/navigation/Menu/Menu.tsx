@@ -28,7 +28,7 @@ export const MenuComponent = forwardRef<MenuRef, MenuProps>((props, ref) => {
     inlineIndent = 24,
     collapsible = false,
     collapsed: controlledCollapsed = false,
-    collapsedIcon,
+    _collapsedIcon,
     expandIcon,
     contextMenu = false,
     onClick,
@@ -238,17 +238,17 @@ export const MenuComponent = forwardRef<MenuRef, MenuProps>((props, ref) => {
         onCollapse?.(newCollapsed);
       },
       getItem: (key: string) => MenuUtils.findItem(items, key),
-      addItem: (item: MenuItem, parentKey?: string) => {
+      addItem: (_item: MenuItem, _parentKey?: string) => {
         // 静态方法，暂不实现
-        console.log('Add item:', item, 'to parent:', parentKey);
+
       },
-      removeItem: (key: string) => {
+      removeItem: (_key: string) => {
         // 静态方法，暂不实现
-        console.log('Remove item:', key);
+
       },
-      updateItem: (key: string, newItem: Partial<MenuItem>) => {
+      updateItem: (_key: string, _newItem: Partial<MenuItem>) => {
         // 静态方法，暂不实现
-        console.log('Update item:', key, newItem);
+
       },
       expandAll: () => {
         const allKeys = MenuUtils.flattenItems(items)

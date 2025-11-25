@@ -2,18 +2,19 @@
  * responsiveUtils 单元测试
  */
 
-import { renderHook, act } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
 import { useResponsive, getScreenSize, matchScreenSize, getResponsiveValue, generateResponsiveStyles } from '../responsiveUtils';
 
 // 模拟Taro环境
-jest.mock('@tarojs/taro', () => ({
-  getSystemInfoSync: jest.fn(() => ({
+vi.mock('@tarojs/taro', () => ({
+  getSystemInfoSync: vi.fn(() => ({
     windowWidth: 375,
     windowHeight: 667,
     statusBarHeight: 20,
     safeArea: { top: 20, bottom: 0, left: 0, right: 375 }
   })),
-  getMenuButtonBoundingClientRect: jest.fn(() => ({
+  getMenuButtonBoundingClientRect: vi.fn(() => ({
     width: 87,
     height: 32,
     top: 26,

@@ -1,5 +1,6 @@
 import React from 'react'
 import { render, screen, fireEvent, act } from '@testing-library/react'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { Tabs } from '../Tabs'
 import type { TabsProps, TabsRef, TabItem } from '../Tabs.types'
 
@@ -53,7 +54,7 @@ vi.mock('../Tabs.styles', () => ({
       cursor: 'pointer',
       color: '#1890ff'
     }),
-    getContentStyle: (position: any, animated: any) => ({
+    getContentStyle: (_position: any, _animated: any) => ({
       flex: 1,
       position: 'relative',
       overflow: 'hidden'
@@ -307,7 +308,7 @@ describe('Tabs Component', () => {
 
   describe('Custom Rendering', () => {
     it('uses custom tab bar render', () => {
-      const customTabBar = (props: TabsProps) => (
+      const customTabBar = (_props: TabsProps) => (
         <div data-testid="custom-tab-bar">Custom Tab Bar</div>
       )
       render(<Tabs items={mockItems} renderTabBar={customTabBar} data-testid="tabs" />)

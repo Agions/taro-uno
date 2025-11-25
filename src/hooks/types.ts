@@ -1,4 +1,4 @@
-export type AsyncState<T> = {
+export type HookAsyncState<T> = {
     data: T | undefined;
     error: Error | undefined;
     loading: boolean;

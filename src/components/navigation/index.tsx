@@ -4,7 +4,7 @@ export * from './Tabs';
 export * from './Pagination';
 export * from './Steps';
 export * from './NavBar';
-export * from './Tree';
+
 
 // 导出类型
 export type { TabsProps, TabsRef, TabPosition, TabType, TabSize, TabItem, TabPaneProps } from './Tabs/Tabs.types';

@@ -18,13 +18,13 @@ export const Steps = forwardRef<StepsRef, StepsProps>(({
   style,
   current = 0,
   direction = 'horizontal',
-  labelPlacement = 'horizontal',
+  labelPlacement: _labelPlacement = 'horizontal',
   progressDot = false,
-  initial = 0,
+  initial: _initial = 0,
   status,
   size = 'default',
   items,
-  children,
+  children: _children,
   onChange,
   ...props
 }, ref) => {

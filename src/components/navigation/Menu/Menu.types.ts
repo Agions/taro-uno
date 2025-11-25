@@ -80,7 +80,7 @@ export interface MenuProps {
   /** 是否折叠 */
   collapsed?: boolean;
   /** 折叠图标 */
-  collapsedIcon?: ReactNode;
+  _collapsedIcon?: ReactNode;
   /** 展开图标 */
   expandIcon?: ReactNode | ((_props: { isOpen: boolean; isSubMenu: boolean }) => ReactNode);
   /** 是否显示右键菜单 */

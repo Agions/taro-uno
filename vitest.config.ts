@@ -87,7 +87,7 @@ export default defineConfig({
     // 测试环境配置
     environment: 'jsdom',
     globals: true,
-    setupFiles: ['./tests/setup.ts'],
+    setupFiles: ['./tests/setup.ts', './vitest.setup.ts'],
     // 测试文件匹配
     include: ['src/**/*.{test,spec}.{js,ts,jsx,tsx}', 'tests/**/*.{test,spec}.{js,ts,jsx,tsx}'],
     exclude: [

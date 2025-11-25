@@ -372,70 +372,7 @@ export function usePriorityUpdates<T>(
   };
 }
 
-// ==================== 性能监控 ====================
-
-interface PerformanceMetrics {
-  renderTime: number;
-  updateTime: number;
-  memoryUsage?: {
-    usedJSHeapSize: number;
-    totalJSHeapSize: number;
-  };
-}
-
-/** 性能监控hook */
-export function usePerformanceMonitor(_componentName: string) {
-  const [metrics, setMetrics] = useState<PerformanceMetrics>({
-    renderTime: 0,
-    updateTime: 0,
-  });
-
-  const startTimeRef = useRef<number>(0);
-
-  const startMeasure = useCallback(() => {
-    startTimeRef.current = performance.now();
-  }, []);
-
-  const endMeasure = useCallback(() => {
-    const endTime = performance.now();
-    const renderTime = endTime - startTimeRef.current;
-
-    setMetrics((prev) => ({
-      ...prev,
-      renderTime,
-      updateTime: prev.updateTime + renderTime,
-    }));
-
-    // 获取内存使用情况
-    if (typeof performance !== 'undefined' && 'memory' in performance) {
-      const memory = (performance as unknown as { memory?: { usedJSHeapSize: number; totalJSHeapSize: number } })
-        .memory;
-      setMetrics((prev) => ({
-        ...prev,
-        memoryUsage: memory
-          ? {
-              usedJSHeapSize: memory.usedJSHeapSize,
-              totalJSHeapSize: memory.totalJSHeapSize,
-            }
-          : prev.memoryUsage,
-      }));
-    }
-  }, []);
-
-  const resetMetrics = useCallback(() => {
-    setMetrics({
-      renderTime: 0,
-      updateTime: 0,
-    });
-  }, []);
-
-  return {
-    metrics,
-    startMeasure,
-    endMeasure,
-    resetMetrics,
-  };
-}
+// usePerformanceMonitor removed to avoid conflict with usePerformanceMonitor.ts
 
 // ==================== 导出 ====================
 // 所有函数已在文件开头单独导出

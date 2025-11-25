@@ -241,7 +241,7 @@ export type NotificationAnimationStyles = {
 };
 
 /** 通知工具函数 */
-export interface NotificationUtils {
+export interface NotificationUtilsType {
   /** 生成唯一键 */
   generateKey: () => string;
   /** 排序通知 */
@@ -289,7 +289,7 @@ export const DEFAULT_NOTIFICATION_CONFIG = {
 } as const;
 
 /** 通知工具类 */
-export const NotificationUtils = {
+export const NotificationUtils: NotificationUtilsType = {
   /** 生成唯一键 */
   generateKey: (): string => {
     return `notification_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -315,19 +315,19 @@ export const NotificationUtils = {
   /** 验证通知配置 */
   validateConfig: (config: Partial<NotificationItem>): { valid: boolean; errors: string[] } => {
     const errors: string[] = [];
-    
+
     if (config.duration !== undefined && (config.duration < 0 || config.duration > 60000)) {
       errors.push('duration must be between 0 and 60000ms');
     }
-    
+
     if (config.type !== undefined && !['success', 'error', 'warning', 'info'].includes(config.type)) {
       errors.push('type must be one of: success, error, warning, info');
     }
-    
+
     if (config.placement !== undefined && !['topRight', 'topLeft', 'bottomRight', 'bottomLeft', 'top', 'bottom'].includes(config.placement)) {
       errors.push('placement must be one of: topRight, topLeft, bottomRight, bottomLeft, top, bottom');
     }
-    
+
     return {
       valid: errors.length === 0,
       errors,

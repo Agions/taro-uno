@@ -22,7 +22,7 @@ export const SpaceComponent = forwardRef<SpaceRef, SpaceProps>((props, ref) => {
     className,
     style,
     onClick,
-    onItemHover,
+    _onItemHover,
     onItemClick,
     responsive,
     ...restProps

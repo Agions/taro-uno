@@ -15,7 +15,9 @@ export const usePlatform = () => {
           const env = String(Taro.getEnv()).toLowerCase();
           return env as any;
         }
-      } catch {}
+      } catch {
+        // ignore
+      }
 
       if (typeof import.meta !== 'undefined' && (import.meta as any)?.env?.TARO_ENV) {
         return (import.meta as any).env.TARO_ENV as string;
