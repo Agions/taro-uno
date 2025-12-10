@@ -47,7 +47,7 @@ export interface RequestInstanceConfig {
  *
  * @example
  * ```typescript
- * const client = new RequestClient({
+ * const client = new Request({
  *   baseURL: 'https://api.example.com',
  *   timeout: 10000,
  *   enableCache: true,

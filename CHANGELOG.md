@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2025-12-10
+
+### 🐛 修复
+
+- 修复文档部署脚本，移除冗余的 build 命令
+- 更新 GitHub Actions 工作流，将 Node.js 版本从 18 改为 20
+- 统一文档中 RequestClient 引用为 Request
+
 ## [1.0.0] - 2025-12-10
 
 ### 🎉 首个生产版本发布
