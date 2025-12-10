@@ -4,14 +4,14 @@
 
 ## 📦 核心类
 
-### RequestClient
+### Request
 
 智能 HTTP 客户端，自动适配各平台。
 
 #### 构造函数
 
 ```tsx
-new RequestClient(config: RequestClientConfig)
+new Request(config: RequestConfig)
 ```
 
 **配置选项：**

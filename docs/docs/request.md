@@ -7,7 +7,7 @@
 - [Request 简介](#request-intro)
 - [快速开始](#quickstart)
 - [核心 API](#core-api)
-  - [RequestClient](#requestclient)
+  - [Request](#requestclient)
   - [useRequest Hook](#userequest-hook)
   - [safeRequest 工具函数](#saverequest)
 - [配置选项](#configuration)
@@ -45,13 +45,13 @@ Request 库已经包含在 Taro Uno UI 中，无需单独安装。
 
 ### 基本使用
 
-#### 使用 RequestClient
+#### 使用 Request
 
 ```tsx
-import { RequestClient } from 'taro-uno-ui';
+import { Request } from 'taro-uno-ui';
 
-// 创建 RequestClient 实例
-const client = new RequestClient({
+// 创建 Request 实例
+const client = new Request({
   baseURL: 'https://api.example.com',
   timeout: 10000,
   headers: {
@@ -121,14 +121,14 @@ function DataList() {
 
 ## 核心 API
 
-### RequestClient
+### Request
 
 智能 HTTP 客户端，自动适配各平台。
 
 #### 构造函数
 
 ```tsx
-new RequestClient(config: RequestClientConfig)
+new Request(config: RequestConfig)
 ```
 
 **配置选项**：
@@ -272,9 +272,9 @@ Request 库支持强大的拦截器功能，可以在请求发送前和响应返
 #### 基本使用
 
 ```tsx
-import { RequestClient } from 'taro-uno-ui';
+import { Request } from 'taro-uno-ui';
 
-const client = new RequestClient();
+const client = new Request();
 
 // 添加请求拦截器
 const requestInterceptor = client.useRequestInterceptor({
@@ -355,13 +355,13 @@ client.useRequestInterceptor({
 
 ### 全局拦截器
 
-全局拦截器会被所有 RequestClient 实例共享，适用于需要全局统一处理的场景，如认证、日志记录等。
+全局拦截器会被所有 Request 实例共享，适用于需要全局统一处理的场景，如认证、日志记录等。
 
 ```tsx
-import { RequestClient } from 'taro-uno-ui';
+import { Request } from 'taro-uno-ui';
 
 // 添加全局请求拦截器
-const globalRequestInterceptor = RequestClient.useGlobalRequestInterceptor({
+const globalRequestInterceptor = Request.useGlobalRequestInterceptor({
   onRequest: (config) => {
     // 所有请求都会执行此拦截器
     config.headers['X-Global-Header'] = 'global-value';
@@ -370,7 +370,7 @@ const globalRequestInterceptor = RequestClient.useGlobalRequestInterceptor({
 });
 
 // 添加全局响应拦截器
-const globalResponseInterceptor = RequestClient.useGlobalResponseInterceptor({
+const globalResponseInterceptor = Request.useGlobalResponseInterceptor({
   onResponse: (response) => {
     // 所有响应都会执行此拦截器
     console.log('Global response:', response.statusCode, response.config?.url);
@@ -383,7 +383,7 @@ globalRequestInterceptor.eject();
 globalResponseInterceptor.eject();
 
 // 清除所有全局拦截器
-RequestClient.clearGlobalInterceptors();
+Request.clearGlobalInterceptors();
 ```
 
 ### 拦截器分组
@@ -469,7 +469,7 @@ client.useResponseInterceptor({
 
 ### 拦截器管理
 
-RequestClient 提供了丰富的方法来管理拦截器：
+Request 提供了丰富的方法来管理拦截器：
 
 ```tsx
 // 获取所有拦截器
@@ -478,7 +478,7 @@ console.log('Request interceptors:', interceptors.request);
 console.log('Response interceptors:', interceptors.response);
 
 // 获取所有全局拦截器
-const globalInterceptors = RequestClient.getGlobalInterceptors();
+const globalInterceptors = Request.getGlobalInterceptors();
 console.log('Global request interceptors:', globalInterceptors.request);
 console.log('Global response interceptors:', globalInterceptors.response);
 
@@ -489,10 +489,10 @@ client.clearInterceptors('auth');
 client.clearInterceptors();
 
 // 清除所有全局拦截器
-RequestClient.clearGlobalInterceptors();
+Request.clearGlobalInterceptors();
 
 // 按分组清除全局拦截器
-RequestClient.clearGlobalInterceptors('logger');
+Request.clearGlobalInterceptors('logger');
 ```
 
 ### 拦截器最佳实践
@@ -619,11 +619,11 @@ RequestClient.clearGlobalInterceptors('logger');
 5. **多实例隔离**：
    ```tsx
    // 创建不同配置的实例
-   const publicClient = new RequestClient({
+   const publicClient = new Request({
      baseURL: 'https://api.example.com/public',
    });
    
-   const privateClient = new RequestClient({
+   const privateClient = new Request({
      baseURL: 'https://api.example.com/private',
    });
    
@@ -677,13 +677,13 @@ client.get('/api/data')
 
 ### 1. 创建单例实例
 
-为了避免重复创建 RequestClient 实例，建议在项目中创建一个单例：
+为了避免重复创建 Request 实例，建议在项目中创建一个单例：
 
 ```tsx
 // src/utils/request.ts
-import { RequestClient } from 'taro-uno-ui';
+import { Request } from 'taro-uno-ui';
 
-const client = new RequestClient({
+const client = new Request({
   baseURL: 'https://api.example.com',
   timeout: 10000,
   headers: {
@@ -727,7 +727,7 @@ const { data, loading } = useRequest('/api/data', {
 对于可能暂时失败的请求，建议设置重试策略：
 
 ```tsx
-const client = new RequestClient({
+const client = new Request({
   retry: {
     enabled: true,
     count: 3,
@@ -742,7 +742,7 @@ const client = new RequestClient({
 建议在拦截器中统一处理错误，避免在每个请求中重复处理：
 
 ```tsx
-const client = new RequestClient({
+const client = new Request({
   interceptors: {
     response: (response) => {
       if (response.code !== 200) {

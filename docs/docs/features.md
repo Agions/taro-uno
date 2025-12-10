@@ -91,14 +91,14 @@ const [token, setToken] = useSessionStorage('token', '');
 
 ## 🔗 多平台 API 请求层
 
-### RequestClient
+### Request
 
 智能 HTTP 客户端，自动适配各平台：
 
 ```tsx
-import { RequestClient } from 'taro-uno-ui';
+import { Request } from 'taro-uno-ui';
 
-const client = new RequestClient({
+const client = new Request({
   baseURL: 'https://api.example.com',
   timeout: 10000,
 });
