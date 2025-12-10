@@ -1,28 +1,16 @@
 import React, { forwardRef, useRef, useEffect, useCallback } from 'react';
 import { View, Text } from '@tarojs/components';
-import { 
-  ProgressProps, 
-  ProgressRef, 
-  ProgressStatus,
-  ProgressLineCap,
-} from './Progress.types';
-import { 
-  getLineStyle, 
-  getCircleStyle, 
-  getDashboardStyle, 
-  getInfoStyle, 
+import { ProgressProps, ProgressRef, ProgressStatus, ProgressLineCap } from './Progress.types';
+import {
+  getLineStyle,
+  getCircleStyle,
+  getDashboardStyle,
+  getInfoStyle,
   getContainerStyle,
   getSvgStyle,
 } from './Progress.styles';
-import { 
-  createProgressAnimation, 
-  easingFunctions,
-} from './utils/animation';
-import {
-  validatePercent,
-  formatProgressValue,
-  calculateProgressStatus,
-} from './utils/progress-calculator';
+import { createProgressAnimation, easingFunctions } from './utils/animation';
+import { validatePercent, formatProgressValue, calculateProgressStatus } from './utils/progress-calculator';
 
 interface SVGCircleProps {
   cx: number;
@@ -39,37 +27,39 @@ interface SVGCircleProps {
   style?: React.CSSProperties;
 }
 
-const SVGCircle: React.FC<SVGCircleProps> = React.memo(({
-  cx,
-  cy,
-  r,
-  fill = 'none',
-  stroke,
-  strokeWidth,
-  strokeLinecap = 'round',
-  strokeDasharray,
-  strokeDashoffset,
-  transform,
-  transformOrigin,
-  style,
-}) => {
-  const circleProps = {
+const SVGCircle: React.FC<SVGCircleProps> = React.memo(
+  ({
     cx,
     cy,
     r,
-    fill,
+    fill = 'none',
     stroke,
     strokeWidth,
-    strokeLinecap,
+    strokeLinecap = 'round',
     strokeDasharray,
     strokeDashoffset,
     transform,
     transformOrigin,
     style,
-  };
+  }) => {
+    const circleProps = {
+      cx,
+      cy,
+      r,
+      fill,
+      stroke,
+      strokeWidth,
+      strokeLinecap,
+      strokeDasharray,
+      strokeDashoffset,
+      transform,
+      transformOrigin,
+      style,
+    };
 
-  return <circle {...circleProps} />;
-});
+    return <circle {...circleProps} />;
+  },
+);
 
 SVGCircle.displayName = 'SVGCircle';
 
@@ -110,58 +100,61 @@ export const Progress = forwardRef<ProgressRef, ProgressProps>((props, ref) => {
   // State
   const [internalPercent, setInternalPercent] = React.useState(() => validatePercent(percent));
   const [isAnimating, setIsAnimating] = React.useState(false);
-  const [status, setStatus] = React.useState<ProgressStatus>(() =>
-    propStatus || (calculateProgressStatus(internalPercent, 'normal') as ProgressStatus)
+  const [status, setStatus] = React.useState<ProgressStatus>(
+    () => propStatus || (calculateProgressStatus(internalPercent, 'normal') as ProgressStatus),
   );
 
   // 优化后的动画处理
-  const animateProgress = useCallback((targetPercent: number) => {
-    if (animationRef.current) {
-      animationRef.current.cancel();
-    }
-
-    const validatedTarget = validatePercent(targetPercent);
-    
-    if (animated && Math.abs(validatedTarget - internalPercent) > 0.1) {
-      setIsAnimating(true);
-      events?.onAnimationStart?.();
-
-      animationRef.current = createProgressAnimation(
-        internalPercent,
-        validatedTarget,
-        (newPercent) => {
-          setInternalPercent(newPercent);
-          events?.onChange?.(newPercent);
-        },
-        {
-          duration: animationDuration,
-          easing: easingFunctions.easeInOut,
-          onStart: () => {
-            setIsAnimating(true);
-          },
-          onComplete: () => {
-            setIsAnimating(false);
-            events?.onAnimationEnd?.();
-            
-            if (validatedTarget >= 100) {
-              setStatus('success');
-              events?.onComplete?.();
-            }
-          },
-        }
-      );
-
-      animationRef.current.start();
-    } else {
-      setInternalPercent(validatedTarget);
-      events?.onChange?.(validatedTarget);
-      
-      if (validatedTarget >= 100) {
-        setStatus('success');
-        events?.onComplete?.();
+  const animateProgress = useCallback(
+    (targetPercent: number) => {
+      if (animationRef.current) {
+        animationRef.current.cancel();
       }
-    }
-  }, [internalPercent, animated, animationDuration, events]);
+
+      const validatedTarget = validatePercent(targetPercent);
+
+      if (animated && Math.abs(validatedTarget - internalPercent) > 0.1) {
+        setIsAnimating(true);
+        events?.onAnimationStart?.();
+
+        animationRef.current = createProgressAnimation(
+          internalPercent,
+          validatedTarget,
+          (newPercent) => {
+            setInternalPercent(newPercent);
+            events?.onChange?.(newPercent);
+          },
+          {
+            duration: animationDuration,
+            easing: easingFunctions.easeInOut,
+            onStart: () => {
+              setIsAnimating(true);
+            },
+            onComplete: () => {
+              setIsAnimating(false);
+              events?.onAnimationEnd?.();
+
+              if (validatedTarget >= 100) {
+                setStatus('success');
+                events?.onComplete?.();
+              }
+            },
+          },
+        );
+
+        animationRef.current.start();
+      } else {
+        setInternalPercent(validatedTarget);
+        events?.onChange?.(validatedTarget);
+
+        if (validatedTarget >= 100) {
+          setStatus('success');
+          events?.onComplete?.();
+        }
+      }
+    },
+    [internalPercent, animated, animationDuration, events],
+  );
 
   // 处理外部percent变化
   useEffect(() => {
@@ -188,23 +181,26 @@ export const Progress = forwardRef<ProgressRef, ProgressProps>((props, ref) => {
   }, []);
 
   // 格式化进度信息
-  const formatProgress = useCallback((percentValue: number): React.ReactNode => {
-    return formatProgressValue(percentValue, format);
-  }, [format]);
+  const formatProgress = useCallback(
+    (percentValue: number): React.ReactNode => {
+      return formatProgressValue(percentValue, format);
+    },
+    [format],
+  );
 
   // 获取当前进度条颜色
   const getProgressColor = useCallback(() => {
     if (strokeColor) {
       return typeof strokeColor === 'string' ? strokeColor : theme?.primaryColor || '#1890ff';
     }
-    
+
     const statusColors = {
       normal: theme?.primaryColor || '#1890ff',
       success: theme?.successColor || '#52c41a',
       exception: theme?.errorColor || '#ff4d4f',
       active: theme?.warningColor || '#faad14',
     };
-    
+
     return statusColors[status];
   }, [strokeColor, status, theme]);
 
@@ -296,9 +292,7 @@ export const Progress = forwardRef<ProgressRef, ProgressProps>((props, ref) => {
           </svg>
           {showInfo && (
             <View style={circleStyles['inner']}>
-              <Text style={getInfoStyle(size)}>
-                {formatProgress(internalPercent)}
-              </Text>
+              <Text style={getInfoStyle(size)}>{formatProgress(internalPercent)}</Text>
             </View>
           )}
         </View>
@@ -369,9 +363,7 @@ export const Progress = forwardRef<ProgressRef, ProgressProps>((props, ref) => {
           </svg>
           {showInfo && (
             <View style={dashboardStyles['inner']}>
-              <Text style={getInfoStyle(size)}>
-                {formatProgress(internalPercent)}
-              </Text>
+              <Text style={getInfoStyle(size)}>{formatProgress(internalPercent)}</Text>
             </View>
           )}
         </View>
@@ -464,7 +456,9 @@ export const Progress = forwardRef<ProgressRef, ProgressProps>((props, ref) => {
     status && `taro-uno-h5-progress--${status}`,
     size && `taro-uno-h5-progress--${size}`,
     animated && `taro-uno-h5-progress--animated`,
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   // Generate accessibility attributes
   const accessibilityProps = {
@@ -480,24 +474,10 @@ export const Progress = forwardRef<ProgressRef, ProgressProps>((props, ref) => {
   };
 
   return (
-    <View
-      ref={containerRef}
-      className={progressClasses}
-      style={containerStyle}
-      {...accessibilityProps}
-      {...rest}
-    >
-      {title && (
-        <Text style={{ fontSize: '14px', fontWeight: 500, marginBottom: '8px' }}>
-          {title}
-        </Text>
-      )}
+    <View ref={containerRef} className={progressClasses} style={containerStyle} {...accessibilityProps} {...rest}>
+      {title && <Text style={{ fontSize: '14px', fontWeight: 500, marginBottom: '8px' }}>{title}</Text>}
       {renderProgress()}
-      {description && (
-        <Text style={{ fontSize: '12px', color: '#666', marginTop: '8px' }}>
-          {description}
-        </Text>
-      )}
+      {description && <Text style={{ fontSize: '12px', color: '#666', marginTop: '8px' }}>{description}</Text>}
       {children}
     </View>
   );

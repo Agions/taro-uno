@@ -82,9 +82,10 @@ export const DividerComponent = forwardRef<DividerRef, DividerProps>((props, ref
       padding: `${typeof textPadding === 'number' ? `${textPadding}px` : textPadding}`,
       backgroundColor: textBackground,
       borderRadius: `${typeof textBorderRadius === 'number' ? `${textBorderRadius}px` : textBorderRadius}`,
-      margin: orientation === 'horizontal'
-        ? `0 ${typeof textSpacing === 'number' ? `${textSpacing}px` : textSpacing}`
-        : `${typeof textSpacing === 'number' ? `${textSpacing}px` : textSpacing} 0`,
+      margin:
+        orientation === 'horizontal'
+          ? `0 ${typeof textSpacing === 'number' ? `${textSpacing}px` : textSpacing}`
+          : `${typeof textSpacing === 'number' ? `${textSpacing}px` : textSpacing} 0`,
     };
 
     // Add custom text styles - these should override the base styles
@@ -115,9 +116,9 @@ export const DividerComponent = forwardRef<DividerRef, DividerProps>((props, ref
     // Clone the icon element to add data-testid if it doesn't have one
     const iconContent = React.isValidElement(icon)
       ? React.cloneElement(icon, {
-        ...(icon.props || {}),
-        'data-testid': 'icon-content'
-      } as any)
+          ...(icon.props || {}),
+          'data-testid': 'icon-content',
+        } as any)
       : icon;
 
     return (
@@ -131,37 +132,66 @@ export const DividerComponent = forwardRef<DividerRef, DividerProps>((props, ref
   const dividerStyle = {
     display: 'flex',
     // Base dimensions
-    width: width !== undefined
-      ? `${typeof width === 'number' ? `${width}px` : width}`
-      : (orientation === 'horizontal' ? '100%' : '1px'),
-    height: height !== undefined
-      ? `${typeof height === 'number' ? `${height}px` : height}`
-      : (orientation === 'vertical' ? '100%' : '1px'),
+    width:
+      width !== undefined
+        ? `${typeof width === 'number' ? `${width}px` : width}`
+        : orientation === 'horizontal'
+          ? '100%'
+          : '1px',
+    height:
+      height !== undefined
+        ? `${typeof height === 'number' ? `${height}px` : height}`
+        : orientation === 'vertical'
+          ? '100%'
+          : '1px',
     // Use 1px border width always, let height/width control dimensions
     ...(orientation === 'horizontal'
-      ? { ['borderBottom']: `1px ${type} ${typeof color === 'string' ? color : dividerStyles.COLOR_MAP[color] || dividerStyles.COLOR_MAP['border'] || '#e5e7eb'}` }
-      : { ['borderRight']: `1px ${type} ${typeof color === 'string' ? color : dividerStyles.COLOR_MAP[color] || dividerStyles.COLOR_MAP['border'] || '#e5e7eb'}` }),
+      ? {
+          ['borderBottom']: `1px ${type} ${typeof color === 'string' ? color : dividerStyles.COLOR_MAP[color] || dividerStyles.COLOR_MAP['border'] || '#e5e7eb'}`,
+        }
+      : {
+          ['borderRight']: `1px ${type} ${typeof color === 'string' ? color : dividerStyles.COLOR_MAP[color] || dividerStyles.COLOR_MAP['border'] || '#e5e7eb'}`,
+        }),
     // Margin with fallback
-    margin: margin !== undefined
-      ? `${typeof margin === 'number' ? `${margin}px` : margin}`
-      : `${dividerStyles.SIZE_MAP[size].margin}px 0`,
+    margin:
+      margin !== undefined
+        ? `${typeof margin === 'number' ? `${margin}px` : margin}`
+        : `${dividerStyles.SIZE_MAP[size].margin}px 0`,
     // Optional styles
     ...(padding !== undefined ? { padding: `${typeof padding === 'number' ? `${padding}px` : padding}` } : {}),
     ...(opacity !== undefined ? { opacity } : {}),
-    ...(borderRadius !== undefined ? { borderRadius: `${typeof borderRadius === 'number' ? `${borderRadius}px` : borderRadius}` } : {}),
+    ...(borderRadius !== undefined
+      ? { borderRadius: `${typeof borderRadius === 'number' ? `${borderRadius}px` : borderRadius}` }
+      : {}),
     ...(spacing !== undefined ? { gap: `${typeof spacing === 'number' ? `${spacing}px` : spacing}` } : {}),
     // Alignment with position fallback
-    justifyContent: align !== undefined
-      ? (align === 'start' ? 'flex-start' : align === 'end' ? 'flex-end' : 'center')
-      : (position === 'left' ? 'flex-start' : position === 'right' ? 'flex-end' : 'center'),
-    alignItems: verticalAlign !== undefined
-      ? (verticalAlign === 'top' ? 'flex-start' : verticalAlign === 'bottom' ? 'flex-end' : 'center')
-      : 'center',
+    justifyContent:
+      align !== undefined
+        ? align === 'start'
+          ? 'flex-start'
+          : align === 'end'
+            ? 'flex-end'
+            : 'center'
+        : position === 'left'
+          ? 'flex-start'
+          : position === 'right'
+            ? 'flex-end'
+            : 'center',
+    alignItems:
+      verticalAlign !== undefined
+        ? verticalAlign === 'top'
+          ? 'flex-start'
+          : verticalAlign === 'bottom'
+            ? 'flex-end'
+            : 'center'
+        : 'center',
     // Handle gradient background (overrides border)
-    ...(gradient ? {
-      backgroundImage: `linear-gradient(${gradient.direction || 'to right'}, ${gradient.start}, ${gradient.end})`,
-      border: 'none',
-    } : {}),
+    ...(gradient
+      ? {
+          backgroundImage: `linear-gradient(${gradient.direction || 'to right'}, ${gradient.start}, ${gradient.end})`,
+          border: 'none',
+        }
+      : {}),
     // Handle animation
     ...(animated ? { transition: `all ${animationDuration}ms ease-in-out` } : {}),
     // Custom style prop takes precedence
@@ -196,7 +226,8 @@ export const DividerComponent = forwardRef<DividerRef, DividerProps>((props, ref
 
   // 计算最终类名 - include test-specific classes for compatibility
   const baseClassName = className || '';
-  const dividerClassName = baseClassName +
+  const dividerClassName =
+    baseClassName +
     ` taro-uno-h5-divider` +
     ` taro-uno-h5-divider--${orientation}` +
     ` taro-uno-h5-divider--${type}` +

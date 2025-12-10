@@ -1,5 +1,5 @@
 import React from 'react';
-import { BaseComponentProps } from '../../../types';
+import { BaseComponentProps as StandardBaseComponentProps } from '../../../types/component-props';
 
 /** NavBar位置 */
 export type NavBarPosition = 'top' | 'fixed' | 'static';
@@ -24,7 +24,7 @@ export interface NavBarRef {
 }
 
 /** NavBar组件属性 */
-export interface NavBarProps extends BaseComponentProps {
+export interface NavBarProps extends StandardBaseComponentProps {
   /** 标题 */
   title?: React.ReactNode;
   /** 左侧内容 */

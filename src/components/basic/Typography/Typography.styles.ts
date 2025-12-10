@@ -217,13 +217,14 @@ export const typographyStyles = {
   /**
    * 多行省略号样式
    */
-  multiLineEllipsis: (maxRows: number) => ({
-    display: '-webkit-box',
-    WebkitBoxOrient: 'vertical',
-    WebkitLineClamp: maxRows,
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-  } as CSSProperties),
+  multiLineEllipsis: (maxRows: number) =>
+    ({
+      display: '-webkit-box',
+      WebkitBoxOrient: 'vertical',
+      WebkitLineClamp: maxRows,
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+    }) as CSSProperties,
 };
 
 /**
@@ -256,7 +257,7 @@ export const calculateTypographyStyles = (props: TypographyProps): CSSProperties
 
   // 根据变体设置样式
   if (variant && variant in typographyStyles['headings']) {
-    Object.assign(styles, typographyStyles['headings'][variant as keyof typeof typographyStyles['headings']]);
+    Object.assign(styles, typographyStyles['headings'][variant as keyof (typeof typographyStyles)['headings']]);
   } else if (variant === 'p') {
     Object.assign(styles, typographyStyles['paragraph']);
   } else if (variant === 'span') {

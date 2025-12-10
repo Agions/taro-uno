@@ -33,134 +33,156 @@ export const TimePickerComponent = forwardRef<TimePickerRef, TimePickerProps>((p
   const isControlled = controlledValue !== undefined;
   const value = isControlled ? controlledValue : internalValue;
 
-  const formatTime = useCallback((timeValue: TimeValue | null): string => {
-    if (!timeValue) return '';
+  const formatTime = useCallback(
+    (timeValue: TimeValue | null): string => {
+      if (!timeValue) return '';
 
-    const { hours = 0, minutes = 0, seconds = 0 } = timeValue;
-    const formatValue = (val: number) => val.toString().padStart(2, '0');
+      const { hours = 0, minutes = 0, seconds = 0 } = timeValue;
+      const formatValue = (val: number) => val.toString().padStart(2, '0');
 
-    let timeString = `${formatValue(hours)}:${formatValue(minutes)}`;
-    if (format.includes('ss')) {
-      timeString += `:${formatValue(seconds)}`;
-    }
+      let timeString = `${formatValue(hours)}:${formatValue(minutes)}`;
+      if (format.includes('ss')) {
+        timeString += `:${formatValue(seconds)}`;
+      }
 
-    return timeString;
-  }, [format]);
+      return timeString;
+    },
+    [format],
+  );
 
   const parseTime = useCallback((input: string): TimeValue | null => {
-    const parts = input.split(':').map(part => parseInt(part, 10));
+    const parts = input.split(':').map((part) => parseInt(part, 10));
     if (parts.length < 2 || parts.some(isNaN)) return null;
 
     return {
       hours: Math.min(23, Math.max(0, parts[0] || 0)),
       minutes: Math.min(59, Math.max(0, parts[1] || 0)),
-      seconds: parts.length > 2 ? Math.min(59, Math.max(0, parts[2] || 0)) : 0
+      seconds: parts.length > 2 ? Math.min(59, Math.max(0, parts[2] || 0)) : 0,
     };
   }, []);
 
-  const handleInputChange = useCallback((event: any) => {
-    const inputValue = event.detail?.value || event.target?.value || '';
-    const parsedValue = parseTime(inputValue);
+  const handleInputChange = useCallback(
+    (event: any) => {
+      const inputValue = event.detail?.value || event.target?.value || '';
+      const parsedValue = parseTime(inputValue);
 
-    if (parsedValue) {
-      if (!isControlled) {
-        setInternalValue(parsedValue);
+      if (parsedValue) {
+        if (!isControlled) {
+          setInternalValue(parsedValue);
+        }
+        onChange?.(parsedValue, formatTime(parsedValue));
       }
-      onChange?.(parsedValue, formatTime(parsedValue));
-    }
-  }, [isControlled, parseTime, onChange, formatTime]);
+    },
+    [isControlled, parseTime, onChange, formatTime],
+  );
 
-  const handleClear = useCallback((event: any) => {
-    if (event && event.stopPropagation) {
-      event.stopPropagation();
-    }
+  const handleClear = useCallback(
+    (event: any) => {
+      if (event && event.stopPropagation) {
+        event.stopPropagation();
+      }
 
-    if (!isControlled) {
-      setInternalValue(null);
-    }
+      if (!isControlled) {
+        setInternalValue(null);
+      }
 
-    onClear?.();
-    onChange?.(null, '');
-  }, [isControlled, onClear, onChange]);
+      onClear?.();
+      onChange?.(null, '');
+    },
+    [isControlled, onClear, onChange],
+  );
 
   const togglePicker = useCallback(() => {
     if (disabled || readonly) return;
     setIsOpened(!isOpened);
   }, [isOpened, disabled, readonly]);
 
-  React.useImperativeHandle(ref, () => ({
-    getValue: () => value,
-    setValue: (newValue: TimeValue | null) => {
-      if (!isControlled) {
-        setInternalValue(newValue);
-      }
-      onChange?.(newValue, newValue ? formatTime(newValue) : '');
-    },
-    getRangeValue: () => null,
-    setRangeValue: () => {},
-    getTimeString: () => value ? formatTime(value) : '',
-    getRangeTimeString: () => null,
-    focus: () => {
-      if (!disabled && !readonly) {
-        (inputRef.current as any)?.focus?.();
-      }
-    },
-    blur: () => {
-      (inputRef.current as any)?.blur?.();
-    },
-    open: () => setIsOpened(true),
-    close: () => setIsOpened(false),
-    clear: () => {
-      if (!isControlled) {
-        setInternalValue(null);
-      }
-      onChange?.(null, '');
-    },
-    setNow: () => {
-      const now = new Date();
-      const newTime: TimeValue = {
-        hours: now.getHours(),
-        minutes: now.getMinutes(),
-        seconds: now.getSeconds()
-      };
-      if (!isControlled) {
-        setInternalValue(newTime);
-      }
-      onChange?.(newTime, formatTime(newTime));
-    },
-    confirm: () => setIsOpened(false),
-    disable: () => {},
-    enable: () => {},
-    isOpen: () => isOpened,
-    isDisabled: () => disabled,
-    isReadOnly: () => readonly,
-    element: inputRef.current,
-    getCurrentTime: () => {
-      const now = new Date();
-      return {
-        hours: now.getHours(),
-        minutes: now.getMinutes(),
-        seconds: now.getSeconds()
-      };
-    },
-    validateTime: (time: TimeValue) => {
-      return time.hours >= 0 && time.hours <= 23 &&
-             time.minutes >= 0 && time.minutes <= 59 &&
-             time.seconds >= 0 && time.seconds <= 59;
-    },
-    formatTime,
-    parseTimeString: parseTime
-  }), [value, isControlled, isOpened, disabled, readonly, onChange, formatTime, parseTime]);
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      getValue: () => value,
+      setValue: (newValue: TimeValue | null) => {
+        if (!isControlled) {
+          setInternalValue(newValue);
+        }
+        onChange?.(newValue, newValue ? formatTime(newValue) : '');
+      },
+      getRangeValue: () => null,
+      setRangeValue: () => {},
+      getTimeString: () => (value ? formatTime(value) : ''),
+      getRangeTimeString: () => null,
+      focus: () => {
+        if (!disabled && !readonly) {
+          (inputRef.current as any)?.focus?.();
+        }
+      },
+      blur: () => {
+        (inputRef.current as any)?.blur?.();
+      },
+      open: () => setIsOpened(true),
+      close: () => setIsOpened(false),
+      clear: () => {
+        if (!isControlled) {
+          setInternalValue(null);
+        }
+        onChange?.(null, '');
+      },
+      setNow: () => {
+        const now = new Date();
+        const newTime: TimeValue = {
+          hours: now.getHours(),
+          minutes: now.getMinutes(),
+          seconds: now.getSeconds(),
+        };
+        if (!isControlled) {
+          setInternalValue(newTime);
+        }
+        onChange?.(newTime, formatTime(newTime));
+      },
+      confirm: () => setIsOpened(false),
+      disable: () => {},
+      enable: () => {},
+      isOpen: () => isOpened,
+      isDisabled: () => disabled,
+      isReadOnly: () => readonly,
+      element: inputRef.current,
+      getCurrentTime: () => {
+        const now = new Date();
+        return {
+          hours: now.getHours(),
+          minutes: now.getMinutes(),
+          seconds: now.getSeconds(),
+        };
+      },
+      validateTime: (time: TimeValue) => {
+        return (
+          time.hours >= 0 &&
+          time.hours <= 23 &&
+          time.minutes >= 0 &&
+          time.minutes <= 59 &&
+          time.seconds >= 0 &&
+          time.seconds <= 59
+        );
+      },
+      formatTime,
+      parseTimeString: parseTime,
+    }),
+    [value, isControlled, isOpened, disabled, readonly, onChange, formatTime, parseTime],
+  );
 
   const baseStyle = {
     display: 'flex',
     alignItems: 'center',
     position: 'relative' as const,
-    ...style
+    ...style,
   };
 
   return (
-    <View style={baseStyle} className={`taro-uno-timepicker taro-uno-timepicker--${size} ${className || ''}`} {...restProps}>
+    <View
+      style={baseStyle}
+      className={`taro-uno-timepicker taro-uno-timepicker--${size} ${className || ''}`}
+      {...restProps}
+    >
       <Input
         ref={inputRef}
         value={formatTime(value)}
@@ -181,7 +203,7 @@ export const TimePickerComponent = forwardRef<TimePickerRef, TimePickerProps>((p
             position: 'absolute',
             right: '30px',
             cursor: 'pointer',
-            fontSize: '16px'
+            fontSize: '16px',
           }}
         >
           ×
@@ -193,7 +215,7 @@ export const TimePickerComponent = forwardRef<TimePickerRef, TimePickerProps>((p
           position: 'absolute',
           right: '8px',
           fontSize: '14px',
-          color: disabled ? '#ccc' : '#666'
+          color: disabled ? '#ccc' : '#666',
         }}
       >
         🕐
@@ -212,7 +234,7 @@ export const TimePickerComponent = forwardRef<TimePickerRef, TimePickerProps>((p
             boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
             zIndex: 1000,
             marginTop: '4px',
-            padding: '8px'
+            padding: '8px',
           }}
         >
           <Text>时间选择面板</Text>

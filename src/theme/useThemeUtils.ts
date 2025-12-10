@@ -193,11 +193,11 @@ function getDefaultSpacing(spacingKey: string): string {
     '48': '12rem',
     '56': '14rem',
     '64': '16rem',
-    'xs': '0.5rem',
-    'sm': '0.75rem',
-    'md': '1rem',
-    'lg': '1.5rem',
-    'xl': '2rem',
+    xs: '0.5rem',
+    sm: '0.75rem',
+    md: '1rem',
+    lg: '1.5rem',
+    xl: '2rem',
     '2xl': '3rem',
     '3xl': '4rem',
     '4xl': '6rem',
@@ -209,11 +209,11 @@ function getDefaultSpacing(spacingKey: string): string {
 
 function getDefaultFontSize(sizeKey: string): string {
   const defaultFontSizes: Record<string, string> = {
-    'xs': '0.75rem',
-    'sm': '0.875rem',
-    'base': '1rem',
-    'lg': '1.125rem',
-    'xl': '1.25rem',
+    xs: '0.75rem',
+    sm: '0.875rem',
+    base: '1rem',
+    lg: '1.125rem',
+    xl: '1.25rem',
     '2xl': '1.5rem',
     '3xl': '1.875rem',
     '4xl': '2.25rem',
@@ -229,12 +229,12 @@ function getDefaultFontSize(sizeKey: string): string {
 
 function getDefaultLineHeight(lineHeightKey: string): string {
   const defaultLineHeights: Record<string, string> = {
-    'none': '1',
-    'tight': '1.25',
-    'snug': '1.375',
-    'normal': '1.5',
-    'relaxed': '1.625',
-    'loose': '2',
+    none: '1',
+    tight: '1.25',
+    snug: '1.375',
+    normal: '1.5',
+    relaxed: '1.625',
+    loose: '2',
   };
 
   return defaultLineHeights[lineHeightKey] || '1.5';
@@ -242,14 +242,14 @@ function getDefaultLineHeight(lineHeightKey: string): string {
 
 function getDefaultBorderRadius(radiusKey: string): string {
   const defaultBorderRadius: Record<string, string> = {
-    'none': '0',
-    'sm': '0.125rem',
-    'md': '0.375rem',
-    'lg': '0.5rem',
-    'xl': '0.75rem',
+    none: '0',
+    sm: '0.125rem',
+    md: '0.375rem',
+    lg: '0.5rem',
+    xl: '0.75rem',
     '2xl': '1rem',
     '3xl': '1.5rem',
-    'full': '9999px',
+    full: '9999px',
   };
 
   return defaultBorderRadius[radiusKey] || '0.375rem';
@@ -257,13 +257,13 @@ function getDefaultBorderRadius(radiusKey: string): string {
 
 function getDefaultShadow(shadowKey: string): string {
   const defaultShadows: Record<string, string> = {
-    'sm': '0 1px 2px 0 rgb(0 0 0 / 0.05)',
-    'md': '0 4px 6px -1px rgb(0 0 0 / 0.1)',
-    'lg': '0 10px 15px -3px rgb(0 0 0 / 0.1)',
-    'xl': '0 20px 25px -5px rgb(0 0 0 / 0.1)',
+    sm: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+    md: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+    lg: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
+    xl: '0 20px 25px -5px rgb(0 0 0 / 0.1)',
     '2xl': '0 25px 50px -12px rgb(0 0 0 / 0.25)',
-    'inner': 'inset 0 2px 4px 0 rgb(0 0 0 / 0.05)',
-    'none': 'none',
+    inner: 'inset 0 2px 4px 0 rgb(0 0 0 / 0.05)',
+    none: 'none',
   };
 
   return defaultShadows[shadowKey] || 'none';
@@ -271,9 +271,9 @@ function getDefaultShadow(shadowKey: string): string {
 
 function getDefaultTransition(transitionKey: string): string {
   const defaultTransitions: Record<string, string> = {
-    'fast': '150ms ease-in-out',
-    'normal': '300ms ease-in-out',
-    'slow': '500ms ease-in-out',
+    fast: '150ms ease-in-out',
+    normal: '300ms ease-in-out',
+    slow: '500ms ease-in-out',
   };
 
   return defaultTransitions[transitionKey] || '300ms ease-in-out';
@@ -287,13 +287,13 @@ function getDefaultZIndex(zIndexKey: string): number {
     '30': 30,
     '40': 40,
     '50': 50,
-    'modal': 1000,
-    'popover': 1010,
-    'tooltip': 1020,
-    'notification': 1030,
-    'header': 1040,
-    'footer': 1050,
-    'overlay': 1060,
+    modal: 1000,
+    popover: 1010,
+    tooltip: 1020,
+    notification: 1030,
+    header: 1040,
+    footer: 1050,
+    overlay: 1060,
   };
 
   return defaultZIndex[zIndexKey] || 1;
@@ -301,11 +301,11 @@ function getDefaultZIndex(zIndexKey: string): number {
 
 function getDefaultBreakpoint(breakpointKey: string): string {
   const defaultBreakpoints: Record<string, string> = {
-    'xs': '0',
-    'sm': '640px',
-    'md': '768px',
-    'lg': '1024px',
-    'xl': '1280px',
+    xs: '0',
+    sm: '640px',
+    md: '768px',
+    lg: '1024px',
+    xl: '1280px',
     '2xl': '1536px',
   };
 

@@ -20,7 +20,6 @@ export const List = forwardRef<ListRef, ListProps>((props, ref) => {
     ...rest
   } = props;
 
-
   const renderItems = () => {
     if (dataSource && renderItem) {
       return dataSource.map((item, index) => (

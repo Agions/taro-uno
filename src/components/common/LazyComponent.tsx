@@ -4,6 +4,7 @@
  */
 
 import React, { Suspense, ComponentType, LazyExoticComponent, ReactNode } from 'react';
+import { View, Text, Button } from '@tarojs/components';
 import { ErrorBoundary } from './ErrorBoundary';
 import { Loading } from '../feedback/Loading';
 
@@ -71,20 +72,20 @@ const componentCache = new Map<string, ComponentType<any>>();
 
 // 默认加载组件
 const DefaultFallback = () => (
-  <div className="flex items-center justify-center p-4">
+  <View className="flex items-center justify-center p-4">
     <Loading type="spinner" size="lg" />
-  </div>
+  </View>
 );
 
 // 默认错误组件
 const DefaultErrorFallback = ({ error, reset }: { error: Error; reset: () => void }) => (
-  <div className="flex flex-col items-center justify-center p-4 text-center">
-    <div className="text-red-500 mb-2">组件加载失败</div>
-    <div className="text-sm text-gray-600 mb-4">{error.message}</div>
-    <button onClick={reset} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+  <View className="flex flex-col items-center justify-center p-4 text-center">
+    <Text className="text-red-500 mb-2">组件加载失败</Text>
+    <Text className="text-sm text-gray-600 mb-4">{error.message}</Text>
+    <Button onClick={reset} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
       重试
-    </button>
-  </div>
+    </Button>
+  </View>
 );
 
 /**

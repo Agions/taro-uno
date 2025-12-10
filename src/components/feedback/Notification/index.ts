@@ -4,7 +4,9 @@ export { default as NotificationManager } from './NotificationManager';
 // Simple notification singleton for direct usage
 class NotificationSingleton {
   open = (_config: any) => {
-    console.warn('Notification singleton called. Please render <NotificationManager /> in your app for full functionality.');
+    console.warn(
+      'Notification singleton called. Please render <NotificationManager /> in your app for full functionality.',
+    );
     return 'notification-key';
   };
 
@@ -27,7 +29,12 @@ class NotificationSingleton {
 }
 
 export const notification = new NotificationSingleton();
-export type { NotificationProps, NotificationRef, NotificationManagerProps, NotificationPlacement } from './Notification.types';
+export type {
+  NotificationProps,
+  NotificationRef,
+  NotificationManagerProps,
+  NotificationPlacement,
+} from './Notification.types';
 export { notificationStyles } from './Notification.styles';
 
 export default Notification;

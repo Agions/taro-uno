@@ -1,14 +1,14 @@
 /**
  * useClickOutside Hook
  * Detect clicks outside of a specific element
- * 
+ *
  * @example
  * ```typescript
  * const ref = useClickOutside<HTMLDivElement>(() => {
  *   console.log('Clicked outside!');
  *   setIsOpen(false);
  * });
- * 
+ *
  * return <div ref={ref}>Content</div>;
  * ```
  */
@@ -22,7 +22,7 @@ export function useClickOutside<T extends HTMLElement = HTMLElement>(
   handler: (event: MouseEvent | TouchEvent) => void,
   enabled: boolean = true,
 ): RefObject<T | null> {
-  const ref = useRef<T>(null);
+  const ref = useRef<T | null>(null);
 
   useEffect(() => {
     if (!enabled) return;

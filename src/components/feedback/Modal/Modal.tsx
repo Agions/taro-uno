@@ -1,7 +1,7 @@
 import React, { forwardRef, useRef, useState, useEffect, useCallback } from 'react';
 import { View, Text } from '@tarojs/components';
 import { modalStyles } from './Modal.styles';
-import type { ModalProps, ModalRef, ModalButton } from './Modal.types';
+import type { ModalProps, ModalRef, ModalButton, ModalStatic } from './Modal.types';
 
 /** Modal组件 */
 export const ModalComponent = forwardRef<ModalRef, ModalProps>((props, ref) => {
@@ -107,7 +107,6 @@ export const ModalComponent = forwardRef<ModalRef, ModalProps>((props, ref) => {
     }
     onClose?.();
   }, [controlledVisible, onClose]);
-
 
   // 处理取消
   const handleCancel = useCallback(() => {
@@ -219,9 +218,7 @@ export const ModalComponent = forwardRef<ModalRef, ModalProps>((props, ref) => {
 
   return (
     <>
-      {mask && internalVisible && (
-        <View className="taro-uno-modal__mask" onClick={handleMaskClick} />
-      )}
+      {mask && internalVisible && <View className="taro-uno-modal__mask" onClick={handleMaskClick} />}
       {internalVisible && (
         <View ref={modalRef} className={modalClassName} style={modalStyle} {...restProps}>
           {renderCloseButton()}
@@ -230,13 +227,9 @@ export const ModalComponent = forwardRef<ModalRef, ModalProps>((props, ref) => {
               <Text className="taro-uno-modal__title">{internalTitle}</Text>
             </View>
           )}
-          <View className={`taro-uno-modal__body ${modalStyles.body}`}>
-            {internalContent}
-          </View>
+          <View className={`taro-uno-modal__body ${modalStyles.body}`}>{internalContent}</View>
           {internalButtons.length > 0 && (
-            <View className={`taro-uno-modal__footer ${modalStyles.footer}`}>
-              {renderButtons()}
-            </View>
+            <View className={`taro-uno-modal__footer ${modalStyles.footer}`}>{renderButtons()}</View>
           )}
         </View>
       )}
@@ -247,16 +240,6 @@ export const ModalComponent = forwardRef<ModalRef, ModalProps>((props, ref) => {
 /** Modal组件显示名称 */
 ModalComponent.displayName = 'Modal';
 
-/** Modal组件类型 */
-interface ModalStatic {
-  new (props: ModalProps): React.ReactElement;
-  confirm: (config: ModalProps) => void;
-  info: (config: ModalProps) => void;
-  success: (config: ModalProps) => void;
-  error: (config: ModalProps) => void;
-  warning: (config: ModalProps) => void;
-}
-
 /** 导出Modal组件 */
 const Modal = ModalComponent as any as ModalStatic;
 
@@ -264,27 +247,22 @@ const Modal = ModalComponent as any as ModalStatic;
 Modal.confirm = (_config: ModalProps) => {
   // 这里可以实现一个全局的确认框
   // 需要配合全局状态管理或Portal实现
-
 };
 
 Modal.info = (_config: ModalProps) => {
   // 信息提示框
-
 };
 
 Modal.success = (_config: ModalProps) => {
   // 成功提示框
-
 };
 
 Modal.error = (_config: ModalProps) => {
   // 错误提示框
-
 };
 
 Modal.warning = (_config: ModalProps) => {
   // 警告提示框
-
 };
 
 export { Modal };

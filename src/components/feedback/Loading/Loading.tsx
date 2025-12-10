@@ -115,7 +115,12 @@ export const Loading = forwardRef<LoadingRef, LoadingProps>((props, ref) => {
   if (!visible) return null;
 
   return (
-    <View ref={elementRef} className={loadingClasses} style={{...LoadingStyles['base'] as React.CSSProperties, ...style}} {...rest}>
+    <View
+      ref={elementRef}
+      className={loadingClasses}
+      style={{ ...(LoadingStyles['base'] as React.CSSProperties), ...style }}
+      {...rest}
+    >
       {renderContent()}
       {text && <Text style={LoadingStyles['text'] as React.CSSProperties}>{text}</Text>}
     </View>

@@ -448,7 +448,7 @@ export class CascaderStyles {
   static formatDisplayValue(
     labels: ReactNode[],
     selectedOptions: CascaderOption[],
-    config: { showPath?: boolean; pathSeparator?: string } = {}
+    config: { showPath?: boolean; pathSeparator?: string } = {},
   ): ReactNode {
     return formatDisplayValue(labels, selectedOptions, config);
   }

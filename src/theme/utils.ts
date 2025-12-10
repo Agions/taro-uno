@@ -78,9 +78,9 @@ export class ColorUtils {
     const hue2rgb = (p: number, q: number, t: number): number => {
       if (t < 0) t += 1;
       if (t > 1) t -= 1;
-      if (t < 1/6) return p + (q - p) * 6 * t;
-      if (t < 1/2) return q;
-      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+      if (t < 1 / 6) return p + (q - p) * 6 * t;
+      if (t < 1 / 2) return q;
+      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
       return p;
     };
 
@@ -91,9 +91,9 @@ export class ColorUtils {
     } else {
       const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
       const p = 2 * l - q;
-      r = hue2rgb(p, q, h + 1/3);
+      r = hue2rgb(p, q, h + 1 / 3);
       g = hue2rgb(p, q, h);
-      b = hue2rgb(p, q, h - 1/3);
+      b = hue2rgb(p, q, h - 1 / 3);
     }
 
     return this.rgbToHex(Math.round(r * 255), Math.round(g * 255), Math.round(b * 255));
@@ -142,20 +142,20 @@ export class ColorUtils {
   static generateGradient(color1: string, color2: string, steps: number): string[] {
     const rgb1 = this.hexToRgb(color1);
     const rgb2 = this.hexToRgb(color2);
-    
+
     if (!rgb1 || !rgb2) return [];
 
     const gradient: string[] = [];
-    
+
     for (let i = 0; i < steps; i++) {
       const ratio = i / (steps - 1);
       const r = Math.round(rgb1.r + (rgb2.r - rgb1.r) * ratio);
       const g = Math.round(rgb1.g + (rgb2.g - rgb1.g) * ratio);
       const b = Math.round(rgb1.b + (rgb2.b - rgb1.b) * ratio);
-      
+
       gradient.push(this.rgbToHex(r, g, b));
     }
-    
+
     return gradient;
   }
 
@@ -165,11 +165,11 @@ export class ColorUtils {
   static getContrastRatio(color1: string, color2: string): number {
     const rgb1 = this.hexToRgb(color1);
     const rgb2 = this.hexToRgb(color2);
-    
+
     if (!rgb1 || !rgb2) return 0;
 
     const getLuminance = (r: number, g: number, b: number): number => {
-      const [rs, gs, bs] = [r, g, b].map(c => {
+      const [rs, gs, bs] = [r, g, b].map((c) => {
         c = c / 255;
         return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
       });
@@ -178,10 +178,10 @@ export class ColorUtils {
 
     const lum1 = getLuminance(rgb1.r, rgb1.g, rgb1.b);
     const lum2 = getLuminance(rgb2.r, rgb2.g, rgb2.b);
-    
+
     const brightest = Math.max(lum1, lum2);
     const darkest = Math.min(lum1, lum2);
-    
+
     return (brightest + 0.05) / (darkest + 0.05);
   }
 
@@ -190,7 +190,7 @@ export class ColorUtils {
    */
   static meetsWCAGStandard(color1: string, color2: string, level: 'AA' | 'AAA' = 'AA'): boolean {
     const ratio = this.getContrastRatio(color1, color2);
-    
+
     if (level === 'AA') {
       return ratio >= 4.5;
     } else {
@@ -208,7 +208,7 @@ export class ResponsiveUtils {
     if (typeof window === 'undefined') {
       return { width: 0, height: 0 };
     }
-    
+
     return {
       width: window.innerWidth,
       height: window.innerHeight,
@@ -220,16 +220,15 @@ export class ResponsiveUtils {
    */
   static getCurrentBreakpoint(breakpoints: Record<string, number>): string {
     const width = this.getScreenSize().width;
-    
-    const breakpointEntries = Object.entries(breakpoints)
-      .sort(([, a], [, b]) => b - a);
-    
+
+    const breakpointEntries = Object.entries(breakpoints).sort(([, a], [, b]) => b - a);
+
     for (const [name, value] of breakpointEntries) {
       if (width >= value) {
         return name;
       }
     }
-    
+
     return breakpointEntries[breakpointEntries.length - 1]?.[0] || 'md';
   }
 
@@ -238,10 +237,8 @@ export class ResponsiveUtils {
    */
   static isMobile(): boolean {
     if (typeof window === 'undefined') return false;
-    
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      navigator.userAgent
-    );
+
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   }
 
   /**
@@ -249,7 +246,7 @@ export class ResponsiveUtils {
    */
   static isTablet(): boolean {
     if (typeof window === 'undefined') return false;
-    
+
     const width = this.getScreenSize().width;
     return width >= 768 && width <= 1024;
   }
@@ -259,7 +256,7 @@ export class ResponsiveUtils {
    */
   static isDesktop(): boolean {
     if (typeof window === 'undefined') return false;
-    
+
     const width = this.getScreenSize().width;
     return width > 1024;
   }
@@ -319,7 +316,8 @@ export class ThemeValidator {
    * 检查是否为有效的颜色值
    */
   static isValidColor(color: string): boolean {
-    const colorRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$|^rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)$|^rgba\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*[\d.]+\s*\)$|^hsl\(\s*\d+\s*,\s*[\d.]+\s*,\s*[\d.]+\s*\)$|^hsla\(\s*\d+\s*,\s*[\d.]+\s*,\s*[\d.]+\s*,\s*[\d.]+\s*\)$|[a-zA-Z]+$/;
+    const colorRegex =
+      /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$|^rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)$|^rgba\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*[\d.]+\s*\)$|^hsl\(\s*\d+\s*,\s*[\d.]+\s*,\s*[\d.]+\s*\)$|^hsla\(\s*\d+\s*,\s*[\d.]+\s*,\s*[\d.]+\s*,\s*[\d.]+\s*\)$|[a-zA-Z]+$/;
     return colorRegex.test(color);
   }
 
@@ -340,7 +338,9 @@ export class ThemeValidator {
     // 检查次要文本的对比度
     const secondaryTextContrast = ColorUtils.getContrastRatio(theme.colors.textSecondary, theme.colors.background);
     if (secondaryTextContrast < 3) {
-      issues.push(`Secondary text contrast ratio is too low: ${secondaryTextContrast.toFixed(2)} (should be at least 3)`);
+      issues.push(
+        `Secondary text contrast ratio is too low: ${secondaryTextContrast.toFixed(2)} (should be at least 3)`,
+      );
       score -= 10;
     }
 
@@ -377,7 +377,7 @@ export class PerformanceMonitor {
    */
   static getStats(name: string): { count: number; average: number; min: number; max: number } {
     const values = this.metrics.get(name) || [];
-    
+
     if (values.length === 0) {
       return { count: 0, average: 0, min: 0, max: 0 };
     }
@@ -407,11 +407,11 @@ export class PerformanceMonitor {
    */
   static getReport(): Record<string, any> {
     const report: Record<string, any> = {};
-    
+
     this.metrics.forEach((_, name) => {
       report[name] = this.getStats(name);
     });
-    
+
     return report;
   }
 }

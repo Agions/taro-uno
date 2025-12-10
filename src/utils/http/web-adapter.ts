@@ -6,11 +6,7 @@ export class WebAdapter implements IRequestAdapter {
     const timeoutId = setTimeout(() => controller.abort(), config.timeout || 10000);
 
     try {
-      const queryString = config.params
-        ? '?' + new URLSearchParams(config.params).toString()
-        : '';
-
-      const response = await fetch(`${config.url}${queryString}`, {
+      const response = await fetch(config.url, {
         method: config.method,
         headers: config.headers,
         body: config.method !== 'GET' ? JSON.stringify(config.data) : undefined,

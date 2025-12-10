@@ -187,10 +187,11 @@ export const tooltipStyles = {
 
   // 获取提示框样式
   getTooltipStyle: (placement?: TooltipPlacement, color?: string, overlayStyle?: CSSProperties): CSSProperties => {
-    const placementStyle = placement && tooltipStyles['placements'][placement] 
-      ? tooltipStyles['placements'][placement] 
-      : tooltipStyles['placements'].top;
-    
+    const placementStyle =
+      placement && tooltipStyles['placements'][placement]
+        ? tooltipStyles['placements'][placement]
+        : tooltipStyles['placements'].top;
+
     return {
       ...tooltipStyles['tooltip'],
       ...placementStyle,
@@ -202,12 +203,12 @@ export const tooltipStyles = {
   // 获取箭头样式
   getArrowStyle: (placement?: TooltipPlacement, color?: string, arrow?: boolean): CSSProperties => {
     if (!arrow) return {};
-    
-    const arrowKey = `${placement}Arrow` as keyof typeof tooltipStyles['placements'];
+
+    const arrowKey = `${placement}Arrow` as keyof (typeof tooltipStyles)['placements'];
     const arrowStyle = tooltipStyles['placements'][arrowKey];
-    
+
     if (!arrowStyle) return {};
-    
+
     return {
       ...tooltipStyles['arrow'],
       ...arrowStyle,
@@ -286,30 +287,23 @@ export const tooltipStyles = {
 
   // 获取主题样式
   getThemeStyle: (theme?: string): CSSProperties => {
-    const themeKey = theme as keyof typeof tooltipStyles['themes'];
+    const themeKey = theme as keyof (typeof tooltipStyles)['themes'];
     return tooltipStyles['themes'][themeKey] || tooltipStyles['themes'].dark;
   },
 };
 
 // CSS 类名工具函数
 export const getTooltipClasses = (placement: TooltipPlacement, visible: boolean): string => {
-  const baseClasses = [
-    'tooltip',
-    `tooltip-${placement}`,
-    visible ? 'tooltip-visible' : 'tooltip-hidden',
-  ];
-  
+  const baseClasses = ['tooltip', `tooltip-${placement}`, visible ? 'tooltip-visible' : 'tooltip-hidden'];
+
   return baseClasses.join(' ');
 };
 
 export const getArrowClasses = (placement: TooltipPlacement, arrow: boolean): string => {
   if (!arrow) return '';
-  
-  const baseClasses = [
-    'tooltip-arrow',
-    `tooltip-arrow-${placement}`,
-  ];
-  
+
+  const baseClasses = ['tooltip-arrow', `tooltip-arrow-${placement}`];
+
   return baseClasses.join(' ');
 };
 

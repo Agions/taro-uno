@@ -2,13 +2,7 @@ import React, { forwardRef, useRef, useState, useEffect, useCallback } from 'rea
 import { Picker, View, Text } from '@tarojs/components';
 import type { ITouchEvent } from '@tarojs/components';
 import { selectStyles } from './Select.styles';
-import type {
-  SelectProps,
-  SelectRef,
-  SelectStatus,
-  SelectOption,
-  SelectOptionGroup,
-} from './Select.types';
+import type { SelectProps, SelectRef, SelectStatus, SelectOption, SelectOptionGroup } from './Select.types';
 
 /** 选择器组件 */
 export const SelectComponent = forwardRef<SelectRef, SelectProps>((props, ref) => {
@@ -53,7 +47,7 @@ export const SelectComponent = forwardRef<SelectRef, SelectProps>((props, ref) =
     loading = false,
     loadingText = '加载中...',
     notFoundContent: _notFoundContent = '暂无数据',
-    style: _style
+    style: _style,
     // ...restProps // Removed unused rest props
   } = props;
 
@@ -257,7 +251,10 @@ export const SelectComponent = forwardRef<SelectRef, SelectProps>((props, ref) =
     if (mode === 'single') {
       return selectedOptions[0]?.label?.toString() || '';
     } else {
-      return selectedOptions.map((opt) => opt.label?.toString()).filter(Boolean).join(', ');
+      return selectedOptions
+        .map((opt) => opt.label?.toString())
+        .filter(Boolean)
+        .join(', ');
     }
   }, [getSelectedOptions, placeholder, mode]);
 
@@ -266,7 +263,10 @@ export const SelectComponent = forwardRef<SelectRef, SelectProps>((props, ref) =
     ref,
     () => ({
       element: selectRef.current,
-      getValue: () => value !== undefined && value !== null ? value : (mode === 'single' ? '' : []) as string | number | (string | number)[],
+      getValue: () =>
+        value !== undefined && value !== null
+          ? value
+          : ((mode === 'single' ? '' : []) as string | number | (string | number)[]),
       setValue: (newValue) => {
         if (!isControlled) {
           setInternalValue(newValue);
@@ -327,9 +327,10 @@ export const SelectComponent = forwardRef<SelectRef, SelectProps>((props, ref) =
       searchOptions: (keyword) => {
         if (!keyword || typeof keyword !== 'string') return [];
         const flatOptions = flattenOptions(options);
-        return flatOptions.filter((opt) =>
-          opt.label?.toString().toLowerCase().includes(keyword.toLowerCase()) ||
-          opt.value?.toString().toLowerCase().includes(keyword.toLowerCase())
+        return flatOptions.filter(
+          (opt) =>
+            opt.label?.toString().toLowerCase().includes(keyword.toLowerCase()) ||
+            opt.value?.toString().toLowerCase().includes(keyword.toLowerCase()),
         );
       },
       scrollToOption: (_optionValue) => {
@@ -353,7 +354,6 @@ export const SelectComponent = forwardRef<SelectRef, SelectProps>((props, ref) =
     ],
   );
 
-  
   // 处理Picker变化
   const handlePickerChange = (e: any) => {
     const selectedIndex = e.detail?.value;
@@ -376,7 +376,7 @@ export const SelectComponent = forwardRef<SelectRef, SelectProps>((props, ref) =
   // 获取当前选中的索引
   const getCurrentIndex = () => {
     if (value === undefined || value === null || value === '') return 0;
-    const index = options.findIndex(opt => {
+    const index = options.findIndex((opt) => {
       if ('options' in opt) return false;
       return opt.value === value;
     });

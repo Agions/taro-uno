@@ -37,10 +37,7 @@ export type ButtonStatus = 'normal' | 'loading' | 'disabled' | 'active';
 export type ButtonIconPosition = 'left' | 'right';
 
 /** 按钮原生属性类型 */
-export type ButtonNativeProps = Omit<
-  React.ButtonHTMLAttributes<HTMLButtonElement>,
-  'size' | 'type' | 'onClick'
->;
+export type ButtonNativeProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'size' | 'type' | 'onClick'>;
 
 // ==================== Button属性类型 ====================
 
@@ -286,37 +283,38 @@ export interface ButtonUtils {
 /** 按钮尺寸验证器 */
 export const buttonSizeValidator: Validator<ButtonSize> = createValidator(
   (value): value is ButtonSize => ['xs', 'sm', 'md', 'lg', 'xl'].includes(value as ButtonSize),
-  'Invalid button size. Must be one of: xs, sm, md, lg, xl'
+  'Invalid button size. Must be one of: xs, sm, md, lg, xl',
 );
 
 /** 按钮类型验证器 */
 export const buttonTypeValidator: Validator<ButtonType> = createValidator(
-  (value): value is ButtonType => ['default', 'primary', 'secondary', 'success', 'warning', 'error', 'info'].includes(value as ButtonType),
-  'Invalid button type. Must be one of: default, primary, secondary, success, warning, error, info'
+  (value): value is ButtonType =>
+    ['default', 'primary', 'secondary', 'success', 'warning', 'error', 'info'].includes(value as ButtonType),
+  'Invalid button type. Must be one of: default, primary, secondary, success, warning, error, info',
 );
 
 /** 按钮变体验证器 */
 export const buttonVariantValidator: Validator<ButtonVariant> = createValidator(
   (value): value is ButtonVariant => ['solid', 'outline', 'ghost', 'text'].includes(value as ButtonVariant),
-  'Invalid button variant. Must be one of: solid, outline, ghost, text'
+  'Invalid button variant. Must be one of: solid, outline, ghost, text',
 );
 
 /** 按钮形状验证器 */
 export const buttonShapeValidator: Validator<ButtonShape> = createValidator(
   (value): value is ButtonShape => ['default', 'rounded', 'circle', 'square'].includes(value as ButtonShape),
-  'Invalid button shape. Must be one of: default, rounded, circle, square'
+  'Invalid button shape. Must be one of: default, rounded, circle, square',
 );
 
 /** 按钮状态验证器 */
 export const buttonStatusValidator: Validator<ButtonStatus> = createValidator(
   (value): value is ButtonStatus => ['normal', 'loading', 'disabled', 'active'].includes(value as ButtonStatus),
-  'Invalid button status. Must be one of: normal, loading, disabled, active'
+  'Invalid button status. Must be one of: normal, loading, disabled, active',
 );
 
 /** 按钮图标位置验证器 */
 export const buttonIconPositionValidator: Validator<ButtonIconPosition> = createValidator(
   (value): value is ButtonIconPosition => ['left', 'right'].includes(value as ButtonIconPosition),
-  'Invalid button icon position. Must be one of: left, right'
+  'Invalid button icon position. Must be one of: left, right',
 );
 
 // ==================== Button类型守卫 ====================
@@ -354,9 +352,9 @@ export function isValidButtonIconPosition(value: unknown): value is ButtonIconPo
 /** 检查是否为有效的按钮属性 */
 export function isValidButtonProps(props: unknown): props is ButtonProps {
   if (!props || typeof props !== 'object') return false;
-  
+
   const obj = props as Record<string, unknown>;
-  
+
   // 验证基本属性类型
   if (obj['size'] !== undefined && !isValidButtonSize(obj['size'])) return false;
   if (obj['type'] !== undefined && !isValidButtonType(obj['type'])) return false;
@@ -364,34 +362,34 @@ export function isValidButtonProps(props: unknown): props is ButtonProps {
   if (obj['shape'] !== undefined && !isValidButtonShape(obj['shape'])) return false;
   if (obj['status'] !== undefined && !isValidButtonStatus(obj['status'])) return false;
   if (obj['iconPosition'] !== undefined && !isValidButtonIconPosition(obj['iconPosition'])) return false;
-  
+
   // 验证布尔值属性
   const booleanProps = ['block', 'danger', 'loading', 'disabled', 'ripple', 'shadow', 'bordered'];
   for (const prop of booleanProps) {
     if (obj[prop] !== undefined && !isBoolean(obj[prop])) return false;
   }
-  
+
   // 验证字符串属性
   const stringProps = ['className', 'loadingText', 'color', 'backgroundColor', 'textColor', 'borderColor'];
   for (const prop of stringProps) {
     if (obj[prop] !== undefined && !isString(obj[prop])) return false;
   }
-  
+
   // 验证数字属性
   const numberProps = ['animationDuration', 'groupIndex', 'groupSize'];
   for (const prop of numberProps) {
     if (obj[prop] !== undefined && !isNumber(obj[prop])) return false;
   }
-  
+
   // 验证函数属性
   const functionProps = ['onClick', 'onPressIn', 'onPressOut', 'onLongPress'];
   for (const prop of functionProps) {
     if (obj[prop] !== undefined && !isFunction(obj[prop])) return false;
   }
-  
+
   // 验证React元素属性
   if (obj['icon'] !== undefined && !isReactElement(obj['icon']) && !isString(obj['icon'])) return false;
-  
+
   return true;
 }
 
@@ -477,17 +475,17 @@ export function createButtonClassName(props: Partial<ButtonProps>): string {
     'taro-uno-button--bordered': !!bordered,
   };
 
-  return classNames(
-    ...baseClasses,
-    conditionalClasses,
-    className
-  );
+  return classNames(...baseClasses, conditionalClasses, className);
 }
 
 /** 计算按钮最终状态 */
 export function calculateFinalStatus(props: Partial<ButtonProps>): ButtonStatus {
-  const { loading = defaultButtonProps.loading, disabled = defaultButtonProps.disabled, status = defaultButtonProps.status } = props;
-  
+  const {
+    loading = defaultButtonProps.loading,
+    disabled = defaultButtonProps.disabled,
+    status = defaultButtonProps.status,
+  } = props;
+
   if (loading) return 'loading';
   if (disabled) return 'disabled';
   return status || 'normal';

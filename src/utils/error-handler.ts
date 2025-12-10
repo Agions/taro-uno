@@ -27,7 +27,7 @@ export interface AppError extends Error {
 class ErrorHandler {
   private static instance: ErrorHandler;
 
-  private constructor() { }
+  private constructor() {}
 
   static getInstance(): ErrorHandler {
     if (!ErrorHandler.instance) {
@@ -41,7 +41,7 @@ class ErrorHandler {
     type: ErrorType = ErrorType.UNKNOWN,
     severity: ErrorSeverity = ErrorSeverity.MEDIUM,
     code?: string,
-    details?: unknown
+    details?: unknown,
   ): AppError {
     const error = new Error(message) as AppError;
     error.type = type;

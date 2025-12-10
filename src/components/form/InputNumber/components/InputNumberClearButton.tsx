@@ -10,22 +10,14 @@ interface InputNumberClearButtonProps {
   onClear: (event: ITouchEvent) => void;
 }
 
-export function InputNumberClearButton({
-  size,
-  disabled,
-  readonly,
-  onClear,
-}: InputNumberClearButtonProps) {
+export function InputNumberClearButton({ size, disabled, readonly, onClear }: InputNumberClearButtonProps) {
   const handleClear = (event: ITouchEvent) => {
     if (disabled || readonly) return;
     onClear(event);
   };
 
   return (
-    <View 
-      style={inputNumberStyles['getClearButtonStyle']({ size })} 
-      onClick={handleClear}
-    >
+    <View style={inputNumberStyles['getClearButtonStyle']({ size })} onClick={handleClear}>
       <Text>×</Text>
     </View>
   );

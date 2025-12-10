@@ -67,7 +67,7 @@ export class ErrorBoundary extends Component<Props, State> {
         <View className="error-boundary">
           <Text className="error-boundary__title">出错了</Text>
           <Text className="error-boundary__message">{this.state.error?.message || '应用遇到了一个错误'}</Text>
-          {process.env['NODE_ENV'] === 'development' && this.state.errorInfo && (
+          {import.meta.env.DEV && this.state.errorInfo && (
             <View className="error-boundary__details">
               <Text className="error-boundary__details-title">错误详情:</Text>
               <Text className="error-boundary__details-text">{this.state.errorInfo.componentStack}</Text>

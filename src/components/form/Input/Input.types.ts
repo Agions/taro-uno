@@ -21,7 +21,19 @@ export type InputNativeProps = InputHTMLAttributes<HTMLInputElement> & TextareaH
 
 /** 输入框组件属性接口 */
 export interface InputProps
-  extends Omit<InputNativeProps, 'size' | 'type' | 'value' | 'onChange' | 'onFocus' | 'onBlur' | 'prefix' | 'onInput' | 'dangerouslySetInnerHTML' | 'onTouchStart'> {
+  extends Omit<
+    InputNativeProps,
+    | 'size'
+    | 'type'
+    | 'value'
+    | 'onChange'
+    | 'onFocus'
+    | 'onBlur'
+    | 'prefix'
+    | 'onInput'
+    | 'dangerouslySetInnerHTML'
+    | 'onTouchStart'
+  > {
   /** 输入框内容 */
   value?: string | number;
   /** 默认值（非受控模式） */

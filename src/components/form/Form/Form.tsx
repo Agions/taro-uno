@@ -2,12 +2,7 @@ import React, { forwardRef, createContext } from 'react';
 import { Form as TaroForm } from '@tarojs/components';
 import type { ITouchEvent } from '@tarojs/components';
 import { formStyles } from './Form.styles';
-import type {
-  FormProps,
-  FormRef,
-  FormContext,
-  FormErrors,
-} from './Form.types';
+import type { FormProps, FormRef, FormContext, FormErrors } from './Form.types';
 import { useFormLogic } from './useFormLogic';
 
 // 创建表单上下文
@@ -18,18 +13,13 @@ export type { FormContext } from './Form.types';
 
 /** 表单组件 */
 export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
-  const {
-    layout = 'horizontal',
-    size = 'md',
-    className,
-    style,
-    children,
-    ...restProps
-  } = props;
+  const { layout = 'horizontal', size = 'md', className, style, children, ...restProps } = props;
 
   // Filter out React DOM event handlers that are incompatible with TaroForm
   const filteredProps = Object.fromEntries(
-    Object.entries(restProps).filter(([key]) => !key.startsWith('on') || key.includes('Click') || key.includes('Touch'))
+    Object.entries(restProps).filter(
+      ([key]) => !key.startsWith('on') || key.includes('Click') || key.includes('Touch'),
+    ),
   );
 
   const {
@@ -173,7 +163,14 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
           fields: {
             ...formInstance.fields,
             [name]: {
-              ...(formInstance.fields[name] || { name, value: '', errors: [], touched: false, validating: false, rules: [] }),
+              ...(formInstance.fields[name] || {
+                name,
+                value: '',
+                errors: [],
+                touched: false,
+                validating: false,
+                rules: [],
+              }),
               rules: [...(formInstance.fields[name]?.rules || []), ...newRules],
             },
           },
@@ -185,7 +182,14 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
           fields: {
             ...formInstance.fields,
             [name]: {
-              ...(formInstance.fields[name] || { name, value: '', errors: [], touched: false, validating: false, rules: [] }),
+              ...(formInstance.fields[name] || {
+                name,
+                value: '',
+                errors: [],
+                touched: false,
+                validating: false,
+                rules: [],
+              }),
               rules: [],
             },
           },
@@ -201,7 +205,20 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
       },
       getFormInstance: () => formInstance,
     }),
-    [formInstance, validateField, setFieldValue, updateField, updateFormInstance, props.onFinishFailed, props.onSubmit, setFieldError, getFieldError, setFieldTouched, setFieldValidating, resetField],
+    [
+      formInstance,
+      validateField,
+      setFieldValue,
+      updateField,
+      updateFormInstance,
+      props.onFinishFailed,
+      props.onSubmit,
+      setFieldError,
+      getFieldError,
+      setFieldTouched,
+      setFieldValidating,
+      resetField,
+    ],
   );
 
   // 生成表单样式

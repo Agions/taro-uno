@@ -1,7 +1,7 @@
 /**
  * useToggle Hook
  * Simple boolean state toggle with optional callbacks
- * 
+ *
  * @example
  * ```typescript
  * const [isOpen, toggle, setIsOpen] = useToggle(false);
@@ -33,7 +33,7 @@ export function useToggle(initialValue: boolean = false): UseToggleReturn {
   const [value, setValue] = useState(initialValue);
 
   const toggle = useCallback(() => {
-    setValue(v => !v);
+    setValue((v) => !v);
   }, []);
 
   const setTrue = useCallback(() => {

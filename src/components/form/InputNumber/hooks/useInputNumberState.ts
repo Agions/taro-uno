@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import type { ITouchEvent } from '@tarojs/components';
-import type { 
-  InputNumberStatus, 
-  InputNumberValidationResult, 
+import type {
+  InputNumberStatus,
+  InputNumberValidationResult,
   InputNumberFormatConfig,
-  InputNumberRule
+  InputNumberRule,
 } from '../InputNumber.types';
 import { inputNumberStyles } from '../InputNumber.styles';
 
@@ -45,9 +45,7 @@ export interface UseInputNumberStateReturn {
   setInternalReadonly: (readonly: boolean) => void;
 }
 
-export function useInputNumberState(
-  params: UseInputNumberStateParams
-): UseInputNumberStateReturn {
+export function useInputNumberState(params: UseInputNumberStateParams): UseInputNumberStateReturn {
   const {
     value: controlledValue,
     defaultValue = null,
@@ -247,7 +245,7 @@ export function useInputNumberState(
     async (text: string, event: ITouchEvent) => {
       const parsedValue = inputNumberStyles['parseValue'](text, formatConfig);
       const clampedValue = parsedValue !== null ? inputNumberStyles['clampValue'](parsedValue, min, max) : null;
-      
+
       if (clampedValue !== null) {
         const roundedValue = inputNumberStyles['roundValue'](clampedValue, precision);
         await handleValueChange(roundedValue, event);

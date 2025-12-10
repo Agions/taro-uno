@@ -28,7 +28,10 @@ export interface DisabledDate {
 }
 
 /** 日期选择器原生属性类型 */
-export type DatePickerNativeProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'onFocus' | 'onBlur' | 'onClick' | 'defaultValue'>;
+export type DatePickerNativeProps = Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  'onChange' | 'onFocus' | 'onBlur' | 'onClick' | 'defaultValue'
+>;
 
 /** 日期选择器组件属性接口 */
 export interface DatePickerProps extends DatePickerNativeProps {

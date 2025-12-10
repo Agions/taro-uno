@@ -46,7 +46,7 @@ export class MemoryManager {
   }
 
   static cleanup(): void {
-    this.cleanupCallbacks.forEach(callback => callback());
+    this.cleanupCallbacks.forEach((callback) => callback());
     this.cleanupCallbacks.clear();
   }
 
@@ -65,29 +65,17 @@ export class MemoryManager {
 }
 
 // 性能优化Hooks
-export function useDebounce<T extends (...args: unknown[]) => unknown>(
-  callback: T,
-  delay: number
-): T {
-  return useMemo(
-    () => debounce(callback, delay) as unknown as T,
-    [callback, delay]
-  );
+export function useDebounce<T extends (...args: unknown[]) => unknown>(callback: T, delay: number): T {
+  return useMemo(() => debounce(callback, delay) as unknown as T, [callback, delay]);
 }
 
-export function useThrottle<T extends (...args: unknown[]) => unknown>(
-  callback: T,
-  delay: number
-): T {
-  return useMemo(
-    () => throttle(callback, delay) as unknown as T,
-    [callback, delay]
-  );
+export function useThrottle<T extends (...args: unknown[]) => unknown>(callback: T, delay: number): T {
+  return useMemo(() => throttle(callback, delay) as unknown as T, [callback, delay]);
 }
 
 export function useLazyLoad<T>(
   loader: () => Promise<T>,
-  deps: any[] = []
+  deps: any[] = [],
 ): { data: T | null; loading: boolean; error: Error | null; reload: () => void } {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(false);
@@ -116,7 +104,7 @@ export function useLazyLoad<T>(
 
 export function useIntersectionObserver(
   callback: (entry: IntersectionObserverEntry) => void,
-  options: IntersectionObserverInit = {}
+  options: IntersectionObserverInit = {},
 ): (node: Element | null) => void {
   const [node, setNode] = useState<Element | null>(null);
 
@@ -137,9 +125,7 @@ export function useIntersectionObserver(
   return setNode;
 }
 
-export function useResizeObserver(
-  callback: (entry: ResizeObserverEntry) => void
-): (node: Element | null) => void {
+export function useResizeObserver(callback: (entry: ResizeObserverEntry) => void): (node: Element | null) => void {
   const [node, setNode] = useState<Element | null>(null);
 
   useEffect(() => {
@@ -190,9 +176,7 @@ export function usePerformanceMonitor({
       const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
       const loadTime = navigation ? navigation.loadEventEnd - navigation.fetchStart : 0;
 
-      const isHealthy =
-        fps >= (thresholds.fps || 30) &&
-        memory <= (thresholds.memory || 80);
+      const isHealthy = fps >= (thresholds.fps || 30) && memory <= (thresholds.memory || 80);
 
       setMetrics({
         fps,
@@ -241,17 +225,20 @@ export function useBatch<T>(callback: (items: T[]) => void, delay: number = 100)
     }
   }, [callback]);
 
-  const addItem = useCallback((item: T) => {
-    batchRef.current.push(item);
+  const addItem = useCallback(
+    (item: T) => {
+      batchRef.current.push(item);
 
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
 
-    timeoutRef.current = setTimeout(() => {
-      flush();
-    }, delay);
-  }, [flush, delay]);
+      timeoutRef.current = setTimeout(() => {
+        flush();
+      }, delay);
+    },
+    [flush, delay],
+  );
 
   useEffect(() => {
     return () => {
@@ -271,10 +258,13 @@ export function useCache<T>(key: string, initialValue: T, deps: any[] = []): [T,
     return cached ? JSON.parse(cached) : initialValue;
   });
 
-  const updateValue = useCallback((newValue: T) => {
-    setValue(newValue);
-    localStorage.setItem(`cache_${key}`, JSON.stringify(newValue));
-  }, [key]);
+  const updateValue = useCallback(
+    (newValue: T) => {
+      setValue(newValue);
+      localStorage.setItem(`cache_${key}`, JSON.stringify(newValue));
+    },
+    [key],
+  );
 
   useEffect(() => {
     const cached = localStorage.getItem(`cache_${key}`);
@@ -295,7 +285,7 @@ export function useOptimizedRequest<T>(
     retryDelay?: number;
     debounceTime?: number;
     throttleTime?: number;
-  } = {}
+  } = {},
 ) {
   const {
     cacheKey,
@@ -336,7 +326,7 @@ export function useOptimizedRequest<T>(
         attempts++;
 
         if (attempts < retryCount) {
-          await new Promise(resolve => setTimeout(resolve, retryDelay));
+          await new Promise((resolve) => setTimeout(resolve, retryDelay));
         }
       }
     }
@@ -393,7 +383,7 @@ export function debounce<T extends (...args: unknown[]) => unknown>(
     leading?: boolean;
     trailing?: boolean;
     maxWait?: number;
-  } = {}
+  } = {},
 ): (...args: Parameters<T>) => void {
   const { leading = false, trailing = true, maxWait } = options;
   let timeoutId: NodeJS.Timeout | null = null;
@@ -409,17 +399,17 @@ export function debounce<T extends (...args: unknown[]) => unknown>(
     lastArgs = null;
     lastThis = null;
     lastCallTime = time;
-    
+
     if (args) {
       result = func.apply(thisArg as any, args) as ReturnType<T>;
     }
-    
+
     return result;
   };
 
   const shouldInvoke = (time: number) => {
     const timeSinceLastCall = time - lastCallTime;
-    
+
     return (
       lastCallTime === 0 || // 首次调用
       timeSinceLastCall >= delay || // 超过延迟时间
@@ -429,11 +419,11 @@ export function debounce<T extends (...args: unknown[]) => unknown>(
 
   const trailingEdge = (time: number) => {
     timeoutId = null;
-    
+
     if (trailing && lastArgs) {
       return invokeFunc(time);
     }
-    
+
     lastArgs = null;
     lastThis = null;
     return result;
@@ -441,21 +431,21 @@ export function debounce<T extends (...args: unknown[]) => unknown>(
 
   const timerExpired = (): ReturnType<T> | null => {
     const time = Date.now();
-    
+
     if (shouldInvoke(time)) {
       return trailingEdge(time);
     }
-    
+
     // 重新计算剩余时间
     const timeSinceLastCall = time - lastCallTime;
     const timeWaiting = delay - timeSinceLastCall;
     const remainingWait = maxWait !== undefined ? Math.min(timeWaiting, maxWait - timeSinceLastCall) : timeWaiting;
-    
+
     timeoutId = setTimeout(timerExpired, remainingWait);
     return null;
   };
 
-  const debounced = function(this: unknown, ...args: Parameters<T>) {
+  const debounced = function (this: unknown, ...args: Parameters<T>) {
     const time = Date.now();
     lastArgs = args;
     lastThis = this;
@@ -508,7 +498,7 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
   options: {
     leading?: boolean;
     trailing?: boolean;
-  } = {}
+  } = {},
 ): (...args: Parameters<T>) => void {
   const { leading = true, trailing = true } = options;
   let lastCallTime = 0;
@@ -516,7 +506,7 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
   let lastArgs: Parameters<T> | null = null;
   let lastThis: unknown = null;
 
-  const throttled = function(this: unknown, ...args: Parameters<T>) {
+  const throttled = function (this: unknown, ...args: Parameters<T>) {
     const now = Date.now();
     const timeSinceLastCall = now - lastCallTime;
 
@@ -533,14 +523,14 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
         clearTimeout(timeoutId);
         timeoutId = null;
       }
-      
+
       lastCallTime = now;
       func.apply(this, args);
     } else if (trailing && !timeoutId) {
       timeoutId = setTimeout(() => {
         lastCallTime = leading ? Date.now() : 0;
         timeoutId = null;
-        
+
         if (lastArgs && trailing) {
           func.apply(lastThis, lastArgs);
         }
@@ -572,7 +562,7 @@ export function rafThrottle<T extends (...args: unknown[]) => unknown>(func: T):
   let lastArgs: Parameters<T> | null = null;
   let lastThis: unknown = null;
 
-  const throttled = function(this: unknown, ...args: Parameters<T>) {
+  const throttled = function (this: unknown, ...args: Parameters<T>) {
     lastArgs = args;
     lastThis = this;
 
@@ -612,7 +602,7 @@ export function lazyLoad<T>(
     timeout?: number;
     retryCount?: number;
     retryDelay?: number;
-  } = {}
+  } = {},
 ): Promise<T> {
   const { timeout = 5000, retryCount = 3, retryDelay = 1000 } = options;
   let retries = 0;
@@ -630,7 +620,7 @@ export function lazyLoad<T>(
         })
         .catch((error) => {
           clearTimeout(timeoutId);
-          
+
           if (retries < retryCount) {
             retries++;
             setTimeout(() => {
@@ -661,7 +651,7 @@ export function lazyLoadImage(
     placeholder?: string;
     onLoad?: () => void;
     onError?: () => void;
-  } = {}
+  } = {},
 ): void {
   const {
     threshold = 0.1,
@@ -700,7 +690,7 @@ export function lazyLoadImage(
         }
       });
     },
-    { threshold, rootMargin }
+    { threshold, rootMargin },
   );
 
   observer.observe(element);
@@ -714,7 +704,7 @@ export function lazyLoadImage(
  */
 export function batch<T extends (...args: any[]) => any>(
   func: (items: Parameters<T>[]) => void,
-  wait: number
+  wait: number,
 ): (...args: Parameters<T>) => void {
   let batch: Parameters<T>[] = [];
   let timeoutId: NodeJS.Timeout | null = null;
@@ -744,13 +734,13 @@ export function batch<T extends (...args: any[]) => any>(
  */
 export function memoize<T extends (...args: unknown[]) => unknown>(
   func: T,
-  keyGenerator?: (...args: Parameters<T>) => string
+  keyGenerator?: (...args: Parameters<T>) => string,
 ): T {
   const cache = new Map<string, ReturnType<T>>();
 
   return ((...args: Parameters<T>) => {
     const key = keyGenerator ? keyGenerator(...args) : JSON.stringify(args);
-    
+
     if (cache.has(key)) {
       return cache.get(key)!;
     }
@@ -765,11 +755,13 @@ export function memoize<T extends (...args: unknown[]) => unknown>(
  * 性能监控装饰器
  * @param options 选项
  */
-export function performanceMonitor(options: {
-  name?: string;
-  threshold?: number;
-  logLevel?: 'warn' | 'error' | 'info';
-} = {}) {
+export function performanceMonitor(
+  options: {
+    name?: string;
+    threshold?: number;
+    logLevel?: 'warn' | 'error' | 'info';
+  } = {},
+) {
   return function (_target: unknown, propertyKey: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value;
     const { name = propertyKey, threshold = 16, logLevel = 'warn' } = options;
@@ -814,10 +806,7 @@ export function raf(callback: () => void): () => void {
  * @param callback 回调函数
  * @param options 选项
  */
-export function idleCallback(
-  callback: () => void,
-  options: { timeout?: number } = {}
-): () => void {
+export function idleCallback(callback: () => void, options: { timeout?: number } = {}): () => void {
   let handle: number;
 
   if ('requestIdleCallback' in window) {

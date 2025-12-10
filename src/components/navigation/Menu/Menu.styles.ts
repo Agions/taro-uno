@@ -1,7 +1,5 @@
 import type { CSSProperties } from 'react';
-import type {
-  MenuItemStyles
-} from './Menu.types';
+import type { MenuItemStyles } from './Menu.types';
 
 /** Menu组件样式配置接口 */
 interface MenuStyleConfig {
@@ -131,10 +129,7 @@ interface MenuStyleFunctions {
     danger?: boolean;
   }) => CSSProperties;
   /** 获取徽章样式 */
-  getBadgeStyle: (props: {
-    size?: 'small' | 'medium' | 'large';
-    theme?: 'light' | 'dark';
-  }) => CSSProperties;
+  getBadgeStyle: (props: { size?: 'small' | 'medium' | 'large'; theme?: 'light' | 'dark' }) => CSSProperties;
   /** 获取折叠按钮样式 */
   getCollapseButtonStyle: (props: {
     size?: 'small' | 'medium' | 'large';
@@ -507,23 +502,25 @@ export const menuStyles: MenuStyleConfig & MenuStyleFunctions = {
         responsive: {},
       },
     };
-    
-    return modeStyles[mode] || {
-      container: {},
-      item: {},
-      selected: {},
-      disabled: {},
-      hover: {},
-      danger: {},
-      subMenu: {},
-      groupTitle: {},
-      icon: {},
-      label: {},
-      extra: {},
-      badge: {},
-      collapseButton: {},
-      responsive: {},
-    };
+
+    return (
+      modeStyles[mode] || {
+        container: {},
+        item: {},
+        selected: {},
+        disabled: {},
+        hover: {},
+        danger: {},
+        subMenu: {},
+        groupTitle: {},
+        icon: {},
+        label: {},
+        extra: {},
+        badge: {},
+        collapseButton: {},
+        responsive: {},
+      }
+    );
   },
 
   // 获取菜单项样式
@@ -632,7 +629,7 @@ export const menuStyles: MenuStyleConfig & MenuStyleFunctions = {
     } = props;
 
     // const themeStyles = menuStyles.getThemeStyles(theme); // Commented out - unused
-    
+
     let style: CSSProperties = {
       ...menuStyles['subMenu'],
     };
@@ -670,13 +667,7 @@ export const menuStyles: MenuStyleConfig & MenuStyleFunctions = {
     collapsed?: boolean;
     style?: CSSProperties;
   }): CSSProperties => {
-    const {
-      mode = 'vertical',
-      theme = 'light',
-      size = 'medium',
-      collapsed = false,
-      style = {},
-    } = props;
+    const { mode = 'vertical', theme = 'light', size = 'medium', collapsed = false, style = {} } = props;
 
     const sizeStyles = menuStyles.getSizeStyles(size);
     const themeStyles = menuStyles.getThemeStyles(theme);
@@ -749,10 +740,7 @@ export const menuStyles: MenuStyleConfig & MenuStyleFunctions = {
   },
 
   // 获取徽章样式
-  getBadgeStyle: (props: {
-    size?: 'small' | 'medium' | 'large';
-    theme?: 'light' | 'dark';
-  }): CSSProperties => {
+  getBadgeStyle: (props: { size?: 'small' | 'medium' | 'large'; theme?: 'light' | 'dark' }): CSSProperties => {
     const { size = 'medium' } = props;
     const sizeStyles = menuStyles.getSizeStyles(size);
 

@@ -64,136 +64,145 @@ export const TransferComponent = forwardRef<TransferRef, TransferProps>((props, 
     setSearchValue,
     setPage,
     reset,
-  } = useTransferState(
-    controlledTargetKeys,
-    defaultTargetKeys,
-    controlledSelectedKeys,
-    defaultSelectedKeys,
-    disabled
-  );
+  } = useTransferState(controlledTargetKeys, defaultTargetKeys, controlledSelectedKeys, defaultSelectedKeys, disabled);
 
   // 处理选项点击
-  const handleItemClick = useCallback((item: TransferOption, _direction: TransferDirection) => {
-    if (item.disabled || internalDisabled) return;
-    
-    const itemKey = item.key;
-    const newSelectedKeys = selectedKeys.includes(itemKey)
-      ? selectedKeys.filter(key => key !== itemKey)
-      : [...selectedKeys, itemKey];
-    
-    updateSelectedKeys(newSelectedKeys);
-    updateLeftRightSelectedKeys(newSelectedKeys, targetKeys);
-    
-    onSelectChange?.(
-      newSelectedKeys.filter(key => !targetKeys.includes(key)),
-      newSelectedKeys.filter(key => targetKeys.includes(key))
-    );
-  }, [selectedKeys, targetKeys, internalDisabled, updateSelectedKeys, updateLeftRightSelectedKeys, onSelectChange]);
+  const handleItemClick = useCallback(
+    (item: TransferOption, _direction: TransferDirection) => {
+      if (item.disabled || internalDisabled) return;
+
+      const itemKey = item.key;
+      const newSelectedKeys = selectedKeys.includes(itemKey)
+        ? selectedKeys.filter((key) => key !== itemKey)
+        : [...selectedKeys, itemKey];
+
+      updateSelectedKeys(newSelectedKeys);
+      updateLeftRightSelectedKeys(newSelectedKeys, targetKeys);
+
+      onSelectChange?.(
+        newSelectedKeys.filter((key) => !targetKeys.includes(key)),
+        newSelectedKeys.filter((key) => targetKeys.includes(key)),
+      );
+    },
+    [selectedKeys, targetKeys, internalDisabled, updateSelectedKeys, updateLeftRightSelectedKeys, onSelectChange],
+  );
 
   // 处理全选
-  const handleSelectAll = useCallback((direction: TransferDirection) => {
-    if (internalDisabled) return;
-    
-    const sourceData = direction === 'left'
-      ? dataSource.filter((item: TransferOption) => !targetKeys.includes(item.key))
-      : dataSource.filter((item: TransferOption) => targetKeys.includes(item.key));
+  const handleSelectAll = useCallback(
+    (direction: TransferDirection) => {
+      if (internalDisabled) return;
 
-    const searchValue = direction === 'left' ? leftSearchValue : rightSearchValue;
+      const sourceData =
+        direction === 'left'
+          ? dataSource.filter((item: TransferOption) => !targetKeys.includes(item.key))
+          : dataSource.filter((item: TransferOption) => targetKeys.includes(item.key));
 
-    // 过滤数据
-    const filteredData = searchValue
-      ? sourceData.filter((item: TransferOption) => {
-          if (filterOption) {
-            return filterOption(searchValue, item);
-          }
-          const searchText = searchValue.toLowerCase();
-          const title = String(item.title).toLowerCase();
-          const description = item.description ? String(item.description).toLowerCase() : '';
-          return title.includes(searchText) || description.includes(searchText);
-        })
-      : sourceData;
-    
-    const enabledData = filteredData.filter((item: TransferOption) => !item.disabled);
-    const currentSelectedKeys = direction === 'left' ? leftSelectedKeys : rightSelectedKeys;
+      const searchValue = direction === 'left' ? leftSearchValue : rightSearchValue;
 
-    const allSelected = enabledData.every((item: TransferOption) => currentSelectedKeys.includes(item.key));
-    const newSelectedKeys = allSelected
-      ? selectedKeys.filter(key => !enabledData.some((item: TransferOption) => item.key === key))
-      : [...selectedKeys, ...enabledData.map((item: TransferOption) => item.key)];
-    
-    updateSelectedKeys(newSelectedKeys);
-    updateLeftRightSelectedKeys(newSelectedKeys, targetKeys);
-    
-    onSelectChange?.(
-      newSelectedKeys.filter(key => !targetKeys.includes(key)),
-      newSelectedKeys.filter(key => targetKeys.includes(key))
-    );
-  }, [
-    dataSource,
-    targetKeys,
-    leftSearchValue,
-    rightSearchValue,
-    leftSelectedKeys,
-    rightSelectedKeys,
-    selectedKeys,
-    internalDisabled,
-    filterOption,
-    updateSelectedKeys,
-    updateLeftRightSelectedKeys,
-    onSelectChange
-  ]);
+      // 过滤数据
+      const filteredData = searchValue
+        ? sourceData.filter((item: TransferOption) => {
+            if (filterOption) {
+              return filterOption(searchValue, item);
+            }
+            const searchText = searchValue.toLowerCase();
+            const title = String(item.title).toLowerCase();
+            const description = item.description ? String(item.description).toLowerCase() : '';
+            return title.includes(searchText) || description.includes(searchText);
+          })
+        : sourceData;
+
+      const enabledData = filteredData.filter((item: TransferOption) => !item.disabled);
+      const currentSelectedKeys = direction === 'left' ? leftSelectedKeys : rightSelectedKeys;
+
+      const allSelected = enabledData.every((item: TransferOption) => currentSelectedKeys.includes(item.key));
+      const newSelectedKeys = allSelected
+        ? selectedKeys.filter((key) => !enabledData.some((item: TransferOption) => item.key === key))
+        : [...selectedKeys, ...enabledData.map((item: TransferOption) => item.key)];
+
+      updateSelectedKeys(newSelectedKeys);
+      updateLeftRightSelectedKeys(newSelectedKeys, targetKeys);
+
+      onSelectChange?.(
+        newSelectedKeys.filter((key) => !targetKeys.includes(key)),
+        newSelectedKeys.filter((key) => targetKeys.includes(key)),
+      );
+    },
+    [
+      dataSource,
+      targetKeys,
+      leftSearchValue,
+      rightSearchValue,
+      leftSelectedKeys,
+      rightSelectedKeys,
+      selectedKeys,
+      internalDisabled,
+      filterOption,
+      updateSelectedKeys,
+      updateLeftRightSelectedKeys,
+      onSelectChange,
+    ],
+  );
 
   // 处理移动
-  const handleMove = useCallback((direction: TransferDirection) => {
-    if (internalDisabled) return;
-    
-    const moveKeys = direction === 'right' ? leftSelectedKeys : rightSelectedKeys;
-    if (moveKeys.length === 0) return;
-    
-    const newTargetKeys = direction === 'right'
-      ? [...targetKeys, ...moveKeys]
-      : targetKeys.filter(key => !moveKeys.includes(key));
-    
-    updateTargetKeys(newTargetKeys);
-    
-    // 清空移动方向的选中状态
-    const newSelectedKeys = selectedKeys.filter(key => !moveKeys.includes(key));
-    updateSelectedKeys(newSelectedKeys);
-    
-    if (direction === 'right') {
-      updateLeftRightSelectedKeys(newSelectedKeys, newTargetKeys);
-    } else {
-      updateLeftRightSelectedKeys(newSelectedKeys, newTargetKeys);
-    }
-    
-    onChange?.(newTargetKeys, direction, moveKeys);
-    onSelectChange?.(
-      newSelectedKeys.filter(key => !newTargetKeys.includes(key)),
-      newSelectedKeys.filter(key => newTargetKeys.includes(key))
-    );
-  }, [
-    targetKeys,
-    leftSelectedKeys,
-    rightSelectedKeys,
-    selectedKeys,
-    internalDisabled,
-    updateTargetKeys,
-    updateSelectedKeys,
-    updateLeftRightSelectedKeys,
-    onChange,
-    onSelectChange
-  ]);
+  const handleMove = useCallback(
+    (direction: TransferDirection) => {
+      if (internalDisabled) return;
+
+      const moveKeys = direction === 'right' ? leftSelectedKeys : rightSelectedKeys;
+      if (moveKeys.length === 0) return;
+
+      const newTargetKeys =
+        direction === 'right' ? [...targetKeys, ...moveKeys] : targetKeys.filter((key) => !moveKeys.includes(key));
+
+      updateTargetKeys(newTargetKeys);
+
+      // 清空移动方向的选中状态
+      const newSelectedKeys = selectedKeys.filter((key) => !moveKeys.includes(key));
+      updateSelectedKeys(newSelectedKeys);
+
+      if (direction === 'right') {
+        updateLeftRightSelectedKeys(newSelectedKeys, newTargetKeys);
+      } else {
+        updateLeftRightSelectedKeys(newSelectedKeys, newTargetKeys);
+      }
+
+      onChange?.(newTargetKeys, direction, moveKeys);
+      onSelectChange?.(
+        newSelectedKeys.filter((key) => !newTargetKeys.includes(key)),
+        newSelectedKeys.filter((key) => newTargetKeys.includes(key)),
+      );
+    },
+    [
+      targetKeys,
+      leftSelectedKeys,
+      rightSelectedKeys,
+      selectedKeys,
+      internalDisabled,
+      updateTargetKeys,
+      updateSelectedKeys,
+      updateLeftRightSelectedKeys,
+      onChange,
+      onSelectChange,
+    ],
+  );
 
   // 处理搜索
-  const handleSearch = useCallback((direction: TransferDirection, value: string) => {
-    setSearchValue(direction, value);
-    onSearch?.(direction, value);
-  }, [setSearchValue, onSearch]);
+  const handleSearch = useCallback(
+    (direction: TransferDirection, value: string) => {
+      setSearchValue(direction, value);
+      onSearch?.(direction, value);
+    },
+    [setSearchValue, onSearch],
+  );
 
   // 处理页码变化
-  const handlePageChange = useCallback((direction: TransferDirection, page: number) => {
-    setPage(direction, page);
-  }, [setPage]);
+  const handlePageChange = useCallback(
+    (direction: TransferDirection, page: number) => {
+      setPage(direction, page);
+    },
+    [setPage],
+  );
 
   // 暴露给外部的引用方法
   React.useImperativeHandle(
@@ -202,15 +211,19 @@ export const TransferComponent = forwardRef<TransferRef, TransferProps>((props, 
       getTargetKeys: () => targetKeys,
       setTargetKeys: (keys: TransferValue) => {
         updateTargetKeys(keys);
-        onChange?.(keys, 'right', keys.filter(key => !targetKeys.includes(key)));
+        onChange?.(
+          keys,
+          'right',
+          keys.filter((key) => !targetKeys.includes(key)),
+        );
       },
       getSelectedKeys: () => selectedKeys,
       setSelectedKeys: (keys: TransferValue) => {
         updateSelectedKeys(keys);
         updateLeftRightSelectedKeys(keys, targetKeys);
         onSelectChange?.(
-          keys.filter(key => !targetKeys.includes(key)),
-          keys.filter(key => targetKeys.includes(key))
+          keys.filter((key) => !targetKeys.includes(key)),
+          keys.filter((key) => targetKeys.includes(key)),
         );
       },
       getDataSource: () => dataSource,
@@ -220,10 +233,9 @@ export const TransferComponent = forwardRef<TransferRef, TransferProps>((props, 
         console.warn('setDataSource should be updated through props');
       },
       moveTo: (direction: TransferDirection, keys: TransferValue) => {
-        const newTargetKeys = direction === 'right'
-          ? [...targetKeys, ...keys]
-          : targetKeys.filter(key => !keys.includes(key));
-        
+        const newTargetKeys =
+          direction === 'right' ? [...targetKeys, ...keys] : targetKeys.filter((key) => !keys.includes(key));
+
         updateTargetKeys(newTargetKeys);
         onChange?.(newTargetKeys, direction, keys);
       },
@@ -231,20 +243,20 @@ export const TransferComponent = forwardRef<TransferRef, TransferProps>((props, 
         handleSelectAll(direction);
       },
       clearSelect: (direction: TransferDirection) => {
-        const newSelectedKeys = selectedKeys.filter(key => {
+        const newSelectedKeys = selectedKeys.filter((key) => {
           if (direction === 'left') {
             return targetKeys.includes(key);
           } else {
             return !targetKeys.includes(key);
           }
         });
-        
+
         updateSelectedKeys(newSelectedKeys);
         updateLeftRightSelectedKeys(newSelectedKeys, targetKeys);
-        
+
         onSelectChange?.(
-          newSelectedKeys.filter(key => !targetKeys.includes(key)),
-          newSelectedKeys.filter(key => targetKeys.includes(key))
+          newSelectedKeys.filter((key) => !targetKeys.includes(key)),
+          newSelectedKeys.filter((key) => targetKeys.includes(key)),
         );
       },
       search: (direction: TransferDirection, value: string) => {
@@ -286,7 +298,7 @@ export const TransferComponent = forwardRef<TransferRef, TransferProps>((props, 
       handleSelectAll,
       handleSearch,
       reset,
-    ]
+    ],
   );
 
   // 生成容器样式

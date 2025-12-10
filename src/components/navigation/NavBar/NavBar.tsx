@@ -94,7 +94,7 @@ export const NavBarComponent = forwardRef<NavBarRef, NavBarProps>((props, ref) =
   const getContainerStyle = () => {
     const baseStyle = {
       ...navBarStyles.container,
-      backgroundColor: backgroundColor || (transparent ? 'transparent' : (theme === 'dark' ? '#1a1a1a' : '#ffffff')),
+      backgroundColor: backgroundColor || (transparent ? 'transparent' : theme === 'dark' ? '#1a1a1a' : '#ffffff'),
       ...(border && !transparent ? navBarStyles.border : {}),
       ...(position === 'fixed' ? navBarStyles.fixed : {}),
       ...style,
@@ -153,7 +153,7 @@ export const NavBarComponent = forwardRef<NavBarRef, NavBarProps>((props, ref) =
         setInternalBackArrow(false);
       },
     }),
-    []
+    [],
   );
 
   // 计算类名
@@ -164,7 +164,9 @@ export const NavBarComponent = forwardRef<NavBarRef, NavBarProps>((props, ref) =
     transparent ? 'taro-uno-navbar--transparent' : '',
     border ? 'taro-uno-navbar--border' : '',
     className || '',
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <>
@@ -180,12 +182,7 @@ export const NavBarComponent = forwardRef<NavBarRef, NavBarProps>((props, ref) =
       )}
 
       {/* NavBar容器 */}
-      <View
-        ref={navBarRef}
-        className={containerClassName}
-        style={getContainerStyle()}
-        {...restProps}
-      >
+      <View ref={navBarRef} className={containerClassName} style={getContainerStyle()} {...restProps}>
         {/* 内容区域 */}
         <View className="taro-uno-navbar__content" style={getContentStyle()}>
           {/* 左侧区域 */}

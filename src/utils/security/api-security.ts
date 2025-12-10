@@ -3,7 +3,6 @@
  * 提供请求拦截、签名机制和敏感数据脱敏功能
  */
 
-
 // 安全配置
 const API_SECURITY_CONFIG = {
   // 签名密钥
@@ -35,7 +34,7 @@ const API_SECURITY_CONFIG = {
     'private_key',
     'authorization',
     'cookie',
-    'session'
+    'session',
   ],
   // 需要签名的请求方法
   SIGNATURE_METHODS: ['POST', 'PUT', 'DELETE', 'PATCH'],
@@ -49,8 +48,8 @@ const API_SECURITY_CONFIG = {
     'x-signature',
     'x-device-id',
     'x-platform',
-    'x-version'
-  ]
+    'x-version',
+  ],
 };
 
 // 脱敏配置
@@ -59,9 +58,10 @@ const MASK_CONFIG = {
   email: (email: string) => {
     if (!email || !email.includes('@')) return email;
     const [localPart = '', domain = ''] = email.split('@');
-    const maskedLocal = localPart.length > 3
-      ? localPart.slice(0, 2) + '*'.repeat(localPart.length - 2)
-      : (localPart[0] ?? '') + '*'.repeat(Math.max(localPart.length - 1, 0));
+    const maskedLocal =
+      localPart.length > 3
+        ? localPart.slice(0, 2) + '*'.repeat(localPart.length - 2)
+        : (localPart[0] ?? '') + '*'.repeat(Math.max(localPart.length - 1, 0));
     return maskedLocal + (domain ? '@' + domain : '');
   },
 
@@ -87,7 +87,7 @@ const MASK_CONFIG = {
   default: (str: string, visibleStart = 2, visibleEnd = 2) => {
     if (!str || str.length <= visibleStart + visibleEnd) return str;
     return str.slice(0, visibleStart) + '*'.repeat(str.length - visibleStart - visibleEnd) + str.slice(-visibleEnd);
-  }
+  },
 };
 
 /**
@@ -101,7 +101,7 @@ export const generateSignature = (method: string, url: string, data: any, timest
   let hash = 0;
   for (let i = 0; i < signString.length; i++) {
     const char = signString.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
+    hash = (hash << 5) - hash + char;
     hash = hash & hash; // 转换为32位整数
   }
 
@@ -111,7 +111,13 @@ export const generateSignature = (method: string, url: string, data: any, timest
 /**
  * 验证请求签名
  */
-export const verifySignature = (method: string, url: string, data: any, timestamp: number, signature: string): boolean => {
+export const verifySignature = (
+  method: string,
+  url: string,
+  data: any,
+  timestamp: number,
+  signature: string,
+): boolean => {
   const expectedSignature = generateSignature(method, url, data, timestamp);
   return expectedSignature === signature;
 };
@@ -121,7 +127,7 @@ export const verifySignature = (method: string, url: string, data: any, timestam
  */
 export const isRequestExpired = (timestamp: number, maxAge: number = 300000): boolean => {
   const now = Date.now();
-  return (now - timestamp) > maxAge; // 默认5分钟过期
+  return now - timestamp > maxAge; // 默认5分钟过期
 };
 
 /**
@@ -135,15 +141,13 @@ export const maskSensitiveData = (data: any, customMaskFields?: string[]): any =
   const sensitiveFields = [...API_SECURITY_CONFIG.SENSITIVE_FIELDS, ...(customMaskFields || [])];
 
   if (Array.isArray(data)) {
-    return data.map(item => maskSensitiveData(item, customMaskFields));
+    return data.map((item) => maskSensitiveData(item, customMaskFields));
   }
 
   const masked: any = {};
 
   for (const [key, value] of Object.entries(data)) {
-    const isSensitive = sensitiveFields.some(field =>
-      key.toLowerCase().includes(field.toLowerCase())
-    );
+    const isSensitive = sensitiveFields.some((field) => key.toLowerCase().includes(field.toLowerCase()));
 
     if (isSensitive) {
       // 根据字段类型选择合适的脱敏方式
@@ -178,7 +182,7 @@ export const buildSecureHeaders = (method: string, url: string, data?: any): Rec
     'X-Timestamp': timestamp.toString(),
     'X-Device-ID': getDeviceId(),
     'X-Platform': getPlatform(),
-    'X-Version': process.env['npm_package_version'] || '1.0.0'
+    'X-Version': process.env['npm_package_version'] || '1.0.0',
   };
 
   // 对特定请求方法添加签名
@@ -213,12 +217,13 @@ export const validateHeaders = (headers: Record<string, string>): { valid: boole
   }
 
   // 检查是否包含不允许的头部
-  const headerKeys = Object.keys(headers).map(key => key.toLowerCase());
-  const disallowedHeaders = headerKeys.filter(key =>
-    !API_SECURITY_CONFIG.ALLOWED_HEADERS.includes(key) &&
-    !key.startsWith('x-') &&
-    !key.startsWith('content-') &&
-    key !== 'authorization'
+  const headerKeys = Object.keys(headers).map((key) => key.toLowerCase());
+  const disallowedHeaders = headerKeys.filter(
+    (key) =>
+      !API_SECURITY_CONFIG.ALLOWED_HEADERS.includes(key) &&
+      !key.startsWith('x-') &&
+      !key.startsWith('content-') &&
+      key !== 'authorization',
   );
 
   if (disallowedHeaders.length > 0) {
@@ -227,7 +232,7 @@ export const validateHeaders = (headers: Record<string, string>): { valid: boole
 
   return {
     valid: errors.length === 0,
-    errors
+    errors,
   };
 };
 
@@ -269,7 +274,7 @@ export const createApiInterceptor = () => {
       },
       execute: (config: any) => {
         return requestInterceptors.reduce((acc, interceptor) => interceptor(acc), config);
-      }
+      },
     },
     response: {
       use: (interceptor: (response: any) => any) => {
@@ -277,8 +282,8 @@ export const createApiInterceptor = () => {
       },
       execute: (response: any) => {
         return responseInterceptors.reduce((acc, interceptor) => interceptor(acc), response);
-      }
-    }
+      },
+    },
   };
 };
 
@@ -322,10 +327,12 @@ export const isSecureUrl = (url: string): boolean => {
 
     // 只允许HTTPS和相对路径
     if (parsedUrl.protocol === 'https:') return true;
-    if (parsedUrl.protocol === 'http:' &&
-        (parsedUrl.hostname === 'localhost' ||
-         parsedUrl.hostname.startsWith('127.0.0.1') ||
-         parsedUrl.hostname.startsWith('192.168.'))) {
+    if (
+      parsedUrl.protocol === 'http:' &&
+      (parsedUrl.hostname === 'localhost' ||
+        parsedUrl.hostname.startsWith('127.0.0.1') ||
+        parsedUrl.hostname.startsWith('192.168.'))
+    ) {
       return true;
     }
 
@@ -342,7 +349,7 @@ export const isSecureUrl = (url: string): boolean => {
 export const secureRetry = async <T>(
   fn: () => Promise<T>,
   maxRetries: number = API_SECURITY_CONFIG.MAX_RETRIES,
-  delay: number = 1000
+  delay: number = 1000,
 ): Promise<T> => {
   let lastError: Error;
 
@@ -353,18 +360,19 @@ export const secureRetry = async <T>(
       lastError = error as Error;
 
       // 如果是认证错误或权限错误，不重试
-      if (error instanceof Error && (
-        error.message.includes('401') ||
-        error.message.includes('403') ||
-        error.message.includes('Unauthorized') ||
-        error.message.includes('Forbidden')
-      )) {
+      if (
+        error instanceof Error &&
+        (error.message.includes('401') ||
+          error.message.includes('403') ||
+          error.message.includes('Unauthorized') ||
+          error.message.includes('Forbidden'))
+      ) {
         throw error;
       }
 
       if (i < maxRetries) {
         // 指数退避
-        await new Promise(resolve => setTimeout(resolve, delay * Math.pow(2, i)));
+        await new Promise((resolve) => setTimeout(resolve, delay * Math.pow(2, i)));
       }
     }
   }
@@ -382,5 +390,5 @@ export default {
   createApiInterceptor,
   isSecureUrl,
   secureRetry,
-  MASK_CONFIG
+  MASK_CONFIG,
 };

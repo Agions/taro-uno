@@ -9,18 +9,18 @@ export const sliderStyles: Record<string, CSSProperties> = {
     alignItems: 'center',
     cursor: 'pointer',
   },
-  
+
   vertical: {
     width: '24px' as any,
     height: '200px' as any,
     flexDirection: 'column' as 'column',
   },
-  
+
   disabled: {
     opacity: 0.5,
     cursor: 'not-allowed',
   },
-  
+
   track: {
     position: 'absolute',
     width: '100%',
@@ -28,7 +28,7 @@ export const sliderStyles: Record<string, CSSProperties> = {
     backgroundColor: '#e5e7eb',
     borderRadius: '2px',
   },
-  
+
   trackFill: {
     position: 'absolute',
     height: '100%',
@@ -37,7 +37,7 @@ export const sliderStyles: Record<string, CSSProperties> = {
     left: 0,
     top: 0,
   },
-  
+
   handle: {
     position: 'absolute',
     width: '16px',
@@ -51,12 +51,12 @@ export const sliderStyles: Record<string, CSSProperties> = {
     transition: 'all 0.2s ease-in-out',
     zIndex: 2,
   },
-  
+
   handleDragging: {
     transform: 'translate(-50%, -50%) scale(1.2)',
     boxShadow: '0 0 0 8px rgba(14, 165, 233, 0.2)',
   },
-  
+
   tooltip: {
     position: 'absolute',
     bottom: '100%',
@@ -72,20 +72,20 @@ export const sliderStyles: Record<string, CSSProperties> = {
     opacity: 0,
     transition: 'opacity 0.2s ease-in-out',
   },
-  
+
   marks: {
     position: 'absolute',
     width: '100%',
     height: '100%',
   },
-  
+
   mark: {
     position: 'absolute',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
   },
-  
+
   markDot: {
     width: '8px',
     height: '8px',
@@ -93,13 +93,13 @@ export const sliderStyles: Record<string, CSSProperties> = {
     borderRadius: '50%',
     marginBottom: '4px',
   },
-  
+
   markLabel: {
     fontSize: '12px',
     color: '#6b7280',
     marginTop: '4px',
   },
-  
+
   // Vertical styles
   verticalTrack: {
     width: '4px',

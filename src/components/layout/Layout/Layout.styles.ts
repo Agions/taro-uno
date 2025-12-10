@@ -48,37 +48,37 @@ export const layoutStyles = {
   siderExpanded: {
     width: 200,
   },
-}
+};
 
 export const getLayoutStyle = (hasSider?: boolean) => {
-  const style = { ...layoutStyles.layout }
+  const style = { ...layoutStyles.layout };
   if (hasSider) {
-    Object.assign(style, layoutStyles.layoutHasSider)
+    Object.assign(style, layoutStyles.layoutHasSider);
   }
-  return style
-}
+  return style;
+};
 
 export const getHeaderStyle = (customStyle?: React.CSSProperties) => {
-  return { ...layoutStyles.header, ...customStyle }
-}
+  return { ...layoutStyles.header, ...customStyle };
+};
 
 export const getContentStyle = (customStyle?: React.CSSProperties) => {
-  return { ...layoutStyles.content, ...customStyle }
-}
+  return { ...layoutStyles.content, ...customStyle };
+};
 
 export const getFooterStyle = (customStyle?: React.CSSProperties) => {
-  return { ...layoutStyles.footer, ...customStyle }
-}
+  return { ...layoutStyles.footer, ...customStyle };
+};
 
 export const getSiderStyle = (collapsed?: boolean, width?: number | string, customStyle?: React.CSSProperties) => {
-  const style: React.CSSProperties = { ...layoutStyles.sider }
+  const style: React.CSSProperties = { ...layoutStyles.sider };
   if (collapsed) {
-    Object.assign(style, layoutStyles.siderCollapsed)
+    Object.assign(style, layoutStyles.siderCollapsed);
   } else {
-    Object.assign(style, layoutStyles.siderExpanded)
+    Object.assign(style, layoutStyles.siderExpanded);
   }
   if (width) {
-    style.width = width
+    style.width = width;
   }
-  return { ...style, ...customStyle }
-}
+  return { ...style, ...customStyle };
+};

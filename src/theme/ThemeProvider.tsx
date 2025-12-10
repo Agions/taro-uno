@@ -149,12 +149,12 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
 
   // 切换主题
   const toggleTheme = () => {
-    setThemeMode(prev => prev === 'light' ? 'dark' : 'light');
+    setThemeMode((prev) => (prev === 'light' ? 'dark' : 'light'));
   };
 
   // 设置自定义主题
   const setCustomThemeData = (themeData: Partial<ThemeConfig>) => {
-    setCustomTheme(prev => ({
+    setCustomTheme((prev) => ({
       ...prev,
       ...themeData,
     }));
@@ -231,11 +231,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     isSystemDark,
   };
 
-  return (
-    <ThemeContext.Provider value={contextValue}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>;
 };
 
 export const useTheme = (): ThemeContextType => {

@@ -10,7 +10,7 @@ export const ListStyles = createStyles({
   size: {
     small: 'text-sm',
     default: 'text-base',
-    large: 'text-lg'
+    large: 'text-lg',
   },
 
   bordered: `
@@ -59,7 +59,7 @@ export const ListStyles = createStyles({
   itemSize: {
     small: 'py-2',
     default: 'py-3',
-    large: 'py-4'
+    large: 'py-4',
   },
 
   itemSplit: `
@@ -75,5 +75,5 @@ export const ListStyles = createStyles({
     cursor-pointer
     hover:bg-gray-50 dark:hover:bg-gray-700
     active:bg-gray-100 dark:active:bg-gray-600
-  `
+  `,
 });

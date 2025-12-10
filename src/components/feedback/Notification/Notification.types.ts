@@ -324,7 +324,10 @@ export const NotificationUtils: NotificationUtilsType = {
       errors.push('type must be one of: success, error, warning, info');
     }
 
-    if (config.placement !== undefined && !['topRight', 'topLeft', 'bottomRight', 'bottomLeft', 'top', 'bottom'].includes(config.placement)) {
+    if (
+      config.placement !== undefined &&
+      !['topRight', 'topLeft', 'bottomRight', 'bottomLeft', 'top', 'bottom'].includes(config.placement)
+    ) {
       errors.push('placement must be one of: topRight, topLeft, bottomRight, bottomLeft, top, bottom');
     }
 

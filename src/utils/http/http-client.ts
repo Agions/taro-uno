@@ -81,7 +81,7 @@ export class HttpClient {
     const headers = {
       ...this.defaultHeaders,
       ...(options.headers || {}),
-      ...buildSecureHeaders(method, fullUrl, options.data)
+      ...buildSecureHeaders(method, fullUrl, options.data),
     };
 
     let config: RequestConfig = { method, url: fullUrl, headers, data: options.data };
@@ -103,7 +103,7 @@ export class HttpClient {
         status: resp.statusCode,
         ok: resp.statusCode >= 200 && resp.statusCode < 300,
         headers: resp.header,
-        data: resp.data
+        data: resp.data,
       };
 
       let processed = this.security.response.execute(wrapped);
@@ -149,7 +149,7 @@ export class HttpClient {
     const usp = new URLSearchParams();
     Object.entries(params).forEach(([k, v]) => {
       if (v === undefined || v === null) return;
-      if (Array.isArray(v)) v.forEach(x => usp.append(k, String(x)));
+      if (Array.isArray(v)) v.forEach((x) => usp.append(k, String(x)));
       else usp.append(k, String(v));
     });
     const sep = path.includes('?') ? '&' : '?';

@@ -98,7 +98,11 @@ export class SelectStyles {
       backgroundColor: style?.backgroundColor || statusStyles['backgroundColor'] || variantStyles['backgroundColor'],
       borderColor: style?.borderColor || statusStyles['borderColor'] || variantStyles['borderColor'],
       borderWidth: style?.borderWidth || variantStyles['borderWidth'],
-      borderBottomWidth: style?.borderBottomWidth ?? style?.borderWidth ?? variantStyles['borderBottomWidth'] ?? variantStyles['borderWidth'],
+      borderBottomWidth:
+        style?.borderBottomWidth ??
+        style?.borderWidth ??
+        variantStyles['borderBottomWidth'] ??
+        variantStyles['borderWidth'],
       color: style?.color || statusStyles['color'],
       opacity: disabled ? 0.5 : 1,
       cursor: disabled ? 'not-allowed' : readonly ? 'default' : 'pointer',

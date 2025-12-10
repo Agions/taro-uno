@@ -5,16 +5,18 @@ import { Card } from './Card'
 
 // Mock Taro components
 vi.mock('@tarojs/components', () => ({
-  View: ({ children, ...props }) => {
+  View: React.forwardRef<any, any>(({ children, ...props }, ref) => {
     const { className, style, id, role, hidden, onClick, ...rest } = props as any
-    const allowed: Record<string, any> = { className, style, id, role, hidden, onClick }
+    const allowed: Record<string, any> = { 
+      className, style, id, role, hidden, onClick, ref 
+    }
     Object.keys(rest).forEach((key) => {
       if (key.startsWith('aria-') || key.startsWith('data-')) {
         allowed[key] = rest[key]
       }
     })
     return <div {...allowed}>{children}</div>
-  },
+  }),
 }))
 
 // Mock @/utils

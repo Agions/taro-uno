@@ -8,12 +8,7 @@ export interface UseInputNumberValidationParams {
   max?: number;
 }
 
-export function useInputNumberValidation({
-  rules,
-  validator,
-  min,
-  max,
-}: UseInputNumberValidationParams) {
+export function useInputNumberValidation({ rules, validator, min, max }: UseInputNumberValidationParams) {
   const validateInput = useCallback(
     async (inputValue: number | null): Promise<InputNumberValidationResult> => {
       if (!rules && !validator && inputValue === null) {
@@ -127,17 +122,23 @@ export function useInputNumberValidation({
     [rules, validator, min, max],
   );
 
-  const validateRequired = useCallback((inputValue: number | null): boolean => {
-    if (!rules?.some((rule: any) => rule.required)) return true;
-    return inputValue !== null;
-  }, [rules]);
+  const validateRequired = useCallback(
+    (inputValue: number | null): boolean => {
+      if (!rules?.some((rule: any) => rule.required)) return true;
+      return inputValue !== null;
+    },
+    [rules],
+  );
 
-  const validateRange = useCallback((inputValue: number | null): boolean => {
-    if (inputValue === null) return true;
-    if (min !== undefined && inputValue < min) return false;
-    if (max !== undefined && inputValue > max) return false;
-    return true;
-  }, [min, max]);
+  const validateRange = useCallback(
+    (inputValue: number | null): boolean => {
+      if (inputValue === null) return true;
+      if (min !== undefined && inputValue < min) return false;
+      if (max !== undefined && inputValue > max) return false;
+      return true;
+    },
+    [min, max],
+  );
 
   return {
     validateInput,

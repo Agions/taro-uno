@@ -48,7 +48,10 @@ export interface TextareaRule {
 
 /** 文本域组件属性接口 */
 export interface TextareaProps
-  extends Omit<TextareaNativeProps, 'size' | 'onChange' | 'onFocus' | 'onBlur' | 'onInput' | 'dangerouslySetInnerHTML' | 'onTouchStart' | 'prefix'> {
+  extends Omit<
+    TextareaNativeProps,
+    'size' | 'onChange' | 'onFocus' | 'onBlur' | 'onInput' | 'dangerouslySetInnerHTML' | 'onTouchStart' | 'prefix'
+  > {
   /** 文本域内容 */
   value?: string;
   /** 默认值（非受控模式） */

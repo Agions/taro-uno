@@ -7,13 +7,13 @@ import type { CascaderOption } from '../Cascader.types';
 export function formatDisplayValue(
   labels: ReactNode[],
   _selectedOptions: CascaderOption[],
-  config: { showPath?: boolean; pathSeparator?: string } = {}
+  config: { showPath?: boolean; pathSeparator?: string } = {},
 ): ReactNode {
   const { showPath = false, pathSeparator = ' / ' } = config;
-  
+
   if (!showPath || labels.length === 0) {
     return labels[labels.length - 1] || '';
   }
-  
+
   return labels.join(pathSeparator);
 }

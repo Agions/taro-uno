@@ -185,91 +185,110 @@ export class CSSVariableGenerator {
         name: 'colors',
         prefix: 'color',
         variables: [
-          'primary', 'primaryLight', 'primaryDark',
-          'secondary', 'success', 'warning', 'error', 'info',
-          'text', 'textSecondary', 'textDisabled', 'textInverse',
-          'background', 'backgroundCard', 'backgroundInput', 'backgroundMask',
-          'border', 'borderLight', 'borderFocus',
-          'shadow', 'shadowLight', 'brand', 'accent', 'link', 'divider'
+          'primary',
+          'primaryLight',
+          'primaryDark',
+          'secondary',
+          'success',
+          'warning',
+          'error',
+          'info',
+          'text',
+          'textSecondary',
+          'textDisabled',
+          'textInverse',
+          'background',
+          'backgroundCard',
+          'backgroundInput',
+          'backgroundMask',
+          'border',
+          'borderLight',
+          'borderFocus',
+          'shadow',
+          'shadowLight',
+          'brand',
+          'accent',
+          'link',
+          'divider',
         ],
         inheritance: [
           {
             parent: 'primary',
             child: 'primaryLight',
-            transform: (value) => this.lightenColor(value, 0.2)
+            transform: (value) => this.lightenColor(value, 0.2),
           },
           {
             parent: 'primary',
             child: 'primaryDark',
-            transform: (value) => this.darkenColor(value, 0.2)
-          }
-        ]
+            transform: (value) => this.darkenColor(value, 0.2),
+          },
+        ],
       },
       {
         name: 'spacing',
         prefix: 'spacing',
-        variables: ['xs', 'sm', 'md', 'lg', 'xl', 'xxl', 'padding', 'margin', 'gap']
+        variables: ['xs', 'sm', 'md', 'lg', 'xl', 'xxl', 'padding', 'margin', 'gap'],
       },
       {
         name: 'typography',
         prefix: 'font',
-        variables: ['family-sans', 'family-serif', 'family-mono', 'family-heading']
+        variables: ['family-sans', 'family-serif', 'family-mono', 'family-heading'],
       },
       {
         name: 'fontSize',
         prefix: 'text',
-        variables: ['xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl']
+        variables: ['xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl'],
       },
       {
         name: 'fontWeight',
         prefix: 'weight',
-        variables: ['light', 'normal', 'medium', 'semibold', 'bold']
+        variables: ['light', 'normal', 'medium', 'semibold', 'bold'],
       },
       {
         name: 'lineHeight',
         prefix: 'leading',
-        variables: ['tight', 'normal', 'relaxed', 'loose']
+        variables: ['tight', 'normal', 'relaxed', 'loose'],
       },
       {
         name: 'letterSpacing',
         prefix: 'tracking',
-        variables: ['tight', 'normal', 'wide']
+        variables: ['tight', 'normal', 'wide'],
       },
       {
         name: 'borderRadius',
         prefix: 'radius',
-        variables: ['none', 'sm', 'md', 'lg', 'xl', 'full', 'circle']
+        variables: ['none', 'sm', 'md', 'lg', 'xl', 'full', 'circle'],
       },
       {
         name: 'shadow',
         prefix: 'shadow',
-        variables: ['none', 'sm', 'md', 'lg', 'xl', '2xl', 'inner']
+        variables: ['none', 'sm', 'md', 'lg', 'xl', '2xl', 'inner'],
       },
       {
         name: 'animation',
         prefix: 'duration',
-        variables: ['fast', 'normal', 'slow']
+        variables: ['fast', 'normal', 'slow'],
       },
       {
         name: 'easing',
         prefix: 'ease',
-        variables: ['linear', 'ease', 'easeIn', 'easeOut', 'easeInOut']
+        variables: ['linear', 'ease', 'easeIn', 'easeOut', 'easeInOut'],
       },
       {
         name: 'breakpoints',
         prefix: 'breakpoint',
-        variables: ['xs', 'sm', 'md', 'lg', 'xl', 'xxl']
+        variables: ['xs', 'sm', 'md', 'lg', 'xl', 'xxl'],
       },
       {
         name: 'zIndex',
         prefix: 'z',
-        variables: ['dropdown', 'sticky', 'fixed', 'modal', 'popover', 'tooltip']
+        variables: ['dropdown', 'sticky', 'fixed', 'modal', 'popover', 'tooltip'],
       },
       {
         name: 'transition',
         prefix: 'transition',
-        variables: ['base', 'fast', 'slow']
-      }
+        variables: ['base', 'fast', 'slow'],
+      },
     ];
   }
 
@@ -279,28 +298,28 @@ export class CSSVariableGenerator {
 
     // 生成颜色变量
     variables.colors = this.generateColorVariables();
-    
+
     // 生成间距变量
     variables.spacing = this.generateSpacingVariables();
-    
+
     // 生成字体变量
     variables.typography = this.generateTypographyVariables();
-    
+
     // 生成边框变量
     variables.borderRadius = this.generateBorderRadiusVariables();
-    
+
     // 生成阴影变量
     variables.shadow = this.generateShadowVariables();
-    
+
     // 生成动画变量
     variables.animation = this.generateAnimationVariables();
-    
+
     // 生成断点变量
     variables.breakpoints = this.generateBreakpointVariables();
-    
+
     // 生成Z-index变量
     variables.zIndex = this.generateZIndexVariables();
-    
+
     // 生成过渡变量
     variables.transition = this.generateTransitionVariables();
 
@@ -310,7 +329,7 @@ export class CSSVariableGenerator {
   // 生成颜色变量
   private generateColorVariables(): CSSVariables['colors'] {
     const { colors } = this.theme;
-    
+
     return {
       primary: colors.primary,
       primaryLight: this.lightenColor(colors.primary, 0.2),
@@ -343,7 +362,7 @@ export class CSSVariableGenerator {
   // 生成间距变量
   private generateSpacingVariables(): CSSVariables['spacing'] {
     const { spacing } = this.theme;
-    
+
     return {
       xs: `${spacing.xs}px`,
       sm: `${spacing.sm}px`,
@@ -360,7 +379,7 @@ export class CSSVariableGenerator {
   // 生成字体变量
   private generateTypographyVariables(): CSSVariables['typography'] {
     const { typography } = this.theme;
-    
+
     return {
       fontFamily: {
         sans: typography.fontFamily.sans.join(', '),
@@ -403,7 +422,7 @@ export class CSSVariableGenerator {
   // 生成边框变量
   private generateBorderRadiusVariables(): CSSVariables['borderRadius'] {
     const { borderRadius } = this.theme;
-    
+
     return {
       none: `${borderRadius.none}px`,
       sm: `${borderRadius.sm}px`,
@@ -418,7 +437,7 @@ export class CSSVariableGenerator {
   // 生成阴影变量
   private generateShadowVariables(): CSSVariables['shadow'] {
     const { shadow } = this.theme;
-    
+
     return {
       none: shadow.none,
       sm: shadow.sm,
@@ -433,7 +452,7 @@ export class CSSVariableGenerator {
   // 生成动画变量
   private generateAnimationVariables(): CSSVariables['animation'] {
     const { animation } = this.theme;
-    
+
     return {
       duration: animation.duration,
       easing: animation.easing,
@@ -443,7 +462,7 @@ export class CSSVariableGenerator {
   // 生成断点变量
   private generateBreakpointVariables(): CSSVariables['breakpoints'] {
     const { breakpoints } = this.theme.spacing;
-    
+
     return {
       xs: `${breakpoints.xs}px`,
       sm: `${breakpoints.sm}px`,
@@ -469,7 +488,7 @@ export class CSSVariableGenerator {
   // 生成过渡变量
   private generateTransitionVariables(): CSSVariables['transition'] {
     const { animation } = this.theme;
-    
+
     return {
       base: `all ${animation.duration.normal} ${animation.easing.easeInOut}`,
       fast: `all ${animation.duration.fast} ${animation.easing.easeInOut}`,
@@ -480,9 +499,9 @@ export class CSSVariableGenerator {
   // 生成CSS变量字符串
   public generateCSSString(): string {
     const variables = this.generateVariables();
-    
+
     let css = ':root {\n';
-    
+
     // 递归生成变量
     const generateSection = (obj: any, prefix: string = '') => {
       Object.entries(obj).forEach(([key, value]) => {
@@ -494,10 +513,10 @@ export class CSSVariableGenerator {
         }
       });
     };
-    
+
     generateSection(variables);
     css += '}\n';
-    
+
     // 生成暗色主题变量
     css += '[data-theme="dark"] {\n';
     const darkVariables = this.generateDarkThemeVariables();
@@ -505,14 +524,14 @@ export class CSSVariableGenerator {
       css += `  --${key}: ${value};\n`;
     });
     css += '}\n';
-    
+
     return css;
   }
 
   // 生成暗色主题变量
   private generateDarkThemeVariables(): Record<string, string> {
     const darkColors = this.generateColorVariables();
-    
+
     return {
       'color-text': darkColors.text,
       'color-text-secondary': darkColors.textSecondary,
@@ -534,22 +553,22 @@ export class CSSVariableGenerator {
   private lightenColor(hex: string, amount: number): string {
     const rgb = this.hexToRgb(hex);
     if (!rgb) return hex;
-    
+
     const r = Math.min(255, Math.floor(rgb.r + (255 - rgb.r) * amount));
     const g = Math.min(255, Math.floor(rgb.g + (255 - rgb.g) * amount));
     const b = Math.min(255, Math.floor(rgb.b + (255 - rgb.b) * amount));
-    
+
     return this.rgbToHex(r, g, b);
   }
 
   private darkenColor(hex: string, amount: number): string {
     const rgb = this.hexToRgb(hex);
     if (!rgb) return hex;
-    
+
     const r = Math.max(0, Math.floor(rgb.r * (1 - amount)));
     const g = Math.max(0, Math.floor(rgb.g * (1 - amount)));
     const b = Math.max(0, Math.floor(rgb.b * (1 - amount)));
-    
+
     return this.rgbToHex(r, g, b);
   }
 

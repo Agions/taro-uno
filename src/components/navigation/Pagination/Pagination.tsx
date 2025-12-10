@@ -274,7 +274,7 @@ export const PaginationComponent = forwardRef<PaginationRef, PaginationProps>((p
   const renderSizeChanger = () => {
     if (!showSizeChanger) return null;
 
-    const sizeIndex = pageSizeOptions.findIndex(size => size === internalPageSize);
+    const sizeIndex = pageSizeOptions.findIndex((size) => size === internalPageSize);
 
     return (
       <View className="taro-uno-pagination__size-changer">

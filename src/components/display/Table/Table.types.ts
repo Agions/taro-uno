@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
-import { BaseComponentProps, Size } from '../../../types';
+import { Size } from '../../../types';
+import { BaseComponentProps as StandardBaseComponentProps } from '../../../types/component-props';
 
 /** 表格尺寸 */
 export type TableSize = Size | 'small' | 'medium' | 'large';
@@ -176,7 +177,7 @@ export interface TableRef<T = any> {
 }
 
 /** 表格组件属性 */
-export interface TableProps<T = any> extends BaseComponentProps {
+export interface TableProps<T = any> extends StandardBaseComponentProps {
   /** 表格数据 */
   data?: T[];
   /** 数据源（兼容属性） */

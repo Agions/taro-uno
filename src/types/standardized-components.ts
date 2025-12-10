@@ -97,8 +97,14 @@ export interface ClickableProps extends BaseComponentProps {
 
 /** 标准组件属性 - 组合所有常用属性 */
 export interface StandardComponentProps
-  extends SizeableProps, VariantProps, StatusProps, ShapeProps,
-          DisabledProps, ReadonlyProps, LoadingProps, ClickableProps {
+  extends SizeableProps,
+    VariantProps,
+    StatusProps,
+    ShapeProps,
+    DisabledProps,
+    ReadonlyProps,
+    LoadingProps,
+    ClickableProps {
   /** 组件唯一标识 */
   id?: string;
   /** 数据属性 */

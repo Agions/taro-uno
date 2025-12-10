@@ -1,7 +1,7 @@
 /**
  * useCounter Hook
  * Manage counter state with increment, decrement, and reset
- * 
+ *
  * @example
  * ```typescript
  * const { count, increment, decrement, reset, set } = useCounter(0, { min: 0, max: 100 });
@@ -38,10 +38,7 @@ export interface UseCounterReturn {
 /**
  * Hook for managing counter state with constraints
  */
-export function useCounter(
-  initialValue: number = 0,
-  options: UseCounterOptions = {},
-): UseCounterReturn {
+export function useCounter(initialValue: number = 0, options: UseCounterOptions = {}): UseCounterReturn {
   const { min, max, step: defaultStep = 1 } = options;
   const [count, setCount] = useState(initialValue);
 
@@ -57,14 +54,14 @@ export function useCounter(
 
   const increment = useCallback(
     (step: number = defaultStep) => {
-      setCount(c => clamp(c + step));
+      setCount((c) => clamp(c + step));
     },
     [defaultStep, clamp],
   );
 
   const decrement = useCallback(
     (step: number = defaultStep) => {
-      setCount(c => clamp(c - step));
+      setCount((c) => clamp(c - step));
     },
     [defaultStep, clamp],
   );

@@ -14,6 +14,9 @@ export { Divider } from './components/basic/Divider';
 export type { DividerProps, DividerRef } from './components/basic/Divider/Divider.types';
 export { Typography } from './components/basic/Typography';
 export type { TypographyProps, TypographyRef } from './components/basic/Typography/Typography.types';
+export { default as Video } from './components/basic/Video';
+export type { VideoProps } from './components/basic/Video/Video.types';
+export { VideoSize, VideoVariant, VideoStatus, PlayMode, LoopMode, PlaybackRate, ControlsPosition, VideoErrorCode } from './components/basic/Video/Video.types';
 
 // 显示组件
 export { Avatar } from './components/display/Avatar';
@@ -109,7 +112,6 @@ export type { NavBarProps, NavBarRef } from './components/navigation/NavBar/NavB
 export { Steps } from './components/navigation/Steps';
 export type { StepsProps, StepsRef } from './components/navigation/Steps/Steps.types';
 
-
 // 工具函数
 export * from './utils/index';
 
@@ -124,7 +126,16 @@ export { AppProvider, useAppContext } from './providers';
 
 // 主题系统
 export { ThemeProvider, useTheme, useThemeUtils } from './theme/ThemeProvider';
-export type { ThemeMode, ThemeConfig, ThemeColors, ThemeSpacing, ThemeTypography, ThemeBorderRadius, ThemeShadow, ThemeAnimation } from './theme/types';
+export type {
+  ThemeMode,
+  ThemeConfig,
+  ThemeColors,
+  ThemeSpacing,
+  ThemeTypography,
+  ThemeBorderRadius,
+  ThemeShadow,
+  ThemeAnimation,
+} from './theme/types';
 
 // 设计系统
 export { designSystem, DesignSystemUtils } from './theme/design-system';
@@ -142,7 +153,7 @@ export {
   getDirectionalStyles,
   getRTLValue,
   applyRTLClasses,
-  createRTLCSS
+  createRTLCSS,
 } from './utils/rtl-support';
 
 // 主题和国际化组件
@@ -159,10 +170,24 @@ export const CONFIG = {
   theme: 'light',
   platform: 'taro',
   components: {
-    basic: ['Button', 'Icon', 'Text', 'Divider', 'Typography'],
+    basic: ['Button', 'Icon', 'Text', 'Divider', 'Typography', 'Video'],
     display: ['Avatar', 'Badge', 'Card', 'List', 'Rate', 'Table', 'Tag', 'Timeline', 'Calendar', 'Carousel'],
     feedback: ['Modal', 'Message', 'Notification', 'Loading', 'Progress', 'Tooltip', 'Result'],
-    form: ['Form', 'Input', 'Select', 'DatePicker', 'TimePicker', 'Radio', 'Checkbox', 'Switch', 'Slider', 'Textarea', 'InputNumber', 'Cascader', 'Transfer'],
+    form: [
+      'Form',
+      'Input',
+      'Select',
+      'DatePicker',
+      'TimePicker',
+      'Radio',
+      'Checkbox',
+      'Switch',
+      'Slider',
+      'Textarea',
+      'InputNumber',
+      'Cascader',
+      'Transfer',
+    ],
     layout: ['Grid', 'Layout', 'Space', 'Affix', 'Row', 'Col', 'Container'],
     navigation: ['Menu', 'Tabs', 'Pagination', 'NavBar', 'Steps'],
   },
@@ -221,6 +246,7 @@ import * as FeedbackComponents from './components/feedback';
 import * as FormComponents from './components/form';
 import * as LayoutComponents from './components/layout';
 import * as NavigationComponents from './components/navigation';
+import VideoComponent from './components/basic/Video';
 
 // 懒加载工具暂时禁用
 
@@ -232,6 +258,7 @@ export default {
   Text: BasicComponents.Text,
   Divider: BasicComponents.Divider,
   Typography: BasicComponents.Typography,
+  Video: VideoComponent,
 
   // 显示组件
   Avatar: DisplayComponents.Avatar,
@@ -246,7 +273,7 @@ export default {
   Carousel: DisplayComponents.Carousel,
 
   // 反馈组件
-  Modal: FeedbackComponents.ModalComponent,
+  Modal: FeedbackComponents.Modal,
   Message: FeedbackComponents.Message,
   Notification: FeedbackComponents.Notification,
   Loading: FeedbackComponents.Loading,
@@ -284,7 +311,6 @@ export default {
   Pagination: NavigationComponents.Pagination,
   NavBar: NavigationComponents.NavBar,
   Steps: NavigationComponents.Steps,
-
 
   // 工具函数
   Utils: ComponentLibraryUtils,

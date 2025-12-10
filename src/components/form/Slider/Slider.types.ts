@@ -26,12 +26,14 @@ export interface SliderProps {
   /** 是否反向 */
   reverse?: boolean;
   /** 工具提示配置 */
-  tooltip?: {
-    /** 是否显示工具提示 */
-    visible?: boolean;
-    /** 格式化函数 */
-    formatter?: (_value: number) => React.ReactNode;
-  } | boolean;
+  tooltip?:
+    | {
+        /** 是否显示工具提示 */
+        visible?: boolean;
+        /** 格式化函数 */
+        formatter?: (_value: number) => React.ReactNode;
+      }
+    | boolean;
   /** 自定义样式类名 */
   className?: string;
   /** 自定义样式 */

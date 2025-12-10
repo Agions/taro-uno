@@ -70,7 +70,9 @@ export const MenuItemComponent: React.FC<MenuItemProps> = ({
         })}
         className={item.className}
       >
-        {itemRender ? itemRender(item) : (
+        {itemRender ? (
+          itemRender(item)
+        ) : (
           <Text style={menuStyles.getLabelStyle({ size, selected, disabled: item.disabled, danger: item.danger })}>
             {item.label}
           </Text>
@@ -96,24 +98,20 @@ export const MenuItemComponent: React.FC<MenuItemProps> = ({
     >
       {/* 图标 */}
       {item.icon && (
-        <View style={menuStyles.getIconStyle({ size, selected, disabled: item.disabled })}>
-          {item.icon}
-        </View>
+        <View style={menuStyles.getIconStyle({ size, selected, disabled: item.disabled })}>{item.icon}</View>
       )}
 
       {/* 标签 */}
-      {itemRender ? itemRender(item) : (
+      {itemRender ? (
+        itemRender(item)
+      ) : (
         <Text style={menuStyles.getLabelStyle({ size, selected, disabled: item.disabled, danger: item.danger })}>
           {item.label}
         </Text>
       )}
 
       {/* 额外信息 */}
-      {item.extra && (
-        <View style={menuStyles.extra}>
-          {item.extra}
-        </View>
-      )}
+      {item.extra && <View style={menuStyles.extra}>{item.extra}</View>}
 
       {/* 徽章 */}
       {item.badge && (

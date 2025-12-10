@@ -99,14 +99,16 @@ export const SubMenuComponent: React.FC<SubMenuProps> = ({
       >
         {/* 图标 */}
         {item.icon && (
-          <View style={menuStyles.getIconStyle({ size, selected: false, disabled: item.disabled })}>
-            {item.icon}
-          </View>
+          <View style={menuStyles.getIconStyle({ size, selected: false, disabled: item.disabled })}>{item.icon}</View>
         )}
 
         {/* 标签 */}
-        {subMenuTitleRender ? subMenuTitleRender(item) : (
-          <Text style={menuStyles.getLabelStyle({ size, selected: false, disabled: item.disabled, danger: item.danger })}>
+        {subMenuTitleRender ? (
+          subMenuTitleRender(item)
+        ) : (
+          <Text
+            style={menuStyles.getLabelStyle({ size, selected: false, disabled: item.disabled, danger: item.danger })}
+          >
             {item.label}
           </Text>
         )}

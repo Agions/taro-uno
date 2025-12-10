@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useMemo } from 'react';
-import { httpClient, HttpClient, RequestOptions } from '@/utils/network/http-client';
+import { request as httpClient, Request } from '@/utils/http/request';
 import { dataFetcher } from '@/utils/cache';
 import { useAsync } from './useAsync';
+import type { RequestOptions as UnifiedRequestOptions } from '@/utils/http/types';
 
 export interface UseRequestOptions<T = unknown> {
-  client?: HttpClient;
-  service?: ((client: HttpClient) => Promise<T>) | string;
-  method?: RequestOptions['method'];
+  client?: Request;
+  service?: ((client: Request) => Promise<T>) | string;
+  method?: UnifiedRequestOptions['method'];
   params?: Record<string, unknown>;
   data?: unknown;
   manual?: boolean;
@@ -53,15 +54,19 @@ export function useRequest<T = unknown>(options: UseRequestOptions<T>): UseReque
   const exec = useCallback(async () => {
     const fetcher = async (): Promise<T> => {
       if (typeof options.service === 'string') {
-        return await client.request<T>(options.service, {
+        return await client.request<T>({
+          url: options.service,
           method: options.method || 'GET',
           params: options.params ?? {},
           data: options.data,
           timeout: options.staleTime ? Math.max(options.staleTime, 1000) : 15000,
-          retries: options.retry ?? (options.method === 'GET' ? 3 : 0),
+          retry: {
+            retries: options.retry ?? (options.method === 'GET' ? 3 : 0),
+            retryDelay: options.retryDelay ?? 1000,
+          },
         });
       }
-      return await (options.service as (c: HttpClient) => Promise<T>)(client);
+      return await (options.service as (c: Request) => Promise<T>)(client);
     };
 
     const result = await dataFetcher.fetch<T>(key, fetcher, {

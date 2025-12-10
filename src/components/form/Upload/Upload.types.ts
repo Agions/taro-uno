@@ -47,7 +47,7 @@ export interface UploadProps {
   /** 是否携带cookie */
   withCredentials?: boolean;
   /** 上传前的钩子 */
-  beforeUpload?: (_file: File) => Promise<boolean | File> | boolean | File;
+  beforeUpload?: (_file: any) => Promise<boolean | any> | boolean | any;
   /** 自定义上传方法 */
   customRequest?: (_options: UploadRequestOptions) => Promise<void>;
   /** 文件状态改变的回调 */
@@ -57,11 +57,11 @@ export interface UploadProps {
   /** 预览文件的回调 */
   onPreview?: (_file: UploadFile) => void;
   /** 上传成功的回调 */
-  onSuccess?: (_response: any, _file: File) => void;
+  onSuccess?: (_response: any, _file: any) => void;
   /** 上传失败的回调 */
-  onError?: (_error: Error, _file: File) => void;
+  onError?: (_error: Error, _file: any) => void;
   /** 上传进度的回调 */
-  onProgress?: (_percent: number, _file: File) => void;
+  onProgress?: (_percent: number, _file: any) => void;
   /** 是否显示文件列表 */
   showUploadList?: boolean;
   /** 列表样式 */
@@ -91,7 +91,7 @@ export interface UploadProps {
 
 export interface UploadRequestOptions {
   /** 文件对象 */
-  file: File;
+  file: any;
   /** 文件名 */
   filename: string;
   /** 附加数据 */
@@ -116,7 +116,7 @@ export interface UploadRef {
   /** 清空文件列表 */
   clearFileList: () => void;
   /** 上传文件 */
-  upload: (file: File) => void;
+  upload: (file: any, tempFilePath?: string) => void;
   /** 中止上传 */
   abort: (file: UploadFile) => void;
 }
@@ -142,11 +142,11 @@ export interface UploadUtilsType {
   /** 获取文件扩展名 */
   getFileExtension: (filename: string) => string;
   /** 检查文件类型 */
-  checkFileType: (file: File, accept: string) => boolean;
+  checkFileType: (file: any, accept: string) => boolean;
   /** 检查文件大小 */
-  checkFileSize: (file: File, maxSize: number) => boolean;
+  checkFileSize: (file: any, maxSize: number) => boolean;
   /** 生成文件预览URL */
-  generatePreviewUrl: (file: File) => Promise<string>;
+  generatePreviewUrl: (file: any) => Promise<string>;
 }
 
 export const UploadUtils: UploadUtilsType = {
@@ -161,40 +161,40 @@ export const UploadUtils: UploadUtilsType = {
   },
 
   getFileExtension: (filename: string) => {
-    return filename.slice((filename.lastIndexOf('.') - 1 >>> 0) + 2);
+    return filename.slice(((filename.lastIndexOf('.') - 1) >>> 0) + 2);
   },
 
-  checkFileType: (file: File, accept: string) => {
-    const acceptTypes = accept.split(',').map(type => type.trim());
-    return acceptTypes.some(type => {
+  checkFileType: (file: any, accept: string) => {
+    const acceptTypes = accept.split(',').map((type) => type.trim());
+    const filename = file.name || file.path.split('/').pop() || '';
+    const fileType = file.type || `image/${filename.split('.').pop()}`;
+
+    return acceptTypes.some((type) => {
       if (type.startsWith('.')) {
-        return file.name.toLowerCase().endsWith(type.toLowerCase());
+        return filename.toLowerCase().endsWith(type.toLowerCase());
       }
       if (type.includes('/*')) {
         const mainType = type.split('/')[0];
-        return file.type.startsWith(mainType || '');
+        return fileType.startsWith(mainType || '');
       }
-      return file.type === type;
+      return fileType === type;
     });
   },
 
-  checkFileSize: (file: File, maxSize: number) => {
+  checkFileSize: (file: any, maxSize: number) => {
     return file.size <= maxSize;
   },
 
-  generatePreviewUrl: (file: File) => {
+  generatePreviewUrl: (file: any) => {
+    // 在 Taro 环境中，直接使用临时文件路径作为预览 URL
     return new Promise((resolve, reject) => {
-      if (!file.type.startsWith('image/')) {
-        reject(new Error('File is not an image'));
-        return;
+      if (file.tempFilePath) {
+        resolve(file.tempFilePath);
+      } else if (file.path) {
+        resolve(file.path);
+      } else {
+        reject(new Error('Cannot generate preview URL'));
       }
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        resolve(e.target?.result as string);
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
     });
   },
 };

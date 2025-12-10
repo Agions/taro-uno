@@ -11,7 +11,11 @@ export const isBrowserEnvironment = (): boolean => {
  * Detect whether Taro runtime is available (mini-program / native bridge).
  */
 export const isTaroEnvironment = (): boolean => {
-  return typeof process !== 'undefined' && typeof process.env !== 'undefined' && typeof process.env['TARO_ENV'] !== 'undefined';
+  return (
+    typeof process !== 'undefined' &&
+    typeof process.env !== 'undefined' &&
+    typeof process.env['TARO_ENV'] !== 'undefined'
+  );
 };
 
 /**
@@ -25,11 +29,15 @@ export const resolvePlatform = (): Platform | 'unknown' => {
 };
 
 /**
- * Safe local storage wrapper guarding non-browser runtimes.
+ * Safe local storage wrapper guarding non-browser runtimes and incomplete localStorage implementations.
  */
 export const safeLocalStorage = {
   getItem(key: string): string | null {
-    if (!isBrowserEnvironment()) {
+    if (
+      !isBrowserEnvironment() ||
+      typeof window.localStorage === 'undefined' ||
+      typeof window.localStorage.getItem !== 'function'
+    ) {
       return null;
     }
 
@@ -42,7 +50,11 @@ export const safeLocalStorage = {
   },
 
   setItem(key: string, value: string): void {
-    if (!isBrowserEnvironment()) {
+    if (
+      !isBrowserEnvironment() ||
+      typeof window.localStorage === 'undefined' ||
+      typeof window.localStorage.setItem !== 'function'
+    ) {
       return;
     }
 
@@ -54,7 +66,11 @@ export const safeLocalStorage = {
   },
 
   removeItem(key: string): void {
-    if (!isBrowserEnvironment()) {
+    if (
+      !isBrowserEnvironment() ||
+      typeof window.localStorage === 'undefined' ||
+      typeof window.localStorage.removeItem !== 'function'
+    ) {
       return;
     }
 
@@ -66,7 +82,11 @@ export const safeLocalStorage = {
   },
 
   clear(): void {
-    if (!isBrowserEnvironment()) {
+    if (
+      !isBrowserEnvironment() ||
+      typeof window.localStorage === 'undefined' ||
+      typeof window.localStorage.clear !== 'function'
+    ) {
       return;
     }
 

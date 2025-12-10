@@ -24,10 +24,10 @@ const Star: React.FC<StarProps> = ({
   const handleClick = useCallback(
     (e: any) => {
       if (disabled || readonly) return;
-      
+
       const rect = e.currentTarget.getBoundingClientRect?.();
       if (rect) {
-        const clickX = e.clientX || (e.touches?.[0]?.clientX);
+        const clickX = e.clientX || e.touches?.[0]?.clientX;
         const position = clickX - rect.left < rect.width / 2 ? 0.5 : 1;
         onClick?.(index, position);
       } else {
@@ -77,22 +77,14 @@ const Star: React.FC<StarProps> = ({
     if (state !== 'half') return null;
 
     return (
-      <View
-        style={rateStyles['getHalfStarMaskStyle']({ color, unselectedColor })}
-        className="taro-uno-rate__star-half"
-      >
+      <View style={rateStyles['getHalfStarMaskStyle']({ color, unselectedColor })} className="taro-uno-rate__star-half">
         {renderCharacter()}
       </View>
     );
   };
 
   return (
-    <View
-      className={starClassName}
-      style={starStyle}
-      onClick={handleClick}
-      onTouchStart={handleClick}
-    >
+    <View className={starClassName} style={starStyle} onClick={handleClick} onTouchStart={handleClick}>
       {renderCharacter()}
       {renderHalfStar()}
     </View>
@@ -232,7 +224,7 @@ export const RateComponent = forwardRef<RateRef, RateProps>((props, ref) => {
   }, [disabled, onFocus]);
 
   // 处理失焦
-  
+
   // 渲染工具提示
   const renderTooltip = (index: number) => {
     if (!showTooltips || !tooltips[index] || showTooltip !== index) return null;

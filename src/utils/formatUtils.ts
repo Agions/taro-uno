@@ -14,10 +14,7 @@ interface DateFormatOptions {
 /** 日期时间格式化工具类 */
 export class DateTimeFormatUtils {
   /** 格式化日期 */
-  static formatDate(
-    date: Date | string | number,
-    options: DateFormatOptions = {}
-  ): string {
+  static formatDate(date: Date | string | number, options: DateFormatOptions = {}): string {
     const { format = 'YYYY-MM-DD' } = options;
     const d = new Date(date);
 
@@ -36,19 +33,19 @@ export class DateTimeFormatUtils {
 
     // 支持的格式化标记
     const replacements: Record<string, string> = {
-      'YYYY': String(year),
-      'YY': String(year).slice(-2),
-      'MM': month,
-      'M': String(d.getMonth() + 1),
-      'DD': day,
-      'D': String(d.getDate()),
-      'HH': hours,
-      'H': String(d.getHours()),
-      'mm': minutes,
-      'm': String(d.getMinutes()),
-      'ss': seconds,
-      's': String(d.getSeconds()),
-      'SSS': milliseconds,
+      YYYY: String(year),
+      YY: String(year).slice(-2),
+      MM: month,
+      M: String(d.getMonth() + 1),
+      DD: day,
+      D: String(d.getDate()),
+      HH: hours,
+      H: String(d.getHours()),
+      mm: minutes,
+      m: String(d.getMinutes()),
+      ss: seconds,
+      s: String(d.getSeconds()),
+      SSS: milliseconds,
     };
 
     // 应用格式化
@@ -108,12 +105,12 @@ export class DateTimeFormatUtils {
 
     const startTime = this.formatDate(startDate, { format: 'HH:mm' });
     const endTime = this.formatDate(endDate, { format: 'HH:mm' });
-    
+
     // 如果在同一天
     if (startDate.toDateString() === endDate.toDateString()) {
       return `${startTime} - ${endTime}`;
     }
-    
+
     // 如果不在同一天
     return `${this.formatDate(startDate, { format: 'MM-DD HH:mm' })} - ${this.formatDate(endDate, { format: 'MM-DD HH:mm' })}`;
   }
@@ -121,10 +118,11 @@ export class DateTimeFormatUtils {
   /** 获取星期几 */
   static getWeekday(date: Date | string | number, locale = 'zh-CN'): string {
     const d = new Date(date);
-    const weekdays = locale === 'zh-CN' 
-      ? ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
-      : ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    
+    const weekdays =
+      locale === 'zh-CN'
+        ? ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
+        : ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
     return weekdays[d.getDay()] || '';
   }
 
@@ -167,10 +165,7 @@ interface NumberFormatOptions {
 /** 数字格式化工具类 */
 export class NumberFormatUtils {
   /** 格式化数字 */
-  static formatNumber(
-    num: number,
-    options: NumberFormatOptions = {}
-  ): string {
+  static formatNumber(num: number, options: NumberFormatOptions = {}): string {
     const {
       locale = 'zh-CN',
       style = 'decimal',
@@ -192,11 +187,7 @@ export class NumberFormatUtils {
   }
 
   /** 格式化货币 */
-  static formatCurrency(
-    amount: number,
-    currency: string = 'CNY',
-    locale = 'zh-CN'
-  ): string {
+  static formatCurrency(amount: number, currency: string = 'CNY', locale = 'zh-CN'): string {
     return this.formatNumber(amount, {
       style: 'currency',
       currency,
@@ -205,11 +196,7 @@ export class NumberFormatUtils {
   }
 
   /** 格式化百分比 */
-  static formatPercent(
-    value: number,
-    decimals: number = 2,
-    locale = 'zh-CN'
-  ): string {
+  static formatPercent(value: number, decimals: number = 2, locale = 'zh-CN'): string {
     return this.formatNumber(value, {
       style: 'percent',
       minimumFractionDigits: decimals,
@@ -219,11 +206,7 @@ export class NumberFormatUtils {
   }
 
   /** 格式化文件大小 */
-  static formatFileSize(
-    bytes: number,
-    decimals: number = 2,
-    locale = 'zh-CN'
-  ): string {
+  static formatFileSize(bytes: number, decimals: number = 2, locale = 'zh-CN'): string {
     if (bytes === 0) return '0 B';
 
     const k = 1024;
@@ -235,11 +218,7 @@ export class NumberFormatUtils {
   }
 
   /** 格式化数字缩写 */
-  static formatNumberAbbreviation(
-    num: number,
-    decimals: number = 1,
-    locale = 'zh-CN'
-  ): string {
+  static formatNumberAbbreviation(num: number, decimals: number = 1, locale = 'zh-CN'): string {
     if (num < 1000) {
       return this.formatNumber(num, { locale });
     }
@@ -329,7 +308,7 @@ export class StringFormatUtils {
 
   /** 驼峰命名转下划线命名 */
   static camelToSnake(str: string): string {
-    return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+    return str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
   }
 
   /** 下划线命名转驼峰命名 */
@@ -344,7 +323,7 @@ export class StringFormatUtils {
 
   /** 驼峰命名转中划线命名 */
   static camelToKebab(str: string): string {
-    return str.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`);
+    return str.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
   }
 
   /** 格式化手机号 */
@@ -381,13 +360,9 @@ export class StringFormatUtils {
   }
 
   /** 高亮关键词 */
-  static highlightKeywords(
-    text: string,
-    keywords: string[],
-    highlightClass = 'highlight'
-  ): string {
+  static highlightKeywords(text: string, keywords: string[], highlightClass = 'highlight'): string {
     let result = text;
-    keywords.forEach(keyword => {
+    keywords.forEach((keyword) => {
       const regex = new RegExp(`(${keyword})`, 'gi');
       result = result.replace(regex, `<span class="${highlightClass}">$1</span>`);
     });
@@ -415,25 +390,18 @@ export class StringFormatUtils {
 
   /** 生成UUID */
   static generateUUID(): string {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      const r = Math.random() * 16 | 0;
-      const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      const r = (Math.random() * 16) | 0;
+      const v = c === 'x' ? r : (r & 0x3) | 0x8;
       return v.toString(16);
     });
   }
 
   /** 格式化模板字符串 */
-  static template(
-    template: string,
-    data: Record<string, any>,
-    delimiter = '{%}'
-  ): string {
-    return template.replace(
-      new RegExp(`${delimiter}(\\w+)${delimiter}`, 'g'),
-      (_, key) => {
-        return data[key] !== undefined ? String(data[key]) : '';
-      }
-    );
+  static template(template: string, data: Record<string, any>, delimiter = '{%}'): string {
+    return template.replace(new RegExp(`${delimiter}(\\w+)${delimiter}`, 'g'), (_, key) => {
+      return data[key] !== undefined ? String(data[key]) : '';
+    });
   }
 }
 

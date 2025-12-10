@@ -107,7 +107,7 @@ export const Card = forwardRef<CardRef, CardProps>((props, ref) => {
       style={style}
       onClick={handlePress}
       onLongPress={onLongPress}
-            data-testid="card"
+      data-testid="card"
       data-shadow={shadow}
       data-bordered={bordered}
       data-hoverable={hoverable}

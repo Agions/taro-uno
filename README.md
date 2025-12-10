@@ -9,7 +9,7 @@ Taro Uno 是一个基于 Taro 框架的跨平台组件库，提供丰富的 UI �
 ## ✨ v1.0.0 新特性
 
 ### 🌐 多平台API请求层
-- **UnifiedRequestClient** - 智能HTTP客户端，自动适配各平台
+- **RequestClient** - 智能HTTP客户端，自动适配各平台
 - **智能缓存** - 请求缓存与去重，性能提升67%
 - **灵活重试** - 支持指数/线性/固定退避策略
 - **拦截器** - 完整的请求/响应拦截支持
@@ -80,6 +80,7 @@ export default App;
 - Button - 按钮
 - Icon - 图标
 - Typography - 排版
+- Video - 视频播放器
 
 ### 表单组件 (Form)
 - Input - 输入框

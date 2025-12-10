@@ -151,13 +151,13 @@ export const RadioComponent = forwardRef<RadioRef, RadioProps>((props, ref) => {
       getSize: () => props.size || 'md',
       setSize: (newSize: RadioSize) => {
         // Radio size is controlled by parent, this is just for consistency
-         
+
         newSize;
       },
       getColor: () => props.color || 'primary',
       setColor: (newColor: RadioColor) => {
         // Radio color is controlled by parent, this is just for consistency
-         
+
         newColor;
       },
       getStatus: () => finalStatus,
@@ -174,7 +174,7 @@ export const RadioComponent = forwardRef<RadioRef, RadioProps>((props, ref) => {
       getData: () => props.data,
       setData: (newData: Record<string, any>) => {
         // Radio data is controlled by parent, this is just for consistency
-         
+
         newData;
       },
       focus: () => {
@@ -185,13 +185,9 @@ export const RadioComponent = forwardRef<RadioRef, RadioProps>((props, ref) => {
       },
       shake: () => {
         // Shake animation implementation would go here
-         
-
       },
       pulse: () => {
         // Pulse animation implementation would go here
-         
-
       },
     }),
     [checked, internalDisabled, internalReadonly, validateRadio, onChange, finalStatus],
@@ -217,7 +213,6 @@ export const RadioComponent = forwardRef<RadioRef, RadioProps>((props, ref) => {
     className,
   });
 
-  
   return (
     <View style={radioStyles['getContainerStyle']({ style: props.containerStyle })}>
       <View style={radioStyles['getWrapperStyle']({ style: props.wrapperStyle })}>
@@ -280,4 +275,3 @@ RadioComponent.displayName = 'Radio';
 
 /** 导出单选框组件 */
 export const Radio = RadioComponent;
-

@@ -44,7 +44,7 @@ export const SliderComponent = forwardRef<SliderRef, SliderProps>((props, ref) =
   const handleChange = useCallback(
     (newValue: number, _event?: ITouchEvent) => {
       const clampedValue = Math.max(min, Math.min(max, newValue));
-      
+
       if (!isControlled) {
         setInternalValue(clampedValue);
       }
@@ -72,19 +72,19 @@ export const SliderComponent = forwardRef<SliderRef, SliderProps>((props, ref) =
   const handleClick = useCallback(
     (event: ITouchEvent) => {
       if (internalDisabled) return;
-      
+
       const rect = (event.currentTarget as any).getBoundingClientRect();
       const clientX = event.detail?.x || 0;
       const clientY = event.detail?.y || 0;
-      
-      const percentage = vertical 
-        ? reverse 
-          ? 1 - ((clientY - rect.top) / rect.height)
+
+      const percentage = vertical
+        ? reverse
+          ? 1 - (clientY - rect.top) / rect.height
           : (clientY - rect.top) / rect.height
-        : reverse 
-          ? 1 - ((clientX - rect.left) / rect.width)
+        : reverse
+          ? 1 - (clientX - rect.left) / rect.width
           : (clientX - rect.left) / rect.width;
-      
+
       const newValue = Math.round((min + percentage * (max - min)) / step) * step;
       handleChange(newValue, event);
     },
@@ -112,10 +112,10 @@ export const SliderComponent = forwardRef<SliderRef, SliderProps>((props, ref) =
 
       const percentage = vertical
         ? reverse
-          ? 1 - ((clientY - rect.top) / rect.height)
+          ? 1 - (clientY - rect.top) / rect.height
           : (clientY - rect.top) / rect.height
         : reverse
-          ? 1 - ((clientX - rect.left) / rect.width)
+          ? 1 - (clientX - rect.left) / rect.width
           : (clientX - rect.left) / rect.width;
 
       const newValue = Math.round((min + percentage * (max - min)) / step) * step;
@@ -125,7 +125,6 @@ export const SliderComponent = forwardRef<SliderRef, SliderProps>((props, ref) =
   );
 
   // 处理键盘交互
-  
 
   // 处理拖拽结束
   const handleDragEnd = useCallback(() => {
@@ -141,11 +140,11 @@ export const SliderComponent = forwardRef<SliderRef, SliderProps>((props, ref) =
     return Object.entries(marks).map(([markValue, markLabel]) => {
       const val = Number(markValue);
       const percentage = getPercentage(val);
-      const position = vertical 
-        ? reverse 
+      const position = vertical
+        ? reverse
           ? `${100 - percentage}%`
           : `${percentage}%`
-        : reverse 
+        : reverse
           ? `${100 - percentage}%`
           : `${percentage}%`;
 
@@ -195,12 +194,8 @@ export const SliderComponent = forwardRef<SliderRef, SliderProps>((props, ref) =
           onChange?.(defaultValue);
         }
       },
-      focus: () => {
-        
-      },
-      blur: () => {
-        
-      },
+      focus: () => {},
+      blur: () => {},
     }),
     [value, isControlled, internalDisabled, dragging, min, max, defaultValue, getPercentage, onChange],
   );
@@ -271,7 +266,6 @@ export const SliderComponent = forwardRef<SliderRef, SliderProps>((props, ref) =
     marginLeft: vertical ? '4px' : 0,
   };
 
-  
   return (
     <View
       ref={containerRef}
@@ -279,20 +273,16 @@ export const SliderComponent = forwardRef<SliderRef, SliderProps>((props, ref) =
       onClick={handleClick}
       onTouchMove={(e) => handleDrag(e as unknown as ITouchEvent)}
       onTouchEnd={() => handleDragEnd()}
-      
       role="slider"
       aria-valuemin={min}
       aria-valuemax={max}
       aria-valuenow={value}
       accessibilityLabel={restProps.accessibilityLabel || 'Slider'}
       aria-disabled={internalDisabled}
-      
       {...restProps}
     >
-      <View style={trackStyle}>
-        {included && <View style={trackFillStyle} />}
-      </View>
-      
+      <View style={trackStyle}>{included && <View style={trackFillStyle} />}</View>
+
       <View
         style={{
           ...handleStyle,
@@ -309,11 +299,7 @@ export const SliderComponent = forwardRef<SliderRef, SliderProps>((props, ref) =
         )}
       </View>
 
-      {marks && (
-        <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
-          {renderMarks()}
-        </View>
-      )}
+      {marks && <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>{renderMarks()}</View>}
     </View>
   );
 });

@@ -14,10 +14,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, '..');
 
 // Get all .types.ts files
-const typesFiles = execSync(
-  'find src -name "*.types.ts"',
-  { encoding: 'utf8', cwd: projectRoot }
-)
+const typesFiles = execSync('find src -name "*.types.ts"', { encoding: 'utf8', cwd: projectRoot })
   .trim()
   .split('\n')
   .filter(Boolean);
@@ -36,7 +33,7 @@ typesFiles.forEach((file) => {
   const functionParamPattern = /\(([a-z][a-zA-Z0-9]*): /g;
   let match;
   const paramsToFix = new Set();
-  
+
   while ((match = functionParamPattern.exec(content)) !== null) {
     const paramName = match[1];
     // Skip already prefixed params
@@ -68,7 +65,7 @@ console.log('Running lint to check remaining errors...\n');
 try {
   const result = execSync('npm run lint:check 2>&1 | tail -1', {
     encoding: 'utf8',
-    cwd: projectRoot
+    cwd: projectRoot,
   });
   console.log(result);
 } catch (error) {

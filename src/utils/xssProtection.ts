@@ -16,28 +16,60 @@ interface XSSProtectionOptions {
 class XSSProtection {
   private defaultOptions: XSSProtectionOptions = {
     allowedTags: [
-      'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-      'p', 'br', 'hr',
-      'ul', 'ol', 'li',
-      'strong', 'em', 'b', 'i', 'u', 's', 'del', 'ins',
-      'blockquote', 'code', 'pre',
-      'a', 'img',
-      'div', 'span', 'section', 'article',
-      'table', 'thead', 'tbody', 'tr', 'th', 'td',
-      'button', 'input', 'label', 'select', 'option', 'textarea'
+      'h1',
+      'h2',
+      'h3',
+      'h4',
+      'h5',
+      'h6',
+      'p',
+      'br',
+      'hr',
+      'ul',
+      'ol',
+      'li',
+      'strong',
+      'em',
+      'b',
+      'i',
+      'u',
+      's',
+      'del',
+      'ins',
+      'blockquote',
+      'code',
+      'pre',
+      'a',
+      'img',
+      'div',
+      'span',
+      'section',
+      'article',
+      'table',
+      'thead',
+      'tbody',
+      'tr',
+      'th',
+      'td',
+      'button',
+      'input',
+      'label',
+      'select',
+      'option',
+      'textarea',
     ],
     allowedAttributes: {
       '*': ['class', 'id', 'style', 'title', 'lang', 'dir'],
-      'a': ['href', 'target', 'rel'],
-      'img': ['src', 'alt', 'width', 'height', 'loading'],
-      'input': ['type', 'name', 'value', 'placeholder', 'disabled', 'readonly', 'required'],
-      'button': ['type', 'disabled'],
-      'select': ['name', 'disabled', 'required', 'multiple'],
-      'textarea': ['name', 'placeholder', 'disabled', 'readonly', 'required', 'rows', 'cols']
+      a: ['href', 'target', 'rel'],
+      img: ['src', 'alt', 'width', 'height', 'loading'],
+      input: ['type', 'name', 'value', 'placeholder', 'disabled', 'readonly', 'required'],
+      button: ['type', 'disabled'],
+      select: ['name', 'disabled', 'required', 'multiple'],
+      textarea: ['name', 'placeholder', 'disabled', 'readonly', 'required', 'rows', 'cols'],
     },
     allowScriptTags: false,
     allowStyleTags: false,
-    stripComments: true
+    stripComments: true,
   };
 
   /**
@@ -50,12 +82,18 @@ class XSSProtection {
 
     return str.replace(/[&<>"']/g, (match) => {
       switch (match) {
-        case '&': return '&';
-        case '<': return '<';
-        case '>': return '>';
-        case '"': return '"';
-        case "'": return '&#x27;';
-        default: return match;
+        case '&':
+          return '&';
+        case '<':
+          return '<';
+        case '>':
+          return '>';
+        case '"':
+          return '"';
+        case "'":
+          return '&#x27;';
+        default:
+          return match;
       }
     });
   }
@@ -70,15 +108,24 @@ class XSSProtection {
 
     return str.replace(new RegExp('[&<>"\'`=/]', 'g'), (match) => {
       switch (match) {
-        case '&': return '&';
-        case '<': return '<';
-        case '>': return '>';
-        case '"': return '"';
-        case "'": return '&#x27;';
-        case '`': return '&#96;';
-        case '=': return '&#61;';
-        case '/': return '&#47;';
-        default: return match;
+        case '&':
+          return '&';
+        case '<':
+          return '<';
+        case '>':
+          return '>';
+        case '"':
+          return '"';
+        case "'":
+          return '&#x27;';
+        case '`':
+          return '&#96;';
+        case '=':
+          return '&#61;';
+        case '/':
+          return '&#47;';
+        default:
+          return match;
       }
     });
   }
@@ -218,8 +265,7 @@ class XSSProtection {
    * @returns 去除引号后的值
    */
   private stripQuotes(value: string): string {
-    if ((value.startsWith('"') && value.endsWith('"')) ||
-      (value.startsWith("'") && value.endsWith("'"))) {
+    if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
       return value.substring(1, value.length - 1);
     }
     return value;
@@ -238,7 +284,7 @@ class XSSProtection {
     try {
       // 在Taro环境中，可能没有window对象，使用相对URL
       const urlObj = new URL(url, 'http://example.com');
-      return safeProtocols.some(protocol => urlObj.protocol === protocol);
+      return safeProtocols.some((protocol) => urlObj.protocol === protocol);
     } catch (e) {
       // 如果URL解析失败，检查是否为相对路径
       return !url.startsWith('javascript:') && !url.startsWith('data:');
@@ -255,14 +301,16 @@ class XSSProtection {
 
     // 危险的CSS属性和值
     const dangerousProperties = [
-      'expression', 'javascript:', 'behavior', 'script', 'binding',
-      'include-source', '-moz-binding'
+      'expression',
+      'javascript:',
+      'behavior',
+      'script',
+      'binding',
+      'include-source',
+      '-moz-binding',
     ];
 
-    const dangerousValues = [
-      'javascript:', 'vbscript:', 'data:', 'expression(',
-      'eval(', 'script:', 'behavior('
-    ];
+    const dangerousValues = ['javascript:', 'vbscript:', 'data:', 'expression(', 'eval(', 'script:', 'behavior('];
 
     // 检查是否包含危险内容
     const lowerStyle = style.toLowerCase();
@@ -310,7 +358,7 @@ class XSSProtection {
 
     // 处理数组
     if (Array.isArray(obj)) {
-      return obj.map(item => this.sanitizeObject(item));
+      return obj.map((item) => this.sanitizeObject(item));
     }
 
     // 处理对象
@@ -346,9 +394,9 @@ class XSSProtection {
     return html.replace(nestedRegex, (_match, tag, content, closeTag) => {
       const sanitizedContent = this.sanitizeHTML(content, {
         ...options,
-        allowedTags: options.allowedTags?.filter(t => t !== 'script' && t !== 'style') || [],
+        allowedTags: options.allowedTags?.filter((t) => t !== 'script' && t !== 'style') || [],
         allowScriptTags: false,
-        allowStyleTags: false
+        allowStyleTags: false,
       });
       return `<${tag}>${sanitizedContent}</${closeTag}>`;
     });
@@ -373,7 +421,7 @@ class XSSProtection {
         const sanitizedError = this.sanitizeObject({
           message,
           stack,
-          type: 'Taro Error'
+          type: 'Taro Error',
         });
         errorLogger.logError(sanitizedError);
       });
@@ -384,7 +432,7 @@ class XSSProtection {
           message: event.message || '',
           filename: event.filename || '',
           lineno: event.lineno,
-          type: 'Window Error'
+          type: 'Window Error',
         });
         errorLogger.logError(sanitizedError);
       });
@@ -399,13 +447,12 @@ class XSSProtection {
         }
         const sanitizedError = this.sanitizeObject({
           message,
-          type: 'Promise Rejection'
+          type: 'Promise Rejection',
         });
         errorLogger.logError(sanitizedError);
       });
     }
   }
-
 }
 
 // 创建单例实例

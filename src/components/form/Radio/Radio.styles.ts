@@ -1,12 +1,5 @@
 import { platform } from '@/utils';
-import type {
-  RadioProps,
-  RadioSize,
-  RadioStatus,
-  RadioVariant,
-  RadioColor,
-  RadioStyleConfig,
-} from './Radio.types';
+import type { RadioProps, RadioSize, RadioStatus, RadioVariant, RadioColor, RadioStyleConfig } from './Radio.types';
 
 /** 样式工具类 */
 export class RadioStyles {

@@ -1,11 +1,7 @@
 import React, { forwardRef, useRef, useState, useEffect, useCallback, useMemo } from 'react';
 import { View, Text, ScrollView } from '@tarojs/components';
 import { TableStyles } from './Table.styles';
-import type {
-  TableProps,
-  TableRef,
-  TableSortOrder,
-} from './Table.types';
+import type { TableProps, TableRef, TableSortOrder } from './Table.types';
 
 /** 表格组件 */
 export const TableComponent = forwardRef<TableRef, TableProps>((props, ref) => {
@@ -92,7 +88,7 @@ export const TableComponent = forwardRef<TableRef, TableProps>((props, ref) => {
       setExpandedRowKeys(newExpandedKeys);
 
       // 调用外部展开回调
-      const record = data.find(item => String(item[rowKey as keyof typeof item]) === key);
+      const record = data.find((item) => String(item[rowKey as keyof typeof item]) === key);
       if (record && typeof expandable === 'object' && expandable.onExpand) {
         expandable.onExpand(expanded, record);
       }
@@ -337,7 +333,7 @@ export const TableComponent = forwardRef<TableRef, TableProps>((props, ref) => {
     () => ({
       element: tableRef.current,
       getData: () => data,
-      getSelectedRows: () => data.filter(item => selectedRowKeys.includes(item.id as string)),
+      getSelectedRows: () => data.filter((item) => selectedRowKeys.includes(item.id as string)),
       getSelectedRowKeys: () => selectedRowKeys,
       getSortField: () => sortField,
       getSortOrder: () => sortOrder,

@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 // import { View } from '@tarojs/components'; // Commented out - unused
-import { BaseComponentProps, Size } from '../../../types';
+import { Size } from '../../../types';
+import { BaseComponentProps as StandardBaseComponentProps } from '../../../types/component-props';
 
 /** Tab位置 */
 export type TabPosition = 'top' | 'right' | 'bottom' | 'left';
@@ -52,7 +53,7 @@ export interface TabsRef {
 }
 
 /** Tabs组件属性 */
-export interface TabsProps extends BaseComponentProps {
+export interface TabsProps extends StandardBaseComponentProps {
   /** Tab项列表 */
   items: TabItem[];
   /** 激活的键值 */
@@ -96,7 +97,7 @@ export interface TabsProps extends BaseComponentProps {
 }
 
 /** TabPane组件属性 */
-export interface TabPaneProps extends BaseComponentProps {
+export interface TabPaneProps extends StandardBaseComponentProps {
   /** Tab键值 */
   tabKey: string;
   /** Tab标题 */

@@ -8,13 +8,13 @@ type SupportedLanguage = 'ar-SA' | 'he-IL' | 'fa-IR' | 'ur-PK' | string;
 
 // RTL语言列表
 export const RTL_LANGUAGES: SupportedLanguage[] = [
-  'ar-SA',  // 阿拉伯语
-  'he-IL',  // 希伯来语
-  'fa-IR',  // 波斯语
-  'ur-PK',  // 乌尔都语
-  'yi',     // 意第绪语
-  'ps',     // 普什图语
-  'sd',     // 信德语
+  'ar-SA', // 阿拉伯语
+  'he-IL', // 希伯来语
+  'fa-IR', // 波斯语
+  'ur-PK', // 乌尔都语
+  'yi', // 意第绪语
+  'ps', // 普什图语
+  'sd', // 信德语
 ];
 
 // 扩展RTL语言配置
@@ -38,7 +38,8 @@ export const RTL_CONFIGS: Record<string, RTLConfig> = {
     language: 'ar-SA',
     name: 'Arabic (Saudi Arabia)',
     rtl: true,
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "Tahoma", "Arial Unicode MS", "Traditional Arabic"',
+    fontFamily:
+      '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "Tahoma", "Arial Unicode MS", "Traditional Arabic"',
     textAlign: 'right',
     direction: 'rtl',
     flipProperties: true,
@@ -50,7 +51,8 @@ export const RTL_CONFIGS: Record<string, RTLConfig> = {
     language: 'he-IL',
     name: 'Hebrew (Israel)',
     rtl: true,
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "David", "Arial Hebrew", "Arial"',
+    fontFamily:
+      '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "David", "Arial Hebrew", "Arial"',
     textAlign: 'right',
     direction: 'rtl',
     flipProperties: true,
@@ -62,7 +64,8 @@ export const RTL_CONFIGS: Record<string, RTLConfig> = {
     language: 'fa-IR',
     name: 'Persian (Iran)',
     rtl: true,
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "Tahoma", "Arial Unicode MS", "IRANSans", "Vazir"',
+    fontFamily:
+      '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "Tahoma", "Arial Unicode MS", "IRANSans", "Vazir"',
     textAlign: 'right',
     direction: 'rtl',
     flipProperties: true,
@@ -74,7 +77,8 @@ export const RTL_CONFIGS: Record<string, RTLConfig> = {
     language: 'ur-PK',
     name: 'Urdu (Pakistan)',
     rtl: true,
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "Noto Nastaliq Urdu", "Arial Unicode MS", "Tahoma"',
+    fontFamily:
+      '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "Noto Nastaliq Urdu", "Arial Unicode MS", "Tahoma"',
     textAlign: 'right',
     direction: 'rtl',
     flipProperties: true,
@@ -86,11 +90,13 @@ export const RTL_CONFIGS: Record<string, RTLConfig> = {
 
 // 检查是否为RTL语言
 export const isRTL = (language: string): boolean => {
-  return RTL_LANGUAGES.includes(language as SupportedLanguage) ||
-         language.startsWith('ar') ||
-         language.startsWith('he') ||
-         language.startsWith('fa') ||
-         language.startsWith('ur');
+  return (
+    RTL_LANGUAGES.includes(language as SupportedLanguage) ||
+    language.startsWith('ar') ||
+    language.startsWith('he') ||
+    language.startsWith('fa') ||
+    language.startsWith('ur')
+  );
 };
 
 // 应用RTL样式
@@ -129,7 +135,9 @@ export const applyRTLStyles = (language: string): void => {
           transform: scaleX(-1);
         }
         .rtl .flip-property {
-          ${config.flipProperties ? `
+          ${
+            config.flipProperties
+              ? `
             margin-left: initial;
             margin-right: initial;
             padding-left: initial;
@@ -137,7 +145,9 @@ export const applyRTLStyles = (language: string): void => {
             border-left: initial;
             border-right: initial;
             border-radius: initial;
-          ` : ''}
+          `
+              : ''
+          }
         }
       `;
 
@@ -322,7 +332,7 @@ export const createRTLCSS = (css: string, language: string): string => {
   ];
 
   let rtlCSS = css;
-  rtlRules.forEach(rule => {
+  rtlRules.forEach((rule) => {
     rtlCSS = rtlCSS.replace(rule.pattern, rule.replacement);
   });
 

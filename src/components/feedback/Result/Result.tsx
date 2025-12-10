@@ -187,39 +187,27 @@ export const ResultComponent = forwardRef<ResultRef, ResultProps>((props, ref) =
   };
 
   return (
-    <View
-      ref={containerRef}
-      style={containerStyle}
-      {...restProps}
-    >
+    <View ref={containerRef} style={containerStyle} {...restProps}>
       <View style={iconContainerStyle}>
         <View style={iconStyle}>
           <Text>{getStatusIcon()}</Text>
         </View>
       </View>
-      
+
       <View style={contentStyle}>
         <View style={titleStyle}>
           <Text>{internalTitle || getStatusText()}</Text>
         </View>
-        
+
         {internalSubTitle && (
           <View style={subTitleStyle}>
             <Text>{internalSubTitle}</Text>
           </View>
         )}
-        
-        {children && (
-          <View style={childrenStyle}>
-            {children}
-          </View>
-        )}
-        
-        {extra && (
-          <View style={extraStyle}>
-            {extra}
-          </View>
-        )}
+
+        {children && <View style={childrenStyle}>{children}</View>}
+
+        {extra && <View style={extraStyle}>{extra}</View>}
       </View>
     </View>
   );

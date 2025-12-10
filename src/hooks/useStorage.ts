@@ -1,7 +1,7 @@
 /**
  * useLocalStorage Hook
  * Persist state to localStorage with automatic serialization
- * 
+ *
  * @example
  * ```typescript
  * const [user, setUser, removeUser] = useLocalStorage<User>('user', null);
@@ -11,6 +11,7 @@
  */
 
 import { useState, useCallback, useEffect } from 'react';
+import Taro from '@tarojs/taro';
 
 export interface UseStorageOptions<T> {
   /** Custom serializer */
@@ -29,24 +30,16 @@ export function useLocalStorage<T>(
   initialValue: T,
   options: UseStorageOptions<T> = {},
 ): [T, (value: T | ((prev: T) => T)) => void, () => void] {
-  const {
-    serializer = JSON.stringify,
-    deserializer = JSON.parse,
-    initializeWithValue = true,
-  } = options;
+  const { serializer = JSON.stringify, deserializer = JSON.parse, initializeWithValue = true } = options;
 
-  // Get initial value from localStorage or use provided initial value
+  // Get initial value from storage or use provided initial value
   const readValue = useCallback((): T => {
-    // Check if localStorage is available (server-side rendering)
-    if (typeof window === 'undefined') {
-      return initialValue;
-    }
-
     try {
-      const item = window.localStorage.getItem(key);
-      return item ? deserializer(item) : initialValue;
+      // In Taro, we need to use async storage API, but for initial value
+      // we'll use the provided initial value and fetch asynchronously later
+      return initialValue;
     } catch (error) {
-      console.warn(`Error reading localStorage key "${key}":`, error);
+      console.warn(`Error reading storage key "${key}":`, error);
       return initialValue;
     }
   }, [key, initialValue, deserializer]);
@@ -58,15 +51,9 @@ export function useLocalStorage<T>(
     return initialValue;
   });
 
-  // Set value in localStorage
+  // Set value in storage
   const setValue = useCallback(
     (value: T | ((prev: T) => T)) => {
-      // Check if localStorage is available
-      if (typeof window === 'undefined') {
-        console.warn('localStorage is not available');
-        return;
-      }
-
       try {
         // Allow value to be a function so we have same API as useState
         const valueToStore = value instanceof Function ? value(storedValue) : value;
@@ -74,63 +61,55 @@ export function useLocalStorage<T>(
         // Save to state
         setStoredValue(valueToStore);
 
-        // Save to localStorage
-        window.localStorage.setItem(key, serializer(valueToStore));
-
-        // Dispatch storage event for cross-tab synchronization
-        window.dispatchEvent(new StorageEvent('storage', {
-          key,
-          newValue: serializer(valueToStore),
-        }));
+        // Save to storage using Taro API
+        Taro.setStorageSync(key, serializer(valueToStore));
       } catch (error) {
-        console.warn(`Error setting localStorage key "${key}":`, error);
+        console.warn(`Error setting storage key "${key}":`, error);
       }
     },
     [key, serializer, storedValue],
   );
 
-  // Remove value from localStorage
+  // Remove value from storage
   const removeValue = useCallback(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
     try {
-      window.localStorage.removeItem(key);
+      Taro.removeStorageSync(key);
       setStoredValue(initialValue);
-
-      // Dispatch storage event
-      window.dispatchEvent(new StorageEvent('storage', {
-        key,
-        newValue: null,
-      }));
     } catch (error) {
-      console.warn(`Error removing localStorage key "${key}":`, error);
+      console.warn(`Error removing storage key "${key}":`, error);
     }
   }, [key, initialValue]);
 
-  // Listen for storage changes from other tabs
+  // Fetch initial value from storage asynchronously
   useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === key) {
-        if (e.newValue === null) {
-          setStoredValue(initialValue);
-        } else {
-          try {
-            setStoredValue(deserializer(e.newValue));
-          } catch (error) {
-            console.warn('Error deserializing storage event:', error);
-          }
+    const fetchInitialValue = () => {
+      try {
+        const item = Taro.getStorageSync(key);
+        if (item.data) {
+          setStoredValue(deserializer(item.data));
         }
+      } catch (error) {
+        console.warn(`Error reading storage key "${key}":`, error);
       }
     };
 
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    fetchInitialValue();
+  }, [key, initialValue, deserializer]);
+
+  // Fetch initial value from storage asynchronously
+  useEffect(() => {
+    const fetchInitialValue = () => {
+      try {
+        const item = Taro.getStorageSync(key);
+        if (item.data) {
+          setStoredValue(deserializer(item.data));
+        }
+      } catch (error) {
+        console.warn(`Error reading storage key "${key}":`, error);
+      }
+    };
+
+    fetchInitialValue();
   }, [key, initialValue, deserializer]);
 
   return [storedValue, setValue, removeValue];
@@ -144,22 +123,15 @@ export function useSessionStorage<T>(
   initialValue: T,
   options: UseStorageOptions<T> = {},
 ): [T, (value: T | ((prev: T) => T)) => void, () => void] {
-  const {
-    serializer = JSON.stringify,
-    deserializer = JSON.parse,
-    initializeWithValue = true,
-  } = options;
+  const { serializer = JSON.stringify, deserializer = JSON.parse, initializeWithValue = true } = options;
 
   const readValue = useCallback((): T => {
-    if (typeof window === 'undefined') {
-      return initialValue;
-    }
-
     try {
-      const item = window.sessionStorage.getItem(key);
-      return item ? deserializer(item) : initialValue;
+      // In Taro, we need to use async storage API, but for initial value
+      // we'll use the provided initial value and fetch asynchronously later
+      return initialValue;
     } catch (error) {
-      console.warn(`Error reading sessionStorage key "${key}":`, error);
+      console.warn(`Error reading storage key "${key}":`, error);
       return initialValue;
     }
   }, [key, initialValue, deserializer]);
@@ -173,31 +145,23 @@ export function useSessionStorage<T>(
 
   const setValue = useCallback(
     (value: T | ((prev: T) => T)) => {
-      if (typeof window === 'undefined') {
-        return;
-      }
-
       try {
         const valueToStore = value instanceof Function ? value(storedValue) : value;
         setStoredValue(valueToStore);
-        window.sessionStorage.setItem(key, serializer(valueToStore));
+        Taro.setStorageSync(key, serializer(valueToStore));
       } catch (error) {
-        console.warn(`Error setting sessionStorage key "${key}":`, error);
+        console.warn(`Error setting storage key "${key}":`, error);
       }
     },
     [key, serializer, storedValue],
   );
 
   const removeValue = useCallback(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
     try {
-      window.sessionStorage.removeItem(key);
+      Taro.removeStorageSync(key);
       setStoredValue(initialValue);
     } catch (error) {
-      console.warn(`Error removing sessionStorage key "${key}":`, error);
+      console.warn(`Error removing storage key "${key}":`, error);
     }
   }, [key, initialValue]);
 

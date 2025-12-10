@@ -132,7 +132,14 @@ export class InputStyles {
 
   /** 生成输入框包装器样式 */
   static getWrapperStyle(props: Partial<InputProps>): React.CSSProperties {
-    const { size = 'md', status = 'normal', disabled = false, readonly: _readonly = false, bordered = true, style = {} } = props;
+    const {
+      size = 'md',
+      status = 'normal',
+      disabled = false,
+      readonly: _readonly = false,
+      bordered = true,
+      style = {},
+    } = props;
 
     const sizeStyles = this.SIZE_MAP[size];
     const statusStyles = this.STATUS_COLORS[status];

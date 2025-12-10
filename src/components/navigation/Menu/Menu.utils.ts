@@ -28,7 +28,7 @@ export class MenuUtils {
   static findParentItem(items: MenuItem[], key: string): MenuItem | null {
     for (const item of items) {
       if (item.children) {
-        if (item.children.some(child => child.key === key)) {
+        if (item.children.some((child) => child.key === key)) {
           return item;
         }
         const found = this.findParentItem(item.children, key);
@@ -45,16 +45,16 @@ export class MenuUtils {
    */
   static getItemPath(items: MenuItem[], key: string): MenuItem[] {
     const path: MenuItem[] = [];
-    
+
     const findPath = (currentItems: MenuItem[], targetKey: string, currentPath: MenuItem[]): boolean => {
       for (const item of currentItems) {
         const newPath = [...currentPath, item];
-        
+
         if (item.key === targetKey) {
           path.push(...newPath);
           return true;
         }
-        
+
         if (item.children) {
           if (findPath(item.children, targetKey, newPath)) {
             return true;
@@ -63,7 +63,7 @@ export class MenuUtils {
       }
       return false;
     };
-    
+
     findPath(items, key, []);
     return path;
   }
@@ -73,7 +73,7 @@ export class MenuUtils {
    */
   static expandParents(items: MenuItem[], key: string): string[] {
     const path = this.getItemPath(items, key);
-    return path.slice(0, -1).map(item => item.key);
+    return path.slice(0, -1).map((item) => item.key);
   }
 
   /**
@@ -81,16 +81,16 @@ export class MenuUtils {
    */
   static flattenItems(items: MenuItem[], parentKey?: string): MenuItem[] {
     const result: MenuItem[] = [];
-    
-    items.forEach(item => {
+
+    items.forEach((item) => {
       const flatItem = { ...item, parentKey };
       result.push(flatItem);
-      
+
       if (item.children) {
         result.push(...this.flattenItems(item.children, item.key));
       }
     });
-    
+
     return result;
   }
 
@@ -98,14 +98,14 @@ export class MenuUtils {
    * 过滤菜单项
    */
   static filterItems(items: MenuItem[], keyword: string): MenuItem[] {
-    return items.filter(item => {
+    return items.filter((item) => {
       const label = String(item.label).toLowerCase();
       const search = keyword.toLowerCase();
-      
+
       if (label.includes(search)) {
         return true;
       }
-      
+
       if (item.children) {
         const filteredChildren = this.filterItems(item.children, keyword);
         if (filteredChildren.length > 0) {
@@ -113,7 +113,7 @@ export class MenuUtils {
           return true;
         }
       }
-      
+
       return false;
     });
   }
@@ -147,7 +147,7 @@ export class MenuUtils {
    * 格式化菜单数据
    */
   static formatMenuData(data: any[]): MenuItem[] {
-    return data.map(item => ({
+    return data.map((item) => ({
       key: item.key || item.id,
       label: item.label || item.name || item.title,
       icon: item.icon,
@@ -169,7 +169,7 @@ export class MenuUtils {
   static handleItemClick(
     item: MenuItem,
     event: any,
-    onClick?: (key: string, item: MenuItem, event: any) => void
+    onClick?: (key: string, item: MenuItem, event: any) => void,
   ): void {
     onClick?.(item.key, item, event);
   }

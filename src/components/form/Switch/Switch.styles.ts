@@ -3,13 +3,7 @@
  * 开关组件样式
  */
 
-import type {
-  SwitchSize,
-  SwitchVariant,
-  SwitchStatus,
-  SwitchColor,
-  SwitchStyleConfig,
-} from './Switch.types';
+import type { SwitchSize, SwitchVariant, SwitchStatus, SwitchColor, SwitchStyleConfig } from './Switch.types';
 
 // 默认样式配置
 const defaultStyleConfig: SwitchStyleConfig = {

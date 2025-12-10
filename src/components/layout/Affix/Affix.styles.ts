@@ -12,26 +12,31 @@ export const affixStyles = {
   affixRelative: {
     position: 'relative' as const,
   },
-}
+};
 
-export const getAffixStyle = (affixed: boolean, position?: 'top' | 'bottom', offset?: number, customStyle?: React.CSSProperties) => {
-  const style: React.CSSProperties = { ...affixStyles.affix }
+export const getAffixStyle = (
+  affixed: boolean,
+  position?: 'top' | 'bottom',
+  offset?: number,
+  customStyle?: React.CSSProperties,
+) => {
+  const style: React.CSSProperties = { ...affixStyles.affix };
 
   if (affixed && position === 'top') {
-    Object.assign(style, affixStyles.affixTop)
+    Object.assign(style, affixStyles.affixTop);
   }
   if (affixed && position === 'bottom') {
-    Object.assign(style, affixStyles.affixBottom)
+    Object.assign(style, affixStyles.affixBottom);
   }
   if (offset !== undefined && position) {
-    style[position] = offset
+    style[position] = offset;
   } else if (offset !== undefined) {
-    style.top = offset
+    style.top = offset;
   }
 
-  return { ...style, ...customStyle }
-}
+  return { ...style, ...customStyle };
+};
 
 export const getRelativeStyle = (customStyle?: React.CSSProperties) => {
-  return { ...affixStyles.affixRelative, ...customStyle }
-}
+  return { ...affixStyles.affixRelative, ...customStyle };
+};

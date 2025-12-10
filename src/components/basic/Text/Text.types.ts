@@ -1,5 +1,5 @@
 import type { ReactNode, HTMLAttributes } from 'react';
-import React from "react"
+import React from 'react';
 /** 文本尺寸 */
 export type TextSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl' | '8xl' | '9xl';
 
@@ -42,9 +42,19 @@ export type TextVariant =
   | 'all-petite-caps'
   | 'unicase'
   | 'titling-caps'
-  | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
-  | 'body1' | 'body2' | 'body'
-  | 'caption' | 'overline' | 'subtitle1' | 'subtitle2';
+  | 'h1'
+  | 'h2'
+  | 'h3'
+  | 'h4'
+  | 'h5'
+  | 'h6'
+  | 'body1'
+  | 'body2'
+  | 'body'
+  | 'caption'
+  | 'overline'
+  | 'subtitle1'
+  | 'subtitle2';
 
 /** 文本间距 */
 export type LetterSpacing = 'tighter' | 'tight' | 'normal' | 'wide' | 'wider' | 'widest' | number;

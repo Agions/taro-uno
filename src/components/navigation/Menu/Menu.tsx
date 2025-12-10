@@ -240,15 +240,12 @@ export const MenuComponent = forwardRef<MenuRef, MenuProps>((props, ref) => {
       getItem: (key: string) => MenuUtils.findItem(items, key),
       addItem: (_item: MenuItem, _parentKey?: string) => {
         // 静态方法，暂不实现
-
       },
       removeItem: (_key: string) => {
         // 静态方法，暂不实现
-
       },
       updateItem: (_key: string, _newItem: Partial<MenuItem>) => {
         // 静态方法，暂不实现
-
       },
       expandAll: () => {
         const allKeys = MenuUtils.flattenItems(items)
@@ -306,12 +303,12 @@ export const MenuComponent = forwardRef<MenuRef, MenuProps>((props, ref) => {
     `taro-uno-h5-menu--${size}`,
     collapsed ? 'taro-uno-h5-menu--collapsed' : '',
     className,
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   // 处理无障碍状态序列化
-  const serializedAccessibilityState = finalAccessibilityState
-    ? JSON.stringify(finalAccessibilityState)
-    : undefined;
+  const serializedAccessibilityState = finalAccessibilityState ? JSON.stringify(finalAccessibilityState) : undefined;
 
   return (
     <View

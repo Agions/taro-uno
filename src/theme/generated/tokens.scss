@@ -173,11 +173,47 @@ $spacing-container-xl: 1280px;
 $spacing-container-2xl: 1536px;
 
 // ==================== 字体令牌 ====================
-$typography-fontFamily-sans: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif;
-$typography-fontFamily-serif: Georgia, Cambria, Times New Roman, Times, serif;
-$typography-fontFamily-mono: Fira Code, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
-$typography-fontFamily-display: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif;
-$typography-fontFamily-body: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif;
+$typography-fontFamily-sans:
+  Inter,
+  -apple-system,
+  BlinkMacSystemFont,
+  Segoe UI,
+  Roboto,
+  Helvetica Neue,
+  Arial,
+  sans-serif;
+$typography-fontFamily-serif:
+  Georgia,
+  Cambria,
+  Times New Roman,
+  Times,
+  serif;
+$typography-fontFamily-mono:
+  Fira Code,
+  Menlo,
+  Monaco,
+  Consolas,
+  Liberation Mono,
+  Courier New,
+  monospace;
+$typography-fontFamily-display:
+  Inter,
+  -apple-system,
+  BlinkMacSystemFont,
+  Segoe UI,
+  Roboto,
+  Helvetica Neue,
+  Arial,
+  sans-serif;
+$typography-fontFamily-body:
+  Inter,
+  -apple-system,
+  BlinkMacSystemFont,
+  Segoe UI,
+  Roboto,
+  Helvetica Neue,
+  Arial,
+  sans-serif;
 $typography-fontSize-3xs: 10px;
 $typography-fontSize-2xs: 12px;
 $typography-fontSize-xs: 14px;
@@ -252,23 +288,45 @@ $effects-borderRadius-modal: 12px;
 $effects-borderRadius-dropdown: 8px;
 $effects-boxShadow-none: none;
 $effects-boxShadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-$effects-boxShadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-$effects-boxShadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-$effects-boxShadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-$effects-boxShadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+$effects-boxShadow-sm:
+  0 1px 3px 0 rgba(0, 0, 0, 0.1),
+  0 1px 2px 0 rgba(0, 0, 0, 0.06);
+$effects-boxShadow-md:
+  0 4px 6px -1px rgba(0, 0, 0, 0.1),
+  0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$effects-boxShadow-lg:
+  0 10px 15px -3px rgba(0, 0, 0, 0.1),
+  0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$effects-boxShadow-xl:
+  0 20px 25px -5px rgba(0, 0, 0, 0.1),
+  0 10px 10px -5px rgba(0, 0, 0, 0.04);
 $effects-boxShadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 $effects-boxShadow-3xl: 0 35px 60px -15px rgba(0, 0, 0, 0.3);
 $effects-boxShadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
 $effects-boxShadow-colored: 0 10px 15px -3px rgba(14, 165, 233, 0.15);
 $effects-boxShadow-button-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-$effects-boxShadow-button-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-$effects-boxShadow-button-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-$effects-boxShadow-card-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-$effects-boxShadow-card-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-$effects-boxShadow-card-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$effects-boxShadow-button-md:
+  0 4px 6px -1px rgba(0, 0, 0, 0.1),
+  0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$effects-boxShadow-button-lg:
+  0 10px 15px -3px rgba(0, 0, 0, 0.1),
+  0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$effects-boxShadow-card-sm:
+  0 1px 3px 0 rgba(0, 0, 0, 0.1),
+  0 1px 2px 0 rgba(0, 0, 0, 0.06);
+$effects-boxShadow-card-md:
+  0 4px 6px -1px rgba(0, 0, 0, 0.1),
+  0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$effects-boxShadow-card-lg:
+  0 10px 15px -3px rgba(0, 0, 0, 0.1),
+  0 4px 6px -2px rgba(0, 0, 0, 0.05);
 $effects-boxShadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-$effects-boxShadow-tooltip: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-$effects-boxShadow-dropdown: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$effects-boxShadow-tooltip:
+  0 10px 15px -3px rgba(0, 0, 0, 0.1),
+  0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$effects-boxShadow-dropdown:
+  0 10px 15px -3px rgba(0, 0, 0, 0.1),
+  0 4px 6px -2px rgba(0, 0, 0, 0.05);
 $effects-animation-duration-75: 75ms;
 $effects-animation-duration-100: 100ms;
 $effects-animation-duration-150: 150ms;
@@ -296,8 +354,14 @@ $effects-animation-delay-300: 300ms;
 $effects-animation-delay-500: 500ms;
 $effects-transition-none: none;
 $effects-transition-all: all 150ms ease-in-out;
-$effects-transition-common: color 150ms ease-in-out, background-color 150ms ease-in-out, border-color 150ms ease-in-out;
-$effects-transition-colors: color 150ms ease-in-out, background-color 150ms ease-in-out, border-color 150ms ease-in-out;
+$effects-transition-common:
+  color 150ms ease-in-out,
+  background-color 150ms ease-in-out,
+  border-color 150ms ease-in-out;
+$effects-transition-colors:
+  color 150ms ease-in-out,
+  background-color 150ms ease-in-out,
+  border-color 150ms ease-in-out;
 $effects-transition-opacity: opacity 150ms ease-in-out;
 $effects-transition-shadow: box-shadow 150ms ease-in-out;
 $effects-transition-transform: transform 150ms ease-in-out;

@@ -61,7 +61,9 @@ export const containerStyles = {
     // 计算最大宽度
     const finalMaxWidth =
       maxWidth !== undefined
-        ? typeof maxWidth === 'number' ? `${maxWidth}px` : containerStyles['parseSize'](maxWidth as Size)
+        ? typeof maxWidth === 'number'
+          ? `${maxWidth}px`
+          : containerStyles['parseSize'](maxWidth as Size)
         : size === 'fluid'
           ? 'none'
           : containerStyles.SIZE_MAP[size as keyof typeof containerStyles.SIZE_MAP];

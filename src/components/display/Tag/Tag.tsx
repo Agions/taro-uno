@@ -45,13 +45,13 @@ export const TagComponent = forwardRef<TagRef, TagProps>((props, ref) => {
 
   const handleClick = (event: any) => {
     event.stopPropagation();
-    
+
     if (checkable) {
       const newChecked = !checkedState;
       setCheckedState(newChecked);
       onCheckedChange?.(newChecked);
     }
-    
+
     onClick?.(event);
   };
 
@@ -63,11 +63,11 @@ export const TagComponent = forwardRef<TagRef, TagProps>((props, ref) => {
 
   const getTagStyle = () => {
     const colorKey = `${color}${variant.charAt(0).toUpperCase() + variant.slice(1)}`;
-    
+
     const baseStyle = {
       ...tagStyles['base'],
       ...tagStyles[size],
-      ...tagStyles[colorKey as keyof typeof tagStyles] || tagStyles['defaultSolid'],
+      ...(tagStyles[colorKey as keyof typeof tagStyles] || tagStyles['defaultSolid']),
       ...style,
     };
 
@@ -119,29 +119,12 @@ export const TagComponent = forwardRef<TagRef, TagProps>((props, ref) => {
   }
 
   return (
-    <View
-      ref={elementRef}
-      style={getTagStyle()}
-      className={className}
-      onClick={handleClick}
-      {...rest}
-    >
+    <View ref={elementRef} style={getTagStyle()} className={className} onClick={handleClick} {...rest}>
       <View style={tagStyles['content']}>
-        {icon && (
-          <View style={tagStyles['icon']}>
-            {icon}
-          </View>
-        )}
-        {children && (
-          <Text style={tagStyles['text']}>
-            {children}
-          </Text>
-        )}
+        {icon && <View style={tagStyles['icon']}>{icon}</View>}
+        {children && <Text style={tagStyles['text']}>{children}</Text>}
         {closable && (
-          <Text
-            style={getCloseIconStyle()}
-            onClick={handleClose}
-          >
+          <Text style={getCloseIconStyle()} onClick={handleClose}>
             ×
           </Text>
         )}

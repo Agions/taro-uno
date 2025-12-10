@@ -129,7 +129,22 @@ export const InputComponent = forwardRef<InputRef, InputProps>((props, ref) => {
         setInternalStatus('normal');
       },
     }),
-    [value, props.value, props.defaultValue, internalDisabled, internalReadonly, validateInput, handleClear, finalStatus, setInternalValue, setInternalStatus, setInternalDisabled, setInternalReadonly, setValidationResult, nativeInputRef]
+    [
+      value,
+      props.value,
+      props.defaultValue,
+      internalDisabled,
+      internalReadonly,
+      validateInput,
+      handleClear,
+      finalStatus,
+      setInternalValue,
+      setInternalStatus,
+      setInternalDisabled,
+      setInternalReadonly,
+      setValidationResult,
+      nativeInputRef,
+    ],
   );
 
   // 生成输入框样式
@@ -166,7 +181,6 @@ export const InputComponent = forwardRef<InputRef, InputProps>((props, ref) => {
       })
     : {};
 
-  
   // 计算字符长度
   const calculateLength = (text: string) => {
     if (!text) return 0;
@@ -232,7 +246,9 @@ export const InputComponent = forwardRef<InputRef, InputProps>((props, ref) => {
             const inputValue = (e as any).detail?.value || (e as any).target?.value || '';
             handleValueChange(inputValue, e as unknown as ITouchEvent);
           }}
-          onKeyboardHeightChange={(e) => onKeyboardHeightChange?.((e as any).detail?.height, e as unknown as ITouchEvent)}
+          onKeyboardHeightChange={(e) =>
+            onKeyboardHeightChange?.((e as any).detail?.height, e as unknown as ITouchEvent)
+          }
           {...(restProps as any)}
         />
 
@@ -263,7 +279,9 @@ export const InputComponent = forwardRef<InputRef, InputProps>((props, ref) => {
       )}
 
       {/* 错误文本 */}
-      {errorText && finalStatus === 'error' && <Text style={inputStyles['getErrorTextStyle']({ size })}>{errorText}</Text>}
+      {errorText && finalStatus === 'error' && (
+        <Text style={inputStyles['getErrorTextStyle']({ size })}>{errorText}</Text>
+      )}
 
       {/* 验证结果文本 */}
       {validationResult?.message && finalStatus === 'error' && (

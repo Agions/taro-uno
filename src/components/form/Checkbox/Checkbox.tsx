@@ -2,13 +2,7 @@ import React, { forwardRef, useRef, useState, useEffect, useCallback } from 'rea
 import { Checkbox as TaroCheckbox, Text, View } from '@tarojs/components';
 import type { ITouchEvent } from '@tarojs/components';
 import { checkboxStyles } from './Checkbox.styles';
-import type {
-  CheckboxProps,
-  CheckboxRef,
-  CheckboxSize,
-  CheckboxStatus,
-  CheckboxColor,
-} from './Checkbox.types';
+import type { CheckboxProps, CheckboxRef, CheckboxSize, CheckboxStatus, CheckboxColor } from './Checkbox.types';
 
 /** 复选框组件 */
 export const CheckboxComponent = forwardRef<CheckboxRef, CheckboxProps>((props, ref) => {
@@ -237,7 +231,6 @@ export const CheckboxComponent = forwardRef<CheckboxRef, CheckboxProps>((props, 
     [internalDisabled, internalReadonly, onClick, handleChange],
   );
 
-  
   // 计算最终状态
   const finalStatus = internalDisabled ? 'disabled' : validationResult?.valid === false ? 'error' : internalStatus;
 
@@ -425,7 +418,7 @@ export const CheckboxComponent = forwardRef<CheckboxRef, CheckboxProps>((props, 
                   target: e.target || e.currentTarget || checkboxRef.current,
                   currentTarget: e.currentTarget || checkboxRef.current,
                   type: e.type || 'change',
-                  ...e
+                  ...e,
                 };
                 onChange?.(!checked, eventObject);
               }

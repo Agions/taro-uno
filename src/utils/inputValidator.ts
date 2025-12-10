@@ -67,7 +67,7 @@ class InputValidator {
     return {
       isValid: errors.length === 0,
       errors,
-      sanitized
+      sanitized,
     };
   }
 
@@ -81,7 +81,7 @@ class InputValidator {
     return this.validateString(email, {
       required: true,
       pattern: emailPattern,
-      sanitize: true
+      sanitize: true,
     });
   }
 
@@ -115,7 +115,7 @@ class InputValidator {
     return this.validateString(phone, {
       required: true,
       pattern: phonePattern,
-      sanitize: true
+      sanitize: true,
     });
   }
 
@@ -136,19 +136,19 @@ class InputValidator {
       if (!allowedProtocols.includes(urlObj.protocol)) {
         return {
           isValid: false,
-          errors: ['只支持 http 和 https 协议']
+          errors: ['只支持 http 和 https 协议'],
         };
       }
 
       return {
         isValid: true,
         errors: [],
-        sanitized: url
+        sanitized: url,
       };
     } catch (e) {
       return {
         isValid: false,
-        errors: ['无效的URL地址']
+        errors: ['无效的URL地址'],
       };
     }
   }
@@ -179,7 +179,7 @@ class InputValidator {
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   }
 
@@ -219,7 +219,7 @@ class InputValidator {
         if (typeof value === 'string') {
           const result = this.validateString(value, rule || {});
           if (!result.isValid) {
-            errors.push(...result.errors.map(err => `${key}: ${err}`));
+            errors.push(...result.errors.map((err) => `${key}: ${err}`));
           }
           if (result.sanitized !== undefined) {
             sanitized[key] = result.sanitized;
@@ -230,7 +230,7 @@ class InputValidator {
           const strValue = String(value);
           const result = this.validateNumber(strValue, rule?.minLength, rule?.maxLength);
           if (!result.isValid) {
-            errors.push(...result.errors.map(err => `${key}: ${err}`));
+            errors.push(...result.errors.map((err) => `${key}: ${err}`));
           }
           sanitized[key] = value;
         } else {
@@ -242,7 +242,7 @@ class InputValidator {
     return {
       isValid: errors.length === 0,
       errors,
-      sanitized: Object.keys(sanitized).length > 0 ? sanitized : undefined
+      sanitized: Object.keys(sanitized).length > 0 ? sanitized : undefined,
     };
   }
 }
@@ -253,9 +253,12 @@ const inputValidator = new InputValidator();
 // 导出便捷方法
 export const validateString = (value: string, rules: ValidationRule) => inputValidator.validateString(value, rules);
 export const validateEmail = (email: string) => inputValidator.validateEmail(email);
-export const validatePhone = (phone: string, countryCode: 'CN' | 'US' | 'GB' | 'JP' | 'KR' = 'CN') => inputValidator.validatePhone(phone, countryCode);
+export const validatePhone = (phone: string, countryCode: 'CN' | 'US' | 'GB' | 'JP' | 'KR' = 'CN') =>
+  inputValidator.validatePhone(phone, countryCode);
 export const validateURL = (url: string) => inputValidator.validateURL(url);
-export const validateNumber = (value: string, min?: number, max?: number) => inputValidator.validateNumber(value, min, max);
-export const validateObject = (obj: Record<string, any>, rules: Record<string, ValidationRule>) => inputValidator.validateObject(obj, rules);
+export const validateNumber = (value: string, min?: number, max?: number) =>
+  inputValidator.validateNumber(value, min, max);
+export const validateObject = (obj: Record<string, any>, rules: Record<string, ValidationRule>) =>
+  inputValidator.validateObject(obj, rules);
 
 export default inputValidator;

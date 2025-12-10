@@ -262,18 +262,29 @@ export interface TransferConfig {
 /** 穿梭框工具函数接口 */
 export interface TransferUtils {
   /** 过滤选项 */
-  filterOptions: (options: TransferDataSource, inputValue: string, filterOption?: TransferProps['filterOption']) => TransferDataSource;
+  filterOptions: (
+    options: TransferDataSource,
+    inputValue: string,
+    filterOption?: TransferProps['filterOption'],
+  ) => TransferDataSource;
   /** 查找选项 */
   findOptions: (options: TransferDataSource, keys: TransferValue) => TransferOption[];
   /** 验证值 */
   validateValue: (value: TransferValue, options: TransferDataSource) => boolean;
   /** 分割数据源 */
-  splitDataSource: (dataSource: TransferDataSource, targetKeys: TransferValue) => {
+  splitDataSource: (
+    dataSource: TransferDataSource,
+    targetKeys: TransferValue,
+  ) => {
     leftDataSource: TransferDataSource;
     rightDataSource: TransferDataSource;
   };
   /** 生成分页数据 */
-  generatePaginationData: (data: TransferDataSource, currentPage: number, pageSize: number) => {
+  generatePaginationData: (
+    data: TransferDataSource,
+    currentPage: number,
+    pageSize: number,
+  ) => {
     data: TransferDataSource;
     total: number;
     currentPage: number;
@@ -348,11 +359,11 @@ export class TransferTools {
   static filterOptions(
     options: TransferDataSource,
     inputValue: string,
-    filterOption?: TransferProps['filterOption']
+    filterOption?: TransferProps['filterOption'],
   ): TransferDataSource {
     if (!inputValue) return options;
 
-    return options.filter(option => {
+    return options.filter((option) => {
       if (filterOption) {
         return filterOption(inputValue, option);
       }
@@ -367,19 +378,19 @@ export class TransferTools {
 
   /** 查找选项 */
   static findOptions(options: TransferDataSource, keys: TransferValue): TransferOption[] {
-    return options.filter(option => keys.includes(option.key));
+    return options.filter((option) => keys.includes(option.key));
   }
 
   /** 验证值 */
   static validateValue(value: TransferValue, options: TransferDataSource): boolean {
-    const validKeys = options.map(option => option.key);
-    return value.every(key => validKeys.includes(key));
+    const validKeys = options.map((option) => option.key);
+    return value.every((key) => validKeys.includes(key));
   }
 
   /** 分割数据源 */
   static splitDataSource(
     dataSource: TransferDataSource,
-    targetKeys: TransferValue
+    targetKeys: TransferValue,
   ): {
     leftDataSource: TransferDataSource;
     rightDataSource: TransferDataSource;
@@ -387,7 +398,7 @@ export class TransferTools {
     const leftDataSource: TransferDataSource = [];
     const rightDataSource: TransferDataSource = [];
 
-    dataSource.forEach(option => {
+    dataSource.forEach((option) => {
       if (targetKeys.includes(option.key)) {
         rightDataSource.push(option);
       } else {
@@ -402,7 +413,7 @@ export class TransferTools {
   static generatePaginationData(
     data: TransferDataSource,
     currentPage: number,
-    pageSize: number
+    pageSize: number,
   ): {
     data: TransferDataSource;
     total: number;
@@ -426,23 +437,20 @@ export class TransferTools {
   }
 
   /** 获取选中的选项 */
-  static getSelectedOptions(
-    options: TransferDataSource,
-    selectedKeys: TransferValue
-  ): TransferOption[] {
-    return options.filter(option => selectedKeys.includes(option.key));
+  static getSelectedOptions(options: TransferDataSource, selectedKeys: TransferValue): TransferOption[] {
+    return options.filter((option) => selectedKeys.includes(option.key));
   }
 
   /** 获取禁用的选项 */
   static getDisabledOptions(options: TransferDataSource): TransferOption[] {
-    return options.filter(option => option.disabled);
+    return options.filter((option) => option.disabled);
   }
 
   /** 排序选项 */
   static sortOptions(
     options: TransferDataSource,
     sortBy: keyof TransferOption,
-    order: 'asc' | 'desc' = 'asc'
+    order: 'asc' | 'desc' = 'asc',
   ): TransferDataSource {
     return [...options].sort((a, b) => {
       const aValue = a[sortBy];
@@ -457,7 +465,7 @@ export class TransferTools {
   /** 去重选项 */
   static uniqueOptions(options: TransferDataSource): TransferDataSource {
     const seen = new Set();
-    return options.filter(option => {
+    return options.filter((option) => {
       if (seen.has(option.key)) {
         return false;
       }
@@ -469,10 +477,10 @@ export class TransferTools {
   /** 批量更新选项状态 */
   static updateOptionsStatus(
     options: TransferDataSource,
-    updates: { key: string | number; disabled?: boolean; selected?: boolean }[]
+    updates: { key: string | number; disabled?: boolean; selected?: boolean }[],
   ): TransferDataSource {
-    return options.map(option => {
-      const update = updates.find(u => u.key === option.key);
+    return options.map((option) => {
+      const update = updates.find((u) => u.key === option.key);
       if (update) {
         return { ...option, ...update };
       }
@@ -483,7 +491,7 @@ export class TransferTools {
   /** 计算选中状态 */
   static calculateSelectionState(
     options: TransferDataSource,
-    selectedKeys: TransferValue
+    selectedKeys: TransferValue,
   ): {
     allSelected: boolean;
     partiallySelected: boolean;
@@ -491,9 +499,9 @@ export class TransferTools {
     selectedCount: number;
     totalCount: number;
   } {
-    const enabledOptions = options.filter(option => !option.disabled);
+    const enabledOptions = options.filter((option) => !option.disabled);
     const totalCount = enabledOptions.length;
-    const selectedCount = enabledOptions.filter(option => selectedKeys.includes(option.key)).length;
+    const selectedCount = enabledOptions.filter((option) => selectedKeys.includes(option.key)).length;
 
     const allSelected = totalCount > 0 && selectedCount === totalCount;
     const noneSelected = selectedCount === 0;

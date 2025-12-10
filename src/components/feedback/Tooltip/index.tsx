@@ -5,10 +5,10 @@
  */
 
 import { Tooltip as TooltipComponent } from './Tooltip';
-import type { 
-  TooltipProps, 
-  TooltipRef, 
-  TooltipTrigger, 
+import type {
+  TooltipProps,
+  TooltipRef,
+  TooltipTrigger,
   TooltipPlacement,
   TooltipTheme,
   TooltipAnimation,
@@ -19,17 +19,17 @@ import type {
   TooltipEventType,
   TooltipEventHandler,
   TooltipOptions,
-  TooltipInstance
+  TooltipInstance,
 } from './Tooltip.types';
 import tooltipStyles from './Tooltip.styles';
 import { getTooltipClasses, getArrowClasses, tooltipCssClasses } from './Tooltip.styles';
 
 // 主要导出
 export { TooltipComponent as Tooltip };
-export type { 
-  TooltipProps, 
-  TooltipRef, 
-  TooltipTrigger, 
+export type {
+  TooltipProps,
+  TooltipRef,
+  TooltipTrigger,
   TooltipPlacement,
   TooltipTheme,
   TooltipAnimation,
@@ -40,17 +40,14 @@ export type {
   TooltipEventType,
   TooltipEventHandler,
   TooltipOptions,
-  TooltipInstance
+  TooltipInstance,
 };
 
 // 样式相关导出
 export { tooltipStyles, getTooltipClasses, getArrowClasses, tooltipCssClasses };
 
 // 重新导出常用类型
-export type {
-  TooltipProps as ITooltipProps,
-  TooltipRef as ITooltipRef,
-} from './Tooltip.types';
+export type { TooltipProps as ITooltipProps, TooltipRef as ITooltipRef } from './Tooltip.types';
 
 // 导出工具函数 - 针对 Taro 环境优化
 export const TooltipUtils = {
@@ -65,23 +62,18 @@ export const TooltipUtils = {
       visible: false,
       show: () => {
         // Taro 环境中的显示逻辑
-
       },
       hide: () => {
         // Taro 环境中的隐藏逻辑
-
       },
       toggle: () => {
         // Taro 环境中的切换逻辑
-
       },
       update: (newProps: Partial<TooltipProps>) => {
         // Taro 环境中的更新逻辑
-
       },
       destroy: () => {
         // Taro 环境中的销毁逻辑
-
       },
     };
   },
@@ -91,7 +83,6 @@ export const TooltipUtils = {
    */
   show: (elementId: string, content: string, options?: Partial<TooltipProps>) => {
     // 在 Taro 环境中通过选择器显示指定元素的 Tooltip
-
     // 实际应用中可以使用 Taro 的选择器 API
   },
 
@@ -100,7 +91,6 @@ export const TooltipUtils = {
    */
   hide: (elementId: string) => {
     // 在 Taro 环境中隐藏指定元素的 Tooltip
-
     // 实际应用中可以使用 Taro 的选择器 API
   },
 
@@ -109,7 +99,6 @@ export const TooltipUtils = {
    */
   update: (elementId: string, content: string) => {
     // 在 Taro 环境中更新指定元素的 Tooltip 内容
-
     // 实际应用中可以使用 Taro 的选择器 API
   },
 
@@ -118,7 +107,6 @@ export const TooltipUtils = {
    */
   destroy: (elementId: string) => {
     // 在 Taro 环境中销毁指定元素的 Tooltip
-
     // 实际应用中可以使用 Taro 的选择器 API
   },
 };

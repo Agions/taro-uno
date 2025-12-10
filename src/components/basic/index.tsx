@@ -12,10 +12,7 @@ import { Typography } from './Typography';
 
 // 导出 Button 组件
 export { Button } from './Button';
-export type {
-  ButtonProps,
-  ButtonRef,
-} from './Button/Button.types';
+export type { ButtonProps, ButtonRef } from './Button/Button.types';
 export { buttonStyles } from './Button/Button.styles';
 
 // 导出 Icon 组件
@@ -111,18 +108,18 @@ export interface BasicComponents {
 }
 
 // 基础组件工具类型
-export type BasicComponentProps = 
-  | import('./Button/Button.types').ButtonProps 
-  | import('./Icon/Icon.types').IconProps 
-  | import('./Text/Text.types').TextProps 
-  | import('./Divider/Divider.types').DividerProps 
+export type BasicComponentProps =
+  | import('./Button/Button.types').ButtonProps
+  | import('./Icon/Icon.types').IconProps
+  | import('./Text/Text.types').TextProps
+  | import('./Divider/Divider.types').DividerProps
   | import('./Typography/Typography.types').TypographyProps;
 
-export type BasicComponentRef = 
-  | import('./Button/Button.types').ButtonRef 
-  | import('./Icon/Icon.types').IconRef 
-  | import('./Text/Text.types').TextRef 
-  | import('./Divider/Divider.types').DividerRef 
+export type BasicComponentRef =
+  | import('./Button/Button.types').ButtonRef
+  | import('./Icon/Icon.types').IconRef
+  | import('./Text/Text.types').TextRef
+  | import('./Divider/Divider.types').DividerRef
   | import('./Typography/Typography.types').TypographyRef;
 
 // 基础组件工具函数
@@ -141,7 +138,8 @@ export const BasicComponentsUtils = {
    */
   getComponentType: (props: BasicComponentProps): string => {
     if ('source' in props) return 'Icon';
-    if ('variant' in props && ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'span'].includes(props.variant as string)) return 'Typography';
+    if ('variant' in props && ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'span'].includes(props.variant as string))
+      return 'Typography';
     if ('children' in props && typeof props.children === 'string') return 'Text';
     if ('type' in props && ['solid', 'outline', 'ghost', 'text'].includes(props.type as string)) return 'Button';
     return 'Divider';

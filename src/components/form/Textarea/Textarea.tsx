@@ -2,7 +2,13 @@ import React, { forwardRef, useRef, useState, useEffect, useCallback } from 'rea
 import { Textarea as TaroTextarea, View, Text } from '@tarojs/components';
 import { textareaStyles } from './Textarea.styles';
 import { utils } from '@/utils';
-import type { TextareaProps, TextareaRef, TextareaStatus, TextareaValidationResult, TextareaRule } from './Textarea.types';
+import type {
+  TextareaProps,
+  TextareaRef,
+  TextareaStatus,
+  TextareaValidationResult,
+  TextareaRule,
+} from './Textarea.types';
 
 /** 文本域组件 */
 export const TextareaComponent = forwardRef<TextareaRef, TextareaProps>((props, ref) => {

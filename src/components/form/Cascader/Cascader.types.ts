@@ -262,13 +262,29 @@ export interface CascaderConfig {
 /** 级联选择器工具函数接口 */
 export interface CascaderUtils {
   /** 查找选项路径 */
-  findOptionPath: (_options: CascaderOption[], value: CascaderValue, fieldNames?: CascaderProps['fieldNames']) => CascaderOption[];
+  findOptionPath: (
+    _options: CascaderOption[],
+    value: CascaderValue,
+    fieldNames?: CascaderProps['fieldNames'],
+  ) => CascaderOption[];
   /** 过滤选项 */
-  filterOptions: (_options: CascaderOption[], inputValue: string, filterOption?: CascaderProps['filterOption']) => CascaderOption[];
+  filterOptions: (
+    _options: CascaderOption[],
+    inputValue: string,
+    filterOption?: CascaderProps['filterOption'],
+  ) => CascaderOption[];
   /** 格式化显示值 */
-  formatDisplayValue: (_labels: ReactNode[], selectedOptions: CascaderOption[], config?: { showPath?: boolean; pathSeparator?: string }) => ReactNode;
+  formatDisplayValue: (
+    _labels: ReactNode[],
+    selectedOptions: CascaderOption[],
+    config?: { showPath?: boolean; pathSeparator?: string },
+  ) => ReactNode;
   /** 验证值 */
-  validateValue: (_value: CascaderValue, options: CascaderOption[], fieldNames?: CascaderProps['fieldNames']) => boolean;
+  validateValue: (
+    _value: CascaderValue,
+    options: CascaderOption[],
+    fieldNames?: CascaderProps['fieldNames'],
+  ) => boolean;
   /** 展平选项 */
   flattenOptions: (_options: CascaderOption[], fieldNames?: CascaderProps['fieldNames']) => CascaderOption[];
   /** 生成选项树 */
@@ -376,7 +392,11 @@ export interface CascaderStyles {
   /** 获取动画关键帧 */
   getAnimations: () => Record<string, CSSProperties>;
   /** 格式化显示值 */
-  formatDisplayValue: (_labels: ReactNode[], selectedOptions: CascaderOption[], config?: { showPath?: boolean; pathSeparator?: string }) => ReactNode;
+  formatDisplayValue: (
+    _labels: ReactNode[],
+    selectedOptions: CascaderOption[],
+    config?: { showPath?: boolean; pathSeparator?: string },
+  ) => ReactNode;
   /** 获取完整样式 */
   getStyle: (_config: {
     size?: CascaderSize;
@@ -405,30 +425,27 @@ export class CascaderTools {
   static findOptionPath(
     options: CascaderOption[],
     value: CascaderValue,
-    fieldNames: CascaderProps['fieldNames'] = {}
+    fieldNames: CascaderProps['fieldNames'] = {},
   ): CascaderOption[] {
-    const {
-      value: valueKey = 'value',
-      children: childrenKey = 'children',
-    } = fieldNames;
+    const { value: valueKey = 'value', children: childrenKey = 'children' } = fieldNames;
 
     const findPath = (
       currentOptions: CascaderOption[],
       targetValue: CascaderValue,
-      path: CascaderOption[] = []
+      path: CascaderOption[] = [],
     ): CascaderOption[] | null => {
       for (const option of currentOptions) {
         const currentPath = [...path, option];
-        
+
         if (option[valueKey as keyof typeof option] === targetValue[targetValue.length - 1]) {
           return currentPath;
         }
-        
+
         if (option[childrenKey as keyof typeof option]) {
           const found = findPath(
             option[childrenKey as keyof typeof option] as CascaderOption[],
             targetValue,
-            currentPath
+            currentPath,
           );
           if (found) return found;
         }
@@ -443,17 +460,14 @@ export class CascaderTools {
   static filterOptions(
     options: CascaderOption[],
     inputValue: string,
-    filterOption?: CascaderProps['filterOption']
+    filterOption?: CascaderProps['filterOption'],
   ): CascaderOption[] {
     const filtered: CascaderOption[] = [];
-    
-    const filter = (
-      currentOptions: CascaderOption[],
-      path: CascaderOption[] = []
-    ) => {
+
+    const filter = (currentOptions: CascaderOption[], path: CascaderOption[] = []) => {
       for (const option of currentOptions) {
         const currentPath = [...path, option];
-        
+
         if (filterOption) {
           if (filterOption(inputValue, option, currentPath)) {
             filtered.push(option);
@@ -461,12 +475,12 @@ export class CascaderTools {
         } else {
           const label = String(option.label).toLowerCase();
           const search = inputValue.toLowerCase();
-          
+
           if (label.includes(search)) {
             filtered.push(option);
           }
         }
-        
+
         if (option.children) {
           filter(option.children, currentPath);
         }
@@ -481,14 +495,14 @@ export class CascaderTools {
   static formatDisplayValue(
     labels: ReactNode[],
     _selectedOptions: CascaderOption[],
-    config: { showPath?: boolean; pathSeparator?: string } = {}
+    config: { showPath?: boolean; pathSeparator?: string } = {},
   ): ReactNode {
     const { showPath = false, pathSeparator = ' / ' } = config;
-    
+
     if (!showPath || labels.length === 0) {
       return labels[labels.length - 1] || '';
     }
-    
+
     return labels.join(pathSeparator);
   }
 
@@ -496,20 +510,15 @@ export class CascaderTools {
   static validateValue(
     value: CascaderValue,
     options: CascaderOption[],
-    fieldNames: CascaderProps['fieldNames'] = {}
+    fieldNames: CascaderProps['fieldNames'] = {},
   ): boolean {
     const path = this.findOptionPath(options, value, fieldNames);
     return path.length > 0;
   }
 
   /** 展平选项 */
-  static flattenOptions(
-    options: CascaderOption[],
-    fieldNames: CascaderProps['fieldNames'] = {}
-  ): CascaderOption[] {
-    const {
-      children: childrenKey = 'children',
-    } = fieldNames;
+  static flattenOptions(options: CascaderOption[], fieldNames: CascaderProps['fieldNames'] = {}): CascaderOption[] {
+    const { children: childrenKey = 'children' } = fieldNames;
 
     const flatten = (currentOptions: CascaderOption[]): CascaderOption[] => {
       return currentOptions.reduce<CascaderOption[]>((acc, option) => {
@@ -527,20 +536,15 @@ export class CascaderTools {
   /** 生成选项树 */
   static generateOptionTree(
     options: CascaderOption[],
-    _fieldNames: CascaderProps['fieldNames'] = {}
+    _fieldNames: CascaderProps['fieldNames'] = {},
   ): CascaderOption[] {
     // 这里可以实现更复杂的树生成逻辑
     return options;
   }
 
   /** 获取叶子节点 */
-  static getLeafOptions(
-    options: CascaderOption[],
-    fieldNames: CascaderProps['fieldNames'] = {}
-  ): CascaderOption[] {
-    const {
-      children: childrenKey = 'children',
-    } = fieldNames;
+  static getLeafOptions(options: CascaderOption[], fieldNames: CascaderProps['fieldNames'] = {}): CascaderOption[] {
+    const { children: childrenKey = 'children' } = fieldNames;
 
     const getLeaves = (currentOptions: CascaderOption[]): CascaderOption[] => {
       return currentOptions.reduce<CascaderOption[]>((acc, option) => {
@@ -557,13 +561,8 @@ export class CascaderTools {
   }
 
   /** 获取禁用选项 */
-  static getDisabledOptions(
-    options: CascaderOption[],
-    fieldNames: CascaderProps['fieldNames'] = {}
-  ): CascaderOption[] {
-    const {
-      children: childrenKey = 'children',
-    } = fieldNames;
+  static getDisabledOptions(options: CascaderOption[], fieldNames: CascaderProps['fieldNames'] = {}): CascaderOption[] {
+    const { children: childrenKey = 'children' } = fieldNames;
 
     const getDisabled = (currentOptions: CascaderOption[]): CascaderOption[] => {
       return currentOptions.reduce<CascaderOption[]>((acc, option) => {

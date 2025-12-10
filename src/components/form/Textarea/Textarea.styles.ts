@@ -345,8 +345,8 @@ export class TextareaStyles {
 
     const sizeStyles = this.SIZE_MAP[size];
     const lineHeight = sizeStyles['fontSize'] * sizeStyles['lineHeight'];
-    const paddingTop = parseInt((String(sizeStyles['padding'] || '0px')).split(' ')[0] || '0');
-    const paddingBottom = parseInt((String(sizeStyles['padding'] || '0px')).split(' ')[0] || '0');
+    const paddingTop = parseInt(String(sizeStyles['padding'] || '0px').split(' ')[0] || '0');
+    const paddingBottom = parseInt(String(sizeStyles['padding'] || '0px').split(' ')[0] || '0');
     const minHeight = lineHeight * minRows + paddingTop + paddingBottom;
     const maxHeight = lineHeight * maxRows + paddingTop + paddingBottom;
 
@@ -556,8 +556,8 @@ export class TextareaStyles {
     minRows?: number,
     maxRows?: number,
   ): number {
-    const paddingTop = parseInt((String(padding || '0px')).split(' ')[0] || '0');
-    const paddingBottom = parseInt((String(padding || '0px')).split(' ')[0] || '0');
+    const paddingTop = parseInt(String(padding || '0px').split(' ')[0] || '0');
+    const paddingBottom = parseInt(String(padding || '0px').split(' ')[0] || '0');
     const lineHeightPx = fontSize * lineHeight;
 
     // 计算内容行数

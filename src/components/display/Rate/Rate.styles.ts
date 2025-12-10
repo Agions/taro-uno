@@ -95,10 +95,7 @@ export const rateStyles = {
   /**
    * 获取半星遮罩样式
    */
-  getHalfStarMaskStyle: (props: {
-    color?: string;
-    unselectedColor?: string;
-  }): React.CSSProperties => {
+  getHalfStarMaskStyle: (props: { color?: string; unselectedColor?: string }): React.CSSProperties => {
     const { color = rateStyles['COLORS'].default } = props;
 
     return {
@@ -138,12 +135,7 @@ export const rateStyles = {
   /**
    * 获取容器类名
    */
-  getClassName: (props: {
-    size?: RateSize;
-    disabled?: boolean;
-    readonly?: boolean;
-    className?: string;
-  }): string => {
+  getClassName: (props: { size?: RateSize; disabled?: boolean; readonly?: boolean; className?: string }): string => {
     const { size = 'default', disabled = false, readonly = false, className = '' } = props;
 
     const baseClass = 'taro-uno-rate';
@@ -157,11 +149,7 @@ export const rateStyles = {
   /**
    * 获取星星类名
    */
-  getStarClassName: (props: {
-    state: StarState;
-    isActive?: boolean;
-    isHovering?: boolean;
-  }): string => {
+  getStarClassName: (props: { state: StarState; isActive?: boolean; isHovering?: boolean }): string => {
     const { state, isActive = false, isHovering = false } = props;
 
     const baseClass = 'taro-uno-rate__star';
@@ -253,7 +241,7 @@ export const rateStyles = {
     size: RateSize;
   }): React.CSSProperties => {
     const { breakpoint = 'md', size } = props;
-    
+
     // 在小屏幕上调整尺寸
     const responsiveSize = breakpoint === 'xs' || breakpoint === 'sm' ? 'small' : size;
     const sizeConfig = rateStyles.SIZE_MAP[responsiveSize as keyof typeof rateStyles.SIZE_MAP];

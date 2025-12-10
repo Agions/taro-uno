@@ -97,58 +97,73 @@ export const stepsStyles = {
     width: 1,
     height: '100%',
   },
-}
+};
 
 export const getStepsStyle = (direction?: 'horizontal' | 'vertical', customStyle?: React.CSSProperties) => ({
   ...stepsStyles.steps,
   ...(direction === 'horizontal' && stepsStyles.stepsHorizontal),
   ...(direction === 'vertical' && stepsStyles.stepsVertical),
   ...customStyle,
-})
+});
 
-export const getStepStyle = (direction?: 'horizontal' | 'vertical', isLast?: boolean, customStyle?: React.CSSProperties) => ({
+export const getStepStyle = (
+  direction?: 'horizontal' | 'vertical',
+  isLast?: boolean,
+  customStyle?: React.CSSProperties,
+) => ({
   ...stepsStyles.step,
   ...(direction === 'horizontal' && stepsStyles.stepHorizontal),
   ...(direction === 'vertical' && stepsStyles.stepVertical),
   ...(isLast && stepsStyles.stepLast),
   ...customStyle,
-})
+});
 
 export const getStepItemStyle = (customStyle?: React.CSSProperties) => ({
   ...stepsStyles.stepItem,
   ...customStyle,
-})
+});
 
-export const getStepIconStyle = (status?: 'wait' | 'process' | 'finish' | 'error', size?: 'default' | 'small', customStyle?: React.CSSProperties) => ({
+export const getStepIconStyle = (
+  status?: 'wait' | 'process' | 'finish' | 'error',
+  size?: 'default' | 'small',
+  customStyle?: React.CSSProperties,
+) => ({
   ...stepsStyles.stepIcon,
   ...(status === 'process' && stepsStyles.stepIconProcess),
   ...(status === 'finish' && stepsStyles.stepIconFinish),
   ...(status === 'error' && stepsStyles.stepIconError),
   ...(size === 'small' && stepsStyles.stepIconSmall),
   ...customStyle,
-})
+});
 
 export const getStepContentStyle = (customStyle?: React.CSSProperties) => ({
   ...stepsStyles.stepContent,
   ...customStyle,
-})
+});
 
-export const getStepTitleStyle = (status?: 'wait' | 'process' | 'finish' | 'error', customStyle?: React.CSSProperties) => ({
+export const getStepTitleStyle = (
+  status?: 'wait' | 'process' | 'finish' | 'error',
+  customStyle?: React.CSSProperties,
+) => ({
   ...stepsStyles.stepTitle,
   ...(status === 'process' && stepsStyles.stepTitleProcess),
   ...(status === 'finish' && stepsStyles.stepTitleFinish),
   ...(status === 'error' && stepsStyles.stepTitleError),
   ...customStyle,
-})
+});
 
 export const getStepDescriptionStyle = (customStyle?: React.CSSProperties) => ({
   ...stepsStyles.stepDescription,
   ...customStyle,
-})
+});
 
-export const getStepTailStyle = (direction?: 'horizontal' | 'vertical', isFinish?: boolean, customStyle?: React.CSSProperties) => ({
+export const getStepTailStyle = (
+  direction?: 'horizontal' | 'vertical',
+  isFinish?: boolean,
+  customStyle?: React.CSSProperties,
+) => ({
   ...stepsStyles.stepTail,
   ...(isFinish && stepsStyles.stepTailFinish),
   ...(direction === 'vertical' && stepsStyles.stepVerticalTail),
   ...customStyle,
-})
+});

@@ -20,10 +20,7 @@ export interface CircleProgressData {
 /**
  * 计算圆形进度条的尺寸
  */
-export function calculateCircleDimensions(
-  size: number,
-  strokeWidth: number
-): CircleDimensions {
+export function calculateCircleDimensions(size: number, strokeWidth: number): CircleDimensions {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const centerX = size / 2;
@@ -42,10 +39,7 @@ export function calculateCircleDimensions(
 /**
  * 计算圆形进度条的进度数据
  */
-export function calculateCircleProgress(
-  dimensions: CircleDimensions,
-  percent: number
-): CircleProgressData {
+export function calculateCircleProgress(dimensions: CircleDimensions, percent: number): CircleProgressData {
   const { circumference } = dimensions;
   const strokeDasharray = circumference;
   const strokeDashoffset = circumference - (percent / 100) * circumference;
@@ -69,13 +63,13 @@ export function calculateDashboardProgress(
   dimensions: CircleDimensions,
   percent: number,
   gapDegree: number,
-  gapPosition: ProgressGapPosition = 'top'
+  gapPosition: ProgressGapPosition = 'top',
 ): CircleProgressData {
   const { circumference } = dimensions;
   const effectiveCircumference = circumference * (1 - gapDegree / 360);
   const strokeDasharray = effectiveCircumference;
   const strokeDashoffset = effectiveCircumference - (percent / 100) * effectiveCircumference;
-  
+
   // 根据缺口位置计算旋转角度
   const rotationMap: Record<ProgressGapPosition, number> = {
     top: -90,
@@ -83,7 +77,7 @@ export function calculateDashboardProgress(
     bottom: 90,
     left: 180,
   };
-  
+
   const baseRotation = rotationMap[gapPosition];
   const rotation = baseRotation + gapDegree / 2;
   const transform = `rotate(${rotation}deg)`;
@@ -101,20 +95,14 @@ export function calculateDashboardProgress(
 /**
  * 计算线型进度条的宽度
  */
-export function calculateLineWidth(
-  containerWidth: number,
-  percent: number
-): number {
+export function calculateLineWidth(containerWidth: number, percent: number): number {
   return Math.max(0, Math.min(containerWidth, (containerWidth * percent) / 100));
 }
 
 /**
  * 根据状态获取颜色
  */
-export function getStatusColor(
-  status: string,
-  theme: Record<string, string>
-): string {
+export function getStatusColor(status: string, theme: Record<string, string>): string {
   return theme[status] || theme['normal'] || '#1890ff';
 }
 
@@ -131,7 +119,7 @@ export function validatePercent(percent: number): number {
 export function calculateAnimationDuration(
   percentDiff: number,
   baseDuration: number = 300,
-  maxDuration: number = 1000
+  maxDuration: number = 1000,
 ): number {
   const duration = (percentDiff / 100) * baseDuration;
   return Math.min(duration, maxDuration);
@@ -142,10 +130,10 @@ export function calculateAnimationDuration(
  */
 export function calculateSegmentPositions(
   segments: Array<{ color: string; percent: number }>,
-  containerWidth: number
+  containerWidth: number,
 ): Array<{ color: string; left: number; width: number }> {
   let currentLeft = 0;
-  return segments.map(segment => {
+  return segments.map((segment) => {
     const width = (containerWidth * segment.percent) / 100;
     const position = {
       color: segment.color,
@@ -167,10 +155,7 @@ export function getLineCapStyle(lineCap: ProgressLineCap): string {
 /**
  * 计算圆角半径
  */
-export function calculateBorderRadius(
-  strokeWidth: number,
-  lineCap: ProgressLineCap
-): number {
+export function calculateBorderRadius(strokeWidth: number, lineCap: ProgressLineCap): number {
   if (lineCap === 'round') {
     return strokeWidth / 2;
   }
@@ -189,7 +174,7 @@ export function generateId(prefix: string = 'progress'): string {
  */
 export function formatProgressValue(
   percent: number,
-  formatter?: (percent: number) => React.ReactNode
+  formatter?: (percent: number) => React.ReactNode,
 ): React.ReactNode {
   if (formatter) {
     return formatter(percent);
@@ -200,10 +185,7 @@ export function formatProgressValue(
 /**
  * 计算进度状态
  */
-export function calculateProgressStatus(
-  percent: number,
-  currentStatus?: string
-): string {
+export function calculateProgressStatus(percent: number, currentStatus?: string): string {
   if (percent >= 100) {
     return 'success';
   }

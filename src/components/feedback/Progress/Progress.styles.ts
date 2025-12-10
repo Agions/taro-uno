@@ -7,9 +7,9 @@ import type {
   ProgressStyles as ProgressStylesType,
   ProgressGradient,
 } from './Progress.types';
-import { 
-  calculateCircleDimensions, 
-  calculateCircleProgress, 
+import {
+  calculateCircleDimensions,
+  calculateCircleProgress,
   calculateDashboardProgress,
   getStatusColor,
   calculateBorderRadius,
@@ -198,7 +198,11 @@ export const getLineStyle = (props: ProgressStyleProps) => {
 
   const mergedTheme = { ...defaultTheme, ...theme };
   const borderRadius = calculateBorderRadius(strokeWidth, strokeLinecap);
-  const color = strokeColor ? (typeof strokeColor === 'string' ? strokeColor : mergedTheme.primaryColor) : getStatusColor(status, statusColors);
+  const color = strokeColor
+    ? typeof strokeColor === 'string'
+      ? strokeColor
+      : mergedTheme.primaryColor
+    : getStatusColor(status, statusColors);
 
   return {
     outer: {
@@ -237,10 +241,14 @@ export const getCircleStyle = (props: ProgressStyleProps) => {
   const sizeValue = sizeMapping[size];
   const strokeWidth = customStrokeWidth || strokeWidthMapping[size];
   const mergedTheme = { ...defaultTheme, ...theme };
-  
+
   const dimensions = calculateCircleDimensions(sizeValue, strokeWidth);
   const progressData = calculateCircleProgress(dimensions, percent);
-  const color = strokeColor ? (typeof strokeColor === 'string' ? strokeColor : mergedTheme.primaryColor) : getStatusColor(status, statusColors);
+  const color = strokeColor
+    ? typeof strokeColor === 'string'
+      ? strokeColor
+      : mergedTheme.primaryColor
+    : getStatusColor(status, statusColors);
 
   return {
     outer: {
@@ -305,10 +313,14 @@ export const getDashboardStyle = (props: ProgressStyleProps) => {
   const sizeValue = sizeMapping[size];
   const strokeWidth = customStrokeWidth || strokeWidthMapping[size];
   const mergedTheme = { ...defaultTheme, ...theme };
-  
+
   const dimensions = calculateCircleDimensions(sizeValue, strokeWidth);
   const progressData = calculateDashboardProgress(dimensions, percent, gapDegree, gapPosition);
-  const color = strokeColor ? (typeof strokeColor === 'string' ? strokeColor : mergedTheme.primaryColor) : getStatusColor(status, statusColors);
+  const color = strokeColor
+    ? typeof strokeColor === 'string'
+      ? strokeColor
+      : mergedTheme.primaryColor
+    : getStatusColor(status, statusColors);
 
   return {
     outer: {
@@ -374,17 +386,14 @@ export const getInfoStyle = (size?: ProgressSize, customStyle?: CSSProperties): 
 };
 
 // 获取容器样式
-export const getContainerStyle = (
-  type?: ProgressType,
-  customStyle?: CSSProperties
-): CSSProperties => {
+export const getContainerStyle = (type?: ProgressType, customStyle?: CSSProperties): CSSProperties => {
   if (type === 'line') {
     return {
       ...progressStyles['lineContainer'],
       ...customStyle,
     };
   }
-  
+
   return {
     ...progressStyles['container'],
     ...customStyle,

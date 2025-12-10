@@ -1,7 +1,7 @@
 import React from 'react';
-import { BaseComponentProps } from '../../../types';
+import { BaseComponentProps as StandardBaseComponentProps } from '../../../types/component-props';
 
-export interface CardProps extends BaseComponentProps {
+export interface CardProps extends StandardBaseComponentProps {
   /** 卡片内容 */
   children: React.ReactNode;
   /** 卡片标题 */
@@ -27,9 +27,9 @@ export interface CardProps extends BaseComponentProps {
   /** 自定义样式 */
   style?: React.CSSProperties;
   /** 点击事件 */
-  onPress?: (_event: any) => void;
+  onPress?: (_event: React.MouseEvent | any) => void;
   /** 长按事件 */
-  onLongPress?: (_event: any) => void;
+  onLongPress?: (_event: React.MouseEvent | any) => void;
 }
 
 export interface CardRef {

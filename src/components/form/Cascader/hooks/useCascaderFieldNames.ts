@@ -6,11 +6,14 @@ import type { CascaderProps } from '../Cascader.types';
  * 提供类型安全的字段名称映射
  */
 export function useCascaderFieldNames(fieldNames?: CascaderProps['fieldNames']) {
-  return useMemo(() => ({
-    value: fieldNames?.value || 'value',
-    label: fieldNames?.label || 'label',
-    children: fieldNames?.children || 'children',
-    disabled: fieldNames?.disabled || 'disabled',
-    isLeaf: fieldNames?.isLeaf || 'isLeaf',
-  }), [fieldNames]);
+  return useMemo(
+    () => ({
+      value: fieldNames?.value || 'value',
+      label: fieldNames?.label || 'label',
+      children: fieldNames?.children || 'children',
+      disabled: fieldNames?.disabled || 'disabled',
+      isLeaf: fieldNames?.isLeaf || 'isLeaf',
+    }),
+    [fieldNames],
+  );
 }

@@ -1,7 +1,7 @@
 /**
  * useMediaQuery Hook
  * Track media query matches for responsive design
- * 
+ *
  * @example
  * ```typescript
  * const isMobile = useMediaQuery('(max-width: 768px)');
@@ -21,7 +21,7 @@ export function useMediaQuery(query: string): boolean {
   useEffect(() => {
     // Check if window is defined (client-side)
     if (typeof window === 'undefined' || !window.matchMedia) {
-      return;
+      return () => {};
     }
 
     const mediaQuery = window.matchMedia(query);
@@ -44,6 +44,8 @@ export function useMediaQuery(query: string): boolean {
       mediaQuery.addListener(handler);
       return () => mediaQuery.removeListener(handler);
     }
+
+    return () => {};
   }, [query]);
 
   return matches;

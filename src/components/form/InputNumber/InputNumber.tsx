@@ -2,7 +2,12 @@ import React, { forwardRef, useCallback, useEffect, useState } from 'react';
 import { Input as TaroInput, View, Text } from '@tarojs/components';
 import type { ITouchEvent } from '@tarojs/components';
 import { inputNumberStyles } from './InputNumber.styles';
-import type { InputNumberProps, InputNumberRef, InputNumberStatus, InputNumberValidationResult } from './InputNumber.types';
+import type {
+  InputNumberProps,
+  InputNumberRef,
+  InputNumberStatus,
+  InputNumberValidationResult,
+} from './InputNumber.types';
 import { useInputNumberState } from './hooks/useInputNumberState';
 import { useInputNumberValidation } from './hooks/useInputNumberValidation';
 import { InputNumberControls } from './components/InputNumberControls';
@@ -112,27 +117,33 @@ export const InputNumberComponent = forwardRef<InputNumberRef, InputNumberProps>
   }, [value, onChange, onInput]);
 
   // 处理清除事件
-  const handleClear = useCallback((event: ITouchEvent) => {
-    if (internalDisabled || internalReadonly) return;
+  const handleClear = useCallback(
+    (event: ITouchEvent) => {
+      if (internalDisabled || internalReadonly) return;
 
-    handleValueChange(null, event);
-    setValidationResult(null);
-    setInternalStatus('normal');
-    onClear?.(event);
-  }, [internalDisabled, internalReadonly, handleValueChange, onClear]);
+      handleValueChange(null, event);
+      setValidationResult(null);
+      setInternalStatus('normal');
+      onClear?.(event);
+    },
+    [internalDisabled, internalReadonly, handleValueChange, onClear],
+  );
 
   // 处理步进事件
-  const handleStep = useCallback(async (direction: 'up' | 'down', event: ITouchEvent) => {
-    if (internalDisabled || internalReadonly) return;
+  const handleStep = useCallback(
+    async (direction: 'up' | 'down', event: ITouchEvent) => {
+      if (internalDisabled || internalReadonly) return;
 
-    const currentValue = value || 0;
-    const newValue = direction === 'up' ? currentValue + step : currentValue - step;
-    const clampedValue = inputNumberStyles['clampValue'](newValue, min, max);
-    const roundedValue = inputNumberStyles['roundValue'](clampedValue, precision);
+      const currentValue = value || 0;
+      const newValue = direction === 'up' ? currentValue + step : currentValue - step;
+      const clampedValue = inputNumberStyles['clampValue'](newValue, min, max);
+      const roundedValue = inputNumberStyles['roundValue'](clampedValue, precision);
 
-    await handleValueChange(roundedValue, event);
-    onStep?.(roundedValue, direction, event);
-  }, [internalDisabled, internalReadonly, value, step, min, max, precision, handleValueChange, onStep]);
+      await handleValueChange(roundedValue, event);
+      onStep?.(roundedValue, direction, event);
+    },
+    [internalDisabled, internalReadonly, value, step, min, max, precision, handleValueChange, onStep],
+  );
 
   // 计算是否显示清除按钮
   const shouldShowClear = useCallback(() => {
@@ -179,7 +190,6 @@ export const InputNumberComponent = forwardRef<InputNumberRef, InputNumberProps>
     className,
   });
 
-  
   // 暴露给外部的引用方法
   React.useImperativeHandle(
     ref,
@@ -303,7 +313,18 @@ export const InputNumberComponent = forwardRef<InputNumberRef, InputNumberProps>
         })}
       >
         {/* 前缀 */}
-        {prefix && <View style={inputNumberStyles['getPrefixStyle']({ size, disabled: internalDisabled, controls, controlsPosition })}>{prefix}</View>}
+        {prefix && (
+          <View
+            style={inputNumberStyles['getPrefixStyle']({
+              size,
+              disabled: internalDisabled,
+              controls,
+              controlsPosition,
+            })}
+          >
+            {prefix}
+          </View>
+        )}
 
         {/* 控制器 */}
         {controls && (
@@ -332,7 +353,18 @@ export const InputNumberComponent = forwardRef<InputNumberRef, InputNumberProps>
         />
 
         {/* 后缀 */}
-        {suffix && <View style={inputNumberStyles['getSuffixStyle']({ size, disabled: internalDisabled, controls, controlsPosition })}>{suffix}</View>}
+        {suffix && (
+          <View
+            style={inputNumberStyles['getSuffixStyle']({
+              size,
+              disabled: internalDisabled,
+              controls,
+              controlsPosition,
+            })}
+          >
+            {suffix}
+          </View>
+        )}
 
         {/* 清除按钮 */}
         {shouldShowClear() && (

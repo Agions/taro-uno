@@ -1,5 +1,15 @@
 import { ReactNode } from 'react';
-import { BaseComponentProps, Size } from '../../../types';
+import { Size } from '../../../types';
+import { BaseComponentProps as StandardBaseComponentProps } from '../../../types/component-props';
+
+/** Modal静态方法接口 */
+export interface ModalStatic {
+  confirm: (config: ModalProps) => void;
+  info: (config: ModalProps) => void;
+  success: (config: ModalProps) => void;
+  error: (config: ModalProps) => void;
+  warning: (config: ModalProps) => void;
+}
 
 /** Modal尺寸 */
 export type ModalSize = Size | 'small' | 'medium' | 'large' | 'fullscreen';
@@ -53,7 +63,7 @@ export interface ModalRef {
 }
 
 /** Modal组件属性 */
-export interface ModalProps extends BaseComponentProps {
+export interface ModalProps extends StandardBaseComponentProps {
   /** 是否显示 */
   visible?: boolean;
   /** 默认是否显示 */

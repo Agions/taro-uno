@@ -17,7 +17,11 @@ export type RadioColor = 'primary' | 'secondary' | 'success' | 'warning' | 'erro
 export type RadioNativeProps = InputHTMLAttributes<HTMLInputElement>;
 
 /** 单选框组件属性接口 */
-export interface RadioProps extends Omit<RadioNativeProps, 'size' | 'onChange' | 'checked' | 'onClick' | 'dangerouslySetInnerHTML' | 'onTouchStart'> {
+export interface RadioProps
+  extends Omit<
+    RadioNativeProps,
+    'size' | 'onChange' | 'checked' | 'onClick' | 'dangerouslySetInnerHTML' | 'onTouchStart'
+  > {
   /** 单选框值 */
   value: string | number;
   /** 是否选中 */

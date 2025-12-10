@@ -1,12 +1,12 @@
 /**
  * useDebounce & useThrottle Hooks
  * Delay value updates or limit function call frequency
- * 
+ *
  * @example
  * ```typescript
  * // Debounce - delays until user stops typing
  * const debouncedSearch = useDebounce(searchTerm, 500);
- * 
+ *
  * // Throttle - limits calls to once per interval
  * const throttledScroll = useThrottle(scrollY, 100);
  * ```
@@ -52,6 +52,7 @@ export function useThrottle<T>(value: T, interval: number = 500): T {
       // Enough time has passed, update immediately
       setThrottledValue(value);
       lastUpdated.current = now;
+      return () => {};
     } else {
       // Schedule update for remaining time
       const timer = setTimeout(() => {
@@ -75,7 +76,7 @@ export function useDebouncedCallback<T extends (...args: any[]) => any>(
   callback: T,
   delay: number = 500,
 ): (...args: Parameters<T>) => void {
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const debouncedCallback = useCallback(
     (...args: Parameters<T>) => {
@@ -110,7 +111,7 @@ export function useThrottledCallback<T extends (...args: any[]) => any>(
   interval: number = 500,
 ): (...args: Parameters<T>) => void {
   const lastRan = useRef<number>(Date.now());
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const throttledCallback = useCallback(
     (...args: Parameters<T>) => {

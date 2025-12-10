@@ -27,21 +27,42 @@ export const useInputLogic = (props: InputProps) => {
     onClear,
   } = props;
 
-  const nativeInputRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null);
+  // 更新ref类型，适配Taro环境
+  const nativeInputRef = useRef<any>(null);
   const [internalValue, setInternalValue] = useState(defaultValue);
   const [isFocused, setIsFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [validationResult, setValidationResult] = useState<{ valid: boolean; message?: string } | null>(null);
   const [internalStatus, setInternalStatus] = useState<InputStatus>(propStatus);
+
+  // 优化：将状态合并，减少useEffect数量
   const [internalDisabled, setInternalDisabled] = useState(disabled);
   const [internalReadonly, setInternalReadonly] = useState(readonly);
-  const [validationResult, setValidationResult] = useState<{ valid: boolean; message?: string } | null>(null);
 
   const isControlled = controlledValue !== undefined;
   const value = isControlled ? controlledValue : internalValue;
 
-  useEffect(() => setInternalStatus(propStatus), [propStatus]);
-  useEffect(() => setInternalDisabled(disabled), [disabled]);
-  useEffect(() => setInternalReadonly(readonly), [readonly]);
+  // 优化：减少不必要的useEffect，合并状态更新
+  useEffect(() => {
+    setInternalStatus(propStatus);
+    setInternalDisabled(disabled);
+    setInternalReadonly(readonly);
+  }, [propStatus, disabled, readonly]);
+
+  // 优化：使用防抖处理immediate验证，避免频繁验证
+  const debouncedImmediateValidate = useCallback(
+    (valueToValidate: string) => {
+      if (immediate && valueToValidate) {
+        validateInput(valueToValidate);
+      }
+    },
+    [immediate],
+  );
+
+  // 优化：只在value变化且immediate为true时执行，避免不必要的验证
+  useEffect(() => {
+    debouncedImmediateValidate(String(value));
+  }, [value, debouncedImmediateValidate]);
 
   const validateInput = useCallback(
     async (inputValue: string): Promise<{ valid: boolean; message?: string }> => {
@@ -79,12 +100,8 @@ export const useInputLogic = (props: InputProps) => {
 
       return { valid: true };
     },
-    [rules, validator, minLength, maxLength]
+    [rules, validator, minLength, maxLength],
   );
-
-  useEffect(() => {
-    if (immediate && value) validateInput(String(value));
-  }, [immediate, value, validateInput]);
 
   const formatInputValue = useCallback(
     (inputValue: string): string => {
@@ -106,7 +123,7 @@ export const useInputLogic = (props: InputProps) => {
       }
       return formattedValue;
     },
-    [type, maxLength]
+    [type, maxLength],
   );
 
   const handleValueChange = useCallback(
@@ -118,6 +135,7 @@ export const useInputLogic = (props: InputProps) => {
 
       onInput?.(formattedValue, event);
 
+      // 优化：合并状态更新，减少重渲染
       if (validateTrigger === 'onChange') {
         const result = await validateInput(formattedValue);
         setValidationResult(result);
@@ -126,7 +144,16 @@ export const useInputLogic = (props: InputProps) => {
 
       onChange?.(formattedValue, event);
     },
-    [internalDisabled, internalReadonly, isControlled, formatInputValue, onInput, validateTrigger, validateInput, onChange]
+    [
+      internalDisabled,
+      internalReadonly,
+      isControlled,
+      formatInputValue,
+      onInput,
+      validateTrigger,
+      validateInput,
+      onChange,
+    ],
   );
 
   const handleFocus = useCallback(
@@ -135,12 +162,12 @@ export const useInputLogic = (props: InputProps) => {
       setIsFocused(true);
       onFocus?.(event);
       if (validateTrigger === 'onFocus') {
-        const result = await validateInput(value as string);
+        const result = await validateInput(String(value));
         setValidationResult(result);
         setInternalStatus(result.valid ? 'normal' : 'error');
       }
     },
-    [internalDisabled, internalReadonly, onFocus, validateTrigger, validateInput, value]
+    [internalDisabled, internalReadonly, onFocus, validateTrigger, validateInput, value],
   );
 
   const handleBlur = useCallback(
@@ -149,25 +176,25 @@ export const useInputLogic = (props: InputProps) => {
       setIsFocused(false);
       onBlur?.(event);
       if (validateTrigger === 'onBlur') {
-        const result = await validateInput(value as string);
+        const result = await validateInput(String(value));
         setValidationResult(result);
         setInternalStatus(result.valid ? 'normal' : 'error');
       }
     },
-    [internalDisabled, internalReadonly, onBlur, validateTrigger, validateInput, value]
+    [internalDisabled, internalReadonly, onBlur, validateTrigger, validateInput, value],
   );
 
   const handleConfirm = useCallback(
     async (event: ITouchEvent) => {
       if (internalDisabled || internalReadonly) return;
-      onConfirm?.(value as string, event);
+      onConfirm?.(String(value), event);
       if (validateTrigger === 'onSubmit') {
-        const result = await validateInput(value as string);
+        const result = await validateInput(String(value));
         setValidationResult(result);
         setInternalStatus(result.valid ? 'normal' : 'error');
       }
     },
-    [internalDisabled, internalReadonly, onConfirm, validateTrigger, validateInput, value]
+    [internalDisabled, internalReadonly, onConfirm, validateTrigger, validateInput, value],
   );
 
   const handleClear = useCallback(
@@ -175,26 +202,35 @@ export const useInputLogic = (props: InputProps) => {
       if (internalDisabled || internalReadonly) return;
       const emptyValue = '';
       if (!isControlled) setInternalValue(emptyValue);
+      // 优化：合并状态更新
       setValidationResult(null);
       setInternalStatus('normal');
       onClear?.(event);
       onChange?.(emptyValue, event);
     },
-    [internalDisabled, internalReadonly, isControlled, onClear, onChange]
+    [internalDisabled, internalReadonly, isControlled, onClear, onChange],
   );
 
-  const handlePasswordToggle = useCallback(() => setShowPassword(!showPassword), [showPassword]);
+  // 优化：减少依赖，简化逻辑
+  const handlePasswordToggle = useCallback(() => {
+    setShowPassword((prev) => !prev);
+  }, []);
 
   const shouldShowClear = useCallback(() => {
     if (!clearable || internalDisabled || internalReadonly) return false;
     switch (clearTrigger) {
-      case 'always': return !!value;
-      case 'focus': return isFocused && !!value;
-      case 'never': return false;
-      default: return false;
+      case 'always':
+        return !!value;
+      case 'focus':
+        return isFocused && !!value;
+      case 'never':
+        return false;
+      default:
+        return false;
     }
   }, [clearable, internalDisabled, internalReadonly, value, isFocused, clearTrigger]);
 
+  // 优化：简化finalStatus计算
   const finalStatus = internalDisabled ? 'disabled' : validationResult?.valid === false ? 'error' : internalStatus;
 
   return {

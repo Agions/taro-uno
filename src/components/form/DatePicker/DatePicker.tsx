@@ -34,7 +34,9 @@ export const DatePickerComponent = forwardRef<DatePickerRef, DatePickerProps>((p
 
   // 内部状态管理
   const [internalValue, setInternalValue] = useState<Date | null>(defaultValue || value || null);
-  const [internalRangeValue, setInternalRangeValue] = useState<{ start: Date; end: Date } | null>(defaultRangeValue || valueRange || null);
+  const [internalRangeValue, setInternalRangeValue] = useState<{ start: Date; end: Date } | null>(
+    defaultRangeValue || valueRange || null,
+  );
   const [isOpened, setIsOpened] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
 
@@ -43,52 +45,61 @@ export const DatePickerComponent = forwardRef<DatePickerRef, DatePickerProps>((p
   const inputRef = useRef<HTMLInputElement>(null);
 
   // 日期格式化函数
-  const formatDate = useCallback((date: Date | null, formatStr: DatePickerFormat = format): string => {
-    if (!date) return '';
+  const formatDate = useCallback(
+    (date: Date | null, formatStr: DatePickerFormat = format): string => {
+      if (!date) return '';
 
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
 
-    switch (formatStr) {
-      case 'YYYY-MM-DD':
-        return `${year}-${month}-${day}`;
-      case 'YYYY/MM/DD':
-        return `${year}/${month}/${day}`;
-      case 'DD/MM/YYYY':
-        return `${day}/${month}/${year}`;
-      case 'MM/DD/YYYY':
-        return `${month}/${day}/${year}`;
-      case 'YYYY年MM月DD日':
-        return `${year}年${month}月${day}日`;
-      default:
-        return `${year}-${month}-${day}`;
-    }
-  }, [format]);
+      switch (formatStr) {
+        case 'YYYY-MM-DD':
+          return `${year}-${month}-${day}`;
+        case 'YYYY/MM/DD':
+          return `${year}/${month}/${day}`;
+        case 'DD/MM/YYYY':
+          return `${day}/${month}/${year}`;
+        case 'MM/DD/YYYY':
+          return `${month}/${day}/${year}`;
+        case 'YYYY年MM月DD日':
+          return `${year}年${month}月${day}日`;
+        default:
+          return `${year}-${month}-${day}`;
+      }
+    },
+    [format],
+  );
 
   // 日期变化处理
-  const handleDateChange = useCallback((date: Date | null) => {
-    setInternalValue(date);
-    const dateString = formatDate(date, format);
-    onChange?.(date, dateString);
-    // 如果有自定义日期渲染，自动打开面板
-    if (dateRender && !isOpened) {
-      setIsOpened(true);
-      onOpenChange?.(true);
-    }
-  }, [onChange, formatDate, format, dateRender, isOpened, onOpenChange]);
+  const handleDateChange = useCallback(
+    (date: Date | null) => {
+      setInternalValue(date);
+      const dateString = formatDate(date, format);
+      onChange?.(date, dateString);
+      // 如果有自定义日期渲染，自动打开面板
+      if (dateRender && !isOpened) {
+        setIsOpened(true);
+        onOpenChange?.(true);
+      }
+    },
+    [onChange, formatDate, format, dateRender, isOpened, onOpenChange],
+  );
 
   // 范围日期变化处理
-  const handleRangeDateChange = useCallback((range: { start: Date; end: Date } | null) => {
-    setInternalRangeValue(range);
-    if (range) {
-      const startString = formatDate(range.start, format);
-      const endString = formatDate(range.end, format);
-      onRangeChange?.(range, [startString, endString]);
-    } else {
-      onRangeChange?.(null, ['', '']);
-    }
-  }, [onRangeChange, formatDate, format]);
+  const handleRangeDateChange = useCallback(
+    (range: { start: Date; end: Date } | null) => {
+      setInternalRangeValue(range);
+      if (range) {
+        const startString = formatDate(range.start, format);
+        const endString = formatDate(range.end, format);
+        onRangeChange?.(range, [startString, endString]);
+      } else {
+        onRangeChange?.(null, ['', '']);
+      }
+    },
+    [onRangeChange, formatDate, format],
+  );
 
   // 打开/关闭选择器
   const togglePicker = useCallback(() => {
@@ -136,7 +147,10 @@ export const DatePickerComponent = forwardRef<DatePickerRef, DatePickerProps>((p
   // 获取格式化范围日期字符串
   const getRangeDateString = useCallback(() => {
     if (!internalRangeValue) return null;
-    return [formatDate(internalRangeValue.start, format), formatDate(internalRangeValue.end, format)] as [string, string];
+    return [formatDate(internalRangeValue.start, format), formatDate(internalRangeValue.end, format)] as [
+      string,
+      string,
+    ];
   }, [internalRangeValue, formatDate, format]);
 
   // 打开选择器
@@ -153,27 +167,36 @@ export const DatePickerComponent = forwardRef<DatePickerRef, DatePickerProps>((p
   }, [onOpenChange]);
 
   // 聚焦处理
-  const handleFocus = useCallback((event: any) => {
-    setIsFocused(true);
-    onFocus?.(event);
-  }, [onFocus]);
-
-  // 失焦处理
-  const handleBlur = useCallback((event: any) => {
-    setIsFocused(false);
-    onBlur?.(event);
-  }, [onBlur]);
-
-  // 点击处理
-  const handleClick = useCallback((event: any) => {
-    onClick?.(event);
-    togglePicker();
-    // 自动触发焦点事件以支持测试
-    if (!isFocused) {
+  const handleFocus = useCallback(
+    (event: any) => {
       setIsFocused(true);
       onFocus?.(event);
-    }
-  }, [onClick, togglePicker, isFocused, onFocus]);
+    },
+    [onFocus],
+  );
+
+  // 失焦处理
+  const handleBlur = useCallback(
+    (event: any) => {
+      setIsFocused(false);
+      onBlur?.(event);
+    },
+    [onBlur],
+  );
+
+  // 点击处理
+  const handleClick = useCallback(
+    (event: any) => {
+      onClick?.(event);
+      togglePicker();
+      // 自动触发焦点事件以支持测试
+      if (!isFocused) {
+        setIsFocused(true);
+        onFocus?.(event);
+      }
+    },
+    [onClick, togglePicker, isFocused, onFocus],
+  );
 
   // 使用 ref 来存储最新的值，确保 getValue 能够立即获取到更新后的值
   const latestValueRef = useRef<Date | null>(internalValue);
@@ -249,17 +272,16 @@ export const DatePickerComponent = forwardRef<DatePickerRef, DatePickerProps>((p
     readOnly,
     opened: isOpened,
     focused: isFocused,
-    className
+    className,
   });
 
-  
   return (
     <View
       ref={pickerRef}
       className={`${pickerClassName} taro-uno-h5-datepicker taro-uno-h5-datepicker--${size} taro-uno-h5-datepicker--${variant}${status !== 'normal' ? ` taro-uno-h5-datepicker--${status}` : ''}${disabled || readOnly ? ' taro-uno-h5-datepicker--disabled' : ''}`}
       style={pickerStyle}
       onClick={handleClick}
-          >
+    >
       {/* 输入区域 */}
       <View
         className="taro-uno-datepicker__input-wrapper"
@@ -276,7 +298,7 @@ export const DatePickerComponent = forwardRef<DatePickerRef, DatePickerProps>((p
               value={internalRangeValue ? formatDate(internalRangeValue.start, format) : ''}
               placeholder={rangePlaceholder[0]}
               disabled={disabled}
-                            onFocus={handleFocus}
+              onFocus={handleFocus}
               onBlur={handleBlur}
             />
             <Text style={DatePickerStyles.getRangeSeparatorStyle()}>至</Text>
@@ -286,7 +308,7 @@ export const DatePickerComponent = forwardRef<DatePickerRef, DatePickerProps>((p
               value={internalRangeValue ? formatDate(internalRangeValue.end, format) : ''}
               placeholder={rangePlaceholder[1]}
               disabled={disabled}
-                            onFocus={handleFocus}
+              onFocus={handleFocus}
               onBlur={handleBlur}
             />
           </View>
@@ -299,7 +321,7 @@ export const DatePickerComponent = forwardRef<DatePickerRef, DatePickerProps>((p
             value={getDateString()}
             placeholder={placeholder}
             disabled={disabled}
-                        onFocus={handleFocus}
+            onFocus={handleFocus}
             onBlur={handleBlur}
           />
         )}
@@ -334,18 +356,12 @@ export const DatePickerComponent = forwardRef<DatePickerRef, DatePickerProps>((p
 
               {/* 自定义日期渲染 */}
               {dateRender && (
-                <View className="taro-uno-datepicker__custom-date">
-                  {dateRender(internalValue || new Date())}
-                </View>
+                <View className="taro-uno-datepicker__custom-date">{dateRender(internalValue || new Date())}</View>
               )}
             </View>
 
             {/* 自定义底部 */}
-            {renderExtraFooter && (
-              <View className="taro-uno-datepicker__custom-footer">
-                {renderExtraFooter()}
-              </View>
-            )}
+            {renderExtraFooter && <View className="taro-uno-datepicker__custom-footer">{renderExtraFooter()}</View>}
           </View>
         </View>
       )}

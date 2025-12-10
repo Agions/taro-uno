@@ -22,12 +22,6 @@ export type {
 export { TransferStyles } from './Transfer.styles';
 export { TransferTools } from './Transfer.types';
 export { useTransferState, useTransferData } from './hooks';
-export {
-  TransferItem,
-  TransferSearch,
-  TransferPagination,
-  TransferOperations,
-  TransferList,
-} from './components';
+export { TransferItem, TransferSearch, TransferPagination, TransferOperations, TransferList } from './components';
 import { Transfer } from './Transfer';
 export default Transfer;

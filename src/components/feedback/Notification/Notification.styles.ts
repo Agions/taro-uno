@@ -1,9 +1,9 @@
 import type { CSSProperties } from 'react';
-import type { 
-  NotificationType, 
-  NotificationPlacement, 
+import type {
+  NotificationType,
+  NotificationPlacement,
   NotificationAnimation,
-  NotificationStyleConfig 
+  NotificationStyleConfig,
 } from './Notification.types';
 
 /** 通知样式类名 */
@@ -211,7 +211,9 @@ export const notificationStyleHelpers = {
 
   /** 获取类型样式 */
   getTypeStyle: (type?: NotificationType): CSSProperties => {
-    return type ? notificationStyleConfig.type[type] || notificationStyleConfig.type.info : notificationStyleConfig.type.info;
+    return type
+      ? notificationStyleConfig.type[type] || notificationStyleConfig.type.info
+      : notificationStyleConfig.type.info;
   },
 
   /** 获取关闭按钮样式 */
@@ -225,33 +227,30 @@ export const notificationStyleHelpers = {
   /** 获取动画样式 */
   getAnimationStyle: (animation: NotificationAnimation = 'fade', visible: boolean): CSSProperties => {
     if (animation === 'none') return {};
-    
+
     const baseAnimation = notificationStyleConfig.animation;
-    
+
     switch (animation) {
       case 'fade':
         return visible ? baseAnimation.enterActive : baseAnimation.exitActive;
-      
+
       case 'slide':
         return visible ? baseAnimation.enterActive : baseAnimation.exitActive;
-      
+
       case 'scale':
-        return visible 
+        return visible
           ? { ...baseAnimation.enterActive, transform: 'scale(1)' }
           : { ...baseAnimation.exitActive, transform: 'scale(0.8)' };
-      
+
       default:
         return {};
     }
   },
 
   /** 获取容器样式 */
-  getContainerStyle: (options: {
-    theme?: any;
-    isMobile?: boolean;
-  }): CSSProperties => {
+  getContainerStyle: (options: { theme?: any; isMobile?: boolean }): CSSProperties => {
     const { isMobile } = options;
-    
+
     return {
       position: 'fixed',
       top: 0,
@@ -260,24 +259,29 @@ export const notificationStyleHelpers = {
       bottom: 0,
       pointerEvents: 'none',
       zIndex: 999,
-      ...(isMobile ? {
-        padding: '10px',
-      } : {
-        padding: '20px',
-      }),
+      ...(isMobile
+        ? {
+            padding: '10px',
+          }
+        : {
+            padding: '20px',
+          }),
     };
   },
 
   /** 获取位置容器样式 */
-  getPlacementStyle: (placement: NotificationPlacement, options: {
-    theme?: any;
-    isMobile?: boolean;
-  }): {
+  getPlacementStyle: (
+    placement: NotificationPlacement,
+    options: {
+      theme?: any;
+      isMobile?: boolean;
+    },
+  ): {
     container: CSSProperties;
     items: CSSProperties;
   } => {
     const { isMobile } = options;
-    
+
     const baseContainerStyle: CSSProperties = {
       position: 'absolute',
       pointerEvents: 'none',
@@ -285,13 +289,13 @@ export const notificationStyleHelpers = {
       flexDirection: 'column',
       gap: '8px',
     };
-    
+
     const baseItemStyle: CSSProperties = {
       pointerEvents: 'auto',
     };
-    
+
     let containerStyle: CSSProperties = {};
-    
+
     switch (placement) {
       case 'topRight':
         containerStyle = {
@@ -301,7 +305,7 @@ export const notificationStyleHelpers = {
           alignItems: 'flex-end',
         };
         break;
-      
+
       case 'topLeft':
         containerStyle = {
           ...baseContainerStyle,
@@ -310,7 +314,7 @@ export const notificationStyleHelpers = {
           alignItems: 'flex-start',
         };
         break;
-      
+
       case 'bottomRight':
         containerStyle = {
           ...baseContainerStyle,
@@ -319,7 +323,7 @@ export const notificationStyleHelpers = {
           alignItems: 'flex-end',
         };
         break;
-      
+
       case 'bottomLeft':
         containerStyle = {
           ...baseContainerStyle,
@@ -328,7 +332,7 @@ export const notificationStyleHelpers = {
           alignItems: 'flex-start',
         };
         break;
-      
+
       case 'top':
         containerStyle = {
           ...baseContainerStyle,
@@ -338,7 +342,7 @@ export const notificationStyleHelpers = {
           alignItems: 'center',
         };
         break;
-      
+
       case 'bottom':
         containerStyle = {
           ...baseContainerStyle,
@@ -349,7 +353,7 @@ export const notificationStyleHelpers = {
         };
         break;
     }
-    
+
     return {
       container: containerStyle,
       items: baseItemStyle,
@@ -359,7 +363,7 @@ export const notificationStyleHelpers = {
   /** 获取堆叠样式 */
   getStackStyle: (index: number, baseOffset: number = 8): CSSProperties => {
     const offset = index * baseOffset;
-    
+
     return {
       transform: `translateY(${offset}px)`,
       transition: 'transform 0.3s ease',
@@ -416,7 +420,10 @@ export const responsiveBreakpoints = {
 } as const;
 
 /** 生成响应式样式 */
-export const generateResponsiveStyle = (style: React.CSSProperties, breakpoint?: keyof typeof responsiveBreakpoints): React.CSSProperties => {
+export const generateResponsiveStyle = (
+  style: React.CSSProperties,
+  breakpoint?: keyof typeof responsiveBreakpoints,
+): React.CSSProperties => {
   if (!breakpoint) return style;
 
   return {
@@ -435,7 +442,10 @@ export const generateThemeStyle = (baseStyle: React.CSSProperties, theme?: any):
 };
 
 /** 计算动态样式 */
-export const calculateDynamicStyles = (base: React.CSSProperties, overrides: React.CSSProperties): React.CSSProperties => {
+export const calculateDynamicStyles = (
+  base: React.CSSProperties,
+  overrides: React.CSSProperties,
+): React.CSSProperties => {
   return {
     ...base,
     ...overrides,

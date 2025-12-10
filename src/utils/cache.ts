@@ -19,11 +19,7 @@ class DataCache {
   /**
    * 获取缓存数据或执行获取函数
    */
-  async fetch<T>(
-    key: string,
-    fetcher: () => Promise<T>,
-    options: CacheOptions = {}
-  ): Promise<T> {
+  async fetch<T>(key: string, fetcher: () => Promise<T>, options: CacheOptions = {}): Promise<T> {
     const { ttl = 5 * 60 * 1000, retries = 0 } = options;
 
     // 检查缓存
@@ -50,7 +46,7 @@ class DataCache {
         lastError = error as Error;
         if (i < retries) {
           // 等待后重试
-          await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
+          await new Promise((resolve) => setTimeout(resolve, 1000 * (i + 1)));
         }
       }
     }

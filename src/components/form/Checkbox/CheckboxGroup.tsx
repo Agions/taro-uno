@@ -2,11 +2,7 @@ import React, { forwardRef, useRef, useState, useEffect, useCallback } from 'rea
 import { View, Text } from '@tarojs/components';
 import type { ITouchEvent } from '@tarojs/components';
 import { checkboxStyles } from './Checkbox.styles';
-import type {
-  CheckboxGroupProps,
-  CheckboxGroupRef,
-  CheckboxStatus,
-} from './Checkbox.types';
+import type { CheckboxGroupProps, CheckboxGroupRef, CheckboxStatus } from './Checkbox.types';
 import { Checkbox } from './Checkbox';
 
 /** 复选框组组件 */
@@ -424,7 +420,9 @@ export const CheckboxGroupComponent = forwardRef<CheckboxGroupRef, CheckboxGroup
 
       {/* 复选框组内容 */}
       {options && options.length > 0 ? (
-        <View style={{ display: 'flex', flexDirection: direction === 'horizontal' ? 'row' : 'column', flexWrap: 'wrap' }}>
+        <View
+          style={{ display: 'flex', flexDirection: direction === 'horizontal' ? 'row' : 'column', flexWrap: 'wrap' }}
+        >
           {renderOptions()}
         </View>
       ) : (
@@ -432,7 +430,9 @@ export const CheckboxGroupComponent = forwardRef<CheckboxGroupRef, CheckboxGroup
       )}
 
       {/* 计数显示 */}
-      {showCount && <Text style={checkboxStyles['getCountStyle']({ size })}>{countText(selectedCount, totalCount)}</Text>}
+      {showCount && (
+        <Text style={checkboxStyles['getCountStyle']({ size })}>{countText(selectedCount, totalCount)}</Text>
+      )}
     </View>
   );
 });

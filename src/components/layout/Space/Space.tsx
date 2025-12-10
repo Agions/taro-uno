@@ -22,10 +22,8 @@ export const SpaceComponent = forwardRef<SpaceRef, SpaceProps>((props, ref) => {
     className,
     style,
     onClick,
-    _onItemHover,
     onItemClick,
     responsive,
-    ...restProps
   } = props;
 
   const spaceRef = useRef<any>(null);
@@ -65,7 +63,7 @@ export const SpaceComponent = forwardRef<SpaceRef, SpaceProps>((props, ref) => {
 
   // 处理点击事件
   const handleClick = useCallback(
-    (event: React.MouseEvent) => {
+    (event: any) => {
       onClick?.(event);
     },
     [onClick],
@@ -80,7 +78,7 @@ export const SpaceComponent = forwardRef<SpaceRef, SpaceProps>((props, ref) => {
   );
 
   // 处理子元素悬停事件
-  
+
   // 渲染子元素
   const renderChildren = () => {
     if (!children) return null;
@@ -191,13 +189,7 @@ export const SpaceComponent = forwardRef<SpaceRef, SpaceProps>((props, ref) => {
   );
 
   return (
-    <View
-      ref={spaceRef}
-      className={spaceClassName}
-      style={{ ...spaceStyle, ...responsiveStyle }}
-      onClick={handleClick}
-      {...restProps}
-    >
+    <View ref={spaceRef} className={spaceClassName} style={{ ...spaceStyle, ...responsiveStyle }} onClick={handleClick}>
       {renderChildren()}
       {renderEllipsis()}
     </View>

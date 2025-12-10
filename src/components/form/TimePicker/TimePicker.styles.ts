@@ -363,10 +363,7 @@ export class TimePickerStyles {
   }
 
   /** 格式化时间值 */
-  static formatTime(
-    time: { hours?: number; minutes?: number; seconds?: number },
-    format: string = 'HH:mm:ss'
-  ): string {
+  static formatTime(time: { hours?: number; minutes?: number; seconds?: number }, format: string = 'HH:mm:ss'): string {
     const { hours = 0, minutes = 0, seconds = 0 } = time;
 
     const pad = (num: number): string => num.toString().padStart(2, '0');
@@ -400,17 +397,16 @@ export class TimePickerStyles {
   static validateTime(time: { hours?: number; minutes?: number; seconds?: number }): boolean {
     const { hours = 0, minutes = 0, seconds = 0 } = time;
 
-    return (
-      hours >= 0 && hours <= 23 &&
-      minutes >= 0 && minutes <= 59 &&
-      seconds >= 0 && seconds <= 59
-    );
+    return hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59 && seconds >= 0 && seconds <= 59;
   }
 
   /** 生成时间选项 */
   static generateTimeOptions(
     type: 'hours' | 'minutes' | 'seconds',
-    disabledTime?: (() => number[]) | ((selectedHour?: number) => number[]) | ((selectedHour?: number, selectedMinute?: number) => number[])
+    disabledTime?:
+      | (() => number[])
+      | ((selectedHour?: number) => number[])
+      | ((selectedHour?: number, selectedMinute?: number) => number[]),
   ): Array<{ value: number; label: string; disabled: boolean }> {
     const max = type === 'hours' ? 24 : 60;
     const options: Array<{ value: number; label: string; disabled: boolean }> = [];
@@ -418,7 +414,7 @@ export class TimePickerStyles {
     for (let i = 0; i < max; i++) {
       const value = i;
       const label = i.toString().padStart(2, '0');
-      
+
       let disabled = false;
       if (disabledTime) {
         if (typeof disabledTime === 'function') {

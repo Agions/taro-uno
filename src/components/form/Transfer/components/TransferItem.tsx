@@ -23,79 +23,72 @@ interface TransferItemProps {
 }
 
 /** Transfer选项组件 */
-export const TransferItem: React.FC<TransferItemProps> = memo(({
-  item,
-  direction,
-  isSelected,
-  disabled,
-  onClick,
-  optionRender,
-  rowRender,
-  index = 0,
-}) => {
-  // 处理点击事件
-  const handleClick = useCallback(() => {
-    if (!disabled) {
-      onClick(item, direction);
+export const TransferItem: React.FC<TransferItemProps> = memo(
+  ({ item, direction, isSelected, disabled, onClick, optionRender, rowRender, index = 0 }) => {
+    // 处理点击事件
+    const handleClick = useCallback(() => {
+      if (!disabled) {
+        onClick(item, direction);
+      }
+    }, [item, direction, disabled, onClick]);
+
+    // 移除了鼠标事件处理函数，因为在Taro环境中可能不支持
+
+    // 使用自定义行渲染
+    if (rowRender) {
+      return (
+        <View
+          key={String(item.key)}
+          style={TransferStyles['getListItemStyle'](disabled, isSelected)}
+          className={item.className}
+          onClick={handleClick}
+          accessibilityState={{ selected: isSelected, disabled: disabled }}
+          role="option"
+        >
+          {rowRender(item, index, direction)}
+        </View>
+      );
     }
-  }, [item, direction, disabled, onClick]);
 
-  // 移除了鼠标事件处理函数，因为在Taro环境中可能不支持
+    // 默认渲染
+    const itemStyle = {
+      ...TransferStyles['getListItemStyle'](disabled, isSelected),
+      ...(item.style || {}),
+    };
 
-  // 使用自定义行渲染
-  if (rowRender) {
+    const checkboxStyle = {
+      ...TransferStyles['getListItemCheckboxStyle'](),
+      ...(isSelected ? TransferStyles['getListItemCheckboxSelectedStyle']() : {}),
+      ...(disabled ? TransferStyles['getListItemCheckboxDisabledStyle']() : {}),
+    };
+
     return (
       <View
         key={String(item.key)}
-        style={TransferStyles['getListItemStyle'](disabled, isSelected)}
+        style={itemStyle}
         className={item.className}
         onClick={handleClick}
-          accessibilityState={{ selected: isSelected, disabled: disabled }}
+        accessibilityState={{ selected: isSelected, disabled: disabled }}
         role="option"
       >
-        {rowRender(item, index, direction)}
+        <View style={checkboxStyle} hidden={true}>
+          {isSelected && <Text accessibilityLabel="已选中">✓</Text>}
+        </View>
+        <View style={TransferStyles['getListItemContentStyle']()}>
+          {optionRender ? (
+            optionRender(item)
+          ) : (
+            <View>
+              <Text>{item.title}</Text>
+              {item.description && (
+                <Text style={TransferStyles['getListItemDescriptionStyle']()}>{item.description}</Text>
+              )}
+            </View>
+          )}
+        </View>
       </View>
     );
-  }
-
-  // 默认渲染
-  const itemStyle = {
-    ...TransferStyles['getListItemStyle'](disabled, isSelected),
-    ...(item.style || {}),
-  };
-
-  const checkboxStyle = {
-    ...TransferStyles['getListItemCheckboxStyle'](),
-    ...(isSelected ? TransferStyles['getListItemCheckboxSelectedStyle']() : {}),
-    ...(disabled ? TransferStyles['getListItemCheckboxDisabledStyle']() : {}),
-  };
-
-  return (
-    <View
-      key={String(item.key)}
-      style={itemStyle}
-      className={item.className}
-      onClick={handleClick}
-      accessibilityState={{ selected: isSelected, disabled: disabled }}
-      role="option"
-    >
-      <View style={checkboxStyle} hidden={true}>
-        {isSelected && <Text accessibilityLabel="已选中">✓</Text>}
-      </View>
-      <View style={TransferStyles['getListItemContentStyle']()}>
-        {optionRender ? optionRender(item) : (
-          <View>
-            <Text>{item.title}</Text>
-            {item.description && (
-              <Text style={TransferStyles['getListItemDescriptionStyle']()}>
-                {item.description}
-              </Text>
-            )}
-          </View>
-        )}
-      </View>
-    </View>
-  );
-});
+  },
+);
 
 TransferItem.displayName = 'TransferItem';

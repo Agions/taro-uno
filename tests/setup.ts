@@ -1,13 +1,13 @@
-import '@testing-library/jest-dom'
-;(globalThis as any).ENABLE_INNER_HTML = true
-;(globalThis as any).ENABLE_ADJACENT_HTML = true
-;(globalThis as any).ENABLE_CLONE_NODE = true
-;(globalThis as any).ENABLE_CONTAINS = true
-;(globalThis as any).SUPPORT_TYPED_ARRAY = true
-import { vi } from 'vitest'
-import React from 'react'
+import '@testing-library/jest-dom';
+(globalThis as any).ENABLE_INNER_HTML = true;
+(globalThis as any).ENABLE_ADJACENT_HTML = true;
+(globalThis as any).ENABLE_CLONE_NODE = true;
+(globalThis as any).ENABLE_CONTAINS = true;
+(globalThis as any).SUPPORT_TYPED_ARRAY = true;
+import { vi } from 'vitest';
+import React from 'react';
 
-vi.mock('@tarojs/runtime', () => ({ default: {} }))
+vi.mock('@tarojs/runtime', () => ({ default: {} }));
 
 const filterProps = (props: Record<string, unknown>) => {
   const {
@@ -35,7 +35,7 @@ const filterProps = (props: Record<string, unknown>) => {
     required,
     checked,
     ...rest
-  } = props as any
+  } = props as any;
   const allowed: Record<string, unknown> = {
     children,
     className,
@@ -60,26 +60,26 @@ const filterProps = (props: Record<string, unknown>) => {
     readOnly,
     required,
     checked,
-  }
+  };
   Object.keys(rest).forEach((key) => {
     if (key.startsWith('aria-') || key.startsWith('data-')) {
-      allowed[key] = (rest as any)[key]
+      allowed[key] = (rest as any)[key];
     }
-  })
-  return allowed
-}
+  });
+  return allowed;
+};
 
 const createComponent = (tag: string) => {
   const Comp = React.forwardRef<any, Record<string, any>>((props, ref) => {
-    const allowed = filterProps(props)
+    const allowed = filterProps(props);
     if ((tag === 'input' || tag === 'textarea' || tag === 'select') && 'value' in allowed && !allowed.onChange) {
-      allowed.onChange = () => {}
+      allowed.onChange = () => {};
     }
-    return React.createElement(tag, { ...allowed, ref }, allowed.children as React.ReactNode)
-  })
-  Comp.displayName = `Mock${String(tag)}`
-  return Comp
-}
+    return React.createElement(tag, { ...allowed, ref }, allowed.children as React.ReactNode);
+  });
+  Comp.displayName = `Mock${String(tag)}`;
+  return Comp;
+};
 
 vi.mock('@tarojs/components', () => ({
   View: createComponent('div'),
@@ -127,4 +127,4 @@ vi.mock('@tarojs/components', () => ({
   AdContentPage: createComponent('div'),
   CustomWrapper: createComponent('div'),
   Embed: createComponent('iframe'),
-}))
+}));

@@ -449,13 +449,7 @@ export class TransferStyles {
     disabled?: boolean;
     style?: CSSProperties;
   }): CSSProperties {
-    const {
-      size = 'medium',
-      status = 'default',
-      layout = 'horizontal',
-      disabled = false,
-      style = {},
-    } = config;
+    const { size = 'medium', status = 'default', layout = 'horizontal', disabled = false, style = {} } = config;
 
     return {
       ...this.getBaseStyle(),
@@ -475,13 +469,7 @@ export class TransferStyles {
     disabled?: boolean;
     className?: string;
   }): string {
-    const {
-      size = 'medium',
-      status = 'default',
-      layout = 'horizontal',
-      disabled = false,
-      className = '',
-    } = config;
+    const { size = 'medium', status = 'default', layout = 'horizontal', disabled = false, className = '' } = config;
 
     const classes = [
       'taro-uno-transfer',

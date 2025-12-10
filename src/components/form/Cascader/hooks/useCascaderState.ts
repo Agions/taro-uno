@@ -6,10 +6,7 @@ import { useCascaderOptions } from './useCascaderOptions';
  * 级联选择器状态管理Hook
  * 提供统一的状态管理逻辑
  */
-export function useCascaderState(
-  options: CascaderOption[],
-  props: CascaderProps
-) {
+export function useCascaderState(options: CascaderOption[], props: CascaderProps) {
   const {
     value: controlledValue,
     defaultValue = null,
@@ -61,28 +58,37 @@ export function useCascaderState(
   }, [open, onDropdownVisibleChange]);
 
   // 设置值
-  const setValue = useCallback((newValue: CascaderValue | null, newSelectedOptions: CascaderOption[]) => {
-    if (!isControlled) {
-      setInternalValue(newValue);
-    }
-    onChange?.(newValue, newSelectedOptions);
-  }, [isControlled, onChange]);
+  const setValue = useCallback(
+    (newValue: CascaderValue | null, newSelectedOptions: CascaderOption[]) => {
+      if (!isControlled) {
+        setInternalValue(newValue);
+      }
+      onChange?.(newValue, newSelectedOptions);
+    },
+    [isControlled, onChange],
+  );
 
   // 设置多选值
-  const setMultipleValue = useCallback((newValues: CascaderValue[], newSelectedOptions: CascaderOption[][]) => {
-    if (!isControlled) {
-      setInternalMultipleValues(newValues);
-    }
-    onMultipleChange?.(newValues, newSelectedOptions);
-  }, [isControlled, onMultipleChange]);
+  const setMultipleValue = useCallback(
+    (newValues: CascaderValue[], newSelectedOptions: CascaderOption[][]) => {
+      if (!isControlled) {
+        setInternalMultipleValues(newValues);
+      }
+      onMultipleChange?.(newValues, newSelectedOptions);
+    },
+    [isControlled, onMultipleChange],
+  );
 
   // 设置展开状态
-  const setOpen = useCallback((newOpen: boolean) => {
-    if (!isOpenControlled) {
-      setInternalOpen(newOpen);
-    }
-    onDropdownVisibleChange?.(newOpen);
-  }, [isOpenControlled, onDropdownVisibleChange]);
+  const setOpen = useCallback(
+    (newOpen: boolean) => {
+      if (!isOpenControlled) {
+        setInternalOpen(newOpen);
+      }
+      onDropdownVisibleChange?.(newOpen);
+    },
+    [isOpenControlled, onDropdownVisibleChange],
+  );
 
   // 清除所有状态
   const clearAll = useCallback(() => {
@@ -115,7 +121,7 @@ export function useCascaderState(
     expandedValues,
     searchValue,
     internalMultipleValues,
-    
+
     // 状态设置函数
     setValue,
     setMultipleValue,
@@ -125,7 +131,7 @@ export function useCascaderState(
     setSearchValue,
     clearAll,
     reset,
-    
+
     // 受控状态标记
     isControlled,
     isOpenControlled,

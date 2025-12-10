@@ -3,7 +3,6 @@
  * Extended type definitions for the unified request client
  */
 
-
 /** HTTP Methods */
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS';
 
@@ -46,20 +45,55 @@ export interface ResponseData<T = any> {
   cookies?: string[];
 }
 
-/** Request interceptor function */
+/** Interceptor priority levels */
+export type InterceptorPriority = 'low' | 'medium' | 'high' | number;
+
+/** Request interceptor function with enhanced features */
 export interface RequestInterceptor {
   /** Called before request is sent */
   onRequest?: (config: RequestConfig) => RequestConfig | Promise<RequestConfig>;
   /** Called if request configuration fails */
   onRequestError?: (error: Error) => Error | Promise<Error>;
+  /** Interceptor priority */
+  priority?: InterceptorPriority;
+  /** Interceptor group name */
+  group?: string;
 }
 
-/** Response interceptor function */
+/** Response interceptor function with enhanced features */
 export interface ResponseInterceptor {
   /** Called on successful response */
   onResponse?: <T>(response: ResponseData<T>) => ResponseData<T> | Promise<ResponseData<T>>;
   /** Called on response error */
   onResponseError?: (error: Error) => Error | Promise<Error>;
+  /** Interceptor priority */
+  priority?: InterceptorPriority;
+  /** Interceptor group name */
+  group?: string;
+}
+
+/** Interceptor registration result */
+export interface InterceptorRegistration {
+  /** ID of the registered interceptor */
+  id: string;
+  /** Function to remove the interceptor */
+  eject: () => void;
+}
+
+/** Global interceptors manager */
+export interface GlobalInterceptorsManager {
+  /** Add a global request interceptor */
+  useRequestInterceptor: (interceptor: RequestInterceptor) => InterceptorRegistration;
+  /** Add a global response interceptor */
+  useResponseInterceptor: (interceptor: ResponseInterceptor) => InterceptorRegistration;
+  /** Remove all global interceptors */
+  clearAll: () => void;
+  /** Remove all interceptors by group */
+  clearByGroup: (group: string) => void;
+  /** Get all global request interceptors */
+  getRequestInterceptors: () => Array<{ id: string } & RequestInterceptor>;
+  /** Get all global response interceptors */
+  getResponseInterceptors: () => Array<{ id: string } & ResponseInterceptor>;
 }
 
 /** Retry configuration */
@@ -173,45 +207,140 @@ export interface DownloadProgress {
 
 /** HTTP client error */
 export class HttpError extends Error {
+  public requestId?: string;
+  public timestamp: number;
+  public retryAttempts?: number;
+  public platform?: Platform;
+
   constructor(
     message: string,
     public statusCode?: number,
     public response?: ResponseData,
     public config?: RequestConfig,
+    options?: { retryAttempts?: number; platform?: Platform; requestId?: string },
   ) {
     super(message);
     this.name = 'HttpError';
+    this.timestamp = Date.now();
+    this.retryAttempts = options?.retryAttempts;
+    this.platform = options?.platform;
+    this.requestId = options?.requestId;
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      statusCode: this.statusCode,
+      requestId: this.requestId,
+      timestamp: this.timestamp,
+      retryAttempts: this.retryAttempts,
+      platform: this.platform,
+      url: this.config?.url,
+      method: this.config?.method,
+      response: this.response,
+    };
   }
 }
 
 /** Network error (no response received) */
 export class NetworkError extends Error {
+  public requestId?: string;
+  public timestamp: number;
+  public retryAttempts?: number;
+  public platform?: Platform;
+
   constructor(
     message: string,
     public config?: RequestConfig,
+    options?: { retryAttempts?: number; platform?: Platform; requestId?: string },
   ) {
     super(message);
     this.name = 'NetworkError';
+    this.timestamp = Date.now();
+    this.retryAttempts = options?.retryAttempts;
+    this.platform = options?.platform;
+    this.requestId = options?.requestId;
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      requestId: this.requestId,
+      timestamp: this.timestamp,
+      retryAttempts: this.retryAttempts,
+      platform: this.platform,
+      url: this.config?.url,
+      method: this.config?.method,
+    };
   }
 }
 
 /** Timeout error */
 export class TimeoutError extends Error {
+  public requestId?: string;
+  public timestamp: number;
+  public retryAttempts?: number;
+  public platform?: Platform;
+
   constructor(
     message: string,
     public timeout?: number,
     public config?: RequestConfig,
+    options?: { retryAttempts?: number; platform?: Platform; requestId?: string },
   ) {
     super(message);
     this.name = 'TimeoutError';
+    this.timestamp = Date.now();
+    this.retryAttempts = options?.retryAttempts;
+    this.platform = options?.platform;
+    this.requestId = options?.requestId;
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      timeout: this.timeout,
+      requestId: this.requestId,
+      timestamp: this.timestamp,
+      retryAttempts: this.retryAttempts,
+      platform: this.platform,
+      url: this.config?.url,
+      method: this.config?.method,
+    };
   }
 }
 
 /** Cancel error */
 export class CancelError extends Error {
-  constructor(message: string = 'Request cancelled') {
+  public requestId?: string;
+  public timestamp: number;
+  public platform?: Platform;
+
+  constructor(
+    message: string = 'Request cancelled',
+    public config?: RequestConfig,
+    options?: { platform?: Platform; requestId?: string },
+  ) {
     super(message);
     this.name = 'CancelError';
+    this.timestamp = Date.now();
+    this.platform = options?.platform;
+    this.requestId = options?.requestId;
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      requestId: this.requestId,
+      timestamp: this.timestamp,
+      platform: this.platform,
+      url: this.config?.url,
+      method: this.config?.method,
+    };
   }
 }
 
@@ -240,7 +369,7 @@ export interface MutationState<T, V = any> {
 }
 
 /** Request hook options */
-export interface UseRequestOptions<T, V = any> extends Omit<RequestOptions, 'url' | 'method' | 'data' | 'params'> {
+export interface UseRequestOptions<T> extends Omit<RequestOptions, 'url' | 'method' | 'data' | 'params'> {
   /** Manual mode - don't execute on mount */
   manual?: boolean;
   /** Default data value */

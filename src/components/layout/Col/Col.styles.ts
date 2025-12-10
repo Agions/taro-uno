@@ -100,27 +100,27 @@ export const colStyles = {
     // 计算间距
     const gutterStyle = gutter
       ? {
-        paddingLeft: Array.isArray(gutter)
-          ? colStyles['parseSizeHalf'](gutter[0])
-          : colStyles['parseSizeHalf'](gutter),
-        paddingRight: Array.isArray(gutter)
-          ? colStyles['parseSizeHalf'](gutter[0])
-          : colStyles['parseSizeHalf'](gutter),
-        paddingTop: Array.isArray(gutter)
-          ? colStyles['parseSizeHalf'](gutter[1])
-          : colStyles['parseSizeHalf'](gutter),
-        paddingBottom: Array.isArray(gutter)
-          ? colStyles['parseSizeHalf'](gutter[1])
-          : colStyles['parseSizeHalf'](gutter),
-      }
+          paddingLeft: Array.isArray(gutter)
+            ? colStyles['parseSizeHalf'](gutter[0])
+            : colStyles['parseSizeHalf'](gutter),
+          paddingRight: Array.isArray(gutter)
+            ? colStyles['parseSizeHalf'](gutter[0])
+            : colStyles['parseSizeHalf'](gutter),
+          paddingTop: Array.isArray(gutter)
+            ? colStyles['parseSizeHalf'](gutter[1])
+            : colStyles['parseSizeHalf'](gutter),
+          paddingBottom: Array.isArray(gutter)
+            ? colStyles['parseSizeHalf'](gutter[1])
+            : colStyles['parseSizeHalf'](gutter),
+        }
       : {};
 
     // 计算柔性布局
     const flexStyle =
       flex !== undefined
         ? {
-          flex: flex === 'auto' ? '1' : flex === 'none' ? 'none' : flex,
-        }
+            flex: flex === 'auto' ? '1' : flex === 'none' ? 'none' : flex,
+          }
         : {};
 
     return {
@@ -142,7 +142,8 @@ export const colStyles = {
 
     const baseClass = 'taro-uno-col';
     const spanClass = `${baseClass}--span-${span}`;
-    const offsetClass = (typeof offset === 'number' ? offset : parseInt(offset)) > 0 ? `${baseClass}--offset-${offset}` : '';
+    const offsetClass =
+      (typeof offset === 'number' ? offset : parseInt(offset)) > 0 ? `${baseClass}--offset-${offset}` : '';
     const flexClass = flex !== undefined ? `${baseClass}--flex-${flex}` : '';
 
     return [baseClass, spanClass, offsetClass, flexClass, className].filter(Boolean).join(' ');
@@ -161,7 +162,6 @@ export const colStyles = {
         // 这里需要配合CSS-in-JS库来处理响应式样式
         // 暂时返回空对象
         // Breakpoint: breakpoint, value: colStyles['getBreakpointValue'](breakpoint)
-
       }
     });
 

@@ -7,18 +7,7 @@ import { avatarStyles } from './Avatar.styles';
 const { bem } = createNamespace('avatar');
 
 export const Avatar = forwardRef<AvatarRef, AvatarProps>((props, ref) => {
-  const {
-    src,
-    alt,
-    size = 'medium',
-    shape = 'circle',
-    icon,
-    children,
-    style,
-    className,
-    onClick,
-    ...rest
-  } = props;
+  const { src, alt, size = 'medium', shape = 'circle', icon, children, style, className, onClick, ...rest } = props;
 
   const handleClick = (event: any) => {
     onClick?.(event);
@@ -43,16 +32,14 @@ export const Avatar = forwardRef<AvatarRef, AvatarProps>((props, ref) => {
     }
 
     if (children) {
-      return (
-        <Text className={bem('text')}>
-          {children}
-        </Text>
-      );
+      return <Text className={bem('text')}>{children}</Text>;
     }
 
     return (
       <Text className={bem('text')}>
-        {String(alt || 'U').charAt(0).toUpperCase()}
+        {String(alt || 'U')
+          .charAt(0)
+          .toUpperCase()}
       </Text>
     );
   };

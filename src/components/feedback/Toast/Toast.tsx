@@ -15,7 +15,6 @@ export const ToastComponent = forwardRef<ToastRef, ToastProps>((props, ref) => {
     closable = false,
     showIcon = true,
     icon,
-    animated = true,
     animationDuration = 300,
     closeable = false,
     onShow,
@@ -24,7 +23,6 @@ export const ToastComponent = forwardRef<ToastRef, ToastProps>((props, ref) => {
     onClick,
     className,
     style,
-    ...restProps
   } = props;
 
   const toastRef = useRef<any>(null);
@@ -100,7 +98,7 @@ export const ToastComponent = forwardRef<ToastRef, ToastProps>((props, ref) => {
 
   // 处理点击
   const handleClick = useCallback(
-    (event: React.MouseEvent) => {
+    (event: any) => {
       onClick?.(event);
     },
     [onClick],
@@ -193,7 +191,7 @@ export const ToastComponent = forwardRef<ToastRef, ToastProps>((props, ref) => {
   }
 
   return (
-    <View ref={toastRef} className={toastClassName} style={toastStyle} onClick={handleClick} {...restProps}>
+    <View ref={toastRef} className={toastClassName} style={toastStyle} onClick={handleClick}>
       {getIcon() && (
         <View className="taro-uno-toast__icon" style={{ marginRight: '8px', fontSize: '16px' }}>
           {getIcon()}
@@ -203,7 +201,11 @@ export const ToastComponent = forwardRef<ToastRef, ToastProps>((props, ref) => {
         <Text>{internalMessage}</Text>
       </View>
       {(closable || closeable) && (
-        <View className="taro-uno-toast__close" style={{ marginLeft: '8px', fontSize: '16px', color: 'white' }} onClick={handleClose}>
+        <View
+          className="taro-uno-toast__close"
+          style={{ marginLeft: '8px', fontSize: '16px', color: 'white' }}
+          onClick={handleClose}
+        >
           ×
         </View>
       )}
@@ -279,8 +281,6 @@ const createGlobalToastContainer = () => {
     opacity: 0;
   `;
 
-  
-
   // 添加图标
   if (props.showIcon !== false) {
     const iconElement = document.createElement('span');
@@ -324,30 +324,42 @@ const createGlobalToastContainer = () => {
           toastElement.parentNode.removeChild(toastElement);
         }
       }, 300);
-    }
+    },
   };
 
   return globalToastInstance;
 };
 
 (Toast as any).info = (config: ToastMethodConfig | string) => {
-  return (Toast as any).show(typeof config === 'string' ? { message: config, type: 'info' } : { ...config, type: 'info' });
+  return (Toast as any).show(
+    typeof config === 'string' ? { message: config, type: 'info' } : { ...config, type: 'info' },
+  );
 };
 
 (Toast as any).success = (config: ToastMethodConfig | string) => {
-  return (Toast as any).show(typeof config === 'string' ? { message: config, type: 'success' } : { ...config, type: 'success' });
+  return (Toast as any).show(
+    typeof config === 'string' ? { message: config, type: 'success' } : { ...config, type: 'success' },
+  );
 };
 
 (Toast as any).warning = (config: ToastMethodConfig | string) => {
-  return (Toast as any).show(typeof config === 'string' ? { message: config, type: 'warning' } : { ...config, type: 'warning' });
+  return (Toast as any).show(
+    typeof config === 'string' ? { message: config, type: 'warning' } : { ...config, type: 'warning' },
+  );
 };
 
 (Toast as any).error = (config: ToastMethodConfig | string) => {
-  return (Toast as any).show(typeof config === 'string' ? { message: config, type: 'error' } : { ...config, type: 'error' });
+  return (Toast as any).show(
+    typeof config === 'string' ? { message: config, type: 'error' } : { ...config, type: 'error' },
+  );
 };
 
 (Toast as any).loading = (config: ToastMethodConfig | string) => {
-  return (Toast as any).show(typeof config === 'string' ? { message: config, type: 'loading', duration: 0 } : { ...config, type: 'loading', duration: 0 });
+  return (Toast as any).show(
+    typeof config === 'string'
+      ? { message: config, type: 'loading', duration: 0 }
+      : { ...config, type: 'loading', duration: 0 },
+  );
 };
 
 (Toast as any).hide = () => {

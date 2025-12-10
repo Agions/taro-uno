@@ -113,7 +113,7 @@ class ResponsiveUtils {
     }
 
     // 如果没有找到，返回默认值（确保不会返回undefined）
-    return (responsiveValue.xs || value as T) as T;
+    return (responsiveValue.xs || (value as T)) as T;
   }
 
   /**
@@ -142,11 +142,7 @@ class ResponsiveUtils {
    * @param otherStyles 其他平台样式
    * @returns 当前平台的样式
    */
-  getPlatformStyles<T>(
-    webStyles: T,
-    weappStyles: T,
-    otherStyles?: Partial<Record<Platform, T>>
-  ): T {
+  getPlatformStyles<T>(webStyles: T, weappStyles: T, otherStyles?: Partial<Record<Platform, T>>): T {
     if (this.platform === 'web' || this.platform === 'h5') {
       return webStyles;
     }
@@ -274,7 +270,7 @@ export const useResponsive = () => {
         const systemInfo = Taro.getSystemInfoSync();
         setWindowSize({
           windowWidth: systemInfo.windowWidth || 375,
-          windowHeight: systemInfo.windowHeight || 667
+          windowHeight: systemInfo.windowHeight || 667,
         });
       } catch (e) {
         // 如果获取失败，使用默认值
@@ -320,14 +316,12 @@ export const useResponsive = () => {
     safeArea,
     statusBarHeight,
     navigationBarHeight,
-    getResponsiveValue: <T>(value: ResponsiveValue<T>) =>
-      responsiveUtils.getResponsiveValue(value, windowWidth),
+    getResponsiveValue: <T>(value: ResponsiveValue<T>) => responsiveUtils.getResponsiveValue(value, windowWidth),
     generateResponsiveStyles: (styles: ResponsiveStyle) =>
       responsiveUtils.generateResponsiveStyles(styles, windowWidth),
     getPlatformStyles: <T>(webStyles: T, weappStyles: T, otherStyles?: Partial<Record<Platform, T>>) =>
       responsiveUtils.getPlatformStyles(webStyles, weappStyles, otherStyles),
-    matchScreenSize: (size: ScreenSize) =>
-      responsiveUtils.matchScreenSize(size, windowWidth),
+    matchScreenSize: (size: ScreenSize) => responsiveUtils.matchScreenSize(size, windowWidth),
   };
 };
 
@@ -338,11 +332,8 @@ export const getResponsiveValue = <T>(value: ResponsiveValue<T>, width: number) 
   responsiveUtils.getResponsiveValue(value, width);
 export const generateResponsiveStyles = (styles: ResponsiveStyle, width: number) =>
   responsiveUtils.generateResponsiveStyles(styles, width);
-export const getPlatformStyles = <T>(
-  webStyles: T,
-  weappStyles: T,
-  otherStyles?: Partial<Record<Platform, T>>
-) => responsiveUtils.getPlatformStyles(webStyles, weappStyles, otherStyles);
+export const getPlatformStyles = <T>(webStyles: T, weappStyles: T, otherStyles?: Partial<Record<Platform, T>>) =>
+  responsiveUtils.getPlatformStyles(webStyles, weappStyles, otherStyles);
 export const getPlatform = () => responsiveUtils.getPlatform();
 export const isMobile = (width: number) => responsiveUtils.isMobile(width);
 export const isTablet = (width: number) => responsiveUtils.isTablet(width);

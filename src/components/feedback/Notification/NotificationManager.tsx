@@ -4,7 +4,7 @@ import type {
   NotificationManagerProps,
   NotificationManagerRef,
   NotificationItem,
-  NotificationPlacement
+  NotificationPlacement,
 } from './Notification.types';
 import { Notification } from './Notification';
 import { notificationStyleHelpers } from './Notification.styles';
@@ -50,93 +50,102 @@ export const NotificationManager = forwardRef<NotificationManagerRef, Notificati
   const notificationRefs = useRef<Map<string, { current: any }>>(new Map());
 
   // 添加通知
-  const addNotification = useCallback((config: Omit<NotificationItem, 'key' | 'createdAt'>): string => {
-    const key = NotificationUtils.generateKey();
-    const newNotification: InternalNotificationItem = {
-      ...config,
-      key,
-      createdAt: Date.now(),
-      placement: config.placement || defaultPlacement,
-      duration: config.duration ?? defaultDuration,
-      animation: config.animation || defaultAnimation,
-      stackIndex: 0,
-      isClosing: false,
-    };
+  const addNotification = useCallback(
+    (config: Omit<NotificationItem, 'key' | 'createdAt'>): string => {
+      const key = NotificationUtils.generateKey();
+      const newNotification: InternalNotificationItem = {
+        ...config,
+        key,
+        createdAt: Date.now(),
+        placement: config.placement || defaultPlacement,
+        duration: config.duration ?? defaultDuration,
+        animation: config.animation || defaultAnimation,
+        stackIndex: 0,
+        isClosing: false,
+      };
 
-    setNotifications(prev => {
-      // 检查是否超过最大数量
-      let updatedNotifications = [...prev, newNotification];
-      
-      if (updatedNotifications.length > maxCount) {
-        // 移除最早的通知
-        const removed = updatedNotifications.shift();
-        if (removed) {
-          // 添加到历史记录
-          setHistory(prevHistory => [...prevHistory.slice(-DEFAULT_NOTIFICATION_CONFIG.maxHistoryCount!), removed]);
-          onLeave?.(removed.key);
+      setNotifications((prev) => {
+        // 检查是否超过最大数量
+        let updatedNotifications = [...prev, newNotification];
+
+        if (updatedNotifications.length > maxCount) {
+          // 移除最早的通知
+          const removed = updatedNotifications.shift();
+          if (removed) {
+            // 添加到历史记录
+            setHistory((prevHistory) => [...prevHistory.slice(-DEFAULT_NOTIFICATION_CONFIG.maxHistoryCount!), removed]);
+            onLeave?.(removed.key);
+          }
         }
-      }
 
-      // 更新堆叠索引
-      return updateStackIndices(updatedNotifications);
-    });
+        // 更新堆叠索引
+        return updateStackIndices(updatedNotifications);
+      });
 
-    onEnter?.(key);
-    return key;
-  }, [maxCount, defaultPlacement, defaultDuration, defaultAnimation, onEnter, onLeave]);
+      onEnter?.(key);
+      return key;
+    },
+    [maxCount, defaultPlacement, defaultDuration, defaultAnimation, onEnter, onLeave],
+  );
 
   // 更新堆叠索引
-  const updateStackIndices = useCallback((notificationsList: InternalNotificationItem[]): InternalNotificationItem[] => {
-    if (!stack) return notificationsList;
+  const updateStackIndices = useCallback(
+    (notificationsList: InternalNotificationItem[]): InternalNotificationItem[] => {
+      if (!stack) return notificationsList;
 
-    return notificationsList.map((notification, index) => ({
-      ...notification,
-      stackIndex: index,
-    }));
-  }, [stack]);
+      return notificationsList.map((notification, index) => ({
+        ...notification,
+        stackIndex: index,
+      }));
+    },
+    [stack],
+  );
 
   // 关闭通知
-  const closeNotification = useCallback((key: string) => {
-    setNotifications(prev => {
-      const notificationIndex = prev.findIndex(n => n.key === key);
-      if (notificationIndex === -1) return prev;
+  const closeNotification = useCallback(
+    (key: string) => {
+      setNotifications((prev) => {
+        const notificationIndex = prev.findIndex((n) => n.key === key);
+        if (notificationIndex === -1) return prev;
 
-      const notification = prev[notificationIndex];
-      const updatedNotifications = prev.filter((_, index) => index !== notificationIndex);
+        const notification = prev[notificationIndex];
+        const updatedNotifications = prev.filter((_, index) => index !== notificationIndex);
 
-      // 添加到历史记录
-      setHistory(prevHistory => [...prevHistory.slice(-DEFAULT_NOTIFICATION_CONFIG.maxHistoryCount!), notification as NotificationItem]);
-      
-      // 更新堆叠索引
-      return updateStackIndices(updatedNotifications);
-    });
+        // 添加到历史记录
+        setHistory((prevHistory) => [
+          ...prevHistory.slice(-DEFAULT_NOTIFICATION_CONFIG.maxHistoryCount!),
+          notification as NotificationItem,
+        ]);
 
-    onLeave?.(key);
-  }, [onLeave, updateStackIndices]);
+        // 更新堆叠索引
+        return updateStackIndices(updatedNotifications);
+      });
+
+      onLeave?.(key);
+    },
+    [onLeave, updateStackIndices],
+  );
 
   // 关闭所有通知
   const closeAllNotifications = useCallback(() => {
-    setNotifications(prev => {
+    setNotifications((prev) => {
       // 添加到历史记录
-      setHistory(prevHistory => [
-        ...prevHistory.slice(-DEFAULT_NOTIFICATION_CONFIG.maxHistoryCount!),
-        ...prev
-      ]);
+      setHistory((prevHistory) => [...prevHistory.slice(-DEFAULT_NOTIFICATION_CONFIG.maxHistoryCount!), ...prev]);
 
       const firstKey = prev[0]?.key;
       if (firstKey) {
         onLeave?.(firstKey);
       }
       onAllClose?.();
-      
+
       return [];
     });
   }, [onLeave, onAllClose]);
 
   // 更新通知
   const updateNotification = useCallback((key: string, config: Partial<NotificationItem>) => {
-    setNotifications(prev => {
-      return prev.map(notification => {
+    setNotifications((prev) => {
+      return prev.map((notification) => {
         if (notification.key === key) {
           return {
             ...notification,
@@ -152,34 +161,52 @@ export const NotificationManager = forwardRef<NotificationManagerRef, Notificati
   }, []);
 
   // 显示通知
-  const open = useCallback((config: Omit<NotificationItem, 'key' | 'createdAt'>) => {
-    return addNotification(config);
-  }, [addNotification]);
+  const open = useCallback(
+    (config: Omit<NotificationItem, 'key' | 'createdAt'>) => {
+      return addNotification(config);
+    },
+    [addNotification],
+  );
 
   // 显示成功通知
-  const success = useCallback((config: Omit<NotificationItem, 'key' | 'createdAt' | 'type'>) => {
-    return open({ ...config, type: 'success' });
-  }, [open]);
+  const success = useCallback(
+    (config: Omit<NotificationItem, 'key' | 'createdAt' | 'type'>) => {
+      return open({ ...config, type: 'success' });
+    },
+    [open],
+  );
 
   // 显示信息通知
-  const info = useCallback((config: Omit<NotificationItem, 'key' | 'createdAt' | 'type'>) => {
-    return open({ ...config, type: 'info' });
-  }, [open]);
+  const info = useCallback(
+    (config: Omit<NotificationItem, 'key' | 'createdAt' | 'type'>) => {
+      return open({ ...config, type: 'info' });
+    },
+    [open],
+  );
 
   // 显示警告通知
-  const warning = useCallback((config: Omit<NotificationItem, 'key' | 'createdAt' | 'type'>) => {
-    return open({ ...config, type: 'warning' });
-  }, [open]);
+  const warning = useCallback(
+    (config: Omit<NotificationItem, 'key' | 'createdAt' | 'type'>) => {
+      return open({ ...config, type: 'warning' });
+    },
+    [open],
+  );
 
   // 显示错误通知
-  const error = useCallback((config: Omit<NotificationItem, 'key' | 'createdAt' | 'type'>) => {
-    return open({ ...config, type: 'error' });
-  }, [open]);
+  const error = useCallback(
+    (config: Omit<NotificationItem, 'key' | 'createdAt' | 'type'>) => {
+      return open({ ...config, type: 'error' });
+    },
+    [open],
+  );
 
   // 关闭指定通知
-  const close = useCallback((key: string) => {
-    closeNotification(key);
-  }, [closeNotification]);
+  const close = useCallback(
+    (key: string) => {
+      closeNotification(key);
+    },
+    [closeNotification],
+  );
 
   // 关闭所有通知
   const destroyAll = useCallback(() => {
@@ -217,7 +244,7 @@ export const NotificationManager = forwardRef<NotificationManagerRef, Notificati
   // 暂停所有通知自动关闭
   const pauseAll = useCallback(() => {
     setIsAllPaused(true);
-    notificationRefs.current.forEach(refObject => {
+    notificationRefs.current.forEach((refObject) => {
       if (refObject?.current?.pauseProgress) {
         refObject.current.pauseProgress();
       }
@@ -227,7 +254,7 @@ export const NotificationManager = forwardRef<NotificationManagerRef, Notificati
   // 恢复所有通知自动关闭
   const resumeAll = useCallback(() => {
     setIsAllPaused(false);
-    notificationRefs.current.forEach(ref => {
+    notificationRefs.current.forEach((ref) => {
       if (ref?.current?.resumeProgress) {
         ref.current.resumeProgress();
       }
@@ -266,17 +293,23 @@ export const NotificationManager = forwardRef<NotificationManagerRef, Notificati
   }));
 
   // 处理通知关闭
-  const handleNotificationClose = useCallback((key: string) => {
-    closeNotification(key);
-  }, [closeNotification]);
+  const handleNotificationClose = useCallback(
+    (key: string) => {
+      closeNotification(key);
+    },
+    [closeNotification],
+  );
 
   // 处理通知点击
-  const handleNotificationClick = useCallback((key: string) => {
-    const notification = notifications.find(n => n.key === key);
-    if (notification?.onClick) {
-      notification.onClick();
-    }
-  }, [notifications]);
+  const handleNotificationClick = useCallback(
+    (key: string) => {
+      const notification = notifications.find((n) => n.key === key);
+      if (notification?.onClick) {
+        notification.onClick();
+      }
+    },
+    [notifications],
+  );
 
   // 获取容器样式
   const getContainerStyle = () => {
@@ -288,12 +321,8 @@ export const NotificationManager = forwardRef<NotificationManagerRef, Notificati
 
   // 获取容器类名
   const getContainerClassName = () => {
-    return cn(
-      'taro-uno-notification-container',
-      containerClassName
-    );
+    return cn('taro-uno-notification-container', containerClassName);
   };
-
 
   // 按位置分组通知
   const renderNotificationsByPlacement = () => {
@@ -307,7 +336,7 @@ export const NotificationManager = forwardRef<NotificationManagerRef, Notificati
     };
 
     // 按位置分组
-    notifications.forEach(notification => {
+    notifications.forEach((notification) => {
       const placement = notification.placement || defaultPlacement;
       notificationsByPlacement[placement].push(notification);
     });
@@ -317,7 +346,7 @@ export const NotificationManager = forwardRef<NotificationManagerRef, Notificati
       if (placementNotifications.length === 0) return null;
 
       const sortedNotifications = NotificationUtils.sortNotifications(placementNotifications);
-      
+
       return (
         <View
           key={placement}
@@ -357,15 +386,15 @@ export const NotificationManager = forwardRef<NotificationManagerRef, Notificati
 
   // 获取位置样式
   const getPlacementStyle = (placement: NotificationPlacement) => {
-    const placementStyleData = notificationStyleHelpers.getPlacementStyle(placement, { theme, isMobile: platform.isMobile() });
+    const placementStyleData = notificationStyleHelpers.getPlacementStyle(placement, {
+      theme,
+      isMobile: platform.isMobile(),
+    });
     return placementStyleData.container;
   };
 
   return (
-    <View
-      className={getContainerClassName()}
-      style={getContainerStyle()}
-    >
+    <View className={getContainerClassName()} style={getContainerStyle()}>
       {renderNotificationsByPlacement()}
     </View>
   );

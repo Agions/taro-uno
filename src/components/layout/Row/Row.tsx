@@ -5,18 +5,7 @@ import type { RowProps, RowRef, RowAlign, RowJustify, RowGutter } from './Row.ty
 
 /** Row组件 */
 export const RowComponent = forwardRef<RowRef, RowProps>((props, ref) => {
-  const {
-    children,
-    gutter = 0,
-    align = 'top',
-    justify = 'start',
-    wrap = true,
-    className,
-    style,
-    onClick,
-    responsive,
-    ...restProps
-  } = props;
+  const { children, gutter = 0, align = 'top', justify = 'start', wrap = true, className, style, onClick } = props;
 
   const rowRef = useRef<any>(null);
   const [internalAlign, setInternalAlign] = useState<RowAlign>(align);
@@ -43,30 +32,11 @@ export const RowComponent = forwardRef<RowRef, RowProps>((props, ref) => {
 
   // 处理点击事件
   const handleClick = useCallback(
-    (event: React.MouseEvent) => {
+    (event: any) => {
       onClick?.(event);
     },
     [onClick],
   );
-
-  // 渲染子元素
-  const renderChildren = () => {
-    if (!children) return null;
-
-    const childrenArray = React.Children.toArray(children);
-
-    return childrenArray.map((child, index) => {
-      // 为每个Col组件传递gutter属性
-      if (React.isValidElement(child) && (child.type as any)?.displayName === 'Col') {
-        return React.cloneElement(child, {
-          key: index,
-          gutter: internalGutter,
-        } as any);
-      }
-
-      return child;
-    });
-  };
 
   // 计算样式
   const rowStyle = rowStyles['getBaseStyle']({
@@ -76,9 +46,6 @@ export const RowComponent = forwardRef<RowRef, RowProps>((props, ref) => {
     wrap: internalWrap,
     style: style || {},
   });
-
-  // 计算响应式样式
-  const responsiveStyle = responsive ? rowStyles['getResponsiveStyle'](responsive) : {};
 
   // 计算类名
   const rowClassName = rowStyles['getClassName']({
@@ -119,15 +86,20 @@ export const RowComponent = forwardRef<RowRef, RowProps>((props, ref) => {
     [internalAlign, internalJustify, internalGutter],
   );
 
+  // 渲染子元素，为每个Col组件传递gutter属性
+  const renderedChildren = React.Children.map(children, (child, index) => {
+    if (React.isValidElement(child) && (child.type as any)?.displayName === 'Col') {
+      return React.cloneElement(child, {
+        key: index,
+        gutter: internalGutter,
+      } as any);
+    }
+    return child;
+  });
+
   return (
-    <View
-      ref={rowRef}
-      className={rowClassName}
-      style={{ ...rowStyle, ...responsiveStyle }}
-      onClick={handleClick}
-      {...restProps}
-    >
-      {renderChildren()}
+    <View ref={rowRef} className={rowClassName} style={{ ...rowStyle, ...style }} onClick={handleClick}>
+      {renderedChildren}
     </View>
   );
 });

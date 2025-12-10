@@ -1,6 +1,5 @@
 import React, { forwardRef, useRef, useState, useEffect, useCallback } from 'react';
 import { View } from '@tarojs/components';
-import type { ITouchEvent } from '@tarojs/components';
 import { gridStyles } from './Grid.styles';
 import type { GridProps, GridRef, GridAlign, GridJustify, GridGap, GridCols } from './Grid.types';
 
@@ -18,10 +17,6 @@ export const GridComponent = forwardRef<GridRef, GridProps>((props, ref) => {
     className,
     style,
     onClick,
-    onItemHover,
-    onItemClick,
-    responsive,
-    ...restProps
   } = props;
 
   const gridRef = useRef<any>(null);
@@ -59,47 +54,11 @@ export const GridComponent = forwardRef<GridRef, GridProps>((props, ref) => {
 
   // 处理点击事件
   const handleClick = useCallback(
-    (event: ITouchEvent) => {
+    (event: any) => {
       onClick?.(event);
     },
     [onClick],
   );
-
-  // 处理子元素点击事件
-  const handleItemClick = useCallback(
-    (index: number, event: ITouchEvent) => {
-      onItemClick?.(index, event);
-    },
-    [onItemClick],
-  );
-
-  // 处理子元素悬停事件
-  const handleItemHover = useCallback(
-    (index: number, event: ITouchEvent) => {
-      onItemHover?.(index, event);
-    },
-    [onItemHover],
-  );
-
-  // 渲染子元素
-  const renderChildren = () => {
-    if (!children) return null;
-
-    const childrenArray = React.Children.toArray(children);
-
-    return childrenArray.map((child, index) => (
-      <View
-        key={index}
-        className="taro-uno-grid__item"
-        style={gridStyles['getItemStyle'](index, childrenArray.length, internalCols)}
-        onClick={(e: ITouchEvent) => handleItemClick(index, e)}
-        onTouchStart={(event) => handleItemHover(index, event as ITouchEvent)}
-        onTouchEnd={(event) => handleItemHover(index, event as ITouchEvent)}
-      >
-        {child}
-      </View>
-    ));
-  };
 
   // 计算样式
   const gridStyle = gridStyles['getBaseStyle']({
@@ -112,9 +71,6 @@ export const GridComponent = forwardRef<GridRef, GridProps>((props, ref) => {
     justify: internalJustify,
     style: style || {},
   });
-
-  // 计算响应式样式
-  const responsiveStyle = responsive ? gridStyles['getResponsiveStyle'](responsive) : {};
 
   // 计算类名
   const gridClassName = gridStyles['getClassName']({
@@ -154,14 +110,8 @@ export const GridComponent = forwardRef<GridRef, GridProps>((props, ref) => {
   );
 
   return (
-    <View
-      ref={gridRef}
-      className={gridClassName}
-      style={{ ...gridStyle, ...responsiveStyle }}
-      onClick={handleClick}
-      {...restProps}
-    >
-      {renderChildren()}
+    <View ref={gridRef} className={gridClassName} style={{ ...gridStyle, ...style }} onClick={handleClick}>
+      {children}
     </View>
   );
 });

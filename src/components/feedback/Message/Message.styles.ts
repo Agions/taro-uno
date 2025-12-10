@@ -27,15 +27,15 @@ export const messageStyles = {
     success: 'bg-blue-50 border border-blue-200',
     error: 'bg-red-50 border border-red-200',
     warning: 'bg-yellow-50 border border-yellow-200',
-    info: 'bg-blue-50 border border-blue-200'
+    info: 'bg-blue-50 border border-blue-200',
   },
   iconType: {
     success: 'text-green-600',
     error: 'text-red-600',
     warning: 'text-yellow-600',
-    info: 'text-blue-600'
+    info: 'text-blue-600',
   },
   iconText: 'text-base',
   title: 'text-sm font-medium text-gray-900 mb-1',
-  closeText: 'text-gray-400 hover:text-gray-600'
+  closeText: 'text-gray-400 hover:text-gray-600',
 };

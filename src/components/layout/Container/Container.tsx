@@ -18,9 +18,6 @@ export const ContainerComponent = forwardRef<ContainerRef, ContainerProps>((prop
     className,
     style,
     onClick,
-    onScroll,
-    responsive,
-    ...restProps
   } = props;
 
   const containerRef = useRef<any>(null);
@@ -53,14 +50,12 @@ export const ContainerComponent = forwardRef<ContainerRef, ContainerProps>((prop
 
   // 处理点击事件
   const handleClick = useCallback(
-    (event: React.MouseEvent) => {
+    (event: any) => {
       onClick?.(event);
     },
     [onClick],
   );
 
-  
-  
   // 计算样式
   const containerStyle = containerStyles['getBaseStyle']({
     size: internalSize,
@@ -73,9 +68,6 @@ export const ContainerComponent = forwardRef<ContainerRef, ContainerProps>((prop
     scrollDirection: internalScrollDirection,
     style: style || {},
   });
-
-  // 计算响应式样式
-  const responsiveStyle = responsive ? containerStyles['getResponsiveStyle'](responsive) : {};
 
   // 计算类名
   const containerClassName = containerStyles['getClassName']({
@@ -116,9 +108,8 @@ export const ContainerComponent = forwardRef<ContainerRef, ContainerProps>((prop
     <View
       ref={containerRef}
       className={containerClassName}
-      style={{ ...containerStyle, ...responsiveStyle }}
+      style={{ ...containerStyle, ...style }}
       onClick={handleClick}
-      {...restProps}
     >
       {children}
     </View>

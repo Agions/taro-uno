@@ -5,7 +5,7 @@ export {
   easingFunctions,
   throttledAnimationUpdate,
   animationBatchManager,
-  AnimationBatchManager
+  AnimationBatchManager,
 } from './animation';
 
 // 导出进度计算相关工具函数
@@ -22,5 +22,5 @@ export {
   calculateBorderRadius,
   generateId,
   formatProgressValue,
-  calculateProgressStatus
+  calculateProgressStatus,
 } from './progress-calculator';

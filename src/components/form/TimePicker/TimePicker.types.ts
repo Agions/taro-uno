@@ -268,7 +268,7 @@ export interface TimePickerUtils {
     max?: TimeValue,
     step?: number,
     disabledTime?: DisabledTime,
-    selectedTime?: TimeValue
+    selectedTime?: TimeValue,
   ) => Array<{ value: number; label: string; disabled: boolean }>;
   /** 计算时间差 */
   getTimeDifference: (_time1: TimeValue, time2: TimeValue) => { hours: number; minutes: number; seconds: number };

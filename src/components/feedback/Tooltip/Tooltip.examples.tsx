@@ -8,7 +8,7 @@ import { Tooltip } from './Tooltip';
 
 export const TooltipExamples = () => {
   const [visible, setVisible] = useState(false);
-  const tooltipRef = useRef < any > (null);
+  const tooltipRef = useRef<any>(null);
 
   return (
     <div className="p-8 space-y-8">
@@ -180,10 +180,7 @@ export const TooltipExamples = () => {
             <Tooltip title="受控 Tooltip" visible={visible}>
               <button className="px-4 py-2 bg-purple-500 text-white rounded">受控模式</button>
             </Tooltip>
-            <button
-              onClick={() => setVisible(!visible)}
-              className="px-4 py-2 bg-gray-500 text-white rounded"
-            >
+            <button onClick={() => setVisible(!visible)} className="px-4 py-2 bg-gray-500 text-white rounded">
               {visible ? '隐藏' : '显示'}
             </button>
           </div>
@@ -200,7 +197,7 @@ export const TooltipExamples = () => {
                 color: 'white',
                 borderRadius: '8px',
                 padding: '16px',
-                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
               }}
             >
               <button className="px-4 py-2 bg-blue-500 text-white rounded">自定义样式</button>
@@ -211,7 +208,7 @@ export const TooltipExamples = () => {
               arrow
               popupStyle={{
                 backgroundColor: '#ff6b6b',
-                color: 'white'
+                color: 'white',
               }}
             >
               <button className="px-4 py-2 bg-green-500 text-white rounded">自定义箭头</button>
@@ -298,17 +295,11 @@ export const TooltipExamples = () => {
         <div className="space-y-2">
           <h3 className="text-lg font-medium">偏移量</h3>
           <div className="flex space-x-4">
-            <Tooltip
-              title="偏移量 [10, 10]"
-              offset={[10, 10]}
-            >
+            <Tooltip title="偏移量 [10, 10]" offset={[10, 10]}>
               <button className="px-4 py-2 bg-blue-500 text-white rounded">偏移 10px</button>
             </Tooltip>
 
-            <Tooltip
-              title="偏移量 [20, -10]"
-              offset={[20, -10]}
-            >
+            <Tooltip title="偏移量 [20, -10]" offset={[20, -10]}>
               <button className="px-4 py-2 bg-green-500 text-white rounded">偏移 20px</button>
             </Tooltip>
           </div>
@@ -328,31 +319,19 @@ export const TooltipExamples = () => {
         <div className="space-y-2">
           <h3 className="text-lg font-medium">API 调用</h3>
           <div className="flex space-x-4">
-            <Tooltip
-              title="可通过 ref 调用"
-              ref={tooltipRef}
-            >
+            <Tooltip title="可通过 ref 调用" ref={tooltipRef}>
               <button className="px-4 py-2 bg-purple-500 text-white rounded">API 控制</button>
             </Tooltip>
 
-            <button
-              onClick={() => tooltipRef.current?.show()}
-              className="px-4 py-2 bg-green-500 text-white rounded"
-            >
+            <button onClick={() => tooltipRef.current?.show()} className="px-4 py-2 bg-green-500 text-white rounded">
               显示
             </button>
 
-            <button
-              onClick={() => tooltipRef.current?.hide()}
-              className="px-4 py-2 bg-red-500 text-white rounded"
-            >
+            <button onClick={() => tooltipRef.current?.hide()} className="px-4 py-2 bg-red-500 text-white rounded">
               隐藏
             </button>
 
-            <button
-              onClick={() => tooltipRef.current?.toggle()}
-              className="px-4 py-2 bg-gray-500 text-white rounded"
-            >
+            <button onClick={() => tooltipRef.current?.toggle()} className="px-4 py-2 bg-gray-500 text-white rounded">
               切换
             </button>
           </div>
@@ -369,11 +348,7 @@ export const TooltipExamples = () => {
           <div className="space-y-4">
             <div className="flex items-center space-x-4">
               <label className="w-24">用户名：</label>
-              <input
-                type="text"
-                className="px-3 py-2 border rounded"
-                placeholder="请输入用户名"
-              />
+              <input type="text" className="px-3 py-2 border rounded" placeholder="请输入用户名" />
               <Tooltip title="用户名长度应为 3-20 个字符">
                 <span className="text-gray-400 cursor-help">?</span>
               </Tooltip>
@@ -381,11 +356,7 @@ export const TooltipExamples = () => {
 
             <div className="flex items-center space-x-4">
               <label className="w-24">密码：</label>
-              <input
-                type="password"
-                className="px-3 py-2 border rounded"
-                placeholder="请输入密码"
-              />
+              <input type="password" className="px-3 py-2 border rounded" placeholder="请输入密码" />
               <Tooltip title="密码应包含字母、数字和特殊字符">
                 <span className="text-gray-400 cursor-help">?</span>
               </Tooltip>
@@ -438,15 +409,21 @@ export const TooltipExamples = () => {
           <h3 className="text-lg font-medium">链接提示</h3>
           <div className="flex space-x-4">
             <Tooltip title="访问官方网站">
-              <a href="#" className="text-blue-500 underline">官方网站</a>
+              <a href="#" className="text-blue-500 underline">
+                官方网站
+              </a>
             </Tooltip>
 
             <Tooltip title="查看文档">
-              <a href="#" className="text-blue-500 underline">文档</a>
+              <a href="#" className="text-blue-500 underline">
+                文档
+              </a>
             </Tooltip>
 
             <Tooltip title="提交问题">
-              <a href="#" className="text-blue-500 underline">问题反馈</a>
+              <a href="#" className="text-blue-500 underline">
+                问题反馈
+              </a>
             </Tooltip>
           </div>
         </div>

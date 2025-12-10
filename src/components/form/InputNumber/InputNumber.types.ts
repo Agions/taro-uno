@@ -24,7 +24,10 @@ export type InputNumberStepMode = 'continuous' | 'discrete';
 export type InputNumberClearTrigger = 'always' | 'focus' | 'never';
 
 /** 数字输入框原生属性类型 */
-export type InputNumberNativeProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'onChange' | 'onFocus' | 'onBlur' | 'onInput' | 'prefix'>;
+export type InputNumberNativeProps = Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  'size' | 'value' | 'onChange' | 'onFocus' | 'onBlur' | 'onInput' | 'prefix'
+>;
 
 /** 验证规则 */
 export interface InputNumberRule {
@@ -62,7 +65,22 @@ export interface InputNumberFormatConfig {
 
 /** 数字输入框组件属性接口 */
 export interface InputNumberProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'onChange' | 'onFocus' | 'onBlur' | 'onInput' | 'disabled' | 'readOnly' | 'autoFocus' | 'maxLength' | 'minLength' | 'defaultValue' | 'prefix'> {
+  extends Omit<
+    React.InputHTMLAttributes<HTMLInputElement>,
+    | 'size'
+    | 'value'
+    | 'onChange'
+    | 'onFocus'
+    | 'onBlur'
+    | 'onInput'
+    | 'disabled'
+    | 'readOnly'
+    | 'autoFocus'
+    | 'maxLength'
+    | 'minLength'
+    | 'defaultValue'
+    | 'prefix'
+  > {
   /** 数字值 */
   value?: number | null;
   /** 默认值（非受控模式） */

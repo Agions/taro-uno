@@ -53,7 +53,8 @@ export interface SelectOptionGroup {
 export type SelectNativeProps = SelectHTMLAttributes<HTMLSelectElement>;
 
 /** 选择器组件属性接口 */
-export interface SelectProps extends Omit<SelectNativeProps, 'size' | 'onChange' | 'onFocus' | 'onBlur' | 'value' | 'defaultValue' | 'prefix'> {
+export interface SelectProps
+  extends Omit<SelectNativeProps, 'size' | 'onChange' | 'onFocus' | 'onBlur' | 'value' | 'defaultValue' | 'prefix'> {
   /** 选择器值 */
   value?: string | number | Array<string | number>;
   /** 默认值（非受控模式） */

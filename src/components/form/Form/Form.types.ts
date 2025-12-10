@@ -85,7 +85,22 @@ export interface FormFieldInfo {
 export type FormNativeProps = FormHTMLAttributes<HTMLFormElement>;
 
 /** 表单组件属性接口 */
-export interface FormProps extends Omit<FormNativeProps, 'onSubmit' | 'onReset' | 'dangerouslySetInnerHTML' | 'onTouchStart' | 'onTouchMove' | 'onTouchEnd' | 'onTouchCancel' | 'onClick' | 'onMouseDown' | 'onMouseUp' | 'onMouseOver' | 'onMouseOut'> {
+export interface FormProps
+  extends Omit<
+    FormNativeProps,
+    | 'onSubmit'
+    | 'onReset'
+    | 'dangerouslySetInnerHTML'
+    | 'onTouchStart'
+    | 'onTouchMove'
+    | 'onTouchEnd'
+    | 'onTouchCancel'
+    | 'onClick'
+    | 'onMouseDown'
+    | 'onMouseUp'
+    | 'onMouseOver'
+    | 'onMouseOut'
+  > {
   /** 表单初始值 */
   initialValues?: FormValues;
   /** 表单布局 */

@@ -11,8 +11,8 @@ export class DataTransformUtils {
   static deepClone<T>(obj: T): T {
     if (obj === null || typeof obj !== 'object') return obj;
     if (obj instanceof Date) return new Date(obj.getTime()) as T;
-    if (obj instanceof Array) return obj.map(item => this.deepClone(item)) as T;
-    
+    if (obj instanceof Array) return obj.map((item) => this.deepClone(item)) as T;
+
     const clonedObj = {} as T;
     for (const key in obj) {
       if (obj.hasOwnProperty(key)) {
@@ -26,7 +26,7 @@ export class DataTransformUtils {
   static objectToArray<T extends Record<string, any>>(
     obj: T,
     keyField = 'key',
-    valueField = 'value'
+    valueField = 'value',
   ): Array<{ [K in typeof keyField | typeof valueField]: any }> {
     return Object.entries(obj).map(([key, value]) => ({
       [keyField]: key,
@@ -35,15 +35,15 @@ export class DataTransformUtils {
   }
 
   /** 数组转对象 */
-  static arrayToObject<T extends Record<string, any>, K extends keyof T>(
-    array: T[],
-    keyField: K
-  ): Record<string, T> {
-    return array.reduce((acc, item) => {
-      const key = String(item[keyField]);
-      acc[key] = item;
-      return acc;
-    }, {} as Record<string, T>);
+  static arrayToObject<T extends Record<string, any>, K extends keyof T>(array: T[], keyField: K): Record<string, T> {
+    return array.reduce(
+      (acc, item) => {
+        const key = String(item[keyField]);
+        acc[key] = item;
+        return acc;
+      },
+      {} as Record<string, T>,
+    );
   }
 
   /** 扁平化嵌套对象 */
@@ -104,7 +104,7 @@ export class DataTransformUtils {
       useGrouping?: boolean;
       currency?: string;
       style?: 'decimal' | 'currency' | 'percent';
-    } = {}
+    } = {},
   ): string {
     const {
       minimumFractionDigits = 0,
@@ -153,7 +153,7 @@ export class DataTransformUtils {
 export class DataFilterUtils {
   /** 过滤空值 */
   static filterEmpty<T>(array: T[]): T[] {
-    return array.filter(item => item !== null && item !== undefined && item !== '');
+    return array.filter((item) => item !== null && item !== undefined && item !== '');
   }
 
   /** 过滤重复值 */
@@ -161,9 +161,9 @@ export class DataFilterUtils {
     if (!key) {
       return [...new Set(array)];
     }
-    
+
     const seen = new Set();
-    return array.filter(item => {
+    return array.filter((item) => {
       const keyValue = item[key];
       if (seen.has(keyValue)) {
         return false;
@@ -174,32 +174,23 @@ export class DataFilterUtils {
   }
 
   /** 过滤范围 */
-  static filterRange<T>(
-    array: T[],
-    key: keyof T,
-    min: number,
-    max: number
-  ): T[] {
-    return array.filter(item => {
+  static filterRange<T>(array: T[], key: keyof T, min: number, max: number): T[] {
+    return array.filter((item) => {
       const value = item[key] as number;
       return value >= min && value <= max;
     });
   }
 
   /** 模糊搜索 */
-  static fuzzySearch<T>(
-    array: T[],
-    searchTerm: string,
-    searchFields: (keyof T)[]
-  ): T[] {
+  static fuzzySearch<T>(array: T[], searchTerm: string, searchFields: (keyof T)[]): T[] {
     if (!searchTerm) return array;
 
     const term = searchTerm.toLowerCase();
-    return array.filter(item =>
-      searchFields.some(field => {
+    return array.filter((item) =>
+      searchFields.some((field) => {
         const value = String(item[field]).toLowerCase();
         return value.includes(term);
-      })
+      }),
     );
   }
 
@@ -211,10 +202,10 @@ export class DataFilterUtils {
       operator: 'equals' | 'contains' | 'startsWith' | 'endsWith' | 'greater' | 'less' | 'between';
       value: any;
       value2?: any;
-    }>
+    }>,
   ): T[] {
-    return array.filter(item => {
-      return conditions.every(condition => {
+    return array.filter((item) => {
+      return conditions.every((condition) => {
         const fieldValue = item[condition.field];
         const { operator, value, value2 } = condition;
 
@@ -254,7 +245,7 @@ export class DataSortUtils {
   /** 基础排序 */
   static sort<T>(array: T[], options: SortOptions<T> = {}): T[] {
     const { key, direction = 'asc', customSort } = options;
-    
+
     if (customSort) {
       return [...array].sort(customSort);
     }
@@ -330,29 +321,32 @@ export class DataSortUtils {
 export class DataAggregateUtils {
   /** 分组 */
   static groupBy<T, K extends keyof T>(array: T[], key: K): Record<string, T[]> {
-    return array.reduce((groups, item) => {
-      const groupKey = String(item[key]);
-      if (!groups[groupKey]) {
-        groups[groupKey] = [];
-      }
-      groups[groupKey].push(item);
-      return groups;
-    }, {} as Record<string, T[]>);
+    return array.reduce(
+      (groups, item) => {
+        const groupKey = String(item[key]);
+        if (!groups[groupKey]) {
+          groups[groupKey] = [];
+        }
+        groups[groupKey].push(item);
+        return groups;
+      },
+      {} as Record<string, T[]>,
+    );
   }
 
   /** 多字段分组 */
-  static groupByMultiple<T, K extends keyof T>(
-    array: T[],
-    keys: K[]
-  ): Record<string, T[]> {
-    return array.reduce((groups, item) => {
-      const groupKey = keys.map(key => String(item[key])).join('|');
-      if (!groups[groupKey]) {
-        groups[groupKey] = [];
-      }
-      groups[groupKey].push(item);
-      return groups;
-    }, {} as Record<string, T[]>);
+  static groupByMultiple<T, K extends keyof T>(array: T[], keys: K[]): Record<string, T[]> {
+    return array.reduce(
+      (groups, item) => {
+        const groupKey = keys.map((key) => String(item[key])).join('|');
+        if (!groups[groupKey]) {
+          groups[groupKey] = [];
+        }
+        groups[groupKey].push(item);
+        return groups;
+      },
+      {} as Record<string, T[]>,
+    );
   }
 
   /** 统计 */
@@ -360,37 +354,44 @@ export class DataAggregateUtils {
     array: T[],
     groupKey: K,
     aggregateField: keyof T,
-    aggregateType: 'sum' | 'avg' | 'count' | 'min' | 'max' = 'sum'
+    aggregateType: 'sum' | 'avg' | 'count' | 'min' | 'max' = 'sum',
   ): Record<string, number> {
     const groups = this.groupBy(array, groupKey);
-    
-    return Object.entries(groups).reduce((result, [key, items]) => {
-      const values = items.map(item => Number(item[aggregateField])).filter(v => !isNaN(v));
-      
-      switch (aggregateType) {
-        case 'sum':
-          result[key] = values.reduce((sum, val) => sum + val, 0);
-          break;
-        case 'avg':
-          result[key] = values.length > 0 ? values.reduce((sum, val) => sum + val, 0) / values.length : 0;
-          break;
-        case 'count':
-          result[key] = items.length;
-          break;
-        case 'min':
-          result[key] = values.length > 0 ? Math.min(...values) : 0;
-          break;
-        case 'max':
-          result[key] = values.length > 0 ? Math.max(...values) : 0;
-          break;
-      }
-      
-      return result;
-    }, {} as Record<string, number>);
+
+    return Object.entries(groups).reduce(
+      (result, [key, items]) => {
+        const values = items.map((item) => Number(item[aggregateField])).filter((v) => !isNaN(v));
+
+        switch (aggregateType) {
+          case 'sum':
+            result[key] = values.reduce((sum, val) => sum + val, 0);
+            break;
+          case 'avg':
+            result[key] = values.length > 0 ? values.reduce((sum, val) => sum + val, 0) / values.length : 0;
+            break;
+          case 'count':
+            result[key] = items.length;
+            break;
+          case 'min':
+            result[key] = values.length > 0 ? Math.min(...values) : 0;
+            break;
+          case 'max':
+            result[key] = values.length > 0 ? Math.max(...values) : 0;
+            break;
+        }
+
+        return result;
+      },
+      {} as Record<string, number>,
+    );
   }
 
   /** 分页 */
-  static paginate<T>(array: T[], page: number, pageSize: number): {
+  static paginate<T>(
+    array: T[],
+    page: number,
+    pageSize: number,
+  ): {
     data: T[];
     total: number;
     totalPages: number;
@@ -418,24 +419,24 @@ export class DataAggregateUtils {
     rowField: keyof T,
     columnField: keyof T,
     valueField: keyof T,
-    aggregateType: 'sum' | 'avg' | 'count' = 'sum'
+    aggregateType: 'sum' | 'avg' | 'count' = 'sum',
   ): Record<string, Record<string, number>> {
     const result: Record<string, Record<string, number>> = {};
-    
+
     // 获取所有唯一的行和列值
-    const rowValues = [...new Set(data.map(item => String(item[rowField])))];
-    const columnValues = [...new Set(data.map(item => String(item[columnField])))];
+    const rowValues = [...new Set(data.map((item) => String(item[rowField])))];
+    const columnValues = [...new Set(data.map((item) => String(item[columnField])))];
 
     // 初始化结果结构
-    rowValues.forEach(rowValue => {
+    rowValues.forEach((rowValue) => {
       result[rowValue] = {};
-      columnValues.forEach(colValue => {
+      columnValues.forEach((colValue) => {
         (result[rowValue] as any)[colValue] = 0;
       });
     });
 
     // 填充数据
-    data.forEach(item => {
+    data.forEach((item) => {
       const rowKey = String(item[rowField]);
       const colKey = String(item[columnField]);
       const value = Number(item[valueField]) || 0;
@@ -495,11 +496,11 @@ export class DataValidationUtils {
   /** 验证数据完整性 */
   static validateDataIntegrity<T>(
     data: T,
-    requiredFields: (keyof T)[]
+    requiredFields: (keyof T)[],
   ): { isValid: boolean; missingFields: (keyof T)[] } {
     const missingFields: (keyof T)[] = [];
 
-    requiredFields.forEach(field => {
+    requiredFields.forEach((field) => {
       if (data[field] === null || data[field] === undefined || data[field] === '') {
         missingFields.push(field);
       }
@@ -514,7 +515,7 @@ export class DataValidationUtils {
   /** 验证数据类型 */
   static validateDataTypes<T>(
     data: T,
-    typeRules: Partial<Record<keyof T, 'string' | 'number' | 'boolean' | 'array' | 'object'>>
+    typeRules: Partial<Record<keyof T, 'string' | 'number' | 'boolean' | 'array' | 'object'>>,
   ): { isValid: boolean; typeErrors: Record<string, string> } {
     const typeErrors: Record<string, string> = {};
 

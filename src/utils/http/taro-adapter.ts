@@ -9,7 +9,7 @@ export class TaroAdapter implements IRequestAdapter {
       header: config.headers,
       data: {
         ...config.data,
-        ...config.params
+        ...config.params,
       },
       timeout: config.timeout || 10000,
     });

@@ -56,67 +56,67 @@ export const notification = {
   open: (config: Parameters<NotificationManagerRef['open']>[0]) => {
     return globalNotificationRef?.open(config) || '';
   },
-  
+
   // 显示成功通知
   success: (config: Parameters<NotificationManagerRef['success']>[0]) => {
     return globalNotificationRef?.success(config) || '';
   },
-  
+
   // 显示信息通知
   info: (config: Parameters<NotificationManagerRef['info']>[0]) => {
     return globalNotificationRef?.info(config) || '';
   },
-  
+
   // 显示警告通知
   warning: (config: Parameters<NotificationManagerRef['warning']>[0]) => {
     return globalNotificationRef?.warning(config) || '';
   },
-  
+
   // 显示错误通知
   error: (config: Parameters<NotificationManagerRef['error']>[0]) => {
     return globalNotificationRef?.error(config) || '';
   },
-  
+
   // 关闭通知
   close: (key: string) => {
     globalNotificationRef?.close(key);
   },
-  
+
   // 关闭所有通知
   destroyAll: () => {
     globalNotificationRef?.destroyAll();
   },
-  
+
   // 更新通知
   update: (key: string, config: Parameters<NotificationManagerRef['update']>[1]) => {
     globalNotificationRef?.update(key, config);
   },
-  
+
   // 获取所有通知
   getNotifications: () => {
     return globalNotificationRef?.getNotifications() || [];
   },
-  
+
   // 获取通知数量
   getCount: () => {
     return globalNotificationRef?.getCount() || 0;
   },
-  
+
   // 暂停所有通知
   pauseAll: () => {
     globalNotificationRef?.pauseAll();
   },
-  
+
   // 恢复所有通知
   resumeAll: () => {
     globalNotificationRef?.resumeAll();
   },
-  
+
   // 清空历史记录
   clearHistory: () => {
     globalNotificationRef?.clearHistory();
   },
-  
+
   // 获取通知历史
   getHistory: () => {
     return globalNotificationRef?.getHistory() || [];
@@ -124,15 +124,7 @@ export const notification = {
 };
 
 // 便捷方法
-export const {
-  success,
-  info,
-  warning,
-  error,
-  destroyAll,
-  pauseAll,
-  resumeAll,
-} = notification;
+export const { success, info, warning, error, destroyAll, pauseAll, resumeAll } = notification;
 
 // 默认导出
 export default Notification;
@@ -143,7 +135,7 @@ export type {
   NotificationType as Type,
   NotificationPlacement as Placement,
   NotificationAnimation as Animation,
-  
+
   // 通知接口
   NotificationItem as Item,
   NotificationProps as Props,

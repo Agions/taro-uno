@@ -1,14 +1,20 @@
-// 导出导航组件
-export * from './Menu';
-export * from './Tabs';
-export * from './Pagination';
-export * from './Steps';
-export * from './NavBar';
+/**
+ * Taro-Uno 导航组件库
+ * 提供用于页面导航的 UI 组件，包括菜单、标签页、分页、步骤条等
+ */
 
+// 导出 Menu 组件
+export { Menu } from './Menu';
+export type { MenuProps, MenuRef, MenuItem, MenuMode, MenuTheme } from './Menu/Menu.types';
+export { menuStyles } from './Menu/Menu.styles';
 
-// 导出类型
+// 导出 Tabs 组件
+export { Tabs } from './Tabs';
 export type { TabsProps, TabsRef, TabPosition, TabType, TabSize, TabItem, TabPaneProps } from './Tabs/Tabs.types';
+export { tabsStyles } from './Tabs/Tabs.styles';
 
+// 导出 Pagination 组件
+export { Pagination } from './Pagination';
 export type {
   PaginationProps,
   PaginationRef,
@@ -16,17 +22,16 @@ export type {
   PaginationPosition,
   PaginationAlign,
 } from './Pagination/Pagination.types';
-
-export type { MenuProps, MenuRef, MenuItem, MenuMode, MenuTheme } from './Menu/Menu.types';
-
-export type { StepsProps, StepsRef, StepProps, StepStatus, StepDirection } from './Steps/Steps.types';
-export type { NavBarProps, NavBarRef, NavBarPosition, NavBarTheme } from './NavBar/NavBar.types';
-
-// 导出样式
-export { tabsStyles } from './Tabs/Tabs.styles';
 export { paginationStyles } from './Pagination/Pagination.styles';
-export { menuStyles } from './Menu/Menu.styles';
+
+// 导出 Steps 组件
+export { Steps } from './Steps';
+export type { StepsProps, StepsRef, StepProps, StepStatus, StepDirection } from './Steps/Steps.types';
 export { stepsStyles } from './Steps/Steps.styles';
+
+// 导出 NavBar 组件
+export { NavBar } from './NavBar';
+export type { NavBarProps, NavBarRef, NavBarPosition, NavBarTheme } from './NavBar/NavBar.types';
 export { navBarStyles } from './NavBar/NavBar.styles';
 
 // 导航组件工具函数

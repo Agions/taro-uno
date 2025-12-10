@@ -129,7 +129,9 @@ export class InputNumberStyles {
   }
 
   /** 生成输入框容器样式 */
-  static getContainerStyle(props: Partial<InputNumberProps> & { block?: boolean; style?: React.CSSProperties }): React.CSSProperties {
+  static getContainerStyle(
+    props: Partial<InputNumberProps> & { block?: boolean; style?: React.CSSProperties },
+  ): React.CSSProperties {
     const { size = 'md', block = false, style = {} } = props;
 
     const sizeStyles = this.SIZE_MAP[size];
@@ -145,14 +147,15 @@ export class InputNumberStyles {
   }
 
   /** 生成输入框包装器样式 */
-  static getWrapperStyle(props: Partial<InputNumberProps> & { bordered?: boolean; controls?: boolean; controlsPosition?: 'start' | 'end'; style?: React.CSSProperties }): React.CSSProperties {
-    const {
-      size = 'md',
-      status = 'normal',
-      disabled = false,
-      bordered = true,
-      style = {},
-    } = props;
+  static getWrapperStyle(
+    props: Partial<InputNumberProps> & {
+      bordered?: boolean;
+      controls?: boolean;
+      controlsPosition?: 'start' | 'end';
+      style?: React.CSSProperties;
+    },
+  ): React.CSSProperties {
+    const { size = 'md', status = 'normal', disabled = false, bordered = true, style = {} } = props;
 
     const sizeStyles = this.SIZE_MAP[size];
     const statusStyles = this.STATUS_COLORS[status];
@@ -173,7 +176,11 @@ export class InputNumberStyles {
   }
 
   /** 生成控制器样式 */
-  static getControlsStyle(props: { size: InputNumberSize; controlsPosition: 'start' | 'end'; style?: React.CSSProperties }): React.CSSProperties {
+  static getControlsStyle(props: {
+    size: InputNumberSize;
+    controlsPosition: 'start' | 'end';
+    style?: React.CSSProperties;
+  }): React.CSSProperties {
     const { size = 'md', controlsPosition = 'end', style = {} } = props;
 
     const sizeStyles = this.SIZE_MAP[size];
@@ -206,7 +213,11 @@ export class InputNumberStyles {
   }
 
   /** 生成控制器按钮样式 */
-  static getControlButtonStyle(props: { size: InputNumberSize; direction: 'up' | 'down'; style?: React.CSSProperties }): React.CSSProperties {
+  static getControlButtonStyle(props: {
+    size: InputNumberSize;
+    direction: 'up' | 'down';
+    style?: React.CSSProperties;
+  }): React.CSSProperties {
     const { size = 'md', direction = 'up', style = {} } = props;
 
     const sizeStyles = this.SIZE_MAP[size];
@@ -234,7 +245,13 @@ export class InputNumberStyles {
   }
 
   /** 生成前缀样式 */
-  static getPrefixStyle(props: { size: InputNumberSize; disabled: boolean; controls: boolean; controlsPosition: 'start' | 'end'; style?: React.CSSProperties }): React.CSSProperties {
+  static getPrefixStyle(props: {
+    size: InputNumberSize;
+    disabled: boolean;
+    controls: boolean;
+    controlsPosition: 'start' | 'end';
+    style?: React.CSSProperties;
+  }): React.CSSProperties {
     const { size = 'md', disabled = false, controls = false, controlsPosition = 'start', style = {} } = props;
 
     const sizeStyles = this.SIZE_MAP[size];
@@ -261,7 +278,13 @@ export class InputNumberStyles {
   }
 
   /** 生成后缀样式 */
-  static getSuffixStyle(props: { size: InputNumberSize; disabled: boolean; controls: boolean; controlsPosition: 'start' | 'end'; style?: React.CSSProperties }): React.CSSProperties {
+  static getSuffixStyle(props: {
+    size: InputNumberSize;
+    disabled: boolean;
+    controls: boolean;
+    controlsPosition: 'start' | 'end';
+    style?: React.CSSProperties;
+  }): React.CSSProperties {
     const { size = 'md', disabled = false, controls = false, controlsPosition = 'end', style = {} } = props;
 
     const sizeStyles = this.SIZE_MAP[size];
@@ -288,7 +311,11 @@ export class InputNumberStyles {
   }
 
   /** 生成标签样式 */
-  static getLabelStyle(props: { size: InputNumberSize; disabled: boolean; style?: React.CSSProperties }): React.CSSProperties {
+  static getLabelStyle(props: {
+    size: InputNumberSize;
+    disabled: boolean;
+    style?: React.CSSProperties;
+  }): React.CSSProperties {
     const { size = 'md', disabled = false, style = {} } = props;
 
     const sizeStyles = this.SIZE_MAP[size];
@@ -303,7 +330,11 @@ export class InputNumberStyles {
   }
 
   /** 生成辅助文本样式 */
-  static getHelperTextStyle(props: { size: InputNumberSize; status: InputNumberStatus; style?: React.CSSProperties }): React.CSSProperties {
+  static getHelperTextStyle(props: {
+    size: InputNumberSize;
+    status: InputNumberStatus;
+    style?: React.CSSProperties;
+  }): React.CSSProperties {
     const { size = 'md', status = 'normal', style = {} } = props;
 
     const sizeStyles = this.SIZE_MAP[size];
@@ -521,7 +552,14 @@ export class InputNumberStyles {
 
     switch (type) {
       case 'currency':
-        formattedValue = this.formatCurrency(value, precision, thousandsSeparator, decimalSeparator, currencySymbol, currencySymbolPosition);
+        formattedValue = this.formatCurrency(
+          value,
+          precision,
+          thousandsSeparator,
+          decimalSeparator,
+          currencySymbol,
+          currencySymbolPosition,
+        );
         break;
       case 'percent':
         formattedValue = this.formatPercent(value, precision, thousandsSeparator, decimalSeparator);
@@ -547,10 +585,10 @@ export class InputNumberStyles {
     thousandsSeparator?: string,
     decimalSeparator?: string,
     currencySymbol?: string,
-    position?: 'prefix' | 'suffix'
+    position?: 'prefix' | 'suffix',
   ): string {
     const formattedNumber = this.formatDecimal(value, precision, thousandsSeparator, decimalSeparator);
-    
+
     if (position === 'prefix') {
       return `${currencySymbol || ''}${formattedNumber}`;
     } else {
@@ -559,14 +597,24 @@ export class InputNumberStyles {
   }
 
   /** 格式化百分比 */
-  private static formatPercent(value: number, precision: number, thousandsSeparator?: string, decimalSeparator?: string): string {
+  private static formatPercent(
+    value: number,
+    precision: number,
+    thousandsSeparator?: string,
+    decimalSeparator?: string,
+  ): string {
     const percentValue = value * 100;
     const formattedNumber = this.formatDecimal(percentValue, precision, thousandsSeparator, decimalSeparator);
     return `${formattedNumber}%`;
   }
 
   /** 格式化小数 */
-  private static formatDecimal(value: number, precision: number, thousandsSeparator?: string, decimalSeparator?: string): string {
+  private static formatDecimal(
+    value: number,
+    precision: number,
+    thousandsSeparator?: string,
+    decimalSeparator?: string,
+  ): string {
     const roundedValue = this.roundValue(value, precision);
     const [integerPart, decimalPart] = roundedValue.toString().split('.');
 
@@ -626,7 +674,10 @@ export class InputNumberStyles {
     }
 
     // 移除千分位分隔符
-    cleanText = cleanText.replace(new RegExp(`\\${thousandsSeparator.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'g'), '');
+    cleanText = cleanText.replace(
+      new RegExp(`\\${thousandsSeparator.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'g'),
+      '',
+    );
 
     // 替换小数点分隔符
     cleanText = cleanText.replace(decimalSeparator, '.');
@@ -648,15 +699,15 @@ export class InputNumberStyles {
   /** 限制数字范围 */
   static clampValue(value: number, min?: number, max?: number): number {
     let clampedValue = value;
-    
+
     if (min !== undefined) {
       clampedValue = Math.max(clampedValue, min);
     }
-    
+
     if (max !== undefined) {
       clampedValue = Math.min(clampedValue, max);
     }
-    
+
     return clampedValue;
   }
 }

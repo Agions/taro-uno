@@ -7,7 +7,7 @@ export function useTransferState(
   defaultTargetKeys: TransferValue = [],
   controlledSelectedKeys?: TransferValue,
   defaultSelectedKeys: TransferValue = [],
-  disabled: boolean = false
+  disabled: boolean = false,
 ) {
   // 内部状态
   const [internalTargetKeys, setInternalTargetKeys] = useState<TransferValue>(defaultTargetKeys);
@@ -34,23 +34,29 @@ export function useTransferState(
   }, [disabled]);
 
   // 更新目标键
-  const updateTargetKeys = useCallback((newKeys: TransferValue) => {
-    if (!isTargetKeysControlled) {
-      setInternalTargetKeys(newKeys);
-    }
-  }, [isTargetKeysControlled]);
+  const updateTargetKeys = useCallback(
+    (newKeys: TransferValue) => {
+      if (!isTargetKeysControlled) {
+        setInternalTargetKeys(newKeys);
+      }
+    },
+    [isTargetKeysControlled],
+  );
 
   // 更新选中键
-  const updateSelectedKeys = useCallback((newKeys: TransferValue) => {
-    if (!isSelectedKeysControlled) {
-      setInternalSelectedKeys(newKeys);
-    }
-  }, [isSelectedKeysControlled]);
+  const updateSelectedKeys = useCallback(
+    (newKeys: TransferValue) => {
+      if (!isSelectedKeysControlled) {
+        setInternalSelectedKeys(newKeys);
+      }
+    },
+    [isSelectedKeysControlled],
+  );
 
   // 更新左右选中键
   const updateLeftRightSelectedKeys = useCallback((newKeys: TransferValue, currentTargetKeys: TransferValue) => {
-    setLeftSelectedKeys(newKeys.filter(key => !currentTargetKeys.includes(key)));
-    setRightSelectedKeys(newKeys.filter(key => currentTargetKeys.includes(key)));
+    setLeftSelectedKeys(newKeys.filter((key) => !currentTargetKeys.includes(key)));
+    setRightSelectedKeys(newKeys.filter((key) => currentTargetKeys.includes(key)));
   }, []);
 
   // 设置搜索值
@@ -98,11 +104,11 @@ export function useTransferState(
     internalDisabled,
     leftPage,
     rightPage,
-    
+
     // 受控状态
     isTargetKeysControlled,
     isSelectedKeysControlled,
-    
+
     // 更新函数
     updateTargetKeys,
     updateSelectedKeys,

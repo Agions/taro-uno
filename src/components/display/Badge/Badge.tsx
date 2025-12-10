@@ -6,16 +6,7 @@ import type { BadgeProps, BadgeRef } from './Badge.types';
 const { bem } = createNamespace('badge');
 
 export const Badge = forwardRef<BadgeRef, BadgeProps>((props, ref) => {
-  const {
-    count,
-    dot = false,
-    overflowCount = 99,
-    showZero = false,
-    children,
-    style,
-    className,
-    ...rest
-  } = props;
+  const { count, dot = false, overflowCount = 99, showZero = false, children, style, className, ...rest } = props;
 
   const displayCount = count !== undefined && count > overflowCount ? `${overflowCount}+` : count;
 
@@ -26,11 +17,7 @@ export const Badge = forwardRef<BadgeRef, BadgeProps>((props, ref) => {
       {children}
       {shouldShowBadge && (
         <View className={`${bem('badge')} ${dot ? bem('dot') : ''}`.trim()}>
-          {dot ? null : (
-            <Text className={bem('count')}>
-              {displayCount}
-            </Text>
-          )}
+          {dot ? null : <Text className={bem('count')}>{displayCount}</Text>}
         </View>
       )}
     </View>

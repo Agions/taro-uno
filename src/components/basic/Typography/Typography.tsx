@@ -79,17 +79,20 @@ export const Typography = forwardRef<TypographyRef, TypographyProps>((props, ref
   const styles = calculateTypographyStyles(props);
 
   // 处理点击事件
-  const handleClick = useCallback((e: React.MouseEvent) => {
-    if (copyable) {
-      e.preventDefault();
-      handleCopy();
-    } else if (editable) {
-      e.preventDefault();
-      handleEdit();
-    } else {
-      onClick?.(e);
-    }
-  }, [copyable, editable, handleCopy, handleEdit, onClick]);
+  const handleClick = useCallback(
+    (e: React.MouseEvent) => {
+      if (copyable) {
+        e.preventDefault();
+        handleCopy();
+      } else if (editable) {
+        e.preventDefault();
+        handleEdit();
+      } else {
+        onClick?.(e);
+      }
+    },
+    [copyable, editable, handleCopy, handleEdit, onClick],
+  );
 
   // 渲染编辑状态
   if (isEditing) {
@@ -200,6 +203,5 @@ export const Typography = forwardRef<TypographyRef, TypographyProps>((props, ref
 });
 
 Typography.displayName = 'Typography';
-
 
 export default Typography;

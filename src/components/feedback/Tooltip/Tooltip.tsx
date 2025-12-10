@@ -1,12 +1,7 @@
 import React, { forwardRef } from 'react';
 import { View, Text } from '@tarojs/components';
 import type { ITouchEvent } from '@tarojs/components';
-import { 
-  TooltipProps, 
-  TooltipRef, 
-  TooltipTrigger,
-  TooltipEventHandler
-} from './Tooltip.types';
+import { TooltipProps, TooltipRef, TooltipTrigger, TooltipEventHandler } from './Tooltip.types';
 import { tooltipStyles } from './Tooltip.styles';
 
 export const Tooltip = forwardRef<TooltipRef, TooltipProps>((props, ref) => {
@@ -60,11 +55,14 @@ export const Tooltip = forwardRef<TooltipRef, TooltipProps>((props, ref) => {
   }, [timer]);
 
   // 设置定时器
-  const setTimerCallback = React.useCallback((callback: () => void, delay: number) => {
-    clearTimer();
-    const newTimer = setTimeout(callback, delay);
-    setTimer(newTimer);
-  }, [clearTimer]);
+  const setTimerCallback = React.useCallback(
+    (callback: () => void, delay: number) => {
+      clearTimer();
+      const newTimer = setTimeout(callback, delay);
+      setTimer(newTimer);
+    },
+    [clearTimer],
+  );
 
   // 显示提示
   const showTooltip = React.useCallback(() => {
@@ -130,17 +128,20 @@ export const Tooltip = forwardRef<TooltipRef, TooltipProps>((props, ref) => {
   }, [disabled, trigger, mouseLeaveDelay, hideDelay, hideTooltip, setTimerCallback, getTriggers]);
 
   // 处理点击
-  const handleClick = React.useCallback((_event: ITouchEvent) => {
-    if (disabled) return;
-    const triggers = getTriggers(trigger);
-    if (triggers.includes('click')) {
-      if (visible) {
-        hideTooltip();
-      } else {
-        showTooltip();
+  const handleClick = React.useCallback(
+    (_event: ITouchEvent) => {
+      if (disabled) return;
+      const triggers = getTriggers(trigger);
+      if (triggers.includes('click')) {
+        if (visible) {
+          hideTooltip();
+        } else {
+          showTooltip();
+        }
       }
-    }
-  }, [disabled, trigger, visible, showTooltip, hideTooltip, getTriggers]);
+    },
+    [disabled, trigger, visible, showTooltip, hideTooltip, getTriggers],
+  );
 
   // 处理焦点
   const handleFocus = React.useCallback(() => {
@@ -161,17 +162,20 @@ export const Tooltip = forwardRef<TooltipRef, TooltipProps>((props, ref) => {
   }, [disabled, trigger, hideTooltip, getTriggers]);
 
   // 处理长按（contextMenu触发）
-  const handleLongPress = React.useCallback((_event: ITouchEvent) => {
-    if (disabled) return;
-    const triggers = getTriggers(trigger);
-    if (triggers.includes('contextMenu')) {
-      if (visible) {
-        hideTooltip();
-      } else {
-        showTooltip();
+  const handleLongPress = React.useCallback(
+    (_event: ITouchEvent) => {
+      if (disabled) return;
+      const triggers = getTriggers(trigger);
+      if (triggers.includes('contextMenu')) {
+        if (visible) {
+          hideTooltip();
+        } else {
+          showTooltip();
+        }
       }
-    }
-  }, [disabled, trigger, visible, showTooltip, hideTooltip, getTriggers]);
+    },
+    [disabled, trigger, visible, showTooltip, hideTooltip, getTriggers],
+  );
 
   // 组件卸载时清除定时器
   React.useEffect(() => {
@@ -186,18 +190,22 @@ export const Tooltip = forwardRef<TooltipRef, TooltipProps>((props, ref) => {
   }, [title]);
 
   // 暴露给外部的引用方法
-  React.useImperativeHandle(ref, () => ({
-    show: showTooltip,
-    hide: hideTooltip,
-    getVisible: () => visible,
-    updateTitle: (newTitle: React.ReactNode) => {
-      setInternalTitle(newTitle);
-    },
-    reposition: () => {
-      // Taro环境中的重新定位逻辑
-      console.log('Reposition tooltip - Taro environment');
-    },
-  }), [showTooltip, hideTooltip, visible]);
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      show: showTooltip,
+      hide: hideTooltip,
+      getVisible: () => visible,
+      updateTitle: (newTitle: React.ReactNode) => {
+        setInternalTitle(newTitle);
+      },
+      reposition: () => {
+        // Taro环境中的重新定位逻辑
+        console.log('Reposition tooltip - Taro environment');
+      },
+    }),
+    [showTooltip, hideTooltip, visible],
+  );
 
   // 渲染箭头
   const renderArrow = React.useCallback(() => {
@@ -258,7 +266,18 @@ export const Tooltip = forwardRef<TooltipRef, TooltipProps>((props, ref) => {
     }
 
     return events;
-  }, [trigger, getTriggers, handleTouchStart, handleTouchEnd, handleMouseEnter, handleMouseLeave, handleClick, handleFocus, handleBlur, handleLongPress]);
+  }, [
+    trigger,
+    getTriggers,
+    handleTouchStart,
+    handleTouchEnd,
+    handleMouseEnter,
+    handleMouseLeave,
+    handleClick,
+    handleFocus,
+    handleBlur,
+    handleLongPress,
+  ]);
 
   const containerStyle = tooltipStyles['getContainerStyle'](style);
   const containerEvents = getContainerEvents();
@@ -269,7 +288,7 @@ export const Tooltip = forwardRef<TooltipRef, TooltipProps>((props, ref) => {
       className={className}
       {...containerEvents}
       {...rest}
-      aria-describedby={visible ? "tooltip-content" : undefined}
+      aria-describedby={visible ? 'tooltip-content' : undefined}
       aria-expanded={visible}
     >
       {children}

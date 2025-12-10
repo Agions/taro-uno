@@ -7,7 +7,7 @@ export const CardStyles = createStyles({
     none: '',
     small: 'shadow-sm',
     default: 'shadow-md',
-    large: 'shadow-lg'
+    large: 'shadow-lg',
   },
 
   bordered: `
@@ -85,5 +85,5 @@ export const CardStyles = createStyles({
 
   action: `
     flex-shrink-0
-  `
+  `,
 });

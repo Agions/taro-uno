@@ -7,11 +7,7 @@ import React, { forwardRef, useRef, useState, useEffect, useCallback } from 'rea
 import { View, Text } from '@tarojs/components';
 import type { ITouchEvent } from '@tarojs/components';
 import { switchStyles } from './Switch.styles';
-import type {
-  SwitchProps,
-  SwitchRef,
-  SwitchValidationResult,
-} from './Switch.types';
+import type { SwitchProps, SwitchRef, SwitchValidationResult } from './Switch.types';
 
 /** 开关组件 */
 export const SwitchComponent = forwardRef<SwitchRef, SwitchProps>((props, ref) => {
@@ -259,11 +255,7 @@ export const SwitchComponent = forwardRef<SwitchRef, SwitchProps>((props, ref) =
   // );
 
   // 计算最终状态
-  const finalStatus = internalDisabled
-    ? 'disabled'
-    : validationResult?.valid === false
-      ? 'error'
-      : 'normal';
+  const finalStatus = internalDisabled ? 'disabled' : validationResult?.valid === false ? 'error' : 'normal';
 
   // 更新当前状态引用
   useEffect(() => {
@@ -316,7 +308,8 @@ export const SwitchComponent = forwardRef<SwitchRef, SwitchProps>((props, ref) =
         // setStatus is required by interface but internalStatus is not used
         // We'll keep the method for compatibility
       },
-      getStatus: () => currentStatusRef.current as 'normal' | 'error' | 'checked' | 'unchecked' | 'disabled' | 'loading',
+      getStatus: () =>
+        currentStatusRef.current as 'normal' | 'error' | 'checked' | 'unchecked' | 'disabled' | 'loading',
       validate: async () => {
         const result = await validateSwitch(value);
         // setInternalStatus(result.valid ? 'normal' : 'error'); // Commented out - internalStatus unused
@@ -345,7 +338,6 @@ export const SwitchComponent = forwardRef<SwitchRef, SwitchProps>((props, ref) =
     ],
   );
 
-  
   // 获取标签文本
   const getLabelText = () => {
     if (!showLabel) return null;
@@ -436,7 +428,9 @@ export const SwitchComponent = forwardRef<SwitchRef, SwitchProps>((props, ref) =
         </View>
 
         {/* 加载文本 */}
-        {internalLoading && loadingText && <Text style={switchStyles['getHelperTextStyle']({ size })}>{loadingText}</Text>}
+        {internalLoading && loadingText && (
+          <Text style={switchStyles['getHelperTextStyle']({ size })}>{loadingText}</Text>
+        )}
       </View>
 
       {/* 辅助文本 */}

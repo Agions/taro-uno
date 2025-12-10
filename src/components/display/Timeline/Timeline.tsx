@@ -4,12 +4,14 @@ import { timelineStyles } from './Timeline.styles';
 import type { TimelineProps, TimelineRef, TimelineItemProps } from './Timeline.types';
 
 /** 时间线项组件 */
-export const TimelineItem: React.FC<TimelineItemProps & { 
-  mode?: 'left' | 'right' | 'alternate';
-  direction?: 'vertical' | 'horizontal';
-  showTimestamp?: boolean;
-  itemIndex?: number;
-}> = ({
+export const TimelineItem: React.FC<
+  TimelineItemProps & {
+    mode?: 'left' | 'right' | 'alternate';
+    direction?: 'vertical' | 'horizontal';
+    showTimestamp?: boolean;
+    itemIndex?: number;
+  }
+> = ({
   title,
   children,
   description,
@@ -56,9 +58,7 @@ export const TimelineItem: React.FC<TimelineItemProps & {
   };
 
   const getLineStyle = () => {
-    const baseStyle = isHorizontal 
-      ? { ...timelineStyles['itemLineHorizontal'] }
-      : { ...timelineStyles['itemLine'] };
+    const baseStyle = isHorizontal ? { ...timelineStyles['itemLineHorizontal'] } : { ...timelineStyles['itemLine'] };
 
     if (isLast) {
       Object.assign(baseStyle, timelineStyles['itemLineLast']);
@@ -72,12 +72,11 @@ export const TimelineItem: React.FC<TimelineItemProps & {
   };
 
   const getDotStyle = () => {
-    const baseStyle = isHorizontal 
-      ? { ...timelineStyles['itemDotHorizontal'] }
-      : { ...timelineStyles['itemDot'] };
+    const baseStyle = isHorizontal ? { ...timelineStyles['itemDotHorizontal'] } : { ...timelineStyles['itemDot'] };
 
     if (!dot) {
-      const colorStyle = timelineStyles[`dot${color.charAt(0).toUpperCase() + color.slice(1)}` as keyof typeof timelineStyles];
+      const colorStyle =
+        timelineStyles[`dot${color.charAt(0).toUpperCase() + color.slice(1)}` as keyof typeof timelineStyles];
       if (colorStyle) {
         Object.assign(baseStyle, colorStyle);
       } else {
@@ -95,7 +94,7 @@ export const TimelineItem: React.FC<TimelineItemProps & {
   };
 
   const getContentStyle = () => {
-    const baseStyle = isHorizontal 
+    const baseStyle = isHorizontal
       ? { ...timelineStyles['itemContentHorizontal'] }
       : { ...timelineStyles['itemContent'] };
 
@@ -114,34 +113,20 @@ export const TimelineItem: React.FC<TimelineItemProps & {
     <View style={getItemStyle()} className={className}>
       {/* 连线 */}
       <View style={getLineStyle()} />
-      
+
       {/* 节点 */}
       {dot ? (
-        <View style={{ ...timelineStyles['customDot'], ...getDotStyle() }}>
-          {dot}
-        </View>
+        <View style={{ ...timelineStyles['customDot'], ...getDotStyle() }}>{dot}</View>
       ) : (
         <View style={getDotStyle()} />
       )}
-      
+
       {/* 内容 */}
       <View style={getContentStyle()}>
-        {title && (
-          <Text style={timelineStyles['itemTitle']}>
-            {title}
-          </Text>
-        )}
-        {description && (
-          <Text style={timelineStyles['itemDescription']}>
-            {description}
-          </Text>
-        )}
+        {title && <Text style={timelineStyles['itemTitle']}>{title}</Text>}
+        {description && <Text style={timelineStyles['itemDescription']}>{description}</Text>}
         {children}
-        {showTimestamp && timestamp && (
-          <Text style={timelineStyles['itemTimestamp']}>
-            {timestamp}
-          </Text>
-        )}
+        {showTimestamp && timestamp && <Text style={timelineStyles['itemTimestamp']}>{timestamp}</Text>}
       </View>
     </View>
   );
@@ -215,12 +200,7 @@ export const TimelineComponent = forwardRef<TimelineRef, TimelineProps>((props, 
   };
 
   return (
-    <View
-      ref={elementRef}
-      style={getTimelineStyle()}
-      className={className}
-      {...rest}
-    >
+    <View ref={elementRef} style={getTimelineStyle()} className={className} {...rest}>
       {renderItems()}
     </View>
   );
@@ -229,7 +209,8 @@ export const TimelineComponent = forwardRef<TimelineRef, TimelineProps>((props, 
 TimelineComponent.displayName = 'Timeline';
 
 // 创建复合组件类型
-export interface TimelineCompoundComponent extends React.ForwardRefExoticComponent<TimelineProps & React.RefAttributes<TimelineRef>> {
+export interface TimelineCompoundComponent
+  extends React.ForwardRefExoticComponent<TimelineProps & React.RefAttributes<TimelineRef>> {
   Item: typeof TimelineItem;
 }
 

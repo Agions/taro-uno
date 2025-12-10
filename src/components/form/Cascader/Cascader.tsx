@@ -61,14 +61,14 @@ export const CascaderComponent = forwardRef<CascaderRef, CascaderProps>((props, 
 
   const inputRef = useRef<HTMLInputElement>(null);
   const fields = useCascaderFieldNames(fieldNames);
-  const { 
-    findOptionPath, 
-    getOptionValue, 
-    getOptionLabel, 
-    hasChildren, 
-    isOptionDisabled, 
+  const {
+    findOptionPath,
+    getOptionValue,
+    getOptionLabel,
+    hasChildren,
+    isOptionDisabled,
     isOptionLeaf,
-    filterOptions: filterOptionsUtil 
+    filterOptions: filterOptionsUtil,
   } = useCascaderOptions(options, fieldNames);
 
   const state = useCascaderState(options, props as CascaderProps);
@@ -117,7 +117,7 @@ export const CascaderComponent = forwardRef<CascaderRef, CascaderProps>((props, 
         setFilteredOptions([]);
       }
     },
-    [showSearch, filterOptionsUtil, onSearch, setSearchValue]
+    [showSearch, filterOptionsUtil, onSearch, setSearchValue],
   );
 
   // 处理选项点击
@@ -176,7 +176,7 @@ export const CascaderComponent = forwardRef<CascaderRef, CascaderProps>((props, 
       isOptionDisabled,
       isOptionLeaf,
       hasChildren,
-    ]
+    ],
   );
 
   // 处理清除
@@ -186,7 +186,7 @@ export const CascaderComponent = forwardRef<CascaderRef, CascaderProps>((props, 
       clearAll();
       onClear?.();
     },
-    [clearAll, onClear]
+    [clearAll, onClear],
   );
 
   // 处理聚焦
@@ -198,7 +198,7 @@ export const CascaderComponent = forwardRef<CascaderRef, CascaderProps>((props, 
       setOpen(true);
       onFocus?.(event);
     },
-    [internalDisabled, internalReadonly, setOpen, onFocus]
+    [internalDisabled, internalReadonly, setOpen, onFocus],
   );
 
   // 处理失焦
@@ -207,7 +207,7 @@ export const CascaderComponent = forwardRef<CascaderRef, CascaderProps>((props, 
       setFocused(false);
       onBlur?.(event);
     },
-    [onBlur]
+    [onBlur],
   );
 
   // 处理下拉框显示状态变化
@@ -216,7 +216,7 @@ export const CascaderComponent = forwardRef<CascaderRef, CascaderProps>((props, 
       if (internalDisabled || internalReadonly) return;
       setOpen(visible);
     },
-    [internalDisabled, internalReadonly, setOpen]
+    [internalDisabled, internalReadonly, setOpen],
   );
 
   // 渲染菜单项
@@ -225,7 +225,7 @@ export const CascaderComponent = forwardRef<CascaderRef, CascaderProps>((props, 
       const optionValue = getOptionValue(option);
       const optionLabel = getOptionLabel(option);
       const isSelected = selectedOptions[level] && getOptionValue(selectedOptions[level]!) === optionValue;
-      const isExpanded = expandedValues.some(value => value === optionValue);
+      const isExpanded = expandedValues.some((value) => value === optionValue);
       const optionHasChildren = hasChildren(option);
 
       const itemStyle = {
@@ -239,19 +239,19 @@ export const CascaderComponent = forwardRef<CascaderRef, CascaderProps>((props, 
           style={itemStyle}
           className={option.className}
           onClick={() => handleOptionClick(option, level)}
-                  >
+        >
           <Text>{optionRender ? optionRender(option, level) : optionLabel}</Text>
           {optionHasChildren && (
-            <Text style={{
-              ...CascaderStyles['getMenuItemExpandIconStyle'](),
-              ...(isExpanded ? CascaderStyles['getMenuItemExpandIconRotatedStyle']() : {}),
-            }}>
+            <Text
+              style={{
+                ...CascaderStyles['getMenuItemExpandIconStyle'](),
+                ...(isExpanded ? CascaderStyles['getMenuItemExpandIconRotatedStyle']() : {}),
+              }}
+            >
               ▶
             </Text>
           )}
-          {option.loading && (
-            <Text style={CascaderStyles['getLoadingIconStyle']()}>⏳</Text>
-          )}
+          {option.loading && <Text style={CascaderStyles['getLoadingIconStyle']()}>⏳</Text>}
         </View>
       );
     },
@@ -267,7 +267,7 @@ export const CascaderComponent = forwardRef<CascaderRef, CascaderProps>((props, 
       getOptionLabel,
       hasChildren,
       isOptionDisabled,
-    ]
+    ],
   );
 
   // 渲染菜单列
@@ -280,7 +280,7 @@ export const CascaderComponent = forwardRef<CascaderRef, CascaderProps>((props, 
 
       return (
         <View key={level} style={columnStyle}>
-          {columnOptions.map(option => renderMenuItem(option, level))}
+          {columnOptions.map((option) => renderMenuItem(option, level))}
           {columnOptions.length === 0 && (
             <View style={CascaderStyles['getEmptyStyle']()}>
               <Text>无数据</Text>
@@ -289,7 +289,7 @@ export const CascaderComponent = forwardRef<CascaderRef, CascaderProps>((props, 
         </View>
       );
     },
-    [expandedValues.length, renderMenuItem]
+    [expandedValues.length, renderMenuItem],
   );
 
   // 渲染菜单
@@ -305,16 +305,14 @@ export const CascaderComponent = forwardRef<CascaderRef, CascaderProps>((props, 
         columns.push(currentOptions);
       }
 
-        if (i < expandedValues.length) {
+      if (i < expandedValues.length) {
         const levelValue = expandedValues[i];
         if (levelValue && levelValue.length > 0) {
           const optionValue = levelValue[levelValue.length - 1];
-          const nextOption = currentOptions.find(
-            (opt: CascaderOption) => {
-              const currentValue = getOptionValue(opt);
-              return currentValue.length > 0 && currentValue[0] === optionValue;
-            }
-          );
+          const nextOption = currentOptions.find((opt: CascaderOption) => {
+            const currentValue = getOptionValue(opt);
+            return currentValue.length > 0 && currentValue[0] === optionValue;
+          });
 
           if (nextOption && hasChildren(nextOption)) {
             currentOptions = nextOption[fields.children as keyof typeof nextOption] as CascaderOption[];
@@ -329,10 +327,12 @@ export const CascaderComponent = forwardRef<CascaderRef, CascaderProps>((props, 
       }
     }
 
-    const menuContent = dropdownRender ? dropdownRender(
-      <View style={{ display: 'flex' }}>
-        {columns.map((columnOptions, level) => renderMenuColumn(columnOptions, level))}
-      </View>
+    const menuContent = dropdownRender ? (
+      dropdownRender(
+        <View style={{ display: 'flex' }}>
+          {columns.map((columnOptions, level) => renderMenuColumn(columnOptions, level))}
+        </View>,
+      )
     ) : (
       <View style={{ display: 'flex' }}>
         {columns.map((columnOptions, level) => renderMenuColumn(columnOptions, level))}
@@ -361,13 +361,9 @@ export const CascaderComponent = forwardRef<CascaderRef, CascaderProps>((props, 
           <View style={CascaderStyles['getPathStyle']()}>
             {selectedOptions.map((option, index) => (
               <React.Fragment key={index}>
-                <Text style={CascaderStyles['getPathItemStyle']()}>
-                  {String(getOptionLabel(option))}
-                </Text>
+                <Text style={CascaderStyles['getPathItemStyle']()}>{String(getOptionLabel(option))}</Text>
                 {index < selectedOptions.length - 1 && (
-                  <Text style={CascaderStyles['getPathSeparatorStyle']()}>
-                    {pathSeparator}
-                  </Text>
+                  <Text style={CascaderStyles['getPathSeparatorStyle']()}>{pathSeparator}</Text>
                 )}
               </React.Fragment>
             ))}
@@ -399,8 +395,8 @@ export const CascaderComponent = forwardRef<CascaderRef, CascaderProps>((props, 
   const formatDisplayValue = useCallback(() => {
     if (!selectedOptions.length) return '';
 
-    const labels = selectedOptions.map(option => String(getOptionLabel(option)));
-    
+    const labels = selectedOptions.map((option) => String(getOptionLabel(option)));
+
     if (displayRender) {
       return displayRender(labels, selectedOptions);
     }
@@ -471,7 +467,7 @@ export const CascaderComponent = forwardRef<CascaderRef, CascaderProps>((props, 
       setExpandedValues,
       setSearchValue,
       reset,
-    ]
+    ],
   );
 
   // 生成输入框样式
@@ -486,35 +482,44 @@ export const CascaderComponent = forwardRef<CascaderRef, CascaderProps>((props, 
   }, [size, internalDisabled, focused, style]);
 
   // 生成容器样式
-  const containerStyle = useMemo(() => ({
-    ...CascaderStyles['getStyle']({
-      size,
-      variant,
-      status,
-      disabled: internalDisabled,
-      readonly: internalReadonly,
-      loading,
-      style: {},
+  const containerStyle = useMemo(
+    () => ({
+      ...CascaderStyles['getStyle']({
+        size,
+        variant,
+        status,
+        disabled: internalDisabled,
+        readonly: internalReadonly,
+        loading,
+        style: {},
+      }),
+      ...style,
     }),
-    ...style,
-  }), [size, variant, status, internalDisabled, internalReadonly, loading, style]);
+    [size, variant, status, internalDisabled, internalReadonly, loading, style],
+  );
 
   // 生成输入框包装器样式
-  const inputWrapperStyle = useMemo(() => ({
-    position: 'relative' as const,
-    display: 'flex' as const,
-    alignItems: 'center' as const,
-    ...CascaderStyles['getSizeStyle'](size),
-  }), [size]);
+  const inputWrapperStyle = useMemo(
+    () => ({
+      position: 'relative' as const,
+      display: 'flex' as const,
+      alignItems: 'center' as const,
+      ...CascaderStyles['getSizeStyle'](size),
+    }),
+    [size],
+  );
 
   // 无障碍状态
-  const finalAccessibilityState = useMemo(() => ({
-    disabled: internalDisabled,
-    readonly: internalReadonly,
-    expanded: open,
-    busy: loading,
-    ...accessibilityState,
-  }), [internalDisabled, internalReadonly, open, loading, accessibilityState]);
+  const finalAccessibilityState = useMemo(
+    () => ({
+      disabled: internalDisabled,
+      readonly: internalReadonly,
+      expanded: open,
+      busy: loading,
+      ...accessibilityState,
+    }),
+    [internalDisabled, internalReadonly, open, loading, accessibilityState],
+  );
 
   return (
     <View
@@ -534,11 +539,7 @@ export const CascaderComponent = forwardRef<CascaderRef, CascaderProps>((props, 
       {...restProps}
     >
       <View style={inputWrapperStyle}>
-        {prefix && (
-          <View style={{ position: 'absolute', left: '12px', zIndex: 1 }}>
-            {prefix}
-          </View>
-        )}
+        {prefix && <View style={{ position: 'absolute', left: '12px', zIndex: 1 }}>{prefix}</View>}
 
         <Input
           ref={inputRef}
@@ -552,23 +553,18 @@ export const CascaderComponent = forwardRef<CascaderRef, CascaderProps>((props, 
         />
 
         {allowClear && value && (
-          <View
-            style={CascaderStyles['getClearStyle']()}
-            onClick={handleClear}
-                      >
+          <View style={CascaderStyles['getClearStyle']()} onClick={handleClear}>
             <Text>{clearIcon || '×'}</Text>
           </View>
         )}
 
-        <View style={{
-          ...CascaderStyles['getSuffixStyle'](),
-          ...(open ? CascaderStyles['getSuffixExpandedStyle']() : {}),
-        }}>
-          {loading ? (
-            <Text style={CascaderStyles['getLoadingIconStyle']()}>⏳</Text>
-          ) : (
-            <Text>{suffixIcon || '▼'}</Text>
-          )}
+        <View
+          style={{
+            ...CascaderStyles['getSuffixStyle'](),
+            ...(open ? CascaderStyles['getSuffixExpandedStyle']() : {}),
+          }}
+        >
+          {loading ? <Text style={CascaderStyles['getLoadingIconStyle']()}>⏳</Text> : <Text>{suffixIcon || '▼'}</Text>}
         </View>
       </View>
 

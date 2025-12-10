@@ -28,7 +28,7 @@ class SecurityHeaders {
     xXSSProtection: '1; mode=block',
     referrerPolicy: 'strict-origin-when-cross-origin',
     permissionsPolicy: true,
-    expectCT: false
+    expectCT: false,
   };
 
   /**
@@ -43,9 +43,8 @@ class SecurityHeaders {
 
     // Content Security Policy
     if (finalConfig.contentSecurityPolicy) {
-      const csp = typeof finalConfig.contentSecurityPolicy === 'string'
-        ? finalConfig.contentSecurityPolicy
-        : this.generateCSP();
+      const csp =
+        typeof finalConfig.contentSecurityPolicy === 'string' ? finalConfig.contentSecurityPolicy : this.generateCSP();
 
       // 生成CSP nonce
       cspNonce = this.generateNonce();
@@ -55,9 +54,10 @@ class SecurityHeaders {
 
     // Strict Transport Security
     if (finalConfig.strictTransportSecurity) {
-      const hsts = typeof finalConfig.strictTransportSecurity === 'string'
-        ? finalConfig.strictTransportSecurity
-        : 'max-age=31536000; includeSubDomains; preload';
+      const hsts =
+        typeof finalConfig.strictTransportSecurity === 'string'
+          ? finalConfig.strictTransportSecurity
+          : 'max-age=31536000; includeSubDomains; preload';
       headers['Strict-Transport-Security'] = hsts;
     }
 
@@ -68,47 +68,42 @@ class SecurityHeaders {
 
     // X-Frame-Options
     if (finalConfig.xFrameOptions) {
-      const frameOptions = typeof finalConfig.xFrameOptions === 'string'
-        ? finalConfig.xFrameOptions
-        : 'DENY';
+      const frameOptions = typeof finalConfig.xFrameOptions === 'string' ? finalConfig.xFrameOptions : 'DENY';
       headers['X-Frame-Options'] = frameOptions;
     }
 
     // X-XSS-Protection
     if (finalConfig.xXSSProtection) {
-      const xssProtection = typeof finalConfig.xXSSProtection === 'string'
-        ? finalConfig.xXSSProtection
-        : '1; mode=block';
+      const xssProtection =
+        typeof finalConfig.xXSSProtection === 'string' ? finalConfig.xXSSProtection : '1; mode=block';
       headers['X-XSS-Protection'] = xssProtection;
     }
 
     // Referrer Policy
     if (finalConfig.referrerPolicy) {
-      const referrerPolicy = typeof finalConfig.referrerPolicy === 'string'
-        ? finalConfig.referrerPolicy
-        : 'strict-origin-when-cross-origin';
+      const referrerPolicy =
+        typeof finalConfig.referrerPolicy === 'string' ? finalConfig.referrerPolicy : 'strict-origin-when-cross-origin';
       headers['Referrer-Policy'] = referrerPolicy;
     }
 
     // Permissions Policy
     if (finalConfig.permissionsPolicy) {
-      const permissionsPolicy = typeof finalConfig.permissionsPolicy === 'string'
-        ? finalConfig.permissionsPolicy
-        : this.generatePermissionsPolicy();
+      const permissionsPolicy =
+        typeof finalConfig.permissionsPolicy === 'string'
+          ? finalConfig.permissionsPolicy
+          : this.generatePermissionsPolicy();
       headers['Permissions-Policy'] = permissionsPolicy;
     }
 
     // Expect-CT
     if (finalConfig.expectCT) {
-      const expectCT = typeof finalConfig.expectCT === 'string'
-        ? finalConfig.expectCT
-        : 'max-age=86400, enforce';
+      const expectCT = typeof finalConfig.expectCT === 'string' ? finalConfig.expectCT : 'max-age=86400, enforce';
       headers['Expect-CT'] = expectCT;
     }
 
     return {
       headers,
-      cspNonce
+      cspNonce,
     };
   }
 
@@ -131,7 +126,7 @@ class SecurityHeaders {
       "form-action 'self'",
       "frame-ancestors 'none'",
       "require-trusted-types-for 'script'",
-      "report-uri /csp-report"
+      'report-uri /csp-report',
     ].join('; ');
   }
 
@@ -142,39 +137,39 @@ class SecurityHeaders {
   private generatePermissionsPolicy(): string {
     // 基础权限策略，可根据实际需求调整
     return [
-      "accelerometer=()",
-      "ambient-light-sensor=()",
-      "battery=()",
-      "bluetooth=()",
-      "camera=()",
-      "cross-origin-isolated=()",
-      "display-capture=()",
-      "document-domain=()",
-      "encrypted-media=()",
-      "execution-while-not-rendered=()",
-      "execution-while-out-of-viewport=()",
-      "focus-without-user-activation=()",
-      "fullscreen=()",
-      "geolocation=()",
-      "gyroscope=()",
-      "hid=()",
-      "identity-credentials-get=()",
-      "idle-detection=()",
-      "local-fonts=()",
-      "magnetometer=()",
-      "microphone=()",
-      "midi=()",
-      "otp-credentials=()",
-      "payment=()",
-      "picture-in-picture=()",
-      "publickey-credentials-get=()",
-      "screen-wake-lock=()",
-      "serial=()",
-      "storage-access=()",
-      "usb=()",
-      "web-share=()",
-      "window-management=()",
-      "xr-spatial-tracking=()"
+      'accelerometer=()',
+      'ambient-light-sensor=()',
+      'battery=()',
+      'bluetooth=()',
+      'camera=()',
+      'cross-origin-isolated=()',
+      'display-capture=()',
+      'document-domain=()',
+      'encrypted-media=()',
+      'execution-while-not-rendered=()',
+      'execution-while-out-of-viewport=()',
+      'focus-without-user-activation=()',
+      'fullscreen=()',
+      'geolocation=()',
+      'gyroscope=()',
+      'hid=()',
+      'identity-credentials-get=()',
+      'idle-detection=()',
+      'local-fonts=()',
+      'magnetometer=()',
+      'microphone=()',
+      'midi=()',
+      'otp-credentials=()',
+      'payment=()',
+      'picture-in-picture=()',
+      'publickey-credentials-get=()',
+      'screen-wake-lock=()',
+      'serial=()',
+      'storage-access=()',
+      'usb=()',
+      'web-share=()',
+      'window-management=()',
+      'xr-spatial-tracking=()',
     ].join(', ');
   }
 
@@ -209,7 +204,7 @@ class SecurityHeaders {
    */
   addSecurityHeadersToRequest(
     originalHeaders: Record<string, string> = {},
-    config?: SecurityHeadersConfig
+    config?: SecurityHeadersConfig,
   ): Record<string, string> {
     const { headers } = this.generateHeaders(config);
 
@@ -231,7 +226,7 @@ class SecurityHeaders {
 
     return {
       ...originalHeaders,
-      ...requestSecurityHeaders
+      ...requestSecurityHeaders,
     };
   }
 
@@ -243,13 +238,13 @@ class SecurityHeaders {
    */
   addSecurityHeadersToResponse(
     originalHeaders: Record<string, string> = {},
-    config?: SecurityHeadersConfig
+    config?: SecurityHeadersConfig,
   ): Record<string, string> {
     const { headers } = this.generateHeaders(config);
 
     return {
       ...originalHeaders,
-      ...headers
+      ...headers,
     };
   }
 
@@ -269,7 +264,7 @@ class SecurityHeaders {
 
     // 检查是否包含必要的指令
     const requiredDirectives = ['default-src', 'script-src'];
-    const directives = csp.split(';').map(dir => dir.trim().split('=')[0]);
+    const directives = csp.split(';').map((dir) => dir.trim().split('=')[0]);
 
     for (const directive of requiredDirectives) {
       if (!directives.includes(directive)) {
@@ -283,7 +278,7 @@ class SecurityHeaders {
       /default-src\s+\*\s*;/,
       /'unsafe-inline'/,
       /'unsafe-eval'/,
-      /data:\s*script/
+      /data:\s*script/,
     ];
 
     for (const pattern of unsafePatterns) {
@@ -294,7 +289,7 @@ class SecurityHeaders {
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   }
 }
@@ -303,8 +298,7 @@ class SecurityHeaders {
 const securityHeaders = new SecurityHeaders();
 
 // 导出便捷方法
-export const generateSecurityHeaders = (config?: SecurityHeadersConfig) =>
-  securityHeaders.generateHeaders(config);
+export const generateSecurityHeaders = (config?: SecurityHeadersConfig) => securityHeaders.generateHeaders(config);
 export const addSecurityHeadersToRequest = (headers?: Record<string, string>, config?: SecurityHeadersConfig) =>
   securityHeaders.addSecurityHeadersToRequest(headers, config);
 export const addSecurityHeadersToResponse = (headers?: Record<string, string>, config?: SecurityHeadersConfig) =>

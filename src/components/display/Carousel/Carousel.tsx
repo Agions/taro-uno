@@ -72,47 +72,50 @@ export const CarouselComponent = forwardRef<CarouselRef, CarouselProps>((props, 
     return () => stopAutoplay();
   }, [startAutoplay, stopAutoplay]);
 
-  const goToSlide = useCallback((index: number) => {
-    if (isTransitioning || totalSlides <= 1) return;
+  const goToSlide = useCallback(
+    (index: number) => {
+      if (isTransitioning || totalSlides <= 1) return;
 
-    const validIndex = Math.max(0, Math.min(index, totalSlides - 1));
-    
-    if (validIndex === currentIndex) return;
+      const validIndex = Math.max(0, Math.min(index, totalSlides - 1));
 
-    beforeChange?.(currentIndex, validIndex);
-    
-    setIsTransitioning(true);
-    setCurrentIndex(validIndex);
-    
-    setTimeout(() => {
-      setIsTransitioning(false);
-      afterChange?.(validIndex);
-    }, 300);
-  }, [currentIndex, totalSlides, isTransitioning, beforeChange, afterChange]);
+      if (validIndex === currentIndex) return;
+
+      beforeChange?.(currentIndex, validIndex);
+
+      setIsTransitioning(true);
+      setCurrentIndex(validIndex);
+
+      setTimeout(() => {
+        setIsTransitioning(false);
+        afterChange?.(validIndex);
+      }, 300);
+    },
+    [currentIndex, totalSlides, isTransitioning, beforeChange, afterChange],
+  );
 
   const goPrev = useCallback(() => {
     if (totalSlides <= 1) return;
-    
+
     let newIndex;
     if (infinite) {
       newIndex = currentIndex <= 0 ? totalSlides - 1 : currentIndex - slidesToScroll;
     } else {
       newIndex = Math.max(0, currentIndex - slidesToScroll);
     }
-    
+
     goToSlide(newIndex);
   }, [currentIndex, totalSlides, infinite, slidesToScroll, goToSlide]);
 
   const goNext = useCallback(() => {
     if (totalSlides <= 1) return;
-    
+
     let newIndex;
     if (infinite) {
       newIndex = currentIndex >= totalSlides - 1 ? 0 : currentIndex + slidesToScroll;
     } else {
       newIndex = Math.min(totalSlides - 1, currentIndex + slidesToScroll);
     }
-    
+
     goToSlide(newIndex);
   }, [currentIndex, totalSlides, infinite, slidesToScroll, goToSlide]);
 
@@ -120,11 +123,9 @@ export const CarouselComponent = forwardRef<CarouselRef, CarouselProps>((props, 
 
   const getTransform = () => {
     if (effect === 'fade') return 'none';
-    
+
     const translateValue = -(currentIndex * (100 / slidesToShow));
-    return vertical 
-      ? `translateY(${translateValue}%)`
-      : `translateX(${translateValue}%)`;
+    return vertical ? `translateY(${translateValue}%)` : `translateX(${translateValue}%)`;
   };
 
   const getWrapperStyle = () => {
@@ -173,7 +174,9 @@ export const CarouselComponent = forwardRef<CarouselRef, CarouselProps>((props, 
 
     const dotsStyle = {
       ...carouselStyles['dots'],
-      ...carouselStyles[`dots${dotsPosition.charAt(0).toUpperCase() + dotsPosition.slice(1)}` as keyof typeof carouselStyles],
+      ...carouselStyles[
+        `dots${dotsPosition.charAt(0).toUpperCase() + dotsPosition.slice(1)}` as keyof typeof carouselStyles
+      ],
     };
 
     return (
@@ -217,7 +220,7 @@ export const CarouselComponent = forwardRef<CarouselRef, CarouselProps>((props, 
             <Text>{vertical ? '↑' : '‹'}</Text>
           </View>
         </View>
-        
+
         <View
           style={{
             ...carouselStyles['arrows'],
@@ -264,24 +267,16 @@ export const CarouselComponent = forwardRef<CarouselRef, CarouselProps>((props, 
   }
 
   return (
-    <View
-      ref={elementRef}
-      style={getCarouselStyle()}
-      className={className}
-      {...rest}
-    >
+    <View ref={elementRef} style={getCarouselStyle()} className={className} {...rest}>
       <View style={carouselStyles['container']}>
         <View style={getWrapperStyle()}>
           {childrenArray.map((child, index) => (
-            <View
-              key={index}
-              style={getSlideStyle(index)}
-            >
+            <View key={index} style={getSlideStyle(index)}>
               {child}
             </View>
           ))}
         </View>
-        
+
         {renderDots()}
         {renderArrows()}
       </View>

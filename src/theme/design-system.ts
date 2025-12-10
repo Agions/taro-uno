@@ -378,7 +378,7 @@ export interface DesignSystemZIndex {
   'popover-backdrop': string;
   popover: string;
   tooltip: string;
-  'max': string;
+  max: string;
 }
 
 export interface DesignSystemTransition {

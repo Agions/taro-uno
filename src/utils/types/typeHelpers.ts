@@ -63,24 +63,36 @@ export function isNotEmpty(value: unknown): boolean {
 /** 检查是否为有效的CSS颜色值 */
 export function isCSSColor(value: unknown): value is string {
   if (!isString(value)) return false;
-  
+
   // 检查十六进制颜色
   const hexPattern = /^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$/;
   if (hexPattern.test(value)) return true;
-  
+
   // 检查rgb/rgba
   const rgbPattern = /^rgba?\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*(,\s*[\d.]+)?\s*\)$/;
   if (rgbPattern.test(value)) return true;
-  
+
   // 检查CSS颜色关键字
-  const cssColors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'gray', 'black', 'white', 'transparent'];
+  const cssColors = [
+    'red',
+    'blue',
+    'green',
+    'yellow',
+    'purple',
+    'orange',
+    'pink',
+    'gray',
+    'black',
+    'white',
+    'transparent',
+  ];
   return cssColors.includes(value.toLowerCase());
 }
 
 /** 检查是否为有效的URL */
 export function isValidURL(value: unknown): value is string {
   if (!isString(value)) return false;
-  
+
   try {
     new URL(value);
     return true;
@@ -92,7 +104,7 @@ export function isValidURL(value: unknown): value is string {
 /** 检查是否为有效的邮箱地址 */
 export function isValidEmail(value: unknown): value is string {
   if (!isString(value)) return false;
-  
+
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailPattern.test(value);
 }
@@ -100,7 +112,7 @@ export function isValidEmail(value: unknown): value is string {
 /** 检查是否为有效的手机号 */
 export function isValidPhone(value: unknown): value is string {
   if (!isString(value)) return false;
-  
+
   const phonePattern = /^1[3-9]\d{9}$/;
   return phonePattern.test(value);
 }
@@ -112,9 +124,7 @@ export function isReactElement(value: unknown): boolean {
 
 /** 检查是否为Promise */
 export function isPromiseLike(value: unknown): value is Promise<any> {
-  return value !== null && 
-         typeof value === 'object' && 
-         typeof (value as any).then === 'function';
+  return value !== null && typeof value === 'object' && typeof (value as any).then === 'function';
 }
 
 // ==================== 日期类型守卫 ====================
@@ -127,7 +137,7 @@ export function isValidDate(value: unknown): value is Date {
 /** 检查是否为日期字符串 */
 export function isDateString(value: unknown): value is string {
   if (!isString(value)) return false;
-  
+
   const date = new Date(value);
   return isValidDate(date);
 }
@@ -159,29 +169,29 @@ export function isInRange(value: unknown, min: number, max: number): value is nu
 /** 深度相等比较 */
 export function deepEqual(a: unknown, b: unknown): boolean {
   if (a === b) return true;
-  
+
   if (a === null || b === null) return false;
   if (a === undefined || b === undefined) return false;
-  
+
   if (typeof a !== typeof b) return false;
-  
+
   if (typeof a === 'object') {
     if (isArray(a) && isArray(b)) {
       if (a.length !== b.length) return false;
       return a.every((item, index) => deepEqual(item, b[index]));
     }
-    
+
     if (a instanceof Date && b instanceof Date) {
       return a.getTime() === b.getTime();
     }
-    
+
     const keysA = Object.keys(a);
     const keysB = Object.keys(b || {});
-    
+
     if (keysA.length !== keysB.length) return false;
-    
-    return keysA.every(key => deepEqual((a as any)[key], (b as any)[key]));
+
+    return keysA.every((key) => deepEqual((a as any)[key], (b as any)[key]));
   }
-  
+
   return false;
 }

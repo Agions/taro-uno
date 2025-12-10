@@ -73,14 +73,10 @@ export type Truthy<T> = T extends false | 0 | '' | null | undefined ? never : T;
 // ==================== 字符串工具类型 ====================
 
 /** 首字母大写 */
-export type Capitalize<S extends string> = S extends `${infer First}${infer Rest}`
-  ? `${Uppercase<First>}${Rest}`
-  : S;
+export type Capitalize<S extends string> = S extends `${infer First}${infer Rest}` ? `${Uppercase<First>}${Rest}` : S;
 
 /** 首字母小写 */
-export type Uncapitalize<S extends string> = S extends `${infer First}${infer Rest}`
-  ? `${Lowercase<First>}${Rest}`
-  : S;
+export type Uncapitalize<S extends string> = S extends `${infer First}${infer Rest}` ? `${Lowercase<First>}${Rest}` : S;
 
 /** 转换为连字符格式 */
 export type KebabCase<S> = S extends `${infer First}${infer Rest}`
@@ -90,9 +86,7 @@ export type KebabCase<S> = S extends `${infer First}${infer Rest}`
   : S;
 
 /** 转换为驼峰格式 */
-export type CamelCase<S> = S extends `${infer First}-${infer Rest}`
-  ? `${First}${Capitalize<CamelCase<Rest>>}`
-  : S;
+export type CamelCase<S> = S extends `${infer First}-${infer Rest}` ? `${First}${Capitalize<CamelCase<Rest>>}` : S;
 
 // ==================== 对象工具类型 ====================
 
@@ -108,8 +102,8 @@ export type DeepMerge<T, U> = T extends object
             ? DeepMerge<T[K], U[K]>
             : T[K]
           : K extends keyof U
-          ? U[K]
-          : never;
+            ? U[K]
+            : never;
       }
     : T
   : U;
@@ -202,9 +196,7 @@ export function isReactElement(value: unknown): value is React.ReactElement {
 }
 
 /** 类型守卫：检查是否为React组件 */
-export function isReactComponent<T extends React.ComponentType<any>>(
-  value: unknown,
-): value is T {
+export function isReactComponent<T extends React.ComponentType<any>>(value: unknown): value is T {
   return isFunction(value);
 }
 
@@ -231,9 +223,7 @@ export function isNotEmpty<T>(value: T | null | undefined): value is T {
 // ==================== 验证工具类型 ====================
 
 /** 验证结果类型 */
-export type ValidationResult<T> = 
-  | { success: true; data: T }
-  | { success: false; error: string };
+export type ValidationResult<T> = { success: true; data: T } | { success: false; error: string };
 
 /** 验证函数类型 */
 export type Validator<T> = (value: unknown) => ValidationResult<T>;
@@ -320,7 +310,7 @@ export function mergeStyles(...styles: (StyleObject | undefined)[]): StyleObject
 // ==================== 异步工具类型 ====================
 
 /** 异步状态类型 */
-export type AsyncState<T> = 
+export type AsyncState<T> =
   | { status: 'idle' }
   | { status: 'loading' }
   | { status: 'success'; data: T }
@@ -334,7 +324,7 @@ export type AsyncOperation<T> = Promise<T> & {
 /** 创建可取消的Promise */
 export function createCancellablePromise<T>(promise: Promise<T>): AsyncOperation<T> {
   let cancelled = false;
-  
+
   const cancellablePromise = promise.then(
     (data) => {
       if (cancelled) {
@@ -347,13 +337,13 @@ export function createCancellablePromise<T>(promise: Promise<T>): AsyncOperation
         throw new Error('Promise was cancelled');
       }
       throw error;
-    }
+    },
   ) as AsyncOperation<T>;
-  
+
   cancellablePromise.cancel = () => {
     cancelled = true;
   };
-  
+
   return cancellablePromise;
 }
 

@@ -3,6 +3,8 @@
  * 提供统一的错误记录和上报功能
  */
 
+import { safeLocalStorage } from './environment';
+
 interface ErrorLog {
   timestamp: string;
   message: string;
@@ -33,7 +35,7 @@ class ErrorLogger {
       type,
       userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
       url: typeof window !== 'undefined' ? window.location.href : undefined,
-      userId: this.getUserId()
+      userId: this.getUserId(),
     };
 
     this.addLog(errorLog);
@@ -52,7 +54,7 @@ class ErrorLogger {
       type,
       userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
       url: typeof window !== 'undefined' ? window.location.href : undefined,
-      userId: this.getUserId()
+      userId: this.getUserId(),
     };
 
     this.addLog(errorLog);
@@ -83,12 +85,10 @@ class ErrorLogger {
    * 保存日志到本地存储
    */
   private saveToLocalStorage(): void {
-    if (typeof localStorage !== 'undefined') {
-      try {
-        localStorage.setItem('taro-uno-error-logs', JSON.stringify(this.logs));
-      } catch (e) {
-        console.warn('Failed to save error logs to localStorage:', e);
-      }
+    try {
+      safeLocalStorage.setItem('taro-uno-error-logs', JSON.stringify(this.logs));
+    } catch (e) {
+      console.warn('Failed to save error logs to localStorage:', e);
     }
   }
 
@@ -96,15 +96,13 @@ class ErrorLogger {
    * 从本地存储加载日志
    */
   private loadFromLocalStorage(): void {
-    if (typeof localStorage !== 'undefined') {
-      try {
-        const savedLogs = localStorage.getItem('taro-uno-error-logs');
-        if (savedLogs) {
-          this.logs = JSON.parse(savedLogs);
-        }
-      } catch (e) {
-        console.warn('Failed to load error logs from localStorage:', e);
+    try {
+      const savedLogs = safeLocalStorage.getItem('taro-uno-error-logs');
+      if (savedLogs) {
+        this.logs = JSON.parse(savedLogs);
       }
+    } catch (e) {
+      console.warn('Failed to load error logs from localStorage:', e);
     }
   }
 
@@ -154,9 +152,7 @@ class ErrorLogger {
    */
   clearLogs(): void {
     this.logs = [];
-    if (typeof localStorage !== 'undefined') {
-      localStorage.removeItem('taro-uno-error-logs');
-    }
+    safeLocalStorage.removeItem('taro-uno-error-logs');
   }
 
   /**

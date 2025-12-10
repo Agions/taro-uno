@@ -1,13 +1,6 @@
 import { useState, useCallback } from 'react';
 import type { ITouchEvent } from '@tarojs/components';
-import type {
-  FormProps,
-  FormInstance,
-  FormValues,
-  FormErrors,
-  FormFieldInfo,
-  FormContext,
-} from './Form.types';
+import type { FormProps, FormInstance, FormValues, FormErrors, FormFieldInfo, FormContext } from './Form.types';
 import { formStyles } from './Form.styles';
 
 export interface UseFormLogicProps extends Omit<FormProps, 'children' | 'className' | 'style'> {
@@ -57,21 +50,23 @@ export function useFormLogic(props: UseFormLogicProps) {
 
   // 注册字段
   const registerField = useCallback((name: string, info: Partial<FormFieldInfo>) => {
-    setFormInstance((prev): FormInstance => ({
-      ...prev,
-      fields: {
-        ...prev.fields,
-        [name]: {
-          name,
-          value: prev.values[name] ?? info.value ?? '',
-          errors: [],
-          touched: false,
-          validating: false,
-          rules: info.rules || [],
-          ...info,
+    setFormInstance(
+      (prev): FormInstance => ({
+        ...prev,
+        fields: {
+          ...prev.fields,
+          [name]: {
+            name,
+            value: prev.values[name] ?? info.value ?? '',
+            errors: [],
+            touched: false,
+            validating: false,
+            rules: info.rules || [],
+            ...info,
+          },
         },
-      },
-    }));
+      }),
+    );
   }, []);
 
   // 注销字段
@@ -100,16 +95,18 @@ export function useFormLogic(props: UseFormLogicProps) {
 
   // 更新字段
   const updateField = useCallback((name: string, info: Partial<FormFieldInfo>) => {
-    setFormInstance((prev): FormInstance => ({
-      ...prev,
-      fields: {
-        ...prev.fields,
-        [name]: {
-          ...(prev.fields[name] || { name, value: '', errors: [], touched: false, validating: false, rules: [] }),
-          ...info,
+    setFormInstance(
+      (prev): FormInstance => ({
+        ...prev,
+        fields: {
+          ...prev.fields,
+          [name]: {
+            ...(prev.fields[name] || { name, value: '', errors: [], touched: false, validating: false, rules: [] }),
+            ...info,
+          },
         },
-      },
-    }));
+      }),
+    );
   }, []);
 
   // 获取字段
@@ -164,65 +161,71 @@ export function useFormLogic(props: UseFormLogicProps) {
 
   // 设置字段错误
   const setFieldError = useCallback((name: string, error: string | string[]) => {
-    setFormInstance((prev): FormInstance => ({
-      ...prev,
-      errors: {
-        ...prev.errors,
-        [name]: Array.isArray(error) ? error : [error],
-      },
-      fields: {
-        ...prev.fields,
-        [name]: {
-          ...(prev.fields[name] || { name, value: '', errors: [], touched: false, validating: false, rules: [] }),
-          errors: Array.isArray(error) ? error : [error],
+    setFormInstance(
+      (prev): FormInstance => ({
+        ...prev,
+        errors: {
+          ...prev.errors,
+          [name]: Array.isArray(error) ? error : [error],
         },
-      },
-    }));
+        fields: {
+          ...prev.fields,
+          [name]: {
+            ...(prev.fields[name] || { name, value: '', errors: [], touched: false, validating: false, rules: [] }),
+            errors: Array.isArray(error) ? error : [error],
+          },
+        },
+      }),
+    );
   }, []);
 
   // 获取字段错误
   const getFieldError = useCallback(
     (name: string): string[] => {
       const errors = formInstance.errors[name];
-      return Array.isArray(errors) ? errors : (errors ? [errors] : []);
+      return Array.isArray(errors) ? errors : errors ? [errors] : [];
     },
     [formInstance.errors],
   );
 
   // 设置字段 touched 状态
   const setFieldTouched = useCallback((name: string, touched: boolean) => {
-    setFormInstance((prev): FormInstance => ({
-      ...prev,
-      touched: {
-        ...prev.touched,
-        [name]: touched,
-      },
-      fields: {
-        ...prev.fields,
-        [name]: {
-          ...(prev.fields[name] || { name, value: '', errors: [], touched: false, validating: false, rules: [] }),
-          touched,
+    setFormInstance(
+      (prev): FormInstance => ({
+        ...prev,
+        touched: {
+          ...prev.touched,
+          [name]: touched,
         },
-      },
-    }));
+        fields: {
+          ...prev.fields,
+          [name]: {
+            ...(prev.fields[name] || { name, value: '', errors: [], touched: false, validating: false, rules: [] }),
+            touched,
+          },
+        },
+      }),
+    );
   }, []);
 
   // 设置字段 validating 状态
   const setFieldValidating = useCallback((name: string, validating: boolean) => {
-    setFormInstance((prev): FormInstance => ({
-      ...prev,
-      validating: {
-        ...prev.validating,
-        [name]: validating,
-      },
-      fields: {
-        ...prev.fields,
-        [name]: {
-          ...(prev.fields[name] || { name, value: '', errors: [], touched: false, validating: false, rules: [] }),
-          validating,
+    setFormInstance(
+      (prev): FormInstance => ({
+        ...prev,
+        validating: {
+          ...prev.validating,
+          [name]: validating,
         },
-      },
-    }));
+        fields: {
+          ...prev.fields,
+          [name]: {
+            ...(prev.fields[name] || { name, value: '', errors: [], touched: false, validating: false, rules: [] }),
+            validating,
+          },
+        },
+      }),
+    );
   }, []);
 
   // 验证单个字段
@@ -381,9 +384,9 @@ export function useFormLogic(props: UseFormLogicProps) {
       try {
         // Create a synthetic event for compatibility
         const syntheticEvent = {
-          preventDefault: () => { },
-          stopPropagation: () => { },
-          ...event
+          preventDefault: () => {},
+          stopPropagation: () => {},
+          ...event,
         } as ITouchEvent;
 
         await onSubmit?.(formInstance.values, syntheticEvent);
@@ -435,9 +438,9 @@ export function useFormLogic(props: UseFormLogicProps) {
 
       // Create a synthetic event for compatibility
       const syntheticEvent = {
-        preventDefault: () => { },
-        stopPropagation: () => { },
-        ...event
+        preventDefault: () => {},
+        stopPropagation: () => {},
+        ...event,
       } as ITouchEvent;
 
       onReset?.(formInstance.values, syntheticEvent);

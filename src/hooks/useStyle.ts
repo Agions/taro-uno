@@ -137,7 +137,10 @@ export const useStyle = () => {
    * @param baseStyle 基础样式
    * @returns 包含激活效果的样式对象
    */
-  const active = (activeStyle: Record<string, unknown>, baseStyle?: Record<string, unknown>): Record<string, unknown> => {
+  const active = (
+    activeStyle: Record<string, unknown>,
+    baseStyle?: Record<string, unknown>,
+  ): Record<string, unknown> => {
     return {
       ...baseStyle,
       '&:active': activeStyle,
@@ -150,7 +153,10 @@ export const useStyle = () => {
    * @param baseStyle 基础样式
    * @returns 包含禁用效果的样式对象
    */
-  const disabled = (disabledStyle: Record<string, unknown>, baseStyle?: Record<string, unknown>): Record<string, unknown> => {
+  const disabled = (
+    disabledStyle: Record<string, unknown>,
+    baseStyle?: Record<string, unknown>,
+  ): Record<string, unknown> => {
     return {
       ...baseStyle,
       '&:disabled': disabledStyle,

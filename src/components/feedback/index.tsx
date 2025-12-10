@@ -1,17 +1,33 @@
-// 导出反馈组件
-export * from './Loading';
-export * from './Message';
-export * from './Modal';
-export * from './Notification';
-export * from './Progress';
-export * from './Result';
-export * from './Tooltip';
+/**
+ * Taro-Uno 反馈组件库
+ * 提供用户交互反馈的 UI 组件，包括加载、消息、模态框、通知等
+ */
 
-// 导出类型
+// 导出 Loading 组件
+export { Loading } from './Loading';
 export type { LoadingProps, LoadingRef, LoadingSize, LoadingType } from './Loading/Loading.types';
+export { LoadingStyles } from './Loading/Loading.styles';
 
+// 导出 Message 组件
+export { Message } from './Message';
 export type { MessageProps, MessageRef, MessageType, MessagePosition } from './Message/Message.types';
+export { messageStyles } from './Message/Message.styles';
 
+// 导出 Modal 组件
+export { Modal } from './Modal';
+export type {
+  ModalProps,
+  ModalRef,
+  ModalSize,
+  ModalPosition,
+  ModalButtonType,
+  ModalButton,
+  ModalConfirmConfig,
+} from './Modal/Modal.types';
+export { modalStyles } from './Modal/Modal.styles';
+
+// 导出 Notification 组件
+export { Notification } from './Notification';
 export type {
   NotificationType,
   NotificationPlacement,
@@ -26,29 +42,41 @@ export type {
   NotificationPlacementStyles,
   NotificationAnimationStyles,
 } from './Notification/Notification.types';
+export {
+  notificationStyles,
+  notificationStyleHelpers,
+  notificationStyleSystem,
+  responsiveBreakpoints,
+  generateResponsiveStyle,
+  generateThemeStyle,
+  calculateDynamicStyles,
+} from './Notification/Notification.styles';
 
+// 导出 Progress 组件
+export { Progress } from './Progress';
 export type {
-  ModalProps,
-  ModalRef,
-  ModalSize,
-  ModalPosition,
-  ModalButtonType,
-  ModalButton,
-  ModalConfirmConfig,
-} from './Modal/Modal.types';
-
-export type { 
-  ProgressProps, 
-  ProgressRef, 
-  ProgressType, 
-  ProgressStatus, 
+  ProgressProps,
+  ProgressRef,
+  ProgressType,
+  ProgressStatus,
   ProgressSize,
   ProgressGradient,
-  ProgressSegment 
+  ProgressSegment,
 } from './Progress/Progress.types';
+export {
+  ProgressStyles,
+  ProgressKeyframes,
+  ProgressMediaQueries,
+  ProgressCSSVariables,
+} from './Progress/Progress.styles';
 
+// 导出 Result 组件
+export { Result } from './Result';
 export type { ResultProps, ResultRef, ResultStatus, ResultSize } from './Result/Result.types';
+export { resultStyles } from './Result/Result.styles';
 
+// 导出 Tooltip 组件
+export { Tooltip } from './Tooltip';
 export type {
   TooltipProps,
   TooltipRef,
@@ -65,22 +93,6 @@ export type {
   TooltipOptions,
   TooltipInstance,
 } from './Tooltip/Tooltip.types';
-
-// 导出样式
-export { LoadingStyles } from './Loading/Loading.styles';
-export { messageStyles } from './Message/Message.styles';
-export { 
-  notificationStyles, 
-  notificationStyleHelpers, 
-  notificationStyleSystem,
-  responsiveBreakpoints,
-  generateResponsiveStyle,
-  generateThemeStyle,
-  calculateDynamicStyles,
-} from './Notification/Notification.styles';
-export { modalStyles } from './Modal/Modal.styles';
-export { ProgressStyles, ProgressKeyframes, ProgressMediaQueries, ProgressCSSVariables } from './Progress/Progress.styles';
-export { resultStyles } from './Result/Result.styles';
 export { tooltipStyles } from './Tooltip/Tooltip.styles';
 
 // 反馈组件工具函数

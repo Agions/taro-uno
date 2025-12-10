@@ -1,6 +1,6 @@
 /**
  * Pagination 分页组件
- * 
+ *
  * 企业级分页组件，支持：
  * - 多种尺寸和样式配置
  * - 简单模式和完整模式
@@ -11,7 +11,13 @@
  */
 
 export { Pagination, PaginationComponent } from './Pagination';
-export type { PaginationProps, PaginationRef, PaginationSize, PaginationPosition, PaginationAlign } from './Pagination.types';
+export type {
+  PaginationProps,
+  PaginationRef,
+  PaginationSize,
+  PaginationPosition,
+  PaginationAlign,
+} from './Pagination.types';
 export { paginationStyles } from './Pagination.styles';
 
 // 默认导出

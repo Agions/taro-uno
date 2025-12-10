@@ -91,35 +91,44 @@ export function ResponsiveProvider({ children }: { children: React.ReactNode }) 
   const isDesktop = screenSize.width >= breakpoints.lg;
 
   // 断点匹配检查
-  const matches = useCallback((breakpoint: keyof typeof breakpoints) => {
-    return screenSize.width >= breakpoints[breakpoint];
-  }, [screenSize.width]);
+  const matches = useCallback(
+    (breakpoint: keyof typeof breakpoints) => {
+      return screenSize.width >= breakpoints[breakpoint];
+    },
+    [screenSize.width],
+  );
 
-  const matchesMinWidth = useCallback((width: number) => {
-    return screenSize.width >= width;
-  }, [screenSize.width]);
+  const matchesMinWidth = useCallback(
+    (width: number) => {
+      return screenSize.width >= width;
+    },
+    [screenSize.width],
+  );
 
-  const matchesMaxWidth = useCallback((width: number) => {
-    return screenSize.width <= width;
-  }, [screenSize.width]);
+  const matchesMaxWidth = useCallback(
+    (width: number) => {
+      return screenSize.width <= width;
+    },
+    [screenSize.width],
+  );
 
   // 获取响应式值
-  const getResponsiveValue = useCallback(<T,>(
-    values: Partial<Record<string, T>>,
-    defaultValue: T
-  ): T => {
-    const currentIndex = breakpointOrder.indexOf(currentBreakpoint as typeof breakpointOrder[number]);
-    
-    // 从当前断点开始，向上查找第一个匹配的值
-    for (let i = currentIndex; i >= 0; i--) {
-      const breakpoint = breakpointOrder[i];
-      if (values[breakpoint as keyof typeof values] !== undefined) {
-        return values[breakpoint as keyof typeof values] as T;
+  const getResponsiveValue = useCallback(
+    <T,>(values: Partial<Record<string, T>>, defaultValue: T): T => {
+      const currentIndex = breakpointOrder.indexOf(currentBreakpoint as (typeof breakpointOrder)[number]);
+
+      // 从当前断点开始，向上查找第一个匹配的值
+      for (let i = currentIndex; i >= 0; i--) {
+        const breakpoint = breakpointOrder[i];
+        if (values[breakpoint as keyof typeof values] !== undefined) {
+          return values[breakpoint as keyof typeof values] as T;
+        }
       }
-    }
-    
-    return defaultValue;
-  }, [currentBreakpoint]);
+
+      return defaultValue;
+    },
+    [currentBreakpoint],
+  );
 
   const contextValue: ResponsiveContextType = {
     screenSize,
@@ -133,11 +142,7 @@ export function ResponsiveProvider({ children }: { children: React.ReactNode }) 
     getResponsiveValue,
   };
 
-  return (
-    <ResponsiveContext.Provider value={contextValue}>
-      {children}
-    </ResponsiveContext.Provider>
-  );
+  return <ResponsiveContext.Provider value={contextValue}>{children}</ResponsiveContext.Provider>;
 }
 
 /**
@@ -154,10 +159,7 @@ export function useResponsive() {
 /**
  * 响应式值 Hook
  */
-export function useResponsiveValue<T>(
-  values: Partial<Record<string, T>>,
-  defaultValue: T
-): T {
+export function useResponsiveValue<T>(values: Partial<Record<string, T>>, defaultValue: T): T {
   const { getResponsiveValue } = useResponsive();
   return getResponsiveValue(values, defaultValue);
 }

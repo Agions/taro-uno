@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.0] - 2025-11-25
+## [1.0.0] - 2025-12-10
 
 ### 🎉 首个生产版本发布
 
@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### ✨ 新增功能
 
 #### 多平台API请求层
-- **UnifiedRequestClient** - 生产级HTTP客户端
+- **RequestClient** - 生产级HTTP客户端
   - 自动平台检测（Web/微信小程序/支付宝小程序等）
   - 智能缓存系统（TTL管理 + 请求去重）
   - 灵活重试策略（指数/线性/固定退避）

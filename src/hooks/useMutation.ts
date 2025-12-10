@@ -1,7 +1,7 @@
 /**
  * useMutation Hook
  * React hook for data mutation operations (POST, PUT, DELETE, PATCH)
- * 
+ *
  * @example
  * ```typescript
  * const { mutate, loading, error } = useMutation<User, CreateUserInput>({
@@ -11,15 +11,15 @@
  *     console.log('User created:', data);
  *   },
  * });
- * 
+ *
  * // Trigger mutation
  * await mutate({ name: 'John Doe', email: 'john@example.com' });
  * ```
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { UnifiedRequestClient } from '../utils/network/unified-request-client';
-import type { RequestOptions, UseMutationOptions, MutationState } from '../utils/network/types';
+import { Request } from '../utils/http/request';
+import type { RequestOptions, UseMutationOptions, MutationState } from '../utils/http/types';
 
 export interface UseMutationResult<T, V = any> extends MutationState<T, V> {
   /** Execute mutation */
@@ -53,7 +53,7 @@ export function useMutation<T = any, V = any>(
     variables: null,
   });
 
-  const clientRef = useRef<UnifiedRequestClient>(new UnifiedRequestClient());
+  const clientRef = useRef<Request>(new Request());
   const previousDataRef = useRef<T | null>(null);
   const mountedRef = useRef(true);
 
@@ -93,7 +93,7 @@ export function useMutation<T = any, V = any>(
           variables,
         });
       } else {
-        setState(prev => ({
+        setState((prev) => ({
           ...prev,
           loading: true,
           error: null,

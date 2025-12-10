@@ -1,9 +1,9 @@
 export { InputNumber } from './InputNumber';
-export type { 
-  InputNumberProps, 
-  InputNumberRef, 
-  InputNumberSize, 
-  InputNumberVariant, 
+export type {
+  InputNumberProps,
+  InputNumberRef,
+  InputNumberSize,
+  InputNumberVariant,
   InputNumberStatus,
   InputNumberControlsPosition,
   InputNumberFormatter,
@@ -16,7 +16,7 @@ export type {
   InputNumberStyleConfig,
   InputNumberUtils,
   InputNumberEvents,
-  InputNumberNativeProps
+  InputNumberNativeProps,
 } from './InputNumber.types';
 export { inputNumberStyles } from './InputNumber.styles';
 

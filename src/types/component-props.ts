@@ -61,7 +61,12 @@ export interface LoadingProps extends BaseComponentProps {
 
 // ==================== 复合组件属性接口 ====================
 export interface StandardComponentProps
-  extends SizeableProps, VariantProps, StatusProps, ShapeProps, DisabledProps, LoadingProps {
+  extends SizeableProps,
+    VariantProps,
+    StatusProps,
+    ShapeProps,
+    DisabledProps,
+    LoadingProps {
   /** 组件唯一标识 */
   id?: string;
   /** 无障碍标签 */

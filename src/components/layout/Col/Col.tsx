@@ -5,19 +5,7 @@ import type { ColProps, ColRef, ColSpan, ColOffset, ColOrder } from './Col.types
 
 /** Col组件 */
 export const ColComponent = forwardRef<ColRef, ColProps>((props, ref) => {
-  const {
-    children,
-    span = 24,
-    offset = 0,
-    order = 0,
-    gutter = 0,
-    flex,
-    className,
-    style,
-    onClick,
-    responsive,
-    ...restProps
-  } = props;
+  const { children, span = 24, offset = 0, order = 0, gutter = 0, flex, className, style, onClick, responsive } = props;
 
   const colRef = useRef<typeof View>(null);
   const [internalSpan, setInternalSpan] = useState<ColSpan>(span);
@@ -44,7 +32,7 @@ export const ColComponent = forwardRef<ColRef, ColProps>((props, ref) => {
 
   // 处理点击事件
   const handleClick = useCallback(
-    (event: React.MouseEvent) => {
+    (event: any) => {
       onClick?.(event);
     },
     [onClick],
@@ -96,13 +84,7 @@ export const ColComponent = forwardRef<ColRef, ColProps>((props, ref) => {
   );
 
   return (
-    <View
-      ref={colRef}
-      className={colClassName}
-      style={{ ...colStyle, ...responsiveStyle }}
-      onClick={handleClick}
-      {...restProps}
-    >
+    <View ref={colRef} className={colClassName} style={{ ...colStyle, ...responsiveStyle }} onClick={handleClick}>
       {children}
     </View>
   );

@@ -100,7 +100,6 @@ export const ComponentLibraryUtils = {
   },
 };
 
-
 // 同步获取组件（兼容性处理）
 let cachedComponents: any = null;
 const getComponentsSync = () => {

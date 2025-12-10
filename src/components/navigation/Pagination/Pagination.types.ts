@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 // import { View } from '@tarojs/components'; // Commented out - unused
-import { BaseComponentProps, Size } from '../../../types';
+import { BaseComponentProps as StandardBaseComponentProps } from '../../../types/component-props';
+import { Size } from '../../../types';
 
 /** 分页尺寸 */
 export type PaginationSize = Size | 'small' | 'medium' | 'large';
@@ -40,7 +41,7 @@ export interface PaginationRef {
 }
 
 /** 分页组件属性 */
-export interface PaginationProps extends BaseComponentProps {
+export interface PaginationProps extends StandardBaseComponentProps {
   /** 当前页码 */
   current?: number;
   /** 默认当前页码 */

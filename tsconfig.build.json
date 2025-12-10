@@ -7,7 +7,8 @@
         "declarationMap": false,
         "sourceMap": false,
         "outDir": "./dist",
-        "stripInternal": true
+        "stripInternal": true,
+        "rootDir": "./src"
     },
     "include": [
         "src/**/*"
@@ -18,6 +19,11 @@
         "coverage",
         "tests",
         "docs",
-        "scripts"
+        "scripts",
+        "**/*.test.ts",
+        "**/*.test.tsx",
+        "**/*.spec.ts",
+        "**/*.spec.tsx",
+        "**/__tests__/**"
     ]
 }

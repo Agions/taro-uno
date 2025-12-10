@@ -8,13 +8,10 @@
 // 导入安全工具函数
 import * as xssProtection from './security/xss-protection';
 import * as apiSecurity from './security/api-security';
-import { httpClient as defaultHttpClient } from './network/http-client';
+import { httpClient as defaultHttpClient } from './http/http-client';
 
 // 导入类型工具函数
-import {
-  deepEqual,
-} from './typeHelpers';
-
+import { deepEqual } from './typeHelpers';
 
 // ==================== 创建命名空间和工具类 ====================
 
@@ -43,7 +40,7 @@ export class PlatformDetector {
   }
 
   static isMobile(): boolean {
-    return this.isMiniProgram() || this.isH5() && window.innerWidth < 768;
+    return this.isMiniProgram() || (this.isH5() && window.innerWidth < 768);
   }
 
   static getPlatformInfo(): { platform: string; isMiniProgram: boolean; isH5: boolean; isRN: boolean; env: string } {
@@ -63,7 +60,7 @@ export class PlatformDetector {
       isMiniProgram: this.isMiniProgram(),
       isH5: this.isH5(),
       isRN: this.isRN(),
-      env: process.env['NODE_ENV'] || 'development'
+      env: process.env['NODE_ENV'] || 'development',
     };
 
     this.cache.set(platform, info);
@@ -92,7 +89,7 @@ export const utils = {
     ...xssProtection,
     api: apiSecurity,
   },
-  network: {
+  http: {
     httpClient: defaultHttpClient,
   },
 

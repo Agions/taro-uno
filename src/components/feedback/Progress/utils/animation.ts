@@ -26,26 +26,15 @@ export const easingFunctions = {
   easeOut: (t: number) => t * (2 - t),
   easeInOut: (t: number) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t),
   easeInCubic: (t: number) => t * t * t,
-  easeOutCubic: (t: number) => (--t) * t * t + 1,
+  easeOutCubic: (t: number) => --t * t * t + 1,
   easeInOutCubic: (t: number) => (t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1),
 };
 
 /**
  * 创建动画控制器
  */
-export function createAnimation(
-  startValue: number,
-  endValue: number,
-  options: AnimationOptions
-): AnimationController {
-  const { 
-    duration, 
-    easing = easingFunctions.linear, 
-    delay = 0,
-    onStart,
-    onComplete,
-    onUpdate 
-  } = options;
+export function createAnimation(startValue: number, endValue: number, options: AnimationOptions): AnimationController {
+  const { duration, easing = easingFunctions.linear, delay = 0, onStart, onComplete, onUpdate } = options;
 
   let startTime: number | null = null;
   let pausedTime = 0;
@@ -55,7 +44,7 @@ export function createAnimation(
 
   const animate = (timestamp: number) => {
     if (!startTime) startTime = timestamp + delay;
-    
+
     if (timestamp < startTime) {
       rafId = requestAnimationFrame(animate);
       return;
@@ -84,12 +73,12 @@ export function createAnimation(
 
   const start = () => {
     if (isRunningFlag) return;
-    
+
     isRunningFlag = true;
     isPaused = false;
     startTime = null;
     pausedTime = 0;
-    
+
     onStart?.();
     rafId = requestAnimationFrame(animate);
   };
@@ -133,11 +122,11 @@ export function createProgressAnimation(
   startPercent: number,
   endPercent: number,
   onUpdate: (percent: number) => void,
-  options: Partial<Omit<AnimationOptions, 'onUpdate'>> = {}
+  options: Partial<Omit<AnimationOptions, 'onUpdate'>> = {},
 ): AnimationController {
   const clampedStart = Math.max(0, Math.min(100, startPercent));
   const clampedEnd = Math.max(0, Math.min(100, endPercent));
-  
+
   return createAnimation(clampedStart, clampedEnd, {
     duration: options.duration || 300,
     easing: options.easing || easingFunctions.linear,
@@ -176,15 +165,15 @@ export class AnimationBatchManager {
   }
 
   pauseAll(): void {
-    this.animations.forEach(animation => animation.pause());
+    this.animations.forEach((animation) => animation.pause());
   }
 
   resumeAll(): void {
-    this.animations.forEach(animation => animation.resume());
+    this.animations.forEach((animation) => animation.resume());
   }
 
   cancelAll(): void {
-    this.animations.forEach(animation => animation.cancel());
+    this.animations.forEach((animation) => animation.cancel());
     this.animations.clear();
   }
 
@@ -197,7 +186,7 @@ export class AnimationBatchManager {
   }
 
   triggerUpdate(): void {
-    this.onUpdateCallbacks.forEach(callback => callback());
+    this.onUpdateCallbacks.forEach((callback) => callback());
   }
 }
 

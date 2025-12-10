@@ -1,20 +1,39 @@
 import React, { forwardRef, useRef } from 'react';
 import { View as TaroView, Text as TaroText, Image as TaroImage } from '@tarojs/components';
 import type { IconProps, IconRef, IconSource } from './Icon.types';
+import { IconUtils } from './IconManager';
 
 /** 图标组件 */
 export const IconComponent = forwardRef<IconRef, IconProps>((props, ref) => {
-  const {
-    source,
-    size = 'md',
-    color = 'currentColor',
-    className,
-    style,
-    onClick,
-    'data-testid': dataTestId,
-  } = props;
+  const { size = 'md', color = 'currentColor', className, style, onClick, 'data-testid': dataTestId } = props;
 
   const iconRef = useRef<SVGElement | HTMLImageElement | HTMLSpanElement>(null);
+
+  const resolveIconSource = (props: IconProps): IconSource => {
+    const { source, theme = 'outlined', prefix = '', suffix = '' } = props;
+
+    // If source is not a string, return it directly
+    if (typeof source !== 'string') {
+      return source;
+    }
+
+    // If it's a URL, data URI, or SVG string, return it directly
+    if (source.startsWith('http') || source.startsWith('data:image') || source.includes('<svg')) {
+      return source;
+    }
+
+    // Try to find the icon in the IconManager by name
+    const iconName = `${prefix}${source}${suffix}`;
+    const resolvedSource = IconUtils.getIcon(iconName, theme);
+
+    // If found, return the resolved source
+    if (resolvedSource) {
+      return resolvedSource;
+    }
+
+    // Otherwise, return the original source
+    return source;
+  };
 
   const getIconType = (source: IconSource): 'image' | 'svg' | 'font' | 'custom' => {
     if (typeof source === 'string') {
@@ -38,12 +57,12 @@ export const IconComponent = forwardRef<IconRef, IconProps>((props, ref) => {
     if (typeof size === 'number') return size;
 
     const sizeMap: Record<string, number> = {
-      'xs': 12,
-      'sm': 16,
-      'md': 20,
-      'lg': 24,
-      'xl': 32,
-      'xxl': 48
+      xs: 12,
+      sm: 16,
+      md: 20,
+      lg: 24,
+      xl: 32,
+      xxl: 48,
     };
 
     return sizeMap[size] || 20;
@@ -56,20 +75,22 @@ export const IconComponent = forwardRef<IconRef, IconProps>((props, ref) => {
     width: getSizeValue(size),
     height: getSizeValue(size),
     color,
-    ...style
+    ...style,
   };
 
   const renderIcon = (): React.ReactNode => {
-    const iconType = getIconType(source);
+    // Resolve the icon source first
+    const resolvedSource = resolveIconSource(props);
+    const iconType = getIconType(resolvedSource);
 
     switch (iconType) {
       case 'svg':
-        if (typeof source === 'string') {
+        if (typeof resolvedSource === 'string') {
           return (
             <TaroView
               ref={iconRef as any}
               style={baseStyle}
-              dangerouslySetInnerHTML={{ __html: source }}
+              dangerouslySetInnerHTML={{ __html: resolvedSource }}
               data-testid={dataTestId}
             />
           );
@@ -81,7 +102,7 @@ export const IconComponent = forwardRef<IconRef, IconProps>((props, ref) => {
           <TaroImage
             ref={iconRef as any}
             style={baseStyle}
-            src={source as string}
+            src={resolvedSource as string}
             mode="aspectFit"
             data-testid={dataTestId}
           />
@@ -92,20 +113,15 @@ export const IconComponent = forwardRef<IconRef, IconProps>((props, ref) => {
           <TaroText
             ref={iconRef as any}
             style={baseStyle}
-            className={`${className || ''} ${source}`.trim()}
+            className={`${className || ''} ${resolvedSource}`.trim()}
             data-testid={dataTestId}
           />
         );
 
       case 'custom':
         return (
-          <TaroView
-            ref={iconRef as any}
-            style={baseStyle}
-            className={className}
-            data-testid={dataTestId}
-          >
-            {React.isValidElement(source) ? source : null}
+          <TaroView ref={iconRef as any} style={baseStyle} className={className} data-testid={dataTestId}>
+            {React.isValidElement(resolvedSource) ? resolvedSource : null}
           </TaroView>
         );
 
@@ -114,7 +130,7 @@ export const IconComponent = forwardRef<IconRef, IconProps>((props, ref) => {
           <TaroText
             ref={iconRef as any}
             style={baseStyle}
-            className={`${className || ''} ${source}`.trim()}
+            className={`${className || ''} ${resolvedSource}`.trim()}
             data-testid={dataTestId}
           />
         );
@@ -136,14 +152,11 @@ export const IconComponent = forwardRef<IconRef, IconProps>((props, ref) => {
     getColor: () => color,
     rotate: () => {},
     setColor: () => {},
-    setSize: () => {}
+    setSize: () => {},
   }));
 
   return (
-    <TaroView
-      style={{ display: 'inline-flex' }}
-      onClick={onClick}
-    >
+    <TaroView style={{ display: 'inline-flex' }} onClick={onClick}>
       {renderIcon()}
     </TaroView>
   );

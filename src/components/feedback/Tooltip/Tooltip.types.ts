@@ -1,18 +1,18 @@
 import React from 'react';
 import type { ITouchEvent } from '@tarojs/components';
 
-export type TooltipPlacement = 
-  | 'top' 
-  | 'bottom' 
-  | 'left' 
-  | 'right' 
-  | 'topLeft' 
-  | 'topRight' 
-  | 'bottomLeft' 
-  | 'bottomRight' 
-  | 'leftTop' 
-  | 'leftBottom' 
-  | 'rightTop' 
+export type TooltipPlacement =
+  | 'top'
+  | 'bottom'
+  | 'left'
+  | 'right'
+  | 'topLeft'
+  | 'topRight'
+  | 'bottomLeft'
+  | 'bottomRight'
+  | 'leftTop'
+  | 'leftBottom'
+  | 'rightTop'
   | 'rightBottom';
 
 export type TooltipTrigger = 'hover' | 'click' | 'focus' | 'contextMenu';
@@ -135,13 +135,7 @@ export interface TooltipAnimationConfig {
 }
 
 // Tooltip 事件类型
-export type TooltipEventType = 
-  | 'mouseenter'
-  | 'mouseleave'
-  | 'click'
-  | 'focus'
-  | 'blur'
-  | 'contextmenu';
+export type TooltipEventType = 'mouseenter' | 'mouseleave' | 'click' | 'focus' | 'blur' | 'contextmenu';
 
 // Tooltip 选项类型
 export interface TooltipOptions {

@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useRef, useState, useEffect } from 'react';
+import { forwardRef, useImperativeHandle, useRef, useState, useEffect, useMemo, useCallback } from 'react';
 import { View, Text } from '@tarojs/components';
 import { calendarStyles } from './Calendar.styles';
 import type { CalendarProps, CalendarRef, CalendarDate } from './Calendar.types';
@@ -80,15 +80,28 @@ export const CalendarComponent = forwardRef<CalendarRef, CalendarProps>((props, 
     }
   }, [value]);
 
-  const getWeekDays = () => {
-    return ['日', '一', '二', '三', '四', '五', '六'];
-  };
+  // 固定的星期和月份名称，提取到组件外部避免重复创建
+  const WEEK_DAYS = ['日', '一', '二', '三', '四', '五', '六'];
+  const MONTH_NAMES = [
+    '一月',
+    '二月',
+    '三月',
+    '四月',
+    '五月',
+    '六月',
+    '七月',
+    '八月',
+    '九月',
+    '十月',
+    '十一月',
+    '十二月',
+  ];
 
-  const getMonthNames = () => {
-    return ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
-  };
+  const getWeekDays = () => WEEK_DAYS;
+  const getMonthNames = () => MONTH_NAMES;
 
-  const getDatesInMonth = (): CalendarDate[] => {
+  // 使用 useMemo 优化 getDatesInMonth 函数，只在依赖项变化时重新计算
+  const datesInMonth = useMemo(() => {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
     const today = new Date();
@@ -144,31 +157,38 @@ export const CalendarComponent = forwardRef<CalendarRef, CalendarProps>((props, 
     }
 
     return dates;
-  };
+  }, [currentDate, selectedDate, events, disabledDate]);
 
-  const handleDateClick = (date: CalendarDate) => {
-    if (date.disabled) return;
+  // 使用 useCallback 优化事件处理函数
+  const handleDateClick = useCallback(
+    (date: CalendarDate) => {
+      if (date.disabled) return;
 
-    const newDate = new Date(date.year, date.month - 1, date.day);
-    setSelectedDate(newDate);
-    onSelect?.(newDate);
-    onChange?.(newDate);
-  };
+      const newDate = new Date(date.year, date.month - 1, date.day);
+      setSelectedDate(newDate);
+      onSelect?.(newDate);
+      onChange?.(newDate);
+    },
+    [onSelect, onChange],
+  );
 
-  const handleMonthClick = (monthIndex: number) => {
-    const newDate = new Date(currentDate.getFullYear(), monthIndex, 1);
-    setCurrentDate(newDate);
-    setCurrentMode('month');
-    onChange?.(newDate);
-    onModeChange?.('month');
-  };
+  const handleMonthClick = useCallback(
+    (monthIndex: number) => {
+      const newDate = new Date(currentDate.getFullYear(), monthIndex, 1);
+      setCurrentDate(newDate);
+      setCurrentMode('month');
+      onChange?.(newDate);
+      onModeChange?.('month');
+    },
+    [currentDate, onChange, onModeChange],
+  );
 
-  const handleHeaderTitleClick = () => {
+  const handleHeaderTitleClick = useCallback(() => {
     setCurrentMode(currentMode === 'month' ? 'year' : 'month');
     onModeChange?.(currentMode === 'month' ? 'year' : 'month');
-  };
+  }, [currentMode, onModeChange]);
 
-  const handlePrevClick = () => {
+  const handlePrevClick = useCallback(() => {
     const newDate = new Date(currentDate);
     if (currentMode === 'month') {
       newDate.setMonth(newDate.getMonth() - 1);
@@ -177,9 +197,9 @@ export const CalendarComponent = forwardRef<CalendarRef, CalendarProps>((props, 
     }
     setCurrentDate(newDate);
     onChange?.(newDate);
-  };
+  }, [currentDate, currentMode, onChange]);
 
-  const handleNextClick = () => {
+  const handleNextClick = useCallback(() => {
     const newDate = new Date(currentDate);
     if (currentMode === 'month') {
       newDate.setMonth(newDate.getMonth() + 1);
@@ -188,15 +208,15 @@ export const CalendarComponent = forwardRef<CalendarRef, CalendarProps>((props, 
     }
     setCurrentDate(newDate);
     onChange?.(newDate);
-  };
+  }, [currentDate, currentMode, onChange]);
 
-  const handleTodayClick = () => {
+  const handleTodayClick = useCallback(() => {
     const today = new Date();
     setCurrentDate(today);
     setSelectedDate(today);
     setCurrentMode('month');
     onChange?.(today);
-  };
+  }, [onChange]);
 
   const renderDateCell = (date: CalendarDate) => {
     if (dateRender) {
@@ -242,7 +262,6 @@ export const CalendarComponent = forwardRef<CalendarRef, CalendarProps>((props, 
   };
 
   const renderMonthView = () => {
-    const dates = getDatesInMonth();
     const weekDays = getWeekDays();
 
     return (
@@ -254,7 +273,9 @@ export const CalendarComponent = forwardRef<CalendarRef, CalendarProps>((props, 
             </View>
           ))}
         </View>
-        <View style={calendarStyles['dateGrid'] ?? {}}>{dates.map((date) => renderDateCell(date))}</View>
+        <View style={calendarStyles['dateGrid'] ?? {}}>
+          {datesInMonth.map((date: CalendarDate) => renderDateCell(date))}
+        </View>
       </>
     );
   };

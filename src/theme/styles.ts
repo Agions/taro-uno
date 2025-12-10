@@ -397,7 +397,7 @@ export const styleUtils = (theme?: ThemeConfig): StyleUtils => {
     const { defaultTheme } = require('./defaults');
     _defaultStyleUtils = createStyleUtils(defaultTheme);
   }
-  return theme ? createStyleUtils(theme) : (_defaultStyleUtils!);
+  return theme ? createStyleUtils(theme) : _defaultStyleUtils!;
 };
 
 export default createStyleUtils;

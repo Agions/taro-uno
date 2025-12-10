@@ -3,15 +3,8 @@
  * 提供高性能的大数据量列表渲染
  */
 
-import React, {
-  useRef,
-  useEffect,
-  useMemo,
-  useCallback,
-  useState,
-  ReactNode,
-  CSSProperties,
-} from 'react';
+import React, { useRef, useEffect, useMemo, useCallback, useState, ReactNode, CSSProperties } from 'react';
+import { View, ScrollView } from '@tarojs/components';
 
 export interface VirtualListProps<T = any> {
   /**
@@ -123,108 +116,102 @@ interface PositionItem {
   data: any;
 }
 
-export const VirtualList = React.forwardRef<HTMLDivElement, VirtualListProps<any>>(
-  (props, ref) => {
-    const {
-      data,
-      renderItem,
-      itemHeight,
-      height,
-      width = '100%',
-      itemKey,
-      overscan = 3,
-      dynamicHeight = false,
-      scrollToIndex,
-      scrollBehavior = 'auto',
-      empty,
-      loading,
-      isLoading = false,
-      onEndReached,
-      onEndReachedThreshold = 200,
-      style,
-      className,
-      
-      itemClassName,
-      onScroll,
-    } = props;
+export const VirtualList = React.forwardRef<any, VirtualListProps<any>>((props, ref) => {
+  const {
+    data,
+    renderItem,
+    itemHeight,
+    height,
+    width = '100%',
+    itemKey,
+    overscan = 3,
+    dynamicHeight = false,
+    scrollToIndex,
+    scrollBehavior = 'auto',
+    empty,
+    loading,
+    isLoading = false,
+    onEndReached,
+    onEndReachedThreshold = 200,
+    style,
+    className,
 
-    const [scrollTop, setScrollTop] = useState(0);
-    
-    const [positions, setPositions] = useState<PositionItem[]>([]);
+    itemClassName,
+    onScroll,
+  } = props;
 
-    const containerRef = useRef<HTMLDivElement>(null);
-    const contentRef = useRef<HTMLDivElement>(null);
-    const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [scrollTop, setScrollTop] = useState(0);
 
-    // 计算位置信息
-    const calculatePositions = useCallback(() => {
-      if (!dynamicHeight && typeof itemHeight === 'number') {
-        return data.map((item, index) => ({
-          top: index * itemHeight,
-          height: itemHeight,
-          bottom: (index + 1) * itemHeight,
-          index,
-          data: item,
-        }));
-      }
+  const [positions, setPositions] = useState<PositionItem[]>([]);
 
-      // 动态高度计算
-      const newPositions: PositionItem[] = [];
-      let top = 0;
+  const containerRef = useRef<any>(null);
+  const contentRef = useRef<any>(null);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-      data.forEach((item, index) => {
-        const height = typeof itemHeight === 'function' ? itemHeight(index) : itemHeight;
-        newPositions.push({
-          top,
-          height,
-          bottom: top + height,
-          index,
-          data: item,
-        });
-        top += height;
+  // 计算位置信息
+  const calculatePositions = useCallback(() => {
+    if (!dynamicHeight && typeof itemHeight === 'number') {
+      return data.map((item, index) => ({
+        top: index * itemHeight,
+        height: itemHeight,
+        bottom: (index + 1) * itemHeight,
+        index,
+        data: item,
+      }));
+    }
+
+    // 动态高度计算
+    const newPositions: PositionItem[] = [];
+    let top = 0;
+
+    data.forEach((item, index) => {
+      const height = typeof itemHeight === 'function' ? itemHeight(index) : itemHeight;
+      newPositions.push({
+        top,
+        height,
+        bottom: top + height,
+        index,
+        data: item,
       });
+      top += height;
+    });
 
-      return newPositions;
-    }, [data, itemHeight, dynamicHeight]);
+    return newPositions;
+  }, [data, itemHeight, dynamicHeight]);
 
-    // 初始化位置
-    useEffect(() => {
-      setPositions(calculatePositions());
-    }, [calculatePositions]);
+  // 初始化位置
+  useEffect(() => {
+    setPositions(calculatePositions());
+  }, [calculatePositions]);
 
-    
+  // 计算可见范围
+  const visibleRange = useMemo(() => {
+    if (!positions.length) return { start: 0, end: 0 };
 
-    // 计算可见范围
-    const visibleRange = useMemo(() => {
-      if (!positions.length) return { start: 0, end: 0 };
+    const containerHeight = typeof height === 'number' ? height : containerRef.current?.clientHeight || 0;
+    const startIndex = positions.findIndex((item) => item.bottom > scrollTop);
+    const endIndex = positions.findIndex((item) => item.top > scrollTop + containerHeight);
 
-      const containerHeight = typeof height === 'number' ? height : containerRef.current?.clientHeight || 0;
-      const startIndex = positions.findIndex(item => item.bottom > scrollTop);
-      const endIndex = positions.findIndex(item => item.top > scrollTop + containerHeight);
+    return {
+      start: Math.max(0, startIndex - overscan),
+      end: Math.min(positions.length - 1, endIndex + overscan),
+    };
+  }, [scrollTop, positions, height, overscan]);
 
-      return {
-        start: Math.max(0, startIndex - overscan),
-        end: Math.min(positions.length - 1, endIndex + overscan),
-      };
-    }, [scrollTop, positions, height, overscan]);
+  // 总高度
+  const totalHeight = useMemo(() => {
+    if (!positions.length) return 0;
+    const lastItem = positions[positions.length - 1];
+    return lastItem ? lastItem.bottom : 0;
+  }, [positions]);
 
-    // 总高度
-    const totalHeight = useMemo(() => {
-      if (!positions.length) return 0;
-      const lastItem = positions[positions.length - 1];
-      return lastItem ? lastItem.bottom : 0;
-    }, [positions]);
-
-    // 处理滚动
-    const handleScroll = useCallback(() => {
-      if (!containerRef.current) return;
-
-      const container = containerRef.current;
-      const newScrollTop = container.scrollTop;
-      const newScrollLeft = container.scrollLeft;
+  // 处理滚动
+  const handleScroll = useCallback(
+    (e: any) => {
+      const newScrollTop = e.detail.scrollTop;
+      const newScrollLeft = e.detail.scrollLeft;
 
       setScrollTop(newScrollTop);
-      
 
       // 清除之前的超时
       if (scrollTimeoutRef.current) {
@@ -241,127 +228,122 @@ export const VirtualList = React.forwardRef<HTMLDivElement, VirtualListProps<any
 
       // 检查是否到达底部
       if (onEndReached) {
-        const containerHeight = container.clientHeight;
-        const scrollHeight = container.scrollHeight;
-        const isNearBottom = scrollHeight - (newScrollTop + containerHeight) < onEndReachedThreshold;
+        const containerHeight = typeof height === 'number' ? height : containerRef.current?.clientHeight || 0;
+        const isNearBottom = totalHeight - (newScrollTop + containerHeight) < onEndReachedThreshold;
 
         if (isNearBottom && !isLoading) {
           onEndReached();
         }
       }
-    }, [onEndReached, onEndReachedThreshold, isLoading, onScroll]);
+    },
+    [onEndReached, onEndReachedThreshold, isLoading, onScroll, height, totalHeight],
+  );
 
-    // 滚动到指定索引
-    useEffect(() => {
-      if (scrollToIndex !== undefined && containerRef.current) {
-        const position = positions[scrollToIndex];
-        if (position) {
-          containerRef.current.scrollTo({
-            top: position.top,
-            behavior: scrollBehavior,
-          });
-        }
-      }
-    }, [scrollToIndex, positions, scrollBehavior]);
-
-    // 清理超时
-    useEffect(() => {
-      return () => {
-        if (scrollTimeoutRef.current) {
-          clearTimeout(scrollTimeoutRef.current);
-        }
-      };
-    }, []);
-
-    // 渲染项目
-    const renderItems = useCallback(() => {
-      if (!positions.length) return null;
-
-      const items: ReactNode[] = [];
-      const { start, end } = visibleRange;
-
-      for (let i = start; i <= end; i++) {
-        const position = positions[i];
-        if (!position) continue;
-
-        const key = typeof itemKey === 'function' ? itemKey(position.data, i) : position.data[itemKey];
-        const itemStyle: CSSProperties = {
-          position: 'absolute',
+  // 滚动到指定索引
+  useEffect(() => {
+    if (scrollToIndex !== undefined && containerRef.current) {
+      const position = positions[scrollToIndex];
+      if (position) {
+        containerRef.current.scrollTo({
           top: position.top,
-          left: 0,
-          width: '100%',
-          height: position.height,
-          ...props.itemStyle,
-        };
-
-        items.push(
-          <div
-            key={key}
-            className={itemClassName}
-            style={itemStyle}
-            data-index={i}
-          >
-            {renderItem(position.data, i)}
-          </div>
-        );
+          behavior: scrollBehavior,
+        });
       }
+    }
+  }, [scrollToIndex, positions, scrollBehavior]);
 
-      return items;
-    }, [positions, visibleRange, itemKey, renderItem, itemClassName, props.itemStyle]);
-
-    // 渲染内容
-    const renderContent = () => {
-      if (isLoading && data.length === 0) {
-        return loading || <div className="flex items-center justify-center h-full">加载中...</div>;
+  // 清理超时
+  useEffect(() => {
+    return () => {
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
       }
-
-      if (!isLoading && data.length === 0) {
-        return empty || <div className="flex items-center justify-center h-full">暂无数据</div>;
-      }
-
-      return (
-        <>
-          {renderItems()}
-          {isLoading && data.length > 0 && (
-            <div className="flex items-center justify-center p-4">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-            </div>
-          )}
-        </>
-      );
     };
+  }, []);
+
+  // 渲染项目
+  const renderItems = useCallback(() => {
+    if (!positions.length) return null;
+
+    const items: ReactNode[] = [];
+    const { start, end } = visibleRange;
+
+    for (let i = start; i <= end; i++) {
+      const position = positions[i];
+      if (!position) continue;
+
+      const key = typeof itemKey === 'function' ? itemKey(position.data, i) : position.data[itemKey];
+      const itemStyle: CSSProperties = {
+        position: 'absolute',
+        top: position.top,
+        left: 0,
+        width: '100%',
+        height: position.height,
+        ...props.itemStyle,
+      };
+
+      items.push(
+        <View key={key} className={itemClassName} style={itemStyle} data-index={i}>
+          {renderItem(position.data, i)}
+        </View>,
+      );
+    }
+
+    return items;
+  }, [positions, visibleRange, itemKey, renderItem, itemClassName, props.itemStyle]);
+
+  // 渲染内容
+  const renderContent = () => {
+    if (isLoading && data.length === 0) {
+      return loading || <View className="flex items-center justify-center h-full">加载中...</View>;
+    }
+
+    if (!isLoading && data.length === 0) {
+      return empty || <View className="flex items-center justify-center h-full">暂无数据</View>;
+    }
 
     return (
-      <div
-        ref={(node) => {
-          if (typeof ref === 'function') {
-            ref(node);
-          } else if (ref) {
-            ref.current = node;
-          }
-          containerRef.current = node;
-        }}
-        className={`relative overflow-auto ${className || ''}`}
-        style={{
-          height,
-          width,
-          ...style,
-        }}
-        onScroll={handleScroll}
-      >
-        <div
-          ref={contentRef}
-          style={{
-            height: totalHeight,
-            position: 'relative',
-          }}
-        >
-          {renderContent()}
-        </div>
-      </div>
+      <>
+        {renderItems()}
+        {isLoading && data.length > 0 && (
+          <View className="flex items-center justify-center p-4">
+            <View className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></View>
+          </View>
+        )}
+      </>
     );
-  }
-);
+  };
+
+  return (
+    <ScrollView
+      ref={(node) => {
+        if (typeof ref === 'function') {
+          ref(node);
+        } else if (ref) {
+          ref.current = node;
+        }
+        containerRef.current = node;
+      }}
+      className={`relative ${className || ''}`}
+      style={{
+        height,
+        width,
+        ...style,
+      }}
+      onScroll={handleScroll}
+    >
+      <View
+        ref={contentRef}
+        style={{
+          height: totalHeight,
+          position: 'relative',
+        }}
+      >
+        {renderContent()}
+      </View>
+    </ScrollView>
+  );
+});
 
 VirtualList.displayName = 'VirtualList';
 

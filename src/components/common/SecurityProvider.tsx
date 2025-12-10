@@ -63,24 +63,8 @@ export const SecurityProvider: React.FC<SecurityProviderProps> = ({
     logError(error);
   };
 
-  // 全局 fetch 拦截添加安全头部
-  useEffect(() => {
-    if (typeof window === 'undefined' || !window.fetch) {
-      return;
-    }
-
-    const originalFetch = window.fetch;
-    window.fetch = async (input: any, init?: RequestInit) => {
-      if (init && init.headers) {
-        init.headers = addSecurityHeaders(init.headers as Record<string, string>);
-      }
-      return originalFetch(input, init);
-    };
-
-    return () => {
-      window.fetch = originalFetch;
-    };
-  }, []);
+  // 在 Taro.js 环境中，安全头部由统一请求客户端处理
+  // 不再需要拦截 window.fetch，因为 Taro.js 使用 Taro.request API
 
   // 设置OWASP错误钩子
   useEffect(() => {
