@@ -78,7 +78,6 @@ coverage/
 # Package manager artifacts
 pnpm-lock.yaml
 yarn.lock
-package-lock.json
 
 # Temporary files
 *.tmp
