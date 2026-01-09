@@ -48,7 +48,7 @@ export default defineConfig(({ mode }) => {
         entry: path.resolve(__dirname, 'src/index.ts'),
         name: 'TaroUnoUI',
         formats: ['es', 'cjs'],
-        fileName: (format) => `@taro-uno-ui.${format}.js`
+        fileName: (format) => `@taro-uno-ui.${format}.js`,
       } : undefined,
 
       rollupOptions: {
@@ -127,7 +127,7 @@ export default defineConfig(({ mode }) => {
           inlineDynamicImports: false,
           globals: isLib ? {
             react: 'React',
-            '@tarojs/components': 'TaroComponents'
+            '@tarojs/components': 'TaroComponents',
           } : undefined,
         },
         external: isLib ? ['react', 'react-dom', '@tarojs/components', '@tarojs/taro'] : [],
@@ -183,7 +183,7 @@ export default defineConfig(({ mode }) => {
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: `@import "@/theme/design-tokens.scss";`,
+          additionalData: '@import "@/theme/design-tokens.scss";',
           charset: false,
         },
       },

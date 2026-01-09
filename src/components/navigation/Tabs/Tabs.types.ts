@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 // import { View } from '@tarojs/components'; // Commented out - unused
 import { Size } from '../../../types';
-import { BaseComponentProps as StandardBaseComponentProps } from '../../../types/component-props';
+import { BaseProps } from '../../../types/component';
 
 /** Tab位置 */
 export type TabPosition = 'top' | 'right' | 'bottom' | 'left';
@@ -10,7 +10,7 @@ export type TabPosition = 'top' | 'right' | 'bottom' | 'left';
 export type TabType = 'line' | 'card' | 'segment';
 
 /** Tab尺寸 */
-export type TabSize = Size | 'small' | 'medium' | 'large';
+export type TabSize = Size | 'default' | 'small' | 'medium' | 'large';
 
 /** Tab项接口 */
 export interface TabItem {
@@ -53,7 +53,7 @@ export interface TabsRef {
 }
 
 /** Tabs组件属性 */
-export interface TabsProps extends StandardBaseComponentProps {
+export interface TabsProps extends BaseProps {
   /** Tab项列表 */
   items: TabItem[];
   /** 激活的键值 */
@@ -97,7 +97,7 @@ export interface TabsProps extends StandardBaseComponentProps {
 }
 
 /** TabPane组件属性 */
-export interface TabPaneProps extends StandardBaseComponentProps {
+export interface TabPaneProps extends BaseProps {
   /** Tab键值 */
   tabKey: string;
   /** Tab标题 */

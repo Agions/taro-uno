@@ -2,7 +2,7 @@ import { forwardRef, useImperativeHandle, useRef, useState, useEffect, useMemo, 
 import { View, Text } from '@tarojs/components';
 import { calendarStyles } from './Calendar.styles';
 import type { CalendarProps, CalendarRef, CalendarDate } from './Calendar.types';
-import { useTheme } from '../../common/ThemeProvider';
+import { useThemeContext as useTheme } from '../../../providers/ThemeProvider';
 
 /** 日历组件 */
 export const CalendarComponent = forwardRef<CalendarRef, CalendarProps>((props, ref) => {

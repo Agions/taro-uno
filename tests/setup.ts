@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 (globalThis as any).ENABLE_INNER_HTML = true;
 (globalThis as any).ENABLE_ADJACENT_HTML = true;
 (globalThis as any).ENABLE_CLONE_NODE = true;
@@ -73,7 +74,7 @@ const createComponent = (tag: string) => {
   const Comp = React.forwardRef<any, Record<string, any>>((props, ref) => {
     const allowed = filterProps(props);
     if ((tag === 'input' || tag === 'textarea' || tag === 'select') && 'value' in allowed && !allowed.onChange) {
-      allowed.onChange = () => {};
+      allowed.onChange = () => { };
     }
     return React.createElement(tag, { ...allowed, ref }, allowed.children as React.ReactNode);
   });

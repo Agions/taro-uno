@@ -8,12 +8,12 @@ export type IconSource =
   | string // URL或字体图标名称
   | ReactNode // 自定义React节点
   | {
-      // SVG图标数据
-      viewBox?: string;
-      path?: string;
-      paths?: string[];
-      d?: string;
-    };
+    // SVG图标数据
+    viewBox?: string;
+    path?: string;
+    paths?: string[];
+    d?: string;
+  };
 
 /** 图标尺寸 */
 export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl';
@@ -36,7 +36,7 @@ export type IconNativeProps = SVGAttributes<SVGElement>;
 /** 图标组件属性接口 */
 export interface IconProps extends Omit<IconNativeProps, 'size' | 'color'> {
   /** 图标源 */
-  source: IconSource;
+  source?: IconSource;
   /** 图标类型 */
   type?: IconType;
   /** 图标尺寸 */
@@ -156,15 +156,15 @@ export interface IconUtils {
   /** 格式化图标状态 */
   formatIconStatus: (_status: IconStatus) => string;
   /** 解析图标源 */
-  parseIconSource: (_source: IconSource) => { type: IconType; data: any };
+  parseIconSource: (_source: IconSource) => { type: IconType; data: unknown };
   /** 生成SVG路径 */
-  generateSVGPath: (_data: any) => ReactNode;
+  generateSVGPath: (_data: unknown) => ReactNode;
   /** 生成字体图标 */
-  generateFontIcon: (_data: any) => ReactNode;
+  generateFontIcon: (_data: unknown) => ReactNode;
   /** 生成图片图标 */
-  generateImageIcon: (_data: any) => ReactNode;
+  generateImageIcon: (_data: unknown) => ReactNode;
   /** 生成自定义图标 */
-  generateCustomIcon: (_data: any) => ReactNode;
+  generateCustomIcon: (_data: unknown) => ReactNode;
   /** 检测图标类型 */
   detectIconType: (_source: IconSource) => IconType;
 }

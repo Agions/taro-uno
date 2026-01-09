@@ -1,51 +1,83 @@
-import type { CSSProperties, ReactNode } from 'react';
+/**
+ * Button 组件类型定义
+ * 继承 InteractiveProps，移除重复类型定义
+ * @module components/basic/Button/Button.types
+ */
+
+import type { ReactNode } from 'react';
 import type { ITouchEvent } from '@tarojs/components';
+import type { InteractiveProps } from '../../../types/component';
+import type { Status, Shape } from '../../../types/common';
 
-/** 按钮类型 */
-export type ButtonType = 'default' | 'primary' | 'success' | 'warning' | 'danger';
+// ==================== Button Props ====================
 
-/** 按钮尺寸 */
-export type ButtonSize = 'sm' | 'md' | 'lg';
+/**
+ * Button 组件 Props
+ * @description 继承 InteractiveProps，包含 className, style, size, variant, disabled, loading
+ */
+export interface ButtonProps extends InteractiveProps {
+  /**
+   * 按钮类型/状态
+   * @description 控制按钮的语义颜色
+   * @default 'default'
+   */
+  type?: Status;
 
-/** 按钮变体 */
-export type ButtonVariant = 'solid' | 'outline' | 'ghost' | 'text';
+  /**
+   * 按钮形状
+   * @description 控制按钮的边角形状
+   * @default 'default'
+   */
+  shape?: Shape;
 
-/** 按钮形状 */
-export type ButtonShape = 'default' | 'round' | 'circle';
-
-/** 按钮状态 */
-export type ButtonStatus = 'default' | 'primary' | 'success' | 'warning' | 'danger' | 'disabled' | 'loading';
-
-export interface ButtonProps {
-  /** 按钮类型 */
-  type?: ButtonType;
-  /** 按钮尺寸 */
-  size?: ButtonSize;
-  /** 按钮变体 */
-  variant?: ButtonVariant;
-  /** 按钮形状 */
-  shape?: ButtonShape;
-  /** 是否禁用 */
-  disabled?: boolean;
-  /** 是否加载中 */
-  loading?: boolean;
-  /** 子节点 */
-  children?: ReactNode;
-  /** 图标 */
-  icon?: ReactNode;
-  /** 点击事件 */
-  onClick?: (_event: ITouchEvent) => void;
-  /** 自定义样式 */
-  style?: CSSProperties;
-  /** 自定义类名 */
-  className?: string;
-  /** 是否块级显示 */
+  /**
+   * 是否块级显示
+   * @description 块级按钮会占满父容器宽度
+   * @default false
+   */
   block?: boolean;
-  /** 无障碍标签 */
+
+  /**
+   * 图标
+   * @description 按钮内显示的图标
+   */
+  icon?: ReactNode;
+
+  /**
+   * 图标位置
+   * @description 图标相对于文字的位置
+   * @default 'left'
+   */
+  iconPosition?: 'left' | 'right';
+
+  /**
+   * 子元素
+   * @description 按钮内容
+   */
+  children?: ReactNode;
+
+  /**
+   * 点击事件回调
+   * @description 点击按钮时触发
+   */
+  onClick?: (event: ITouchEvent) => void;
+
+  /**
+   * 无障碍标签
+   * @description 用于屏幕阅读器的描述文本
+   */
   accessibilityLabel?: string;
-  /** 无障碍角色 */
+
+  /**
+   * 无障碍角色
+   * @description 用于屏幕阅读器的角色标识
+   */
   accessibilityRole?: string;
-  /** 无障碍状态 */
+
+  /**
+   * 无障碍状态
+   * @description 用于屏幕阅读器的状态信息
+   */
   accessibilityState?: {
     disabled?: boolean;
     busy?: boolean;
@@ -53,29 +85,40 @@ export interface ButtonProps {
   };
 }
 
+// ==================== Button Ref ====================
+
+/**
+ * Button 组件 Ref 类型
+ * @description 通过 ref 暴露的方法和属性
+ */
 export interface ButtonRef {
-  /** DOM 元素 */
-  element: any;
-  /** 获取按钮类型 */
-  getType: () => ButtonType;
-  /** 获取按钮尺寸 */
-  getSize: () => ButtonSize;
-  /** 获取按钮状态 */
-  getStatus: () => ButtonStatus;
-  /** 检查是否禁用 */
+  /**
+   * DOM 元素引用
+   */
+  element: HTMLButtonElement | null;
+
+  /**
+   * 获取按钮类型
+   */
+  getType: () => Status;
+
+  /**
+   * 获取按钮尺寸
+   */
+  getSize: () => 'sm' | 'md' | 'lg';
+
+  /**
+   * 检查是否禁用
+   */
   isDisabled: () => boolean;
-  /** 检查是否加载中 */
+
+  /**
+   * 检查是否加载中
+   */
   isLoading: () => boolean;
-  /** 禁用按钮 */
-  disable: () => void;
-  /** 启用按钮 */
-  enable: () => void;
-  /** 设置加载状态 */
-  setLoading: (_loading: boolean) => void;
-  /** 设置按钮类型 */
-  setType: (_type: ButtonType) => void;
-  /** 设置按钮尺寸 */
-  setSize: (_size: ButtonSize) => void;
-  /** 点击按钮 */
+
+  /**
+   * 触发点击
+   */
   click: () => void;
 }

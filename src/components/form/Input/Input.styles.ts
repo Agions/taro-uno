@@ -1,445 +1,548 @@
-import type { InputProps, InputSize, InputVariant, InputStatus, InputStyleConfig } from './Input.types';
+/**
+ * Input 组件样式定义
+ * 使用 ThemeConfig 创建样式，继承通用样式
+ * @module components/form/Input/Input.styles
+ */
 
-/** 样式工具类 */
-export class InputStyles {
-  /** 获取平台前缀 */
-  private static getPlatformPrefix(): string {
-    return 'taro-uno-input';
-  }
+import { mergeStyles } from '../../../theme/styles/createStyles';
+import { flex, itemsCenter } from '../../../theme/styles/common/layout';
+import { cursorText, disabled as disabledStyle, focusRingPrimary, focusRingError } from '../../../theme/styles/common/interaction';
+import type { StyleObject } from '../../../types/style';
+import type { ThemeConfig } from '../../../theme/types';
 
-  /** 尺寸映射 */
-  static readonly SIZE_MAP: Record<
-    InputSize,
-    { fontSize: number; padding: string; height: number; borderRadius: number }
-  > = {
-    xs: { fontSize: 20, padding: '8px 12px', height: 56, borderRadius: 4 },
-    sm: { fontSize: 24, padding: '12px 16px', height: 64, borderRadius: 6 },
-    md: { fontSize: 28, padding: '16px 20px', height: 72, borderRadius: 8 },
-    lg: { fontSize: 32, padding: '20px 24px', height: 80, borderRadius: 10 },
-    xl: { fontSize: 36, padding: '24px 32px', height: 88, borderRadius: 12 },
+// ==================== 基础样式 ====================
+
+/** 输入框基础样式 */
+const inputBase: StyleObject = {
+  ...cursorText,
+  boxSizing: 'border-box',
+  outline: 'none',
+  border: '1px solid transparent',
+  transition: 'all 0.2s ease',
+  width: '100%',
+  fontFamily: 'inherit',
+};
+
+/** 输入框容器基础样式 */
+const containerBase: StyleObject = {
+  display: 'flex',
+  flexDirection: 'column',
+  position: 'relative',
+};
+
+/** 输入框包装器基础样式 */
+const wrapperBase: StyleObject = {
+  ...flex,
+  ...itemsCenter,
+  position: 'relative',
+  width: '100%',
+  transition: 'all 0.2s ease',
+};
+
+// ==================== 子元素样式 ====================
+
+/** 前缀样式 */
+export const prefixStyle: StyleObject = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: '#6b7280',
+  flexShrink: 0,
+};
+
+/** 后缀样式 */
+export const suffixStyle: StyleObject = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: '#6b7280',
+  flexShrink: 0,
+  gap: 4,
+};
+
+/** 标签样式 */
+export const labelStyle: StyleObject = {
+  fontWeight: 500,
+  marginBottom: 8,
+};
+
+/** 辅助文本样式 */
+export const helperTextStyle: StyleObject = {
+  marginTop: 4,
+};
+
+/** 错误文本样式 */
+export const errorTextStyle: StyleObject = {
+  marginTop: 4,
+  color: '#ef4444',
+};
+
+/** 计数器样式 */
+export const counterStyle: StyleObject = {
+  textAlign: 'right',
+  marginTop: 4,
+  color: '#9ca3af',
+};
+
+/** 清除按钮样式 */
+export const clearButtonStyle: StyleObject = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: 20,
+  height: 20,
+  borderRadius: '50%',
+  backgroundColor: '#e5e7eb',
+  color: '#6b7280',
+  fontSize: 12,
+  cursor: 'pointer',
+  transition: 'all 0.2s ease',
+  flexShrink: 0,
+};
+
+/** 密码切换按钮样式 */
+export const passwordToggleStyle: StyleObject = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: 24,
+  height: 24,
+  color: '#6b7280',
+  cursor: 'pointer',
+  transition: 'all 0.2s ease',
+  flexShrink: 0,
+};
+
+// ==================== 样式计算函数 ====================
+
+/** 获取尺寸样式 */
+export function getSizeStyle(size: string, theme: ThemeConfig): StyleObject {
+  const sizeMap: Record<string, StyleObject> = {
+    sm: {
+      padding: '6px 12px',
+      fontSize: theme.typography.fontSize.sm,
+      height: 32,
+      borderRadius: theme.borderRadius.sm,
+    },
+    md: {
+      padding: '8px 16px',
+      fontSize: theme.typography.fontSize.base,
+      height: 40,
+      borderRadius: theme.borderRadius.md,
+    },
+    lg: {
+      padding: '12px 20px',
+      fontSize: theme.typography.fontSize.lg,
+      height: 48,
+      borderRadius: theme.borderRadius.lg,
+    },
   };
-
-  /** 变体样式映射 */
-  static readonly VARIANT_STYLES: Record<
-    InputVariant,
-    { backgroundColor: string; borderColor: string; borderWidth: number; borderBottomWidth?: number }
-  > = {
-    outlined: { backgroundColor: 'transparent', borderColor: '#e5e7eb', borderWidth: 1 },
-    filled: { backgroundColor: '#f9fafb', borderColor: '#e5e7eb', borderWidth: 1 },
-    underlined: { backgroundColor: 'transparent', borderColor: '#e5e7eb', borderWidth: 0, borderBottomWidth: 1 },
-  };
-
-  /** 状态颜色映射 */
-  static readonly STATUS_COLORS: Record<
-    InputStatus,
-    { color: string; backgroundColor?: string; borderColor?: string; icon?: string }
-  > = {
-    normal: { color: '#111827', borderColor: '#e5e7eb' },
-    error: { color: '#ef4444', borderColor: '#ef4444', backgroundColor: '#fef2f2', icon: '❌' },
-    warning: { color: '#f59e0b', borderColor: '#f59e0b', backgroundColor: '#fffbeb', icon: '⚠️' },
-    success: { color: '#22c55e', borderColor: '#22c55e', backgroundColor: '#f0fdf4', icon: '✅' },
-    disabled: { color: '#9ca3af', borderColor: '#e5e7eb', backgroundColor: '#f9fafb' },
-    loading: { color: '#6b7280', borderColor: '#e5e7eb', backgroundColor: '#f9fafb', icon: '⏳' },
-  };
-
-  /** 生成输入框类名 */
-  static getClassName(props: Partial<InputProps>): string {
-    const prefix = this.getPlatformPrefix();
-    const {
-      size = 'md',
-      variant = 'outlined',
-      status = 'normal',
-      disabled = false,
-      readonly = false,
-      bordered = true,
-      multiline = false,
-      clearable = false,
-      className = '',
-    } = props;
-
-    const classes = [
-      prefix,
-      `${prefix}--${size}`,
-      `${prefix}--${variant}`,
-      `${prefix}--${status}`,
-      disabled && `${prefix}--disabled`,
-      readonly && `${prefix}--readonly`,
-      bordered && `${prefix}--bordered`,
-      multiline && `${prefix}--multiline`,
-      clearable && `${prefix}--clearable`,
-      className,
-    ].filter(Boolean);
-
-    return classes.join(' ');
-  }
-
-  /** 生成输入框样式 */
-  static getStyle(props: Partial<InputProps>): React.CSSProperties {
-    const {
-      size = 'md',
-      variant = 'outlined',
-      status = 'normal',
-      disabled = false,
-      readonly = false,
-      style = {},
-    } = props;
-
-    const sizeStyles = this.SIZE_MAP[size];
-    const variantStyles = this.VARIANT_STYLES[variant];
-    const statusStyles = this.STATUS_COLORS[status];
-
-    const baseStyle: React.CSSProperties = {
-      ...sizeStyles,
-      backgroundColor: statusStyles['backgroundColor'] || variantStyles['backgroundColor'],
-      borderColor: statusStyles['borderColor'] || variantStyles['borderColor'],
-      borderWidth: variantStyles['borderWidth'],
-      color: statusStyles['color'],
-      opacity: disabled ? 0.5 : 1,
-      cursor: disabled ? 'not-allowed' : readonly ? 'default' : 'text',
-      transition: 'all 0.2s ease-in-out',
-      boxSizing: 'border-box',
-      outline: 'none',
-      ...style,
-    };
-
-    // 处理下划线变体的特殊样式
-    if (variant === 'underlined') {
-      baseStyle.borderLeftWidth = 0;
-      baseStyle.borderRightWidth = 0;
-      baseStyle.borderTopWidth = 0;
-      baseStyle.borderRadius = 0;
-      baseStyle.borderBottomWidth = variantStyles['borderBottomWidth'] || 1;
-    }
-
-    return baseStyle;
-  }
-
-  /** 生成输入框容器样式 */
-  static getContainerStyle(props: Partial<InputProps>): React.CSSProperties {
-    const { size = 'md', block = false, style = {} } = props;
-
-    const sizeStyles = this.SIZE_MAP[size];
-
-    return {
-      position: 'relative',
-      display: 'flex',
-      flexDirection: 'column',
-      width: block ? '100%' : 'auto',
-      minWidth: sizeStyles['height'] * 3,
-      ...style,
-    };
-  }
-
-  /** 生成输入框包装器样式 */
-  static getWrapperStyle(props: Partial<InputProps>): React.CSSProperties {
-    const {
-      size = 'md',
-      status = 'normal',
-      disabled = false,
-      readonly: _readonly = false,
-      bordered = true,
-      style = {},
-    } = props;
-
-    const sizeStyles = this.SIZE_MAP[size];
-    const statusStyles = this.STATUS_COLORS[status];
-
-    return {
-      position: 'relative',
-      display: 'flex',
-      alignItems: 'center',
-      width: '100%',
-      height: sizeStyles['height'],
-      borderRadius: sizeStyles['borderRadius'],
-      border: bordered ? '1px solid' : 'none',
-      borderColor: statusStyles['borderColor'],
-      backgroundColor: statusStyles['backgroundColor'] || 'transparent',
-      opacity: disabled ? 0.5 : 1,
-      transition: 'all 0.2s ease-in-out',
-      ...style,
-    };
-  }
-
-  /** 生成前缀样式 */
-  static getPrefixStyle(props: Partial<InputProps>): React.CSSProperties {
-    const { size = 'md', disabled = false, style = {} } = props;
-
-    const sizeStyles = this.SIZE_MAP[size];
-
-    return {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      paddingLeft: sizeStyles['padding'].split(' ')[0],
-      paddingRight: sizeStyles['padding'].split(' ')[1],
-      height: '100%',
-      color: disabled ? '#9ca3af' : '#6b7280',
-      fontSize: sizeStyles['fontSize'],
-      ...style,
-    };
-  }
-
-  /** 生成后缀样式 */
-  static getSuffixStyle(props: Partial<InputProps>): React.CSSProperties {
-    const { size = 'md', disabled = false, style = {} } = props;
-
-    const sizeStyles = this.SIZE_MAP[size];
-
-    return {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      paddingLeft: sizeStyles['padding'].split(' ')[1],
-      paddingRight: sizeStyles['padding'].split(' ')[0],
-      height: '100%',
-      color: disabled ? '#9ca3af' : '#6b7280',
-      fontSize: sizeStyles['fontSize'],
-      ...style,
-    };
-  }
-
-  /** 生成标签样式 */
-  static getLabelStyle(props: Partial<InputProps>): React.CSSProperties {
-    const { size = 'md', disabled = false, style = {} } = props;
-
-    const sizeStyles = this.SIZE_MAP[size];
-
-    return {
-      fontSize: sizeStyles['fontSize'],
-      fontWeight: 500,
-      color: disabled ? '#9ca3af' : '#374151',
-      marginBottom: 8,
-      ...style,
-    };
-  }
-
-  /** 生成辅助文本样式 */
-  static getHelperTextStyle(props: Partial<InputProps>): React.CSSProperties {
-    const { size = 'md', status = 'normal', style = {} } = props;
-
-    const sizeStyles = this.SIZE_MAP[size];
-    const statusStyles = this.STATUS_COLORS[status];
-
-    return {
-      fontSize: sizeStyles['fontSize'] * 0.85,
-      color: statusStyles['color'],
-      marginTop: 4,
-      ...style,
-    };
-  }
-
-  /** 生成错误文本样式 */
-  static getErrorTextStyle(props: Partial<InputProps>): React.CSSProperties {
-    const { size = 'md', style = {} } = props;
-
-    const sizeStyles = this.SIZE_MAP[size];
-
-    return {
-      fontSize: sizeStyles['fontSize'] * 0.85,
-      color: '#ef4444',
-      marginTop: 4,
-      ...style,
-    };
-  }
-
-  /** 生成计数器样式 */
-  static getCounterStyle(props: Partial<InputProps>): React.CSSProperties {
-    const { size = 'md', style = {} } = props;
-
-    const sizeStyles = this.SIZE_MAP[size];
-
-    return {
-      fontSize: sizeStyles['fontSize'] * 0.75,
-      color: '#9ca3af',
-      textAlign: 'right',
-      marginTop: 4,
-      ...style,
-    };
-  }
-
-  /** 生成清除按钮样式 */
-  static getClearButtonStyle(props: Partial<InputProps>): React.CSSProperties {
-    const { size = 'md', style = {} } = props;
-
-    const sizeStyles = this.SIZE_MAP[size];
-
-    return {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      width: sizeStyles['fontSize'] * 1.5,
-      height: sizeStyles['fontSize'] * 1.5,
-      borderRadius: '50%',
-      backgroundColor: '#e5e7eb',
-      color: '#6b7280',
-      fontSize: sizeStyles['fontSize'] * 0.8,
-      cursor: 'pointer',
-      transition: 'all 0.2s ease-in-out',
-      ...style,
-    };
-  }
-
-  /** 生成密码切换按钮样式 */
-  static getPasswordToggleStyle(props: Partial<InputProps>): React.CSSProperties {
-    const { size = 'md', style = {} } = props;
-
-    const sizeStyles = this.SIZE_MAP[size];
-
-    return {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      width: sizeStyles['fontSize'] * 1.5,
-      height: sizeStyles['fontSize'] * 1.5,
-      color: '#6b7280',
-      fontSize: sizeStyles['fontSize'],
-      cursor: 'pointer',
-      transition: 'all 0.2s ease-in-out',
-      ...style,
-    };
-  }
-
-  /** 生成多行输入框样式 */
-  static getMultilineStyle(props: Partial<InputProps>): React.CSSProperties {
-    const { size = 'md', rows = 3, autoHeight = false, style = {} } = props;
-
-    const sizeStyles = this.SIZE_MAP[size];
-
-    return {
-      minHeight: autoHeight ? sizeStyles['height'] : sizeStyles['height'] * rows,
-      maxHeight: autoHeight ? sizeStyles['height'] * 6 : 'none',
-      resize: autoHeight ? 'none' : 'vertical',
-      paddingTop: sizeStyles['padding'].split(' ')[0],
-      paddingBottom: sizeStyles['padding'].split(' ')[0],
-      lineHeight: 1.5,
-      ...style,
-    };
-  }
-
-  /** 生成输入框样式配置 */
-  static getStyleConfig(): InputStyleConfig {
-    return {
-      base: {
-        boxSizing: 'border-box',
-        outline: 'none',
-        transition: 'all 0.2s ease-in-out',
-      },
-      sizes: {
-        xs: { fontSize: 20, padding: '8px 12px', height: 56, borderRadius: 4 },
-        sm: { fontSize: 24, padding: '12px 16px', height: 64, borderRadius: 6 },
-        md: { fontSize: 28, padding: '16px 20px', height: 72, borderRadius: 8 },
-        lg: { fontSize: 32, padding: '20px 24px', height: 80, borderRadius: 10 },
-        xl: { fontSize: 36, padding: '24px 32px', height: 88, borderRadius: 12 },
-      },
-      variants: {
-        outlined: { backgroundColor: 'transparent', borderColor: '#e5e7eb', borderWidth: 1 },
-        filled: { backgroundColor: '#f9fafb', borderColor: '#e5e7eb', borderWidth: 1 },
-        underlined: { backgroundColor: 'transparent', borderColor: '#e5e7eb', borderWidth: 0, borderBottomWidth: 1 },
-      },
-      statuses: {
-        normal: { color: '#111827', borderColor: '#e5e7eb' },
-        error: { color: '#ef4444', borderColor: '#ef4444', backgroundColor: '#fef2f2' },
-        warning: { color: '#f59e0b', borderColor: '#f59e0b', backgroundColor: '#fffbeb' },
-        success: { color: '#22c55e', borderColor: '#22c55e', backgroundColor: '#f0fdf4' },
-        disabled: { color: '#9ca3af', borderColor: '#e5e7eb', backgroundColor: '#f9fafb' },
-        loading: { color: '#6b7280', borderColor: '#e5e7eb', backgroundColor: '#f9fafb' },
-      },
-      prefix: {
-        display: 'flex',
-        alignItems: 'center',
-        color: '#6b7280',
-      },
-      suffix: {
-        display: 'flex',
-        alignItems: 'center',
-        color: '#6b7280',
-      },
-      label: {
-        fontSize: 28,
-        fontWeight: 500,
-        color: '#374151',
-        marginBottom: 8,
-      },
-      helperText: {
-        fontSize: 24,
-        color: '#6b7280',
-        marginTop: 4,
-      },
-      errorText: {
-        fontSize: 24,
-        color: '#ef4444',
-        marginTop: 4,
-      },
-      counter: {
-        fontSize: 21,
-        color: '#9ca3af',
-        textAlign: 'right',
-        marginTop: 4,
-      },
-      clearButton: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 24,
-        height: 24,
-        borderRadius: '50%',
-        backgroundColor: '#e5e7eb',
-        color: '#6b7280',
-        fontSize: 16,
-        cursor: 'pointer',
-      },
-      passwordToggle: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 24,
-        height: 24,
-        color: '#6b7280',
-        fontSize: 20,
-        cursor: 'pointer',
-      },
-    };
-  }
-
-  /** 生成CSS变量 */
-  static generateCSSVariables(): string {
-    return `
-      :root {
-        --input-primary-color: #0ea5e9;
-        --input-error-color: #ef4444;
-        --input-warning-color: #f59e0b;
-        --input-success-color: #22c55e;
-        --input-text-color: #111827;
-        --input-text-color-secondary: #6b7280;
-        --input-text-color-disabled: #9ca3af;
-        --input-border-color: #e5e7eb;
-        --input-border-color-focus: #0ea5e9;
-        --input-background-color: #ffffff;
-        --input-background-color-disabled: #f9fafb;
-        --input-background-color-filled: #f9fafb;
-        --input-shadow-focus: 0 0 0 3px rgba(14, 165, 233, 0.1);
-        --input-animation-duration: 200ms;
-      }
-    `;
-  }
-
-  /** 生成关键帧动画 */
-  static generateKeyframes(): string {
-    return `
-      @keyframes inputShake {
-        0%, 100% { transform: translateX(0); }
-        25% { transform: translateX(-5px); }
-        75% { transform: translateX(5px); }
-      }
-      
-      @keyframes inputPulse {
-        0% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.4); }
-        70% { box-shadow: 0 0 0 10px rgba(14, 165, 233, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0); }
-      }
-    `;
-  }
+  return sizeMap[size] ?? sizeMap['md'] ?? {};
 }
 
-/** 导出样式工具 */
-export const inputStyles = InputStyles;
+/** 获取状态样式 */
+export function getStatusStyle(status: string, theme: ThemeConfig): StyleObject {
+  const statusMap: Record<string, StyleObject> = {
+    default: {
+      borderColor: theme.colors.border,
+      color: theme.colors.text,
+    },
+    primary: {
+      borderColor: theme.colors.primary,
+      color: theme.colors.text,
+    },
+    success: {
+      borderColor: theme.colors.success,
+      color: theme.colors.text,
+    },
+    warning: {
+      borderColor: theme.colors.warning,
+      color: theme.colors.text,
+    },
+    danger: {
+      borderColor: theme.colors.error,
+      color: theme.colors.text,
+    },
+  };
+  return statusMap[status] ?? statusMap['default'] ?? {};
+}
+
+/** 获取变体样式 */
+export function getVariantStyle(variant: string, theme: ThemeConfig): StyleObject {
+  const variantMap: Record<string, StyleObject> = {
+    outlined: {
+      backgroundColor: 'transparent',
+      borderWidth: 1,
+      borderStyle: 'solid',
+      borderColor: theme.colors.border,
+    },
+    filled: {
+      backgroundColor: theme.colors.backgroundInput,
+      borderWidth: 1,
+      borderStyle: 'solid',
+      borderColor: 'transparent',
+    },
+    underlined: {
+      backgroundColor: 'transparent',
+      borderWidth: 0,
+      borderBottomWidth: 1,
+      borderStyle: 'solid',
+      borderColor: theme.colors.border,
+      borderRadius: 0,
+    },
+  };
+  return variantMap[variant] ?? variantMap['outlined'] ?? {};
+}
+
+/** 获取形状样式 */
+export function getShapeStyle(shape: string, theme: ThemeConfig): StyleObject {
+  const shapeMap: Record<string, StyleObject> = {
+    default: { borderRadius: theme.borderRadius.md },
+    round: { borderRadius: theme.borderRadius.full },
+  };
+  return shapeMap[shape] ?? shapeMap['default'] ?? {};
+}
+
+/** 获取禁用状态样式 */
+export function getDisabledStyle(theme: ThemeConfig): StyleObject {
+  return {
+    ...disabledStyle,
+    backgroundColor: theme.colors.backgroundInput,
+    color: theme.colors.textDisabled,
+  };
+}
+
+/** 获取只读状态样式 */
+export function getReadOnlyStyle(): StyleObject {
+  return {
+    cursor: 'default',
+    backgroundColor: 'transparent',
+  };
+}
+
+/** 获取加载状态样式 */
+export function getLoadingStyle(): StyleObject {
+  return {
+    opacity: 0.7,
+    cursor: 'wait',
+    pointerEvents: 'none',
+  };
+}
+
+/** 获取聚焦状态样式 */
+export function getFocusStyle(status: string): StyleObject {
+  if (status === 'danger') {
+    return focusRingError;
+  }
+  return focusRingPrimary;
+}
+
+/** 获取块级样式 */
+export function getBlockStyle(block: boolean): StyleObject {
+  if (!block) return {};
+  return { width: '100%' };
+}
+
+/** 计算输入框完整样式 */
+export function computeInputStyles(
+  props: {
+    size?: string;
+    status?: string;
+    inputVariant?: string;
+    shape?: string;
+    disabled?: boolean;
+    readOnly?: boolean;
+    loading?: boolean;
+    block?: boolean;
+    bordered?: boolean;
+  },
+  theme: ThemeConfig,
+): StyleObject {
+  const {
+    size = 'md',
+    status = 'default',
+    inputVariant = 'outlined',
+    shape = 'default',
+    disabled = false,
+    readOnly = false,
+    loading = false,
+    block = false,
+    bordered = true,
+  } = props;
+
+  let style = { ...inputBase };
+  style = mergeStyles(style, getSizeStyle(size, theme));
+  style = mergeStyles(style, getStatusStyle(status, theme));
+  style = mergeStyles(style, getVariantStyle(inputVariant, theme));
+  style = mergeStyles(style, getShapeStyle(shape, theme));
+  style = mergeStyles(style, getBlockStyle(block));
+
+  if (!bordered) {
+    style = mergeStyles(style, { borderColor: 'transparent' });
+  }
+
+  if (disabled) {
+    style = mergeStyles(style, getDisabledStyle(theme));
+  } else if (readOnly) {
+    style = mergeStyles(style, getReadOnlyStyle());
+  } else if (loading) {
+    style = mergeStyles(style, getLoadingStyle());
+  }
+
+  return style;
+}
+
+/** 计算容器样式 */
+export function computeContainerStyles(
+  props: {
+    block?: boolean;
+  },
+  _theme: ThemeConfig,
+): StyleObject {
+  const { block = false } = props;
+
+  let style = { ...containerBase };
+  style = mergeStyles(style, getBlockStyle(block));
+
+  return style;
+}
+
+/** 计算包装器样式 */
+export function computeWrapperStyles(
+  props: {
+    size?: string;
+    status?: string;
+    inputVariant?: string;
+    disabled?: boolean;
+    bordered?: boolean;
+  },
+  theme: ThemeConfig,
+): StyleObject {
+  const {
+    size = 'md',
+    status = 'default',
+    inputVariant = 'outlined',
+    disabled = false,
+    bordered = true,
+  } = props;
+
+  let style = { ...wrapperBase };
+  const sizeStyle = getSizeStyle(size, theme);
+  style = mergeStyles(style, {
+    height: sizeStyle.height,
+    borderRadius: sizeStyle.borderRadius,
+  });
+  style = mergeStyles(style, getVariantStyle(inputVariant, theme));
+  style = mergeStyles(style, getStatusStyle(status, theme));
+
+  if (!bordered) {
+    style = mergeStyles(style, { borderColor: 'transparent' });
+  }
+
+  if (disabled) {
+    style = mergeStyles(style, { opacity: 0.5 });
+  }
+
+  return style;
+}
+
+/** 计算标签样式 */
+export function computeLabelStyles(
+  props: {
+    size?: string;
+    disabled?: boolean;
+  },
+  theme: ThemeConfig,
+): StyleObject {
+  const { size = 'md', disabled = false } = props;
+  const sizeStyle = getSizeStyle(size, theme);
+
+  let style = { ...labelStyle };
+  style = mergeStyles(style, {
+    fontSize: sizeStyle.fontSize,
+    color: disabled ? theme.colors.textDisabled : theme.colors.text,
+  });
+
+  return style;
+}
+
+/** 计算辅助文本样式 */
+export function computeHelperTextStyles(
+  props: {
+    size?: string;
+    status?: string;
+  },
+  theme: ThemeConfig,
+): StyleObject {
+  const { size = 'md', status = 'default' } = props;
+  const sizeStyle = getSizeStyle(size, theme);
+
+  let style = { ...helperTextStyle };
+  style = mergeStyles(style, {
+    fontSize: (sizeStyle.fontSize as number) * 0.85,
+    color: status === 'danger' ? theme.colors.error : theme.colors.textSecondary,
+  });
+
+  return style;
+}
+
+/** 计算错误文本样式 */
+export function computeErrorTextStyles(
+  props: {
+    size?: string;
+  },
+  theme: ThemeConfig,
+): StyleObject {
+  const { size = 'md' } = props;
+  const sizeStyle = getSizeStyle(size, theme);
+
+  let style = { ...errorTextStyle };
+  style = mergeStyles(style, {
+    fontSize: (sizeStyle.fontSize as number) * 0.85,
+    color: theme.colors.error,
+  });
+
+  return style;
+}
+
+/** 计算计数器样式 */
+export function computeCounterStyles(
+  props: {
+    size?: string;
+  },
+  theme: ThemeConfig,
+): StyleObject {
+  const { size = 'md' } = props;
+  const sizeStyle = getSizeStyle(size, theme);
+
+  let style = { ...counterStyle };
+  style = mergeStyles(style, {
+    fontSize: (sizeStyle.fontSize as number) * 0.75,
+    color: theme.colors.textSecondary,
+  });
+
+  return style;
+}
+
+/** 计算前缀样式 */
+export function computePrefixStyles(
+  props: {
+    size?: string;
+    disabled?: boolean;
+  },
+  theme: ThemeConfig,
+): StyleObject {
+  const { size = 'md', disabled = false } = props;
+  const sizeStyle = getSizeStyle(size, theme);
+
+  let style = { ...prefixStyle };
+  style = mergeStyles(style, {
+    fontSize: sizeStyle.fontSize,
+    paddingLeft: 12,
+    paddingRight: 8,
+    color: disabled ? theme.colors.textDisabled : theme.colors.textSecondary,
+  });
+
+  return style;
+}
+
+/** 计算后缀样式 */
+export function computeSuffixStyles(
+  props: {
+    size?: string;
+    disabled?: boolean;
+  },
+  theme: ThemeConfig,
+): StyleObject {
+  const { size = 'md', disabled = false } = props;
+  const sizeStyle = getSizeStyle(size, theme);
+
+  let style = { ...suffixStyle };
+  style = mergeStyles(style, {
+    fontSize: sizeStyle.fontSize,
+    paddingLeft: 8,
+    paddingRight: 12,
+    color: disabled ? theme.colors.textDisabled : theme.colors.textSecondary,
+  });
+
+  return style;
+}
+
+/** 计算清除按钮样式 */
+export function computeClearButtonStyles(
+  props: {
+    size?: string;
+  },
+  _theme: ThemeConfig,
+): StyleObject {
+  const { size = 'md' } = props;
+
+  const sizeMap: Record<string, number> = {
+    sm: 16,
+    md: 20,
+    lg: 24,
+  };
+
+  const buttonSize = sizeMap[size] ?? 20;
+
+  let style = { ...clearButtonStyle };
+  style = mergeStyles(style, {
+    width: buttonSize,
+    height: buttonSize,
+    fontSize: buttonSize * 0.6,
+  });
+
+  return style;
+}
+
+/** 计算密码切换按钮样式 */
+export function computePasswordToggleStyles(
+  props: {
+    size?: string;
+  },
+  _theme: ThemeConfig,
+): StyleObject {
+  const { size = 'md' } = props;
+
+  const sizeMap: Record<string, number> = {
+    sm: 20,
+    md: 24,
+    lg: 28,
+  };
+
+  const buttonSize = sizeMap[size] ?? 24;
+
+  let style = { ...passwordToggleStyle };
+  style = mergeStyles(style, {
+    width: buttonSize,
+    height: buttonSize,
+    fontSize: buttonSize * 0.7,
+  });
+
+  return style;
+}
+
+/** 合并输入框最终样式 */
+export function mergeInputStyles(
+  baseStyle: StyleObject,
+  customStyle?: StyleObject,
+): StyleObject {
+  return mergeStyles(baseStyle, customStyle || {});
+}
+
+/** 输入框样式集合（用于外部导出） */
+export const inputStyles = {
+  base: inputBase,
+  container: containerBase,
+  wrapper: wrapperBase,
+  prefix: prefixStyle,
+  suffix: suffixStyle,
+  label: labelStyle,
+  helperText: helperTextStyle,
+  errorText: errorTextStyle,
+  counter: counterStyle,
+  clearButton: clearButtonStyle,
+  passwordToggle: passwordToggleStyle,
+};
+
+export default computeInputStyles;

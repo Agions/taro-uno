@@ -1,0 +1,93 @@
+.about {
+  min-height: 100vh;
+  padding: 32px;
+  background: linear-gradient(180deg, #f0f9ff 0%, #ffffff 100%);
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 48px 0;
+    text-align: center;
+  }
+
+  &__logo {
+    font-size: 72px;
+    margin-bottom: 16px;
+  }
+
+  &__title {
+    font-size: 40px;
+    font-weight: 700;
+    color: #0ea5e9;
+    margin-bottom: 8px;
+  }
+
+  &__version {
+    font-size: 24px;
+    color: #64748b;
+    background: #e0f2fe;
+    padding: 4px 16px;
+    border-radius: 20px;
+  }
+
+  &__card {
+    margin-bottom: 24px;
+  }
+
+  &__desc {
+    font-size: 28px;
+    color: #475569;
+    line-height: 1.6;
+  }
+
+  &__features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  &__feature {
+    width: calc(50% - 8px);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background: #f8fafc;
+    border-radius: 12px;
+  }
+
+  &__feature-icon {
+    font-size: 32px;
+  }
+
+  &__feature-text {
+    font-size: 26px;
+    color: #334155;
+  }
+
+  &__install {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #1e293b;
+    border-radius: 12px;
+    padding: 20px 24px;
+  }
+
+  &__install-code {
+    font-size: 24px;
+    color: #22d3ee;
+    font-family: monospace;
+  }
+
+  &__footer {
+    padding: 32px 0;
+    text-align: center;
+  }
+
+  &__copyright {
+    font-size: 24px;
+    color: #94a3b8;
+  }
+}

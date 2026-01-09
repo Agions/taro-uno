@@ -1,18 +1,23 @@
-import React, { forwardRef, createContext } from 'react';
+/**
+ * Form Component
+ * 表单组件，提供完整的表单验证和状态管理功能
+ * @module components/form/Form/Form
+ */
+
+import React, { forwardRef } from 'react';
 import { Form as TaroForm } from '@tarojs/components';
 import type { ITouchEvent } from '@tarojs/components';
 import { formStyles } from './Form.styles';
-import type { FormProps, FormRef, FormContext, FormErrors } from './Form.types';
+import type { FormProps, FormRef, FormErrors } from './Form.types';
 import { useFormLogic } from './useFormLogic';
+import { FormContextProvider } from './FormContext';
+import { FormItem } from './FormItem';
 
-// 创建表单上下文
-export const FormContextProvider = createContext<FormContext | null>(null);
-
-// 导出FormContext
-export type { FormContext } from './Form.types';
-
-/** 表单组件 */
-export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
+/**
+ * 表单组件
+ * @description 提供表单状态管理、验证和提交功能的复合组件
+ */
+const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
   const { layout = 'horizontal', size = 'md', className, style, children, ...restProps } = props;
 
   // Filter out React DOM event handlers that are incompatible with TaroForm
@@ -253,5 +258,16 @@ export const FormComponent = forwardRef<FormRef, FormProps>((props, ref) => {
 /** 表单组件显示名称 */
 FormComponent.displayName = 'Form';
 
-/** 导出表单组件 */
-export { FormComponent as Form };
+/**
+ * 复合表单组件
+ * @description 包含 Form 主组件和 Form.Item 子组件的复合组件
+ */
+type FormType = typeof FormComponent & {
+  Item: typeof FormItem;
+};
+
+const Form = FormComponent as FormType;
+Form.Item = FormItem;
+
+export { Form, FormContextProvider };
+export type { FormContext } from './Form.types';

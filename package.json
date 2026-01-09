@@ -1,6 +1,6 @@
 {
   "name": "taro-uno-ui",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "为 Taro 生态系统打造的简化版跨平台 UI 组件库",
   "keywords": [
     "taro",
@@ -25,7 +25,6 @@
   },
   "files": [
     "dist",
-    "src",
     "README.md",
     "LICENSE"
   ],
@@ -85,16 +84,17 @@
     "eslint": "^9.35.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-react": "^7.32.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.20",
     "eslint-plugin-storybook": "^9.1.8",
+    "fast-check": "^4.5.3",
     "globals": "^16.5.0",
     "jsdom": "^24.0.0",
     "postcss-pxtorem": "^6.1.0",
     "prettier": "^3.6.2",
     "tsx": "^4.19.2",
     "typedoc": "^0.28.14",
-    "typescript": "^6.0.0-dev.20251202",
+    "typescript": "^5.7.2",
     "vite": "^7.1.5",
     "vitest": "^1.6.1"
   },

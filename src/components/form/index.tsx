@@ -4,13 +4,38 @@
  */
 
 // 导出 Form 组件
-export { Form } from './Form';
-export type { FormContext, FormProps, FormRef, FormItemProps } from './Form/Form.types';
+export { Form, FormItem, FormContextProvider } from './Form';
+export { useFormContext, useFormItemContext, useFormField, useFormState, useFormMethods, useFormConfig } from './Form';
+export type {
+  FormContext,
+  FormProps,
+  FormRef,
+  FormItemProps,
+  FormInstance,
+  FormLayout,
+  FormLabelAlign,
+  FormSize,
+  FormStatus,
+  FormFieldStatus,
+  FormValues,
+  FormErrors,
+  FormTouched,
+  FormFieldInfo,
+  FormRule,
+  FormItemContext,
+} from './Form/Form.types';
 export { formStyles } from './Form/Form.styles';
 
 // 导出 Input 组件
 export { Input } from './Input';
-export type { InputProps, InputRef, InputType, InputSize } from './Input/Input.types';
+export type {
+  InputProps,
+  InputRef,
+  InputType,
+  InputVariant,
+  ClearTrigger,
+  InputValidationResult,
+} from './Input/Input.types';
 export { inputStyles } from './Input/Input.styles';
 
 // 导出 Select 组件
@@ -72,6 +97,11 @@ export { cascaderStyles } from './Cascader/Cascader.styles';
 export { Transfer } from './Transfer';
 export type { TransferProps, TransferRef } from './Transfer/Transfer.types';
 export { transferStyles } from './Transfer/Transfer.styles';
+
+// 导出 AutoComplete 组件
+export { AutoComplete } from './AutoComplete';
+export type { AutoCompleteProps, AutoCompleteRef } from './AutoComplete/AutoComplete.types';
+export { BaseStyles as autocompleteStyles } from './AutoComplete/AutoComplete.styles';
 
 // 表单组件版本
 export const FORM_VERSION = '1.0.0';

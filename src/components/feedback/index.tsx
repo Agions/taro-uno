@@ -95,6 +95,47 @@ export type {
 } from './Tooltip/Tooltip.types';
 export { tooltipStyles } from './Tooltip/Tooltip.styles';
 
+// 导出 Popconfirm 组件
+export { Popconfirm } from './Popconfirm';
+export type {
+  PopconfirmProps,
+  PopconfirmRef,
+  PopconfirmDirection,
+  PopconfirmTheme,
+  PopconfirmButtonType,
+  PopconfirmButton,
+  PopconfirmConfig,
+  PopconfirmContext,
+} from './Popconfirm/Popconfirm.types';
+export {
+  BaseStyles as popconfirmStyles,
+  getThemeStyle as getPopconfirmThemeStyle,
+  getDirectionStyle as getPopconfirmDirectionStyle,
+  getButtonStyle as getPopconfirmButtonStyle,
+  mergeStyles as mergePopconfirmStyles,
+} from './Popconfirm/Popconfirm.styles';
+
+// 导出 Drawer 组件
+export { Drawer } from './Drawer';
+export type {
+  DrawerProps,
+  DrawerRef,
+  DrawerDirection,
+  DrawerTheme,
+  DrawerButtonType,
+  DrawerButton,
+  DrawerConfig,
+  DrawerContext,
+} from './Drawer/Drawer.types';
+export {
+  BaseStyles as drawerStyles,
+  getThemeStyle as getDrawerThemeStyle,
+  getDirectionStyle as getDrawerDirectionStyle,
+  mergeStyles as mergeDrawerStyles,
+} from './Drawer/Drawer.styles';
+
+
+
 // 反馈组件工具函数
 export const FeedbackUtils = {
   /**

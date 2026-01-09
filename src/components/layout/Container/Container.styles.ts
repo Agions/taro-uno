@@ -5,6 +5,9 @@ import type { Size, CSSUnit } from '../../../types';
 export const containerStyles = {
   /** 尺寸映射表 */
   SIZE_MAP: {
+    sm: 320,
+    md: 768,
+    lg: 1024,
     small: 320,
     medium: 768,
     large: 1024,
@@ -24,7 +27,7 @@ export const containerStyles = {
   /**
    * 解析尺寸值
    */
-  parseSize: (size: Size | number | `${number}${CSSUnit}`): number | string => {
+  parseSize: (size: Size | 'default' | 'small' | 'medium' | 'large' | number | `${number}${CSSUnit}`): number | string => {
     if (typeof size === 'number') {
       return `${size}px`;
     }
@@ -90,12 +93,12 @@ export const containerStyles = {
     // 计算滚动样式
     const overflow = scrollable
       ? {
-          overflowX: (scrollDirection === 'horizontal' || scrollDirection === 'both' ? 'auto' : 'hidden') as any,
-          overflowY: (scrollDirection === 'vertical' || scrollDirection === 'both' ? 'auto' : 'hidden') as any,
-        }
+        overflowX: (scrollDirection === 'horizontal' || scrollDirection === 'both' ? 'auto' : 'hidden') as any,
+        overflowY: (scrollDirection === 'vertical' || scrollDirection === 'both' ? 'auto' : 'hidden') as any,
+      }
       : {
-          overflow: 'visible' as any,
-        };
+        overflow: 'visible' as any,
+      };
 
     return {
       width,

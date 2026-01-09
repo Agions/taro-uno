@@ -6,19 +6,27 @@
 
 Taro Uno 是一个基于 Taro 框架的跨平台组件库，提供丰富的 UI 组件和表单控件，支持微信小程序、H5、React Native 等多端开发。
 
-## ✨ v1.0.0 新特性
+## ✨ v1.0.2 新特性
 
-### 🌐 多平台API请求层
-- **Request** - 智能HTTP客户端，自动适配各平台
-- **智能缓存** - 请求缓存与去重，性能提升67%
-- **灵活重试** - 支持指数/线性/固定退避策略
-- **拦截器** - 完整的请求/响应拦截支持
+### 🧩 通用组件
+- **ErrorBoundary** - 错误边界组件，优雅处理组件错误
+- **LazyComponent** - 懒加载组件，支持代码分割和加载状态
+- **VirtualList** - 虚拟列表组件，高效渲染大量数据
 
-### 🎣 强大的React Hooks
-- **useMutation** - 数据变更与乐观更新
-- **useToggle, useCounter** - 状态管理
-- **useLocalStorage/useSessionStorage** - 持久化存储
-- **useClickOutside** - UI交互检测
+### 📐 布局组件
+- **ResponsiveContainer** - 响应式容器组件
+- **ResponsiveGrid** - 响应式栅格组件
+
+### 🎣 Hooks 扩展
+- **useDeepCompareEffect** - 深度比较的 useEffect
+- **usePerformance** - 性能监控 Hook
+- **useVirtualScroll** - 虚拟滚动 Hook
+- **useMediaQuery** - 媒体查询 Hook
+
+### 📚 文档更新
+- 全新的文档视觉系统，采用渐变蓝紫色配色方案
+- 重新设计的侧边栏导航结构
+- 新增 API 参考文档
 
 详见 [CHANGELOG.md](./CHANGELOG.md)
 
@@ -79,46 +87,75 @@ export default App;
 ### 基础组件 (Basic)
 - Button - 按钮
 - Icon - 图标
+- Text - 文本
+- Divider - 分割线
 - Typography - 排版
-- Video - 视频播放器
 
 ### 表单组件 (Form)
+- Form - 表单
 - Input - 输入框
+- Textarea - 多行文本输入
+- InputNumber - 数字输入
 - Select - 选择器
+- Cascader - 级联选择器
+- AutoComplete - 自动完成
+- DatePicker - 日期选择器
+- TimePicker - 时间选择器
 - Checkbox - 复选框
 - Radio - 单选框
 - Switch - 开关
 - Slider - 滑块
 - Upload - 上传
-- DatePicker - 日期选择器
-- TimePicker - 时间选择器
-- Cascader - 级联选择器
-- Textarea - 多行文本输入
+- Transfer - 穿梭框
 
-### 布局组件 (Layout)
-- Grid - 网格
-- Space - 间距
-- Divider - 分割线
-- Container - 容器
-
-### 显示组件 (Display)
-- Card - 卡片
-- Table - 表格
-- List - 列表
-- Badge - 徽标
+### 展示组件 (Display)
 - Avatar - 头像
+- Badge - 徽标
+- Tag - 标签
+- Card - 卡片
+- List - 列表
+- Table - 表格
+- Calendar - 日历
+- Timeline - 时间轴
+- Carousel - 轮播
+- Rate - 评分
+- RichText - 富文本
 
 ### 反馈组件 (Feedback)
-- Modal - 对话框
-- Message - 消息提示
-- Notification - 通知提醒
-- Toast - 轻提示
 - Loading - 加载
+- Progress - 进度条
+- Message - 消息提示
+- Toast - 轻提示
+- Notification - 通知提醒
+- Modal - 对话框
+- Drawer - 抽屉
+- Popconfirm - 气泡确认
+- Tooltip - 文字提示
+- Result - 结果
+
+### 布局组件 (Layout)
+- Grid - 栅格
+- Row - 行
+- Col - 列
+- Layout - 布局
+- Container - 容器
+- Space - 间距
+- Affix - 固钉
+- ResponsiveContainer - 响应容器
+- ResponsiveGrid - 响应栅格
 
 ### 导航组件 (Navigation)
+- Menu - 菜单
+- NavBar - 导航栏
+- PageHeader - 页头
 - Tabs - 标签页
-- Pagination - 分页
 - Steps - 步骤条
+- Pagination - 分页
+
+### 通用组件 (Common)
+- ErrorBoundary - 错误边界
+- LazyComponent - 懒加载
+- VirtualList - 虚拟列表
 
 ## 文档
 

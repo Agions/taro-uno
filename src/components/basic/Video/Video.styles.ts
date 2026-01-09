@@ -5,7 +5,7 @@
 
 import type { CSSProperties } from 'react';
 import { createNamespace } from '../../../utils/createNamespace';
-import { useTheme } from '../../../hooks/useTheme';
+import { useTheme } from '../../../hooks/ui/useTheme';
 import type { VideoSize, VideoVariant, VideoStatus, VideoControlsConfig } from './Video.types';
 
 const { bem } = createNamespace('video');

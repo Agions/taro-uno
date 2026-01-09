@@ -1,4 +1,24 @@
-import { rafThrottle } from '@/utils/performance/performance';
+/**
+ * 简单的 requestAnimationFrame 节流函数
+ */
+const rafThrottle = <T extends (...args: unknown[]) => void>(callback: T): T => {
+  let rafId: number | null = null;
+  let lastArgs: unknown[] | null = null;
+
+  const throttled = (...args: unknown[]) => {
+    lastArgs = args;
+    if (rafId === null) {
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        if (lastArgs) {
+          callback(...lastArgs);
+        }
+      });
+    }
+  };
+
+  return throttled as T;
+};
 
 export interface AnimationOptions {
   duration: number;

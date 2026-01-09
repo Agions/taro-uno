@@ -17,6 +17,7 @@ export type {
   NotificationManagerProps,
   NotificationRef,
   NotificationUtils,
+  NotificationManagerRef,
 } from './Notification.types';
 
 // 导出默认配置
@@ -30,9 +31,6 @@ export {
   notificationStylesCompat,
   notificationStylesLegacy,
 } from './Notification.styles';
-
-// 导出工具函数
-export { NotificationUtils } from './Notification.types';
 
 // 创建全局通知管理器实例
 import type { NotificationManagerRef } from './Notification.types';
@@ -129,26 +127,7 @@ export const { success, info, warning, error, destroyAll, pauseAll, resumeAll } 
 // 默认导出
 export default Notification;
 
-// 导出类型工具
-export type {
-  // 通知类型
-  NotificationType as Type,
-  NotificationPlacement as Placement,
-  NotificationAnimation as Animation,
-
-  // 通知接口
-  NotificationItem as Item,
-  NotificationProps as Props,
-  NotificationManagerProps as ManagerProps,
-  NotificationRef as Ref,
-  NotificationManagerRef as ManagerRef,
-} from './Notification.types';
-
-// 导出全局通知对象
-export { notification };
-
 // 组件 displayName
 if (typeof Notification !== 'undefined') {
   (Notification as any).displayName = 'Notification';
 }
-// NotificationManager displayName is set in NotificationManager.tsx

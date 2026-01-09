@@ -5,6 +5,45 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - 2026-01-09
+
+### ✨ 新增功能
+
+#### 通用组件
+- **ErrorBoundary** - 错误边界组件，优雅处理组件错误
+- **LazyComponent** - 懒加载组件，支持代码分割和加载状态
+- **VirtualList** - 虚拟列表组件，高效渲染大量数据
+
+#### 布局组件
+- **ResponsiveContainer** - 响应式容器组件
+- **ResponsiveGrid** - 响应式栅格组件
+
+#### Hooks 扩展
+- **useDeepCompareEffect** - 深度比较的 useEffect
+- **usePerformance** - 性能监控 Hook
+- **usePerformanceMonitor** - 性能监控器 Hook
+- **useVirtualScroll** - 虚拟滚动 Hook
+- **useMediaQuery** - 媒体查询 Hook
+
+### 📚 文档更新
+
+- 全新的文档视觉系统，采用渐变蓝紫色配色方案
+- 重新设计的侧边栏导航结构
+- 新增 API 参考文档
+- 优化代码高亮配置
+- 改进明暗主题切换体验
+
+### 🔧 改进
+
+- 优化组件导出结构
+- 改进 TypeScript 类型定义
+- 统一组件样式规范
+
+### 🐛 修复
+
+- 修复 Docusaurus Prism 语言配置问题
+- 修复文档侧边栏显示问题
+
 ## [1.0.1] - 2025-12-10
 
 ### 🐛 修复

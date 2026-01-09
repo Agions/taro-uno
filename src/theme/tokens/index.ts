@@ -13,6 +13,15 @@ import { spacingTokens, type SpacingTokens } from './spacing';
 import { typographyTokens, type TypographyTokens } from './typography';
 import { effectsTokens, type EffectsTokens } from './effects';
 
+// 导出别名以保持向后兼容
+export const defaultColorTokens = colorTokens;
+export const defaultSpacingTokens = spacingTokens;
+export const defaultTypographyTokens = typographyTokens;
+export const defaultBorderRadiusTokens = effectsTokens.borderRadius;
+export const defaultBoxShadowTokens = effectsTokens.boxShadow;
+export const defaultAnimationTokens = effectsTokens.animation;
+export const defaultZIndexTokens = effectsTokens.zIndex;
+
 // 完整的设计令牌接口
 export interface DesignTokens {
   colors: ColorTokens;
@@ -28,6 +37,9 @@ export const designTokens: DesignTokens = {
   typography: typographyTokens,
   effects: effectsTokens,
 };
+
+// 别名以保持向后兼容
+export const defaultDesignTokens = designTokens;
 
 // 暗色主题设计令牌
 export const darkDesignTokens: DesignTokens = {
@@ -50,13 +62,17 @@ export class DesignTokensManager {
    */
   getColor(path: string): string {
     const keys = path.split('.');
-    let value: any = this.tokens.colors;
+    let value: unknown = this.tokens.colors;
 
     for (const key of keys) {
-      value = value?.[key];
+      if (value && typeof value === 'object' && key in value) {
+        value = (value as Record<string, unknown>)[key];
+      } else {
+        value = undefined;
+      }
     }
 
-    return value || '#000000';
+    return typeof value === 'string' ? value : '#000000';
   }
 
   /**
@@ -123,21 +139,21 @@ export class DesignTokensManager {
     let css = ':root {\n';
 
     // 递归生成变量
-    const generateSection = (obj: any, prefix: string = '') => {
+    const generateSection = (obj: Record<string, unknown>, prefix: string = ''): void => {
       Object.entries(obj).forEach(([key, value]) => {
         if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-          generateSection(value, `${prefix}${key}-`);
+          generateSection(value as Record<string, unknown>, `${prefix}${key}-`);
         } else if (Array.isArray(value)) {
           const variableName = `--${prefix}${key}`;
           css += `  ${variableName}: ${value.join(', ')};\n`;
         } else {
           const variableName = `--${prefix}${key}`;
-          css += `  ${variableName}: ${value};\n`;
+          css += `  ${variableName}: ${String(value)};\n`;
         }
       });
     };
 
-    generateSection(this.tokens);
+    generateSection(this.tokens as unknown as Record<string, unknown>);
     css += '}\n';
 
     return css;
@@ -150,19 +166,19 @@ export class DesignTokensManager {
     let css = '[data-theme="dark"] {\n';
 
     // 只生成颜色相关的变量
-    const generateColorSection = (obj: any, prefix: string = 'colors-') => {
+    const generateColorSection = (obj: Record<string, unknown>, prefix: string = 'colors-'): void => {
       Object.entries(obj).forEach(([key, value]) => {
         if (typeof value === 'object' && value !== null) {
-          generateColorSection(value, `${prefix}${key}-`);
+          generateColorSection(value as Record<string, unknown>, `${prefix}${key}-`);
         } else {
           const variableName = `--${prefix}${key}`;
-          css += `  ${variableName}: ${value};\n`;
+          css += `  ${variableName}: ${String(value)};\n`;
         }
       });
     };
 
     if (darkColorTokens) {
-      generateColorSection(darkColorTokens);
+      generateColorSection(darkColorTokens as unknown as Record<string, unknown>);
     }
 
     css += '}\n';

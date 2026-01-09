@@ -1,7 +1,7 @@
 import React from 'react';
-import { BaseComponentProps as StandardBaseComponentProps } from '../../../types/component-props';
+import { BaseProps } from '../../../types/component';
 
-export interface CardProps extends StandardBaseComponentProps {
+export interface CardProps extends BaseProps {
   /** 卡片内容 */
   children: React.ReactNode;
   /** 卡片标题 */

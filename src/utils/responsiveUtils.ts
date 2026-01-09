@@ -93,7 +93,7 @@ class ResponsiveUtils {
    * @param currentWidth 当前屏幕宽度
    * @returns 匹配的值
    */
-  getResponsiveValue<T>(value: ResponsiveValue<T>, currentWidth: number): T {
+  getResponsiveValue<T>(value: ResponsiveValue<T>, currentWidth: number): T | undefined {
     if (typeof value !== 'object' || value === null) {
       return value as T;
     }
@@ -101,19 +101,33 @@ class ResponsiveUtils {
     const size = this.getScreenSize(currentWidth);
     const responsiveValue = value as Partial<Record<ScreenSize, T>>;
 
-    // 从当前尺寸开始向上查找匹配的值
-    const sizeOrder: ScreenSize[] = ['2xl', 'xl', 'lg', 'md', 'sm', 'xs'];
-    for (const s of sizeOrder) {
-      if (responsiveValue[s] !== undefined) {
-        return responsiveValue[s] as T;
-      }
-      if (s === size) {
-        break;
+    // 如果当前尺寸有值，直接返回
+    if (responsiveValue[size] !== undefined) {
+      return responsiveValue[size] as T;
+    }
+
+    // 从当前尺寸向小尺寸查找（fallback to smaller breakpoints）
+    const sizeOrder: ScreenSize[] = ['xs', 'sm', 'md', 'lg', 'xl', '2xl'];
+    const currentIndex = sizeOrder.indexOf(size);
+
+    // 先向小尺寸查找
+    for (let i = currentIndex - 1; i >= 0; i--) {
+      const sizeKey = sizeOrder[i];
+      if (sizeKey && responsiveValue[sizeKey] !== undefined) {
+        return responsiveValue[sizeKey] as T;
       }
     }
 
-    // 如果没有找到，返回默认值（确保不会返回undefined）
-    return (responsiveValue.xs || (value as T)) as T;
+    // 再向大尺寸查找
+    for (let i = currentIndex + 1; i < sizeOrder.length; i++) {
+      const sizeKey = sizeOrder[i];
+      if (sizeKey && responsiveValue[sizeKey] !== undefined) {
+        return responsiveValue[sizeKey] as T;
+      }
+    }
+
+    // 如果没有找到，返回undefined
+    return undefined;
   }
 
   /**
@@ -328,7 +342,7 @@ export const useResponsive = () => {
 // 导出便捷方法
 export const getScreenSize = (width: number) => responsiveUtils.getScreenSize(width);
 export const matchScreenSize = (size: ScreenSize, width: number) => responsiveUtils.matchScreenSize(size, width);
-export const getResponsiveValue = <T>(value: ResponsiveValue<T>, width: number) =>
+export const getResponsiveValue = <T>(value: ResponsiveValue<T>, width: number): T | undefined =>
   responsiveUtils.getResponsiveValue(value, width);
 export const generateResponsiveStyles = (styles: ResponsiveStyle, width: number) =>
   responsiveUtils.generateResponsiveStyles(styles, width);

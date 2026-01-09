@@ -451,11 +451,11 @@ export const Progress = forwardRef<ProgressRef, ProgressProps>((props, ref) => {
   // Generate CSS classes for testing
   const progressClasses = [
     className,
-    `taro-uno-h5-progress`,
+    'taro-uno-h5-progress',
     type && `taro-uno-h5-progress--${type}`,
     status && `taro-uno-h5-progress--${status}`,
     size && `taro-uno-h5-progress--${size}`,
-    animated && `taro-uno-h5-progress--animated`,
+    animated && 'taro-uno-h5-progress--animated',
   ]
     .filter(Boolean)
     .join(' ');

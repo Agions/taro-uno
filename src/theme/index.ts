@@ -1,14 +1,7 @@
 /**
  * Taro-Uno UI 设计系统
- * 提供完整的设计令牌、主题管理、无障碍访问、响应式设计和动画系统
+ * 提供完整的设计令牌、主题管理和样式系统
  */
-
-// 导入需要的模块
-import { defaultTheme, darkTheme } from './defaults';
-import { ColorUtils, ResponsiveUtils, ThemeValidator, ThemePresets } from './utils';
-import { createCSSVariables, generateCSSVariablesString } from './variables';
-import { createStyleUtils, generateStyles, createStyles } from './styles';
-import type { ThemeProvider, useTheme } from './ThemeProvider.types';
 
 // 导出类型定义
 export type {
@@ -23,77 +16,120 @@ export type {
 } from './types';
 
 // 导出默认主题配置
-export { defaultTheme, darkTheme } from './defaults';
+export { defaultTheme } from './defaults';
+export { darkTheme, darkColorTokens, darkDesignTokens, generateDarkThemeCSSVariables } from './dark';
 
-// 导出工具函数
-export { default as themeUtils, ColorUtils, ResponsiveUtils, ThemeValidator, ThemePresets } from './utils';
+// 导出设计令牌系统（从 tokens/ 目录）
+export {
+  designTokens,
+  darkDesignTokens as darkTokens,
+  DesignTokensManager,
+  tokensManager,
+  getColor,
+  getSpacing,
+  getFontSize,
+  getFontWeight,
+  getBorderRadius,
+  getBoxShadow,
+  getAnimationDuration,
+  getAnimationEasing,
+  getZIndex,
+} from './tokens';
 
-// 导出CSS变量系统
-export { default as CSSVariableGenerator, createCSSVariables, generateCSSVariablesString } from './variables';
-export type { CSSVariables, VariableInheritance, VariableGroup } from './variables';
+export type {
+  DesignTokens,
+  ColorTokens,
+  SpacingTokens,
+  TypographyTokens,
+  EffectsTokens,
+} from './tokens';
 
-// 导出样式工具
-export { default as createStyleUtils, generateStyles, createStyles, styleUtils } from './styles';
-export type { StyleUtils as StyleUtilsType } from './styles';
+// 导出颜色令牌
+export { colorTokens, darkColorTokens as darkColors } from './tokens/colors';
+export type { ColorTokens as ColorTokensType } from './tokens/colors';
 
-// 导出设计令牌系统
+// 导出间距令牌
+export { spacingTokens } from './tokens/spacing';
+export type { SpacingTokens as SpacingTokensType } from './tokens/spacing';
+
+// 导出字体令牌
+export { typographyTokens } from './tokens/typography';
+export type { TypographyTokens as TypographyTokensType } from './tokens/typography';
+
+// 导出效果令牌
+export { effectsTokens } from './tokens/effects';
+export type { EffectsTokens as EffectsTokensType } from './tokens/effects';
+
+// 导出深度合并工具
+export {
+  deepMerge,
+  deepClone,
+  deepMergeAll,
+  mergeDesignTokens,
+  isPlainObject,
+  isArray,
+  isDate,
+  isRegExp,
+} from './utils/deepMerge';
+export type { DeepMergeOptions } from './utils/deepMerge';
+
+// 导出样式系统（从 styles/ 目录）
+export {
+  createStyles,
+  createComponentStyles,
+  mergeStyles,
+  extendStyles,
+  deepMergeStyles,
+  conditionalStyle,
+  extractStyleProps,
+  composeStyles,
+  createResponsiveStyle,
+} from './styles';
+
+export type {
+  StyleDefinition,
+  StyleDefinitionFunction,
+  ComponentStyleProps,
+  ComputedStyles,
+} from './styles';
+
+// 导出设计令牌生成器（从 design-tokens.ts）
 export {
   default as DesignTokenGenerator,
-  createDesignTokens,
   generateDesignTokenCSS,
   generateDarkThemeCSS,
+  defaultDesignTokens as designTokensFromGenerator,
+  createDesignTokens,
 } from './design-tokens';
-export type { DesignTokens } from './design-tokens';
 
-// 导出ThemeProvider
-export { ThemeProvider, useTheme };
+// 导出默认令牌（从 defaults.ts）
+export {
+  defaultDesignTokens,
+  defaultColorTokens,
+  defaultSpacingTokens,
+  defaultTypographyTokens,
+  defaultBorderRadiusTokens,
+  defaultBoxShadowTokens,
+  defaultAnimationTokens,
+  defaultZIndexTokens,
+} from './defaults';
 
 // 主题快捷导出
 export * from './types';
 export * from './defaults';
-export * from './utils';
-export * from './variables';
-export * from './styles';
-export * from './design-tokens';
 
 // 主题预设
+import { defaultTheme } from './defaults';
+import { darkTheme } from './dark';
+
 export const themes = {
   default: defaultTheme,
   dark: darkTheme,
 };
 
-// 主题工具函数集合
-export const themeTools = {
-  // 颜色工具
-  color: ColorUtils,
-
-  // 响应式工具
-  responsive: ResponsiveUtils,
-
-  // 验证工具
-  validator: ThemeValidator,
-
-  // 预设主题
-  presets: ThemePresets,
-
-  // CSS变量生成
-  css: {
-    createVariables: createCSSVariables,
-    generateString: generateCSSVariablesString,
-  },
-
-  // 样式工具
-  styles: {
-    createUtils: createStyleUtils,
-    generateStyles: generateStyles,
-    createStyles: createStyles,
-  },
-};
-
 // 默认导出
 export default {
   themes,
-  themeTools,
   defaultTheme,
   darkTheme,
 };

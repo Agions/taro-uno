@@ -4,6 +4,27 @@ import type { TableSize } from './Table.types';
 export class TableStyles {
   /** 尺寸映射 */
   static readonly SIZE_MAP: Record<TableSize, any> = {
+    sm: {
+      fontSize: 12,
+      padding: 8,
+      headerHeight: 32,
+      rowHeight: 32,
+      borderRadius: 4,
+    },
+    md: {
+      fontSize: 14,
+      padding: 12,
+      headerHeight: 40,
+      rowHeight: 40,
+      borderRadius: 6,
+    },
+    lg: {
+      fontSize: 16,
+      padding: 16,
+      headerHeight: 48,
+      rowHeight: 48,
+      borderRadius: 8,
+    },
     default: {
       fontSize: 14,
       padding: 12,

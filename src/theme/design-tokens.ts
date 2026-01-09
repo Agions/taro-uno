@@ -993,18 +993,18 @@ export class DesignTokenGenerator {
     let css = ':root {\n';
 
     // 递归生成变量
-    const generateSection = (obj: any, prefix: string = '') => {
+    const generateSection = (obj: Record<string, unknown>, prefix: string = ''): void => {
       Object.entries(obj).forEach(([key, value]) => {
         if (typeof value === 'object' && value !== null) {
-          generateSection(value, `${prefix}${key}-`);
+          generateSection(value as Record<string, unknown>, `${prefix}${key}-`);
         } else {
           const variableName = `--${prefix}${key}`;
-          css += `  ${variableName}: ${value};\n`;
+          css += `  ${variableName}: ${String(value)};\n`;
         }
       });
     };
 
-    generateSection(this.tokens);
+    generateSection(this.tokens as unknown as Record<string, unknown>);
     css += '}\n';
 
     return css;
@@ -1056,29 +1056,33 @@ export class DesignTokenGenerator {
   }
 
   // 获取令牌值
-  public getToken(path: string): any {
+  public getToken<T = unknown>(path: string): T | undefined {
     const keys = path.split('.');
-    let value: any = this.tokens;
+    let value: unknown = this.tokens;
 
     for (const key of keys) {
-      value = value?.[key];
+      if (value && typeof value === 'object' && key in value) {
+        value = (value as Record<string, unknown>)[key];
+      } else {
+        return undefined;
+      }
     }
 
-    return value;
+    return value as T;
   }
 
   // 更新令牌
-  public updateToken(path: string, value: any): void {
+  public updateToken<T>(path: string, value: T): void {
     const keys = path.split('.');
-    let current: any = this.tokens;
+    let current: Record<string, unknown> = this.tokens as unknown as Record<string, unknown>;
 
     for (let i = 0; i < keys.length - 1; i++) {
       const key = keys[i];
-      if (key && !current[key]) {
+      if (key && !(key in current)) {
         current[key] = {};
       }
       if (key) {
-        current = current[key] as any;
+        current = current[key] as Record<string, unknown>;
       }
     }
 

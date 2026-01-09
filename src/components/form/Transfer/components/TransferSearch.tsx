@@ -75,7 +75,6 @@ export const TransferSearch: React.FC<TransferSearchProps> = memo(
           onBlur={handleBlur}
           disabled={disabled}
           aria-label={searchPlaceholder}
-          role="searchbox"
         />
       </View>
     );

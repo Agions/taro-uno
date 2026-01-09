@@ -1,0 +1,8 @@
+{
+  "label": "反馈组件 Feedback",
+  "position": 6,
+  "link": {
+    "type": "generated-index",
+    "description": "反馈组件包括模态框、抽屉、提示、加载、进度条等组件。"
+  }
+}

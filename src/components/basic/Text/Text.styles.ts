@@ -1,11 +1,11 @@
-import { PlatformDetector } from '../../../utils';
+import { getPlatformType } from '../../../utils';
 import type { TextProps, TextSize, TextWeight, TextColor, TextStatus } from './Text.types';
 
 /** 样式工具类 */
 export class TextStyles {
   /** 获取平台前缀 */
   private static getPlatformPrefix(): string {
-    const platformValue = PlatformDetector.getPlatform();
+    const platformValue = getPlatformType();
     // For test environment, default to h5
     if (process.env['NODE_ENV'] === 'test' || platformValue === 'unknown') {
       return 'taro-uno-h5-text';
@@ -213,47 +213,47 @@ export class TextStyles {
     // 处理渐变背景
     const backgroundStyle = gradient
       ? {
-          backgroundImage: `linear-gradient(${gradient.direction || 'to right'}, ${gradient.start}, ${gradient.end})`,
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text',
-          textFillColor: 'transparent',
-        }
+        backgroundImage: `linear-gradient(${gradient.direction || 'to right'}, ${gradient.start}, ${gradient.end})`,
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text',
+        textFillColor: 'transparent',
+      }
       : {};
 
     // 处理最大行数
     const overflowStyle = maxLines
       ? {
-          display: '-webkit-box',
-          WebkitBoxOrient: 'vertical' as any,
-          WebkitLineClamp: maxLines,
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-        }
+        display: '-webkit-box',
+        WebkitBoxOrient: 'vertical' as const,
+        WebkitLineClamp: maxLines,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+      }
       : {};
 
     // 处理省略号
     const ellipsisStyle = ellipsis
       ? {
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-        }
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+      }
       : {};
 
     // 处理换行
     const wrapStyle = !wrap
       ? {
-          whiteSpace: 'nowrap',
-        }
+        whiteSpace: 'nowrap',
+      }
       : {};
 
     // 处理断词
     const breakWordStyle = breakWord
       ? {
-          wordBreak: 'break-word' as any,
-          overflowWrap: 'break-word' as any,
-        }
+        wordBreak: 'break-word' as const,
+        overflowWrap: 'break-word' as const,
+      }
       : {};
 
     return {
@@ -271,7 +271,7 @@ export class TextStyles {
       lineHeight: _lineHeightValue,
       opacity: loading || disabled ? statusStyles['opacity'] : 1,
       cursor: loading || disabled ? statusStyles['cursor'] : 'default',
-      pointerEvents: (loading || disabled ? statusStyles['pointerEvents'] : 'auto') as any,
+      pointerEvents: (loading || disabled ? statusStyles['pointerEvents'] : 'auto') as React.CSSProperties['pointerEvents'],
       transition: animated ? `all ${animationDuration}ms ease-in-out` : 'none',
       backgroundColor: highlight ? highlightColor : 'transparent',
       textShadow,

@@ -1,0 +1,8 @@
+{
+  "label": "数据录入 Data Entry",
+  "position": 4,
+  "link": {
+    "type": "generated-index",
+    "description": "数据录入组件包括表单、输入框、选择器、日期选择等组件。"
+  }
+}

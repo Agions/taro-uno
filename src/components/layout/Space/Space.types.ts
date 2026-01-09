@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import type { ITouchEvent } from '@tarojs/components';
-import { BaseComponentProps, Size, CSSUnit } from '../../../types';
+import { BaseProps } from '../../../types/component';
+import { Size, CSSUnit } from '../../../types';
 
 /** Space组件方向 */
 export type SpaceDirection = 'horizontal' | 'vertical';
@@ -12,7 +13,7 @@ export type SpaceAlign = 'start' | 'center' | 'end' | 'stretch';
 export type SpaceWrap = 'nowrap' | 'wrap' | 'wrap-reverse';
 
 /** Space组件尺寸 */
-export type SpaceSize = Size | number | `${number}${CSSUnit}`;
+export type SpaceSize = Size | 'default' | 'small' | 'medium' | 'large' | number | `${number}${CSSUnit}`;
 
 /** Space组件间距 */
 export type SpaceGap = SpaceSize | [SpaceSize, SpaceSize];
@@ -49,7 +50,7 @@ export interface SpaceRef {
 }
 
 /** Space组件属性 */
-export interface SpaceProps extends BaseComponentProps {
+export interface SpaceProps extends BaseProps {
   /** 子元素 */
   children?: ReactNode;
   /** 间距方向 */

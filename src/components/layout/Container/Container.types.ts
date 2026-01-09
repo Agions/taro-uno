@@ -1,8 +1,9 @@
 import { ReactNode } from 'react';
-import { BaseComponentProps, Size, CSSUnit } from '../../../types';
+import { BaseProps } from '../../../types/component';
+import { Size, CSSUnit } from '../../../types';
 
 /** Container组件尺寸 */
-export type ContainerSize = Size | 'full' | 'fluid';
+export type ContainerSize = Size | 'default' | 'full' | 'fluid';
 
 /** Container组件对齐方式 */
 export type ContainerAlign = 'start' | 'center' | 'end' | 'stretch';
@@ -28,7 +29,7 @@ export interface ContainerRef {
 }
 
 /** Container组件属性 */
-export interface ContainerProps extends BaseComponentProps {
+export interface ContainerProps extends BaseProps {
   /** 子元素 */
   children?: ReactNode;
   /** 容器尺寸 */
@@ -36,9 +37,9 @@ export interface ContainerProps extends BaseComponentProps {
   /** 最大宽度 */
   maxWidth?: number | string;
   /** 内边距 */
-  padding?: Size | number | `${number}${CSSUnit}`;
+  padding?: Size | 'default' | 'small' | 'medium' | 'large' | number | `${number}${CSSUnit}`;
   /** 外边距 */
-  margin?: Size | number | `${number}${CSSUnit}`;
+  margin?: Size | 'default' | 'small' | 'medium' | 'large' | number | `${number}${CSSUnit}`;
   /** 对齐方式 */
   align?: ContainerAlign;
   /** 是否居中 */

@@ -8,8 +8,8 @@ import type {
 } from './Notification.types';
 import { Notification } from './Notification';
 import { notificationStyleHelpers } from './Notification.styles';
-import { cn, platform } from '../../../utils';
-import { useTheme } from '../../../theme/ThemeProvider';
+import { cn, isMobile } from '../../../utils';
+import { useThemeContext } from '../../../providers/ThemeProvider';
 import { DEFAULT_NOTIFICATION_CONFIG, NotificationUtils } from './Notification.types';
 
 // 通知项内部接口
@@ -43,7 +43,7 @@ export const NotificationManager = forwardRef<NotificationManagerRef, Notificati
   void props.style;
   void props.className;
 
-  const theme = useTheme();
+  const theme = useThemeContext();
   const [notifications, setNotifications] = useState<InternalNotificationItem[]>([]);
   const [history, setHistory] = useState<NotificationItem[]>([]);
   const [_isAllPaused, setIsAllPaused] = useState(false);
@@ -314,7 +314,7 @@ export const NotificationManager = forwardRef<NotificationManagerRef, Notificati
   // 获取容器样式
   const getContainerStyle = () => {
     return {
-      ...notificationStyleHelpers.getContainerStyle({ theme, isMobile: platform.isMobile() }),
+      ...notificationStyleHelpers.getContainerStyle({ theme, isMobile: isMobile() }),
       ...containerStyle,
     };
   };
@@ -388,7 +388,7 @@ export const NotificationManager = forwardRef<NotificationManagerRef, Notificati
   const getPlacementStyle = (placement: NotificationPlacement) => {
     const placementStyleData = notificationStyleHelpers.getPlacementStyle(placement, {
       theme,
-      isMobile: platform.isMobile(),
+      isMobile: isMobile(),
     });
     return placementStyleData.container;
   };

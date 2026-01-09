@@ -130,6 +130,13 @@ export default [
         DocumentEventMap: 'readonly',
         // TypeScript utility types
         Parameters: 'readonly',
+        // DOM types for event listeners
+        WindowEventMap: 'readonly',
+        HTMLElementEventMap: 'readonly',
+        AddEventListenerOptions: 'readonly',
+        CanvasImageSource: 'readonly',
+        // Taro global
+        Taro: 'readonly',
         // Node.js types
         NodeJS: 'readonly',
         IntersectionObserverInit: 'readonly',
@@ -146,9 +153,11 @@ export default [
     rules: {
       ...tsPlugin.configs.recommended.rules,
       ...reactPlugin.configs.recommended.rules,
-      ...reactHooks.configs.recommended.rules,
+      // Only use specific react-hooks rules, not the full recommended config (which includes React Compiler)
+      'react-hooks/rules-of-hooks': 'warn', // Downgrade to warning for createComponent render functions
+      'react-hooks/exhaustive-deps': 'warn',
       // TypeScript rules optimization
-      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-explicit-any': 'warn', // Downgraded to warn - 390+ instances need gradual fixing
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
@@ -160,6 +169,12 @@ export default [
       ],
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-non-null-assertion': 'warn',
+      '@typescript-eslint/ban-ts-comment': 'warn', // Allow @ts-ignore with warning
+      '@typescript-eslint/no-empty-object-type': 'warn', // Allow empty interfaces with warning
+      '@typescript-eslint/no-unused-expressions': 'warn', // Allow unused expressions with warning
+      // Disable no-redeclare for TypeScript function overloads
+      'no-redeclare': 'off',
+      'no-import-assign': 'warn',
       // React rules optimization
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
@@ -194,6 +209,10 @@ export default [
       '**/*.d.ts',
       'scripts/**/*',
       '.storybook/**/*',
+      'docs/**',
+      'docs/.docusaurus/**',
+      'docs/build/**',
+      'docs/node_modules/**',
     ],
   },
   ...storybook.configs['flat/recommended'],

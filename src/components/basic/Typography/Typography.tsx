@@ -1,6 +1,15 @@
 import React, { forwardRef, useImperativeHandle, useState, useCallback } from 'react';
-import { TypographyProps, TypographyRef } from './Typography.types';
+import { Text as TaroText, View, Input, Button } from '@tarojs/components';
+import { TypographyProps, TypographyRef, TitleProps, ParagraphProps, TypographyTextProps } from './Typography.types';
 import { calculateTypographyStyles } from './Typography.styles';
+
+// 扩展 Typography 组件类型，包含子组件
+export interface TypographyComponent
+  extends React.ForwardRefExoticComponent<TypographyProps & React.RefAttributes<TypographyRef>> {
+  Title: React.ForwardRefExoticComponent<TitleProps & React.RefAttributes<TypographyRef>>;
+  Paragraph: React.ForwardRefExoticComponent<ParagraphProps & React.RefAttributes<TypographyRef>>;
+  Text: React.ForwardRefExoticComponent<TypographyTextProps & React.RefAttributes<TypographyRef>>;
+}
 
 /**
  * Typography 排版组件
@@ -97,11 +106,11 @@ export const Typography = forwardRef<TypographyRef, TypographyProps>((props, ref
   // 渲染编辑状态
   if (isEditing) {
     return (
-      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-        <input
+      <View style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+        <Input
           type="text"
           value={editText}
-          onChange={(e) => setEditText(e.target.value)}
+          onInput={(e) => setEditText(e.detail.value)}
           style={{
             border: '1px solid #d1d5db',
             borderRadius: '4px',
@@ -111,7 +120,7 @@ export const Typography = forwardRef<TypographyRef, TypographyProps>((props, ref
           }}
           autoFocus
         />
-        <button
+        <Button
           onClick={handleEditComplete}
           style={{
             padding: '4px 8px',
@@ -124,8 +133,8 @@ export const Typography = forwardRef<TypographyRef, TypographyProps>((props, ref
           }}
         >
           确定
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={handleEditCancel}
           style={{
             padding: '4px 8px',
@@ -138,8 +147,8 @@ export const Typography = forwardRef<TypographyRef, TypographyProps>((props, ref
           }}
         >
           取消
-        </button>
-      </div>
+        </Button>
+      </View>
     );
   }
 
@@ -152,28 +161,16 @@ export const Typography = forwardRef<TypographyRef, TypographyProps>((props, ref
       ...restProps,
     };
 
-    switch (variant) {
-      case 'h1':
-      case 'h2':
-      case 'h3':
-      case 'h4':
-      case 'h5':
-      case 'h6':
-        return React.createElement(variant, commonProps, children);
-      case 'p':
-        return React.createElement('p', commonProps, children);
-      case 'span':
-        return React.createElement('span', commonProps, children);
-      default:
-        return React.createElement('span', commonProps, children);
-    }
+    // 在 Taro 中，所有文本都应该使用 Text 组件
+    // 根据 variant 设置不同的样式来模拟标题和段落效果
+    return <TaroText {...commonProps}>{children}</TaroText>;
   };
 
   return (
     <>
       {renderContent()}
       {copyable && (
-        <span
+        <TaroText
           style={{
             marginLeft: '8px',
             fontSize: '12px',
@@ -183,10 +180,10 @@ export const Typography = forwardRef<TypographyRef, TypographyProps>((props, ref
           onClick={handleCopy}
         >
           📋
-        </span>
+        </TaroText>
       )}
       {editable && (
-        <span
+        <TaroText
           style={{
             marginLeft: '8px',
             fontSize: '12px',
@@ -196,7 +193,7 @@ export const Typography = forwardRef<TypographyRef, TypographyProps>((props, ref
           onClick={handleEdit}
         >
           ✏️
-        </span>
+        </TaroText>
       )}
     </>
   );
@@ -204,4 +201,54 @@ export const Typography = forwardRef<TypographyRef, TypographyProps>((props, ref
 
 Typography.displayName = 'Typography';
 
-export default Typography;
+// Title 子组件
+const Title = forwardRef<TypographyRef, TitleProps>((props, ref) => {
+  const { level = 1, children, ...restProps } = props;
+  // 处理 level 可能是字符串的情况（如 "h1", "h2" 等）
+  let variant: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+
+  if (typeof level === 'string') {
+    // 如果是 "h1", "h2" 等格式，直接使用
+    variant = level as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+  } else {
+    // 如果是数字，转换为 "h1", "h2" 等格式
+    variant = `h${level}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+  }
+
+  return (
+    <Typography ref={ref} variant={variant} {...restProps}>
+      {children}
+    </Typography>
+  );
+});
+
+Title.displayName = 'Typography.Title';
+
+// Paragraph 子组件
+const Paragraph = forwardRef<TypographyRef, ParagraphProps>((props, ref) => {
+  return (
+    <Typography ref={ref} variant="p" {...props}>
+      {props.children}
+    </Typography>
+  );
+});
+
+Paragraph.displayName = 'Typography.Paragraph';
+
+// Text 子组件
+const Text = forwardRef<TypographyRef, TypographyTextProps>((props, ref) => {
+  return (
+    <Typography ref={ref} variant="span" {...props}>
+      {props.children}
+    </Typography>
+  );
+});
+
+Text.displayName = 'Typography.Text';
+
+// 将子组件附加到 Typography 组件上
+(Typography as TypographyComponent).Title = Title;
+(Typography as TypographyComponent).Paragraph = Paragraph;
+(Typography as TypographyComponent).Text = Text;
+
+export default Typography as TypographyComponent;

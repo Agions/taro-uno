@@ -1,0 +1,8 @@
+{
+  "label": "通用组件 General",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "description": "通用组件包括按钮、图标、排版、分割线等基础组件。"
+  }
+}

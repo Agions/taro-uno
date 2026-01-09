@@ -88,7 +88,7 @@ export const IconComponent = forwardRef<IconRef, IconProps>((props, ref) => {
         if (typeof resolvedSource === 'string') {
           return (
             <TaroView
-              ref={iconRef as any}
+              ref={iconRef as React.RefObject<HTMLElement>}
               style={baseStyle}
               dangerouslySetInnerHTML={{ __html: resolvedSource }}
               data-testid={dataTestId}
@@ -100,7 +100,7 @@ export const IconComponent = forwardRef<IconRef, IconProps>((props, ref) => {
       case 'image':
         return (
           <TaroImage
-            ref={iconRef as any}
+            ref={iconRef as React.RefObject<HTMLImageElement>}
             style={baseStyle}
             src={resolvedSource as string}
             mode="aspectFit"
@@ -111,7 +111,7 @@ export const IconComponent = forwardRef<IconRef, IconProps>((props, ref) => {
       case 'font':
         return (
           <TaroText
-            ref={iconRef as any}
+            ref={iconRef as React.RefObject<HTMLSpanElement>}
             style={baseStyle}
             className={`${className || ''} ${resolvedSource}`.trim()}
             data-testid={dataTestId}
@@ -120,7 +120,12 @@ export const IconComponent = forwardRef<IconRef, IconProps>((props, ref) => {
 
       case 'custom':
         return (
-          <TaroView ref={iconRef as any} style={baseStyle} className={className} data-testid={dataTestId}>
+          <TaroView
+            ref={iconRef as React.RefObject<HTMLElement>}
+            style={baseStyle}
+            className={className}
+            data-testid={dataTestId}
+          >
             {React.isValidElement(resolvedSource) ? resolvedSource : null}
           </TaroView>
         );
@@ -128,7 +133,7 @@ export const IconComponent = forwardRef<IconRef, IconProps>((props, ref) => {
       default:
         return (
           <TaroText
-            ref={iconRef as any}
+            ref={iconRef as React.RefObject<HTMLSpanElement>}
             style={baseStyle}
             className={`${className || ''} ${resolvedSource}`.trim()}
             data-testid={dataTestId}

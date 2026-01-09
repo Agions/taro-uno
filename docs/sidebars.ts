@@ -1,166 +1,160 @@
 import type { SidebarsConfig } from '@docusaurus/plugin-content-docs';
 
-// This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
-
-/**
- * Creating a sidebar enables you to:
- * - create an ordered group of docs
- * - render a sidebar for each doc of that group
- * - provide next/previous navigation
- *
- * The sidebars can be generated from the filesystem, or explicitly defined here.
- *
- * Create as many sidebars as you want.
- */
 const sidebars: SidebarsConfig = {
-  // 文档侧边栏
   docsSidebar: [
-    {
-      type: 'doc',
-      id: 'intro',
-      label: '项目简介',
-    },
-    {
-      type: 'doc',
-      id: 'quickstart',
-      label: '快速开始',
-    },
-    {
-      type: 'doc',
-      id: 'features',
-      label: '核心功能',
-    },
+    { type: 'doc', id: 'intro', label: '项目简介' },
+    { type: 'doc', id: 'quickstart', label: '快速开始' },
+    { type: 'doc', id: 'features', label: '核心功能' },
     {
       type: 'category',
       label: '开发指南',
+      collapsed: false,
       items: [
-        'guides/installation',
-        'guides/theme-customization',
-        'guides/multi-platform',
-        'guides/best-practices',
+        { type: 'doc', id: 'guides/installation', label: '安装配置' },
+        { type: 'doc', id: 'guides/theme-customization', label: '主题定制' },
+        { type: 'doc', id: 'guides/multi-platform', label: '多平台适配' },
+        { type: 'doc', id: 'guides/best-practices', label: '最佳实践' },
       ],
     },
-    {
-      type: 'doc',
-      id: 'request',
-      label: 'Request 请求库',
-    },
-    {
-      type: 'category',
-      label: 'Hooks 相关文档',
-      items: [
-        'hooks/index',
-      ],
-    },
-    {
-      type: 'category',
-      label: '常用问题解决方案库',
-      items: [
-        'solutions/index',
-      ],
-    },
-    {
-      type: 'category',
-      label: '相关解决文档集',
-      items: [
-        'references/index',
-      ],
-    },
-    {
-      type: 'doc',
-      id: 'faq',
-      label: '常见问题',
-    },
-    {
-      type: 'doc',
-      id: 'changelog',
-      label: '更新日志',
-    },
+    { type: 'doc', id: 'api/index', label: 'API 参考' },
+    { type: 'doc', id: 'faq', label: '常见问题' },
+    { type: 'doc', id: 'changelog', label: '更新日志' },
   ],
-
-  // 组件侧边栏
   componentsSidebar: [
     {
       type: 'category',
-      label: '布局组件',
+      label: '基础组件 Basic',
+      collapsed: false,
       items: [
-        'components/layout/container',
-        'components/layout/layout',
-        'components/layout/grid',
-        'components/layout/row',
-        'components/layout/col',
-        'components/layout/space',
-        'components/layout/affix',
+        { type: 'doc', id: 'components/basic/button', label: 'Button 按钮' },
+        { type: 'doc', id: 'components/basic/icon', label: 'Icon 图标' },
+        { type: 'doc', id: 'components/basic/text', label: 'Text 文本' },
+        { type: 'doc', id: 'components/basic/divider', label: 'Divider 分割线' },
+        { type: 'doc', id: 'components/basic/typography', label: 'Typography 排版' },
       ],
     },
     {
       type: 'category',
-      label: '基础组件',
+      label: '表单组件 Form',
       items: [
-        'components/basic/button',
-        'components/basic/icon',
-        'components/basic/typography',
-        'components/basic/text',
-        'components/basic/divider',
-        'components/basic/video',
+        { type: 'doc', id: 'components/form/form', label: 'Form 表单' },
+        { type: 'doc', id: 'components/form/input', label: 'Input 输入框' },
+        { type: 'doc', id: 'components/form/textarea', label: 'Textarea 文本域' },
+        { type: 'doc', id: 'components/form/input-number', label: 'InputNumber 数字输入' },
+        { type: 'doc', id: 'components/form/select', label: 'Select 选择器' },
+        { type: 'doc', id: 'components/form/cascader', label: 'Cascader 级联选择' },
+        { type: 'doc', id: 'components/form/auto-complete', label: 'AutoComplete 自动完成' },
+        { type: 'doc', id: 'components/form/date-picker', label: 'DatePicker 日期选择' },
+        { type: 'doc', id: 'components/form/time-picker', label: 'TimePicker 时间选择' },
+        { type: 'doc', id: 'components/form/checkbox', label: 'Checkbox 复选框' },
+        { type: 'doc', id: 'components/form/radio', label: 'Radio 单选框' },
+        { type: 'doc', id: 'components/form/switch', label: 'Switch 开关' },
+        { type: 'doc', id: 'components/form/slider', label: 'Slider 滑动条' },
+        { type: 'doc', id: 'components/form/upload', label: 'Upload 上传' },
+        { type: 'doc', id: 'components/form/transfer', label: 'Transfer 穿梭框' },
       ],
     },
     {
       type: 'category',
-      label: '导航组件',
+      label: '展示组件 Display',
       items: [
-        'components/navigation/navbar',
-        'components/navigation/menu',
-        'components/navigation/tabs',
-        'components/navigation/steps',
-        'components/navigation/pagination',
+        { type: 'doc', id: 'components/display/avatar', label: 'Avatar 头像' },
+        { type: 'doc', id: 'components/display/badge', label: 'Badge 徽标' },
+        { type: 'doc', id: 'components/display/tag', label: 'Tag 标签' },
+        { type: 'doc', id: 'components/display/card', label: 'Card 卡片' },
+        { type: 'doc', id: 'components/display/list', label: 'List 列表' },
+        { type: 'doc', id: 'components/display/table', label: 'Table 表格' },
+        { type: 'doc', id: 'components/display/calendar', label: 'Calendar 日历' },
+        { type: 'doc', id: 'components/display/timeline', label: 'Timeline 时间轴' },
+        { type: 'doc', id: 'components/display/carousel', label: 'Carousel 轮播' },
+        { type: 'doc', id: 'components/display/rate', label: 'Rate 评分' },
+        { type: 'doc', id: 'components/display/rich-text', label: 'RichText 富文本' },
       ],
     },
     {
       type: 'category',
-      label: '表单组件',
+      label: '反馈组件 Feedback',
       items: [
-        'components/form/input',
-        'components/form/textarea',
-        'components/form/switch',
-        'components/form/checkbox',
-        'components/form/radio',
-        'components/form/select',
-        'components/form/form',
-        'components/form/cascader',
-        'components/form/date-picker',
-        'components/form/time-picker',
+        { type: 'doc', id: 'components/feedback/loading', label: 'Loading 加载' },
+        { type: 'doc', id: 'components/feedback/progress', label: 'Progress 进度条' },
+        { type: 'doc', id: 'components/feedback/message', label: 'Message 消息' },
+        { type: 'doc', id: 'components/feedback/toast', label: 'Toast 轻提示' },
+        { type: 'doc', id: 'components/feedback/notification', label: 'Notification 通知' },
+        { type: 'doc', id: 'components/feedback/modal', label: 'Modal 对话框' },
+        { type: 'doc', id: 'components/feedback/drawer', label: 'Drawer 抽屉' },
+        { type: 'doc', id: 'components/feedback/popconfirm', label: 'Popconfirm 气泡确认' },
+        { type: 'doc', id: 'components/feedback/tooltip', label: 'Tooltip 文字提示' },
+        { type: 'doc', id: 'components/feedback/result', label: 'Result 结果' },
       ],
     },
     {
       type: 'category',
-      label: '显示组件',
+      label: '布局组件 Layout',
       items: [
-        'components/display/avatar',
-        'components/display/badge',
-        'components/display/card',
-        'components/display/carousel',
-        'components/display/list',
-        'components/display/table',
-        'components/display/tag',
-        'components/display/timeline',
-        'components/display/rate',
-        'components/display/calendar',
+        { type: 'doc', id: 'components/layout/grid', label: 'Grid 栅格' },
+        { type: 'doc', id: 'components/layout/row', label: 'Row 行' },
+        { type: 'doc', id: 'components/layout/col', label: 'Col 列' },
+        { type: 'doc', id: 'components/layout/layout', label: 'Layout 布局' },
+        { type: 'doc', id: 'components/layout/container', label: 'Container 容器' },
+        { type: 'doc', id: 'components/layout/space', label: 'Space 间距' },
+        { type: 'doc', id: 'components/layout/affix', label: 'Affix 固钉' },
+        { type: 'doc', id: 'components/layout/responsive-container', label: 'ResponsiveContainer 响应容器' },
+        { type: 'doc', id: 'components/layout/responsive-grid', label: 'ResponsiveGrid 响应栅格' },
       ],
     },
     {
       type: 'category',
-      label: '反馈组件',
+      label: '导航组件 Navigation',
       items: [
-        'components/feedback/loading',
-        'components/feedback/message',
-        'components/feedback/toast',
-        'components/feedback/notification',
-        'components/feedback/modal',
-        'components/feedback/progress',
-        'components/feedback/result',
-        'components/feedback/tooltip',
+        { type: 'doc', id: 'components/navigation/menu', label: 'Menu 菜单' },
+        { type: 'doc', id: 'components/navigation/navbar', label: 'NavBar 导航栏' },
+        { type: 'doc', id: 'components/navigation/page-header', label: 'PageHeader 页头' },
+        { type: 'doc', id: 'components/navigation/tabs', label: 'Tabs 标签页' },
+        { type: 'doc', id: 'components/navigation/steps', label: 'Steps 步骤条' },
+        { type: 'doc', id: 'components/navigation/pagination', label: 'Pagination 分页' },
       ],
+    },
+    {
+      type: 'category',
+      label: '通用组件 Common',
+      items: [
+        { type: 'doc', id: 'components/common/error-boundary', label: 'ErrorBoundary 错误边界' },
+        { type: 'doc', id: 'components/common/lazy-component', label: 'LazyComponent 懒加载' },
+        { type: 'doc', id: 'components/common/virtual-list', label: 'VirtualList 虚拟列表' },
+      ],
+    },
+  ],
+  hooksSidebar: [
+    { type: 'doc', id: 'hooks/index', label: 'Hooks 概览' },
+    {
+      type: 'category',
+      label: 'state Hooks',
+      items: [{ type: 'doc', id: 'hooks/state', label: '状态管理' }],
+    },
+    {
+      type: 'category',
+      label: 'effect Hooks',
+      items: [{ type: 'doc', id: 'hooks/effect', label: '副作用处理' }],
+    },
+    {
+      type: 'category',
+      label: 'DOM Hooks',
+      items: [{ type: 'doc', id: 'hooks/dom', label: 'DOM 操作' }],
+    },
+    {
+      type: 'category',
+      label: 'async Hooks',
+      items: [{ type: 'doc', id: 'hooks/async', label: '异步处理' }],
+    },
+    {
+      type: 'category',
+      label: 'UI Hooks',
+      items: [{ type: 'doc', id: 'hooks/ui', label: 'UI 相关' }],
+    },
+    {
+      type: 'category',
+      label: 'lifecycle Hooks',
+      items: [{ type: 'doc', id: 'hooks/lifecycle', label: '生命周期' }],
     },
   ],
 };

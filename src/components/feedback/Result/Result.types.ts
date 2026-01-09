@@ -57,6 +57,17 @@ export interface ResultConfig {
   extraStyle?: React.CSSProperties;
 }
 
+/** 格式化结果数据的输入类型 */
+export interface ResultDataInput {
+  [key: string]: unknown;
+}
+
+/** 格式化结果数据的输出类型 */
+export interface FormattedResultData extends ResultDataInput {
+  timestamp: string;
+  formattedTime: string;
+}
+
 export interface ResultUtilsType {
   /** 获取状态对应的颜色 */
   getStatusColor: (_status: ResultStatus) => string;
@@ -65,7 +76,7 @@ export interface ResultUtilsType {
   /** 获取状态对应的默认标题 */
   getStatusTitle: (_status: ResultStatus) => string;
   /** 格式化结果数据 */
-  formatResultData: (_data: any) => any;
+  formatResultData: <T extends ResultDataInput>(_data: T) => T & FormattedResultData;
   /** 验证状态是否有效 */
   validateStatus: (_status: string) => boolean;
 }
@@ -113,7 +124,7 @@ export const ResultUtils: ResultUtilsType = {
     return titleMap[status] || status;
   },
 
-  formatResultData: (data: any) => {
+  formatResultData: <T extends ResultDataInput>(data: T): T & FormattedResultData => {
     return {
       ...data,
       timestamp: new Date().toISOString(),

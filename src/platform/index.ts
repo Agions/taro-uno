@@ -5,17 +5,29 @@
 
 import * as Taro from '@tarojs/taro';
 import type { Platform, PlatformInfo, RequestConfig, RequestResponse, RequestError } from '../types';
+import type {
+  WechatMiniProgramAPI,
+  AlipayMiniProgramAPI,
+  SwanMiniProgramAPI,
+  TTMiniProgramAPI,
+  QQMiniProgramAPI,
+  JDMiniProgramAPI,
+  MiniProgramTakePhotoOptions,
+  MiniProgramTakePhotoResult,
+  MiniProgramShareOptions,
+  MiniProgramShareTimelineOptions,
+} from '../types/global.d';
 import { PLATFORM_APIS, PLATFORM_FEATURES, PLATFORM_NAMES } from '../constants';
 
 // 全局类型声明
 declare global {
   interface Window {
-    wx?: any;
-    my?: any;
-    swan?: any;
-    tt?: any;
-    qq?: any;
-    jd?: any;
+    wx?: WechatMiniProgramAPI;
+    my?: AlipayMiniProgramAPI;
+    swan?: SwanMiniProgramAPI;
+    tt?: TTMiniProgramAPI;
+    qq?: QQMiniProgramAPI;
+    jd?: JDMiniProgramAPI;
   }
 }
 
@@ -27,12 +39,12 @@ export interface PlatformAdapter {
   getPlatformInfo(): PlatformInfo;
 
   /** 网络请求 */
-  request<T = any>(config: RequestConfig): Promise<RequestResponse<T>>;
+  request<T = unknown>(config: RequestConfig): Promise<RequestResponse<T>>;
 
   /** 存储操作 */
   storage: {
-    set(key: string, value: any): Promise<void>;
-    get(key: string): Promise<any>;
+    set<T = unknown>(key: string, value: T): Promise<void>;
+    get<T = unknown>(key: string): Promise<T>;
     remove(key: string): Promise<void>;
     clear(): Promise<void>;
     getInfo(): Promise<{ currentSize: number; limitSize: number }>;
@@ -47,7 +59,7 @@ export interface PlatformAdapter {
 
   /** 相机服务 */
   camera: {
-    takePhoto(options?: any): Promise<any>;
+    takePhoto(options?: MiniProgramTakePhotoOptions): Promise<MiniProgramTakePhotoResult>;
     chooseImage(options?: Taro.chooseImage.Option): Promise<Taro.chooseImage.SuccessCallbackResult>;
     chooseVideo(options?: Taro.chooseVideo.Option): Promise<Taro.chooseVideo.SuccessCallbackResult>;
   };
@@ -59,8 +71,8 @@ export interface PlatformAdapter {
 
   /** 分享服务 */
   share: {
-    shareAppMessage(options?: any): Promise<void>;
-    shareToTimeline(options?: any): Promise<void>;
+    shareAppMessage(options?: MiniProgramShareOptions): Promise<void>;
+    shareToTimeline(options?: MiniProgramShareTimelineOptions): Promise<void>;
   };
 
   /** 生物识别 */
@@ -108,38 +120,46 @@ class WeappAdapter implements PlatformAdapter {
   getPlatformInfo(): PlatformInfo {
     const system = Taro.getSystemInfoSync();
     const accountInfo = Taro.getAccountInfoSync();
+    const miniProgram = accountInfo.miniProgram as unknown as Record<string, unknown>;
 
     return {
+      type: 'weapp',
       platform: 'weapp',
       isMiniProgram: true,
       isH5: false,
       isRN: false,
+      isHarmony: false,
       system,
-      SDKVersion: (accountInfo.miniProgram as any).sdkVersion || accountInfo.miniProgram.version,
+      SDKVersion: (miniProgram['sdkVersion'] as string) || accountInfo.miniProgram.version,
       version: accountInfo.miniProgram.version,
     };
   }
 
-  async request<T = any>(config: RequestConfig): Promise<RequestResponse<T>> {
+  async request<T = unknown>(config: RequestConfig): Promise<RequestResponse<T>> {
     return new Promise((resolve, reject) => {
       Taro.request({
-        url: config.url,
-        method: (config.method as any) || 'GET',
-        header: config.header,
+        url: config.url || '',
+        method: (config.method || 'GET') as keyof Taro.request.Method,
+        header: config.header || config.headers,
         data: config.data,
         timeout: config.timeout,
         success: (res) => {
           resolve({
             data: res.data as T,
+            status: res.statusCode,
             statusCode: res.statusCode,
+            statusText: res.errMsg || '',
             statusMessage: res.errMsg,
-            header: res.header,
+            headers: res.header as Record<string, string>,
+            header: res.header as Record<string, string>,
+            config,
           });
         },
         fail: (err) => {
+          const errWithCode = err as { errMsg?: string; errCode?: number };
           const error: RequestError = {
             message: err.errMsg || 'Request failed',
-            code: (err as any).errCode,
+            code: String(errWithCode.errCode || 'UNKNOWN'),
             detail: err,
           };
           reject(error);
@@ -149,7 +169,7 @@ class WeappAdapter implements PlatformAdapter {
   }
 
   storage = {
-    async set(key: string, value: any): Promise<void> {
+    async set<T = unknown>(key: string, value: T): Promise<void> {
       return new Promise((resolve, reject) => {
         Taro.setStorage({
           key,
@@ -160,11 +180,11 @@ class WeappAdapter implements PlatformAdapter {
       });
     },
 
-    async get(key: string): Promise<any> {
+    async get<T = unknown>(key: string): Promise<T> {
       return new Promise((resolve, reject) => {
         Taro.getStorage({
           key,
-          success: (res) => resolve(res.data),
+          success: (res) => resolve(res.data as T),
           fail: reject,
         });
       });
@@ -234,13 +254,24 @@ class WeappAdapter implements PlatformAdapter {
   };
 
   camera = {
-    async takePhoto(options?: any): Promise<any> {
+    async takePhoto(options?: MiniProgramTakePhotoOptions): Promise<MiniProgramTakePhotoResult> {
       return new Promise((resolve, reject) => {
-        (Taro as any).cameraTakePhoto({
-          ...options,
-          success: resolve,
-          fail: reject,
-        });
+        const taroWithCamera = Taro as unknown as {
+          cameraTakePhoto: (opts: {
+            quality?: string;
+            success?: (result: MiniProgramTakePhotoResult) => void;
+            fail?: (error: unknown) => void;
+          }) => void;
+        };
+        if (typeof taroWithCamera.cameraTakePhoto === 'function') {
+          taroWithCamera.cameraTakePhoto({
+            ...options,
+            success: resolve,
+            fail: reject,
+          });
+        } else {
+          reject(new Error('cameraTakePhoto is not supported'));
+        }
       });
     },
 
@@ -278,23 +309,49 @@ class WeappAdapter implements PlatformAdapter {
   };
 
   share = {
-    async shareAppMessage(options?: any): Promise<void> {
+    async shareAppMessage(options?: MiniProgramShareOptions): Promise<void> {
       return new Promise((resolve, reject) => {
-        (Taro as any).shareAppMessage({
-          ...options,
-          success: () => resolve(),
-          fail: reject,
-        });
+        const taroWithShare = Taro as unknown as {
+          shareAppMessage: (opts: {
+            title?: string;
+            path?: string;
+            imageUrl?: string;
+            success?: () => void;
+            fail?: (error: unknown) => void;
+          }) => void;
+        };
+        if (typeof taroWithShare.shareAppMessage === 'function') {
+          taroWithShare.shareAppMessage({
+            ...options,
+            success: () => resolve(),
+            fail: reject,
+          });
+        } else {
+          reject(new Error('shareAppMessage is not supported'));
+        }
       });
     },
 
-    async shareToTimeline(options?: any): Promise<void> {
+    async shareToTimeline(options?: MiniProgramShareTimelineOptions): Promise<void> {
       return new Promise((resolve, reject) => {
-        (Taro as any).shareToTimeline({
-          ...options,
-          success: () => resolve(),
-          fail: reject,
-        });
+        const taroWithShare = Taro as unknown as {
+          shareToTimeline: (opts: {
+            title?: string;
+            query?: string;
+            imageUrl?: string;
+            success?: () => void;
+            fail?: (error: unknown) => void;
+          }) => void;
+        };
+        if (typeof taroWithShare.shareToTimeline === 'function') {
+          taroWithShare.shareToTimeline({
+            ...options,
+            success: () => resolve(),
+            fail: reject,
+          });
+        } else {
+          reject(new Error('shareToTimeline is not supported'));
+        }
       });
     },
   };
@@ -377,10 +434,24 @@ class WeappAdapter implements PlatformAdapter {
 
     async vibrate(): Promise<void> {
       return new Promise((resolve, reject) => {
-        (Taro as any).vibrate({
-          success: () => resolve(),
-          fail: reject,
-        });
+        const taroWithVibrate = Taro as unknown as {
+          vibrate: (opts: {
+            success?: () => void;
+            fail?: (error: unknown) => void;
+          }) => void;
+        };
+        if (typeof taroWithVibrate.vibrate === 'function') {
+          taroWithVibrate.vibrate({
+            success: () => resolve(),
+            fail: reject,
+          });
+        } else {
+          // Fallback to vibrateShort if vibrate is not available
+          Taro.vibrateShort({
+            success: () => resolve(),
+            fail: reject,
+          });
+        }
       });
     },
   };
@@ -467,10 +538,12 @@ class H5Adapter implements PlatformAdapter {
     const system = Taro.getSystemInfoSync();
 
     return {
+      type: 'h5',
       platform: 'h5',
       isMiniProgram: false,
       isH5: true,
       isRN: false,
+      isHarmony: false,
       system,
     };
   }
@@ -484,8 +557,8 @@ class H5Adapter implements PlatformAdapter {
     return result;
   }
 
-  async request<T = any>(config: RequestConfig): Promise<RequestResponse<T>> {
-    const url = new URL(config.url, window.location.origin);
+  async request<T = unknown>(config: RequestConfig): Promise<RequestResponse<T>> {
+    const url = new URL(config.url || '', window.location.origin);
 
     // 添加查询参数
     if (config.params) {
@@ -499,6 +572,7 @@ class H5Adapter implements PlatformAdapter {
       headers: {
         'Content-Type': 'application/json',
         ...config.header,
+        ...config.headers,
       },
     };
 
@@ -509,16 +583,22 @@ class H5Adapter implements PlatformAdapter {
     try {
       const response = await fetch(url.toString(), options);
       const data = await response.json();
+      const responseHeaders = this.headersToObject(response.headers);
 
       return {
         data,
+        status: response.status,
         statusCode: response.status,
+        statusText: response.statusText,
         statusMessage: response.statusText,
-        header: this.headersToObject(response.headers),
+        headers: responseHeaders,
+        header: responseHeaders,
+        config,
       };
     } catch (error) {
       const requestError: RequestError = {
         message: error instanceof Error ? error.message : 'Network error',
+        code: 'NETWORK_ERROR',
         detail: error,
       };
       throw requestError;
@@ -526,13 +606,13 @@ class H5Adapter implements PlatformAdapter {
   }
 
   storage = {
-    async set(key: string, value: any): Promise<void> {
+    async set<T = unknown>(key: string, value: T): Promise<void> {
       localStorage.setItem(key, JSON.stringify(value));
     },
 
-    async get(key: string): Promise<any> {
+    async get<T = unknown>(key: string): Promise<T> {
       const value = localStorage.getItem(key);
-      return value ? JSON.parse(value) : null;
+      return value ? JSON.parse(value) as T : null as T;
     },
 
     async remove(key: string): Promise<void> {
@@ -600,7 +680,7 @@ class H5Adapter implements PlatformAdapter {
   };
 
   camera = {
-    async takePhoto(): Promise<any> {
+    async takePhoto(): Promise<MiniProgramTakePhotoResult> {
       throw new Error('takePhoto is not supported in H5 environment');
     },
 
@@ -711,17 +791,26 @@ class H5Adapter implements PlatformAdapter {
 
     async getNetworkType(): Promise<Taro.getNetworkType.SuccessCallbackResult> {
       // 估算网络类型
-      const connection = (navigator as any).connection;
-      let networkType = 'unknown';
+      interface NavigatorConnection {
+        effectiveType?: string;
+      }
+      const navigatorWithConnection = navigator as Navigator & { connection?: NavigatorConnection };
+      const connection = navigatorWithConnection.connection;
+      let networkType: Taro.getNetworkType.SuccessCallbackResult['networkType'] = 'unknown';
 
-      if (connection) {
-        if (connection.effectiveType) {
-          networkType = connection.effectiveType;
-        }
+      if (connection && connection.effectiveType) {
+        // Map effectiveType to Taro network types
+        const typeMap: Record<string, Taro.getNetworkType.SuccessCallbackResult['networkType']> = {
+          'slow-2g': '2g',
+          '2g': '2g',
+          '3g': '3g',
+          '4g': '4g',
+        };
+        networkType = typeMap[connection.effectiveType] || 'unknown';
       }
 
       return {
-        networkType: networkType as any,
+        networkType,
         errMsg: 'getNetworkType:ok',
       };
     },
@@ -808,10 +897,12 @@ class RNAdapter implements PlatformAdapter {
     const system = Taro.getSystemInfoSync();
 
     return {
+      type: 'rn',
       platform: 'rn',
       isMiniProgram: false,
       isH5: false,
       isRN: true,
+      isHarmony: false,
       system,
     };
   }
@@ -825,9 +916,9 @@ class RNAdapter implements PlatformAdapter {
     return result;
   }
 
-  async request<T = any>(config: RequestConfig): Promise<RequestResponse<T>> {
+  async request<T = unknown>(config: RequestConfig): Promise<RequestResponse<T>> {
     // 使用React Native的fetch实现
-    const url = new URL(config.url);
+    const url = new URL(config.url || '');
 
     if (config.params) {
       Object.entries(config.params).forEach(([key, value]) => {
@@ -840,6 +931,7 @@ class RNAdapter implements PlatformAdapter {
       headers: {
         'Content-Type': 'application/json',
         ...config.header,
+        ...config.headers,
       },
     };
 
@@ -850,16 +942,22 @@ class RNAdapter implements PlatformAdapter {
     try {
       const response = await fetch(url.toString(), options);
       const data = await response.json();
+      const responseHeaders = this.headersToObject(response.headers);
 
       return {
         data,
+        status: response.status,
         statusCode: response.status,
+        statusText: response.statusText,
         statusMessage: response.statusText,
-        header: this.headersToObject(response.headers),
+        headers: responseHeaders,
+        header: responseHeaders,
+        config,
       };
     } catch (error) {
       const requestError: RequestError = {
         message: error instanceof Error ? error.message : 'Network error',
+        code: 'NETWORK_ERROR',
         detail: error,
       };
       throw requestError;
@@ -868,14 +966,14 @@ class RNAdapter implements PlatformAdapter {
 
   // React Native的存储实现需要使用AsyncStorage
   storage = {
-    async set(_key: string, _value: any): Promise<void> {
+    async set<T = unknown>(_key: string, _value: T): Promise<void> {
       // 这里需要导入AsyncStorage
       // const { AsyncStorage } = require('react-native')
       // await AsyncStorage.setItem(key, JSON.stringify(value))
       throw new Error('AsyncStorage not implemented');
     },
 
-    async get(_key: string): Promise<any> {
+    async get<T = unknown>(_key: string): Promise<T> {
       // const { AsyncStorage } = require('react-native')
       // const value = await AsyncStorage.getItem(key)
       // return value ? JSON.parse(value) : null
@@ -916,7 +1014,7 @@ class RNAdapter implements PlatformAdapter {
   };
 
   camera = {
-    async takePhoto(): Promise<any> {
+    async takePhoto(): Promise<MiniProgramTakePhotoResult> {
       throw new Error('Camera service not implemented');
     },
 
@@ -1044,17 +1142,17 @@ export class PlatformManager {
 
   /** 检测当前平台 */
   private detectPlatform(): Platform {
-    if (typeof window !== 'undefined' && window.wx && (window.wx as any).getSystemInfo) {
+    if (typeof window !== 'undefined' && window.wx && typeof window.wx.getSystemInfo === 'function') {
       return 'weapp';
-    } else if (typeof window !== 'undefined' && window.my && (window.my as any).getSystemInfo) {
+    } else if (typeof window !== 'undefined' && window.my && typeof window.my.getSystemInfo === 'function') {
       return 'alipay';
-    } else if (typeof window !== 'undefined' && window.swan && (window.swan as any).getSystemInfo) {
+    } else if (typeof window !== 'undefined' && window.swan && typeof window.swan.getSystemInfo === 'function') {
       return 'swan';
-    } else if (typeof window !== 'undefined' && window.tt && (window.tt as any).getSystemInfo) {
+    } else if (typeof window !== 'undefined' && window.tt && typeof window.tt.getSystemInfo === 'function') {
       return 'tt';
-    } else if (typeof window !== 'undefined' && window.qq && (window.qq as any).getSystemInfo) {
+    } else if (typeof window !== 'undefined' && window.qq && typeof window.qq.getSystemInfo === 'function') {
       return 'qq';
-    } else if (typeof window !== 'undefined' && window.jd && (window.jd as any).getSystemInfo) {
+    } else if (typeof window !== 'undefined' && window.jd && typeof window.jd.getSystemInfo === 'function') {
       return 'jd';
     } else if (typeof navigator !== 'undefined' && navigator.product === 'ReactNative') {
       return 'rn';
@@ -1104,12 +1202,12 @@ export class PlatformManager {
 
   /** 获取当前平台 */
   getPlatform(): Platform {
-    return this.platformInfo.platform;
+    return this.platformInfo.type;
   }
 
   /** 判断是否为指定平台 */
   isPlatform(targetPlatform: Platform): boolean {
-    return this.platformInfo.platform === targetPlatform;
+    return this.platformInfo.type === targetPlatform;
   }
 
   /** 判断是否为小程序环境 */
@@ -1129,19 +1227,19 @@ export class PlatformManager {
 
   /** 检查功能支持 */
   isFeatureSupported(feature: keyof typeof PLATFORM_FEATURES.weapp): boolean {
-    const platform = this.platformInfo.platform;
+    const platform = this.platformInfo.type;
     return PLATFORM_FEATURES[platform]?.[feature] || false;
   }
 
   /** 获取平台API映射 */
   getPlatformAPIs(): typeof PLATFORM_APIS.weapp {
-    const platform = this.platformInfo.platform;
-    return PLATFORM_APIS[platform] || PLATFORM_APIS.h5;
+    const platform = this.platformInfo.type;
+    return PLATFORM_APIS[platform] || PLATFORM_APIS['h5'];
   }
 
   /** 获取平台名称 */
   getPlatformName(): string {
-    const platform = this.platformInfo.platform;
+    const platform = this.platformInfo.type;
     return PLATFORM_NAMES[platform] || 'Unknown';
   }
 
@@ -1186,3 +1284,55 @@ export const {
 } = platformUtils;
 
 // 类型已经在前面导出，这里不需要重复导出
+
+
+// ==================== 新模块导出 ====================
+
+// 导出新的类型定义
+export type {
+  PlatformType,
+  MiniProgramPlatform,
+  SystemInfo,
+  PlatformCapabilities,
+  PlatformConfig,
+} from './types';
+
+export {
+  isMiniProgramPlatform,
+  DEFAULT_PLATFORM_CAPABILITIES,
+  DEFAULT_PLATFORM_CONFIG,
+} from './types';
+
+// 导出新的平台检测器
+export {
+  detectPlatform,
+  detectPlatformType,
+  clearPlatformCache,
+  isPlatform as isPlatformType,
+  isMiniProgram as isMiniProgramEnv,
+  isH5 as isH5Env,
+  isRN as isRNEnv,
+  isHarmony as isHarmonyEnv,
+  getPlatformType as getCurrentPlatformType,
+} from './detector';
+
+// 导出新的适配器
+export type { IPlatformAdapter } from './adapter';
+
+export {
+  BasePlatformAdapter,
+  WeappAdapter as NewWeappAdapter,
+  AlipayAdapter as NewAlipayAdapter,
+  SwanAdapter as NewSwanAdapter,
+  TTAdapter as NewTTAdapter,
+  QQAdapter as NewQQAdapter,
+  JDAdapter as NewJDAdapter,
+  H5Adapter as NewH5Adapter,
+  RNAdapter as NewRNAdapter,
+  HarmonyAdapter as NewHarmonyAdapter,
+  UnknownAdapter as NewUnknownAdapter,
+  createAdapter,
+  getAdapter,
+  clearAdapterCache,
+  registerAdapter,
+} from './adapter';

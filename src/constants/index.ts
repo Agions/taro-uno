@@ -9,30 +9,26 @@ import type { Platform, Size, Variant, Status, ThemeMode, AnimationType, Animati
 
 /** 组件尺寸常量 */
 export const COMPONENT_SIZES: Record<Size, string> = {
-  small: 'small',
-  medium: 'medium',
-  large: 'large',
-  default: 'default',
+  sm: 'sm',
+  md: 'md',
+  lg: 'lg',
 };
 
 /** 组件变体常量 */
 export const COMPONENT_VARIANTS: Record<Variant, string> = {
-  default: 'default',
-  primary: 'primary',
-  secondary: 'secondary',
-  success: 'success',
-  warning: 'warning',
-  danger: 'danger',
-  info: 'info',
+  solid: 'solid',
+  outline: 'outline',
+  ghost: 'ghost',
+  text: 'text',
 };
 
 /** 组件状态常量 */
 export const COMPONENT_STATUSES: Record<Status, string> = {
   default: 'default',
-  loading: 'loading',
-  disabled: 'disabled',
-  error: 'error',
+  primary: 'primary',
   success: 'success',
+  warning: 'warning',
+  danger: 'danger',
 };
 
 /** 组件前缀常量 */
@@ -154,6 +150,8 @@ export const PLATFORM_NAMES: Record<Platform, string> = {
   h5: 'H5',
   rn: 'React Native',
   jd: '京东小程序',
+  harmony: '鸿蒙OS',
+  unknown: '未知平台',
 };
 
 /** 平台特性支持 */
@@ -239,6 +237,24 @@ export const PLATFORM_FEATURES: Record<
     supportsCamera: true,
     supportsPayment: true,
     supportsShare: true,
+    supportsBiometrics: false,
+  },
+  harmony: {
+    supportsStorage: true,
+    supportsNetwork: true,
+    supportsLocation: true,
+    supportsCamera: true,
+    supportsPayment: true,
+    supportsShare: true,
+    supportsBiometrics: true,
+  },
+  unknown: {
+    supportsStorage: false,
+    supportsNetwork: false,
+    supportsLocation: false,
+    supportsCamera: false,
+    supportsPayment: false,
+    supportsShare: false,
     supportsBiometrics: false,
   },
 };
@@ -398,6 +414,40 @@ export const PLATFORM_APIS: Record<
     camera: {
       take: 'jd.cameraTake',
       choose: 'jd.chooseImage',
+    },
+  },
+  harmony: {
+    request: '@ohos.net.http',
+    storage: {
+      set: '@ohos.data.preferences.put',
+      get: '@ohos.data.preferences.get',
+      remove: '@ohos.data.preferences.delete',
+      clear: '@ohos.data.preferences.clear',
+    },
+    location: {
+      get: '@ohos.geolocation.getCurrentLocation',
+      open: '@ohos.router.pushUrl',
+    },
+    camera: {
+      take: '@ohos.multimedia.camera.takePicture',
+      choose: '@ohos.file.picker.select',
+    },
+  },
+  unknown: {
+    request: 'fetch',
+    storage: {
+      set: 'localStorage.setItem',
+      get: 'localStorage.getItem',
+      remove: 'localStorage.removeItem',
+      clear: 'localStorage.clear',
+    },
+    location: {
+      get: 'navigator.geolocation.getCurrentPosition',
+      open: 'window.open',
+    },
+    camera: {
+      take: 'navigator.mediaDevices.getUserMedia',
+      choose: 'input[type=file].click()',
     },
   },
 };

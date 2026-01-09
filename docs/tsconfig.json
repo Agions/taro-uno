@@ -1,7 +1,6 @@
 {
   // 添加类型声明文件路径，解决找不到 testing-library__jest-dom 类型定义的问题
   "compilerOptions": {
-     "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     // 明确指定需要的类型库，避免隐式包含不需要的类型库
     "types": [],

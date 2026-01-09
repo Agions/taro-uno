@@ -127,9 +127,11 @@ export const BasicComponentsUtils = {
   /**
    * 判断是否为基础组件属性
    */
-  isBasicComponentProps: (props: any): props is BasicComponentProps => {
+  isBasicComponentProps: (props: unknown): props is BasicComponentProps => {
     return (
-      props && ('size' in props || 'color' in props || 'variant' in props || 'source' in props || 'children' in props)
+      props !== null &&
+      typeof props === 'object' &&
+      ('size' in props || 'color' in props || 'variant' in props || 'source' in props || 'children' in props)
     );
   },
 

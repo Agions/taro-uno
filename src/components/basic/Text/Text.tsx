@@ -2,8 +2,8 @@ import React, { forwardRef, useRef, useState, useEffect, useCallback } from 'rea
 import { Text as TaroText, View } from '@tarojs/components';
 import { textStyles } from './Text.styles';
 import type { TextProps, TextRef } from './Text.types';
-import { useSecurity } from '../../common/SecurityProvider';
-import { useTheme } from '../../common/ThemeProvider';
+import { useSecurity } from '../../../providers/SecurityProvider';
+import { useThemeContext as useTheme } from '../../../providers/ThemeProvider';
 
 /** 文本组件 */
 export const TextComponent = forwardRef<TextRef, TextProps>((props, ref) => {
@@ -314,6 +314,7 @@ export const TextComponent = forwardRef<TextRef, TextProps>((props, ref) => {
       {internalLoading && renderLoading()}
 
       <TextElement
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ref={textRef as any}
         className={textClassName}
         style={textStyle}
@@ -322,6 +323,7 @@ export const TextComponent = forwardRef<TextRef, TextProps>((props, ref) => {
         aria-label={ariaLabel}
         role={role}
         {...linkProps}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         {...(restProps as any)}
       >
         {sanitizedChildren}

@@ -4,6 +4,9 @@ import type { SpaceProps, SpaceDirection, SpaceSize, SpaceGap } from './Space.ty
 export const spaceStyles = {
   /** 尺寸映射表 */
   SIZE_MAP: {
+    sm: 8,
+    md: 16,
+    lg: 24,
     small: 8,
     medium: 16,
     large: 24,
@@ -95,19 +98,19 @@ export const spaceStyles = {
     // 计算紧凑模式
     const compactStyle = compact
       ? {
-          gap: gapValue,
-          '& > *': {
-            margin: 0,
-          },
-        }
+        gap: gapValue,
+        '& > *': {
+          margin: 0,
+        },
+      }
       : {};
 
     // 计算等分模式
     const splitStyle = split
       ? {
-          flex: 1,
-          minWidth: 0,
-        }
+        flex: 1,
+        minWidth: 0,
+      }
       : {};
 
     return {

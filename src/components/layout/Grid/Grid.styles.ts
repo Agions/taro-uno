@@ -5,6 +5,9 @@ import type { Size, CSSUnit } from '../../../types';
 export const gridStyles = {
   /** 尺寸映射表 */
   SIZE_MAP: {
+    sm: 8,
+    md: 16,
+    lg: 24,
     small: 8,
     medium: 16,
     large: 24,
@@ -32,7 +35,7 @@ export const gridStyles = {
   /**
    * 解析尺寸值
    */
-  parseSize: (size: Size | number | `${number}${CSSUnit}`): string => {
+  parseSize: (size: Size | 'default' | 'small' | 'medium' | 'large' | number | `${number}${CSSUnit}`): string => {
     if (typeof size === 'number') {
       return `${size}px`;
     }
@@ -92,9 +95,8 @@ export const gridStyles = {
     // 计算间距
     const gapValue =
       rowGap || columnGap
-        ? `${rowGap ? gridStyles['parseSize'](rowGap) : gridStyles['parseSize'](Array.isArray(gap) ? gap[0] : gap)} ${
-            columnGap ? gridStyles['parseSize'](columnGap) : gridStyles['parseSize'](Array.isArray(gap) ? gap[1] : gap)
-          }`
+        ? `${rowGap ? gridStyles['parseSize'](rowGap) : gridStyles['parseSize'](Array.isArray(gap) ? gap[0] : gap)} ${columnGap ? gridStyles['parseSize'](columnGap) : gridStyles['parseSize'](Array.isArray(gap) ? gap[1] : gap)
+        }`
         : gridStyles['parseGap'](gap);
 
     // 计算对齐方式

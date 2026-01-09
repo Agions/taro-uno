@@ -1,9 +1,9 @@
 import { ReactNode } from 'react';
 import { Size } from '../../../types';
-import { BaseComponentProps as StandardBaseComponentProps } from '../../../types/component-props';
+import { BaseProps } from '../../../types/component';
 
 /** 评分尺寸 */
-export type RateSize = Size | 'small' | 'medium' | 'large';
+export type RateSize = Size | 'default' | 'small' | 'medium' | 'large';
 
 /** 评分字符 */
 export type RateCharacter = ReactNode | string;
@@ -25,7 +25,7 @@ export interface RateRef {
 }
 
 /** 评分组件属性 */
-export interface RateProps extends StandardBaseComponentProps {
+export interface RateProps extends BaseProps {
   /** 当前评分值 */
   value?: number;
   /** 默认评分值 */

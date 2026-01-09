@@ -1,4 +1,4 @@
-import { PlatformDetector } from '../../../utils';
+import { getPlatformType } from '../../../utils';
 import type { ReactNode } from 'react';
 import type { DividerProps, DividerOrientation, DividerType, DividerSize, DividerColor } from './Divider.types';
 
@@ -6,7 +6,7 @@ import type { DividerProps, DividerOrientation, DividerType, DividerSize, Divide
 export class DividerStyles {
   /** 获取平台前缀 */
   private static getPlatformPrefix(): string {
-    const platformValue = PlatformDetector.getPlatform();
+    const platformValue = getPlatformType();
     return `taro-uno-${platformValue}-divider`;
   }
 
@@ -132,23 +132,23 @@ export class DividerStyles {
     // 处理渐变背景
     const backgroundStyle = gradient
       ? {
-          backgroundImage: `linear-gradient(${gradient.direction || 'to right'}, ${gradient.start}, ${gradient.end})`,
-          border: 'none',
-        }
+        backgroundImage: `linear-gradient(${gradient.direction || 'to right'}, ${gradient.start}, ${gradient.end})`,
+        border: 'none',
+      }
       : borderStyle;
 
     // 处理动画
     const animationStyle = animated
       ? {
-          transition: `all ${animationDuration}ms ease-in-out`,
-        }
+        transition: `all ${animationDuration}ms ease-in-out`,
+      }
       : {};
 
     // 处理间距
     const spacingStyle = spacing
       ? {
-          gap: typeof spacing === 'number' ? `${spacing}px` : spacing,
-        }
+        gap: typeof spacing === 'number' ? `${spacing}px` : spacing,
+      }
       : {};
 
     // 处理对齐
@@ -302,9 +302,8 @@ export class DividerStyles {
     const animationName = animationType === 'slide' ? animations.slide[animationDirection] : animations[animationType];
 
     return {
-      animation: `${animationName} ${animationDuration}ms ${animationDelay}ms ${
-        animationLoop ? 'infinite' : '1'
-      } ${animationPlayState}`,
+      animation: `${animationName} ${animationDuration}ms ${animationDelay}ms ${animationLoop ? 'infinite' : '1'
+        } ${animationPlayState}`,
     };
   }
 

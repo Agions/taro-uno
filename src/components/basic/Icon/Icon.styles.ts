@@ -1,11 +1,11 @@
-import { PlatformDetector } from '../../../utils';
+import { getPlatformType } from '../../../utils';
 import type { IconProps, IconSize, IconStatus, IconTheme } from './Icon.types';
 
 /** 样式工具类 */
 export class IconStyles {
   /** 获取平台前缀 */
   private static getPlatformPrefix(): string {
-    const platformValue = PlatformDetector.getPlatform();
+    const platformValue = getPlatformType();
     return `taro-uno-${platformValue}-icon`;
   }
 
@@ -116,11 +116,11 @@ export class IconStyles {
       color,
       opacity: statusStyles['opacity'],
       cursor: statusStyles['cursor'],
-      pointerEvents: statusStyles['pointerEvents'] as any,
+      pointerEvents: statusStyles['pointerEvents'] as React.CSSProperties['pointerEvents'],
       transform: rotate ? `rotate(${rotate}deg)` : 'none',
       transition: animated ? `all ${animationDuration}ms ease-in-out` : 'none',
       filter: filterStyle,
-      mixBlendMode: blendModeStyle as any,
+      mixBlendMode: blendModeStyle as React.CSSProperties['mixBlendMode'],
       display: 'inline-flex',
       alignItems: 'center',
       justifyContent: 'center',

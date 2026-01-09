@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import type { ITouchEvent } from '@tarojs/components';
-import { BaseComponentProps, Size, CSSUnit } from '../../../types';
+import { BaseProps } from '../../../types/component';
+import { Size, CSSUnit } from '../../../types';
 
 /** Grid组件对齐方式 */
 export type GridAlign = 'start' | 'center' | 'end' | 'stretch';
@@ -11,9 +12,13 @@ export type GridJustify = 'start' | 'center' | 'end' | 'between' | 'around' | 'e
 /** Grid组件间距 */
 export type GridGap =
   | Size
+  | 'default'
+  | 'small'
+  | 'medium'
+  | 'large'
   | number
   | `${number}${CSSUnit}`
-  | [Size | number | `${number}${CSSUnit}`, Size | number | `${number}${CSSUnit}`];
+  | [Size | 'default' | 'small' | 'medium' | 'large' | number | `${number}${CSSUnit}`, Size | 'default' | 'small' | 'medium' | 'large' | number | `${number}${CSSUnit}`];
 
 /** Grid组件列数 */
 export type GridCols = string | number | `${number}`;
@@ -43,7 +48,7 @@ export interface GridRef {
 }
 
 /** Grid组件属性 */
-export interface GridProps extends BaseComponentProps {
+export interface GridProps extends BaseProps {
   /** 子元素 */
   children?: ReactNode;
   /** 列数 */

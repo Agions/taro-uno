@@ -13,7 +13,7 @@ export const sliderStyles: Record<string, CSSProperties> = {
   vertical: {
     width: '24px' as any,
     height: '200px' as any,
-    flexDirection: 'column' as 'column',
+    flexDirection: 'column' as const,
   },
 
   disabled: {

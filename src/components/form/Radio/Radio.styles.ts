@@ -1,11 +1,11 @@
-import { platform } from '@/utils';
+import { getPlatformType } from '@/utils';
 import type { RadioProps, RadioSize, RadioStatus, RadioVariant, RadioColor, RadioStyleConfig } from './Radio.types';
 
 /** 样式工具类 */
 export class RadioStyles {
   /** 获取平台前缀 */
   private static getPlatformPrefix(): string {
-    const platformName = platform.getPlatform();
+    const platformName = getPlatformType();
     return `taro-uno-${platformName}-radio`;
   }
 
@@ -14,12 +14,12 @@ export class RadioStyles {
     RadioSize,
     { fontSize: number; size: number; borderRadius: number; padding: number; iconSize: number }
   > = {
-    xs: { fontSize: 20, size: 16, borderRadius: 8, padding: 4, iconSize: 10 },
-    sm: { fontSize: 24, size: 20, borderRadius: 10, padding: 6, iconSize: 12 },
-    md: { fontSize: 28, size: 24, borderRadius: 12, padding: 8, iconSize: 14 },
-    lg: { fontSize: 32, size: 28, borderRadius: 14, padding: 10, iconSize: 16 },
-    xl: { fontSize: 36, size: 32, borderRadius: 16, padding: 12, iconSize: 18 },
-  };
+      xs: { fontSize: 20, size: 16, borderRadius: 8, padding: 4, iconSize: 10 },
+      sm: { fontSize: 24, size: 20, borderRadius: 10, padding: 6, iconSize: 12 },
+      md: { fontSize: 28, size: 24, borderRadius: 12, padding: 8, iconSize: 14 },
+      lg: { fontSize: 32, size: 28, borderRadius: 14, padding: 10, iconSize: 16 },
+      xl: { fontSize: 36, size: 32, borderRadius: 16, padding: 12, iconSize: 18 },
+    };
 
   /** 状态颜色映射 */
   static readonly STATUS_COLORS: Record<
@@ -34,105 +34,105 @@ export class RadioStyles {
       icon: string;
     }
   > = {
-    normal: {
-      backgroundColor: '#ffffff',
-      borderColor: '#d1d5db',
-      '--radio-dot-color': '#0ea5e9',
-      '--radio-checked-border-color': '#0ea5e9',
-      '--radio-checked-background-color': '#ffffff',
-      textColor: '#374151',
-      icon: '●',
-    },
-    error: {
-      backgroundColor: '#fef2f2',
-      borderColor: '#ef4444',
-      '--radio-dot-color': '#ef4444',
-      '--radio-checked-border-color': '#ef4444',
-      '--radio-checked-background-color': '#ffffff',
-      textColor: '#ef4444',
-      icon: '●',
-    },
-    warning: {
-      backgroundColor: '#fffbeb',
-      borderColor: '#f59e0b',
-      '--radio-dot-color': '#f59e0b',
-      '--radio-checked-border-color': '#f59e0b',
-      '--radio-checked-background-color': '#ffffff',
-      textColor: '#f59e0b',
-      icon: '●',
-    },
-    success: {
-      backgroundColor: '#f0fdf4',
-      borderColor: '#22c55e',
-      '--radio-dot-color': '#22c55e',
-      '--radio-checked-border-color': '#22c55e',
-      '--radio-checked-background-color': '#ffffff',
-      textColor: '#22c55e',
-      icon: '●',
-    },
-    disabled: {
-      backgroundColor: '#f9fafb',
-      borderColor: '#e5e7eb',
-      '--radio-dot-color': '#9ca3af',
-      '--radio-checked-border-color': '#e5e7eb',
-      '--radio-checked-background-color': '#f9fafb',
-      textColor: '#9ca3af',
-      icon: '●',
-    },
-  };
+      normal: {
+        backgroundColor: '#ffffff',
+        borderColor: '#d1d5db',
+        '--radio-dot-color': '#0ea5e9',
+        '--radio-checked-border-color': '#0ea5e9',
+        '--radio-checked-background-color': '#ffffff',
+        textColor: '#374151',
+        icon: '●',
+      },
+      error: {
+        backgroundColor: '#fef2f2',
+        borderColor: '#ef4444',
+        '--radio-dot-color': '#ef4444',
+        '--radio-checked-border-color': '#ef4444',
+        '--radio-checked-background-color': '#ffffff',
+        textColor: '#ef4444',
+        icon: '●',
+      },
+      warning: {
+        backgroundColor: '#fffbeb',
+        borderColor: '#f59e0b',
+        '--radio-dot-color': '#f59e0b',
+        '--radio-checked-border-color': '#f59e0b',
+        '--radio-checked-background-color': '#ffffff',
+        textColor: '#f59e0b',
+        icon: '●',
+      },
+      success: {
+        backgroundColor: '#f0fdf4',
+        borderColor: '#22c55e',
+        '--radio-dot-color': '#22c55e',
+        '--radio-checked-border-color': '#22c55e',
+        '--radio-checked-background-color': '#ffffff',
+        textColor: '#22c55e',
+        icon: '●',
+      },
+      disabled: {
+        backgroundColor: '#f9fafb',
+        borderColor: '#e5e7eb',
+        '--radio-dot-color': '#9ca3af',
+        '--radio-checked-border-color': '#e5e7eb',
+        '--radio-checked-background-color': '#f9fafb',
+        textColor: '#9ca3af',
+        icon: '●',
+      },
+    };
 
   /** 变体样式映射 */
   static readonly VARIANT_STYLES: Record<
     RadioVariant,
     { backgroundColor: string; borderColor: string; borderWidth: number }
   > = {
-    default: { backgroundColor: '#ffffff', borderColor: '#d1d5db', borderWidth: 2 },
-    filled: { backgroundColor: '#f3f4f6', borderColor: '#d1d5db', borderWidth: 2 },
-    outlined: { backgroundColor: 'transparent', borderColor: '#d1d5db', borderWidth: 2 },
-  };
+      default: { backgroundColor: '#ffffff', borderColor: '#d1d5db', borderWidth: 2 },
+      filled: { backgroundColor: '#f3f4f6', borderColor: '#d1d5db', borderWidth: 2 },
+      outlined: { backgroundColor: 'transparent', borderColor: '#d1d5db', borderWidth: 2 },
+    };
 
   /** 颜色主题映射 */
   static readonly COLOR_THEMES: Record<
     RadioColor,
     { primary: string; secondary: string; background: string; border: string }
   > = {
-    primary: {
-      primary: '#0ea5e9',
-      secondary: '#e0f2fe',
-      background: '#ffffff',
-      border: '#0ea5e9',
-    },
-    secondary: {
-      primary: '#6b7280',
-      secondary: '#f3f4f6',
-      background: '#ffffff',
-      border: '#6b7280',
-    },
-    success: {
-      primary: '#22c55e',
-      secondary: '#dcfce7',
-      background: '#ffffff',
-      border: '#22c55e',
-    },
-    warning: {
-      primary: '#f59e0b',
-      secondary: '#fef3c7',
-      background: '#ffffff',
-      border: '#f59e0b',
-    },
-    error: {
-      primary: '#ef4444',
-      secondary: '#fee2e2',
-      background: '#ffffff',
-      border: '#ef4444',
-    },
-    info: {
-      primary: '#3b82f6',
-      secondary: '#dbeafe',
-      background: '#ffffff',
-      border: '#3b82f6',
-    },
-  };
+      primary: {
+        primary: '#0ea5e9',
+        secondary: '#e0f2fe',
+        background: '#ffffff',
+        border: '#0ea5e9',
+      },
+      secondary: {
+        primary: '#6b7280',
+        secondary: '#f3f4f6',
+        background: '#ffffff',
+        border: '#6b7280',
+      },
+      success: {
+        primary: '#22c55e',
+        secondary: '#dcfce7',
+        background: '#ffffff',
+        border: '#22c55e',
+      },
+      warning: {
+        primary: '#f59e0b',
+        secondary: '#fef3c7',
+        background: '#ffffff',
+        border: '#f59e0b',
+      },
+      error: {
+        primary: '#ef4444',
+        secondary: '#fee2e2',
+        background: '#ffffff',
+        border: '#ef4444',
+      },
+      info: {
+        primary: '#3b82f6',
+        secondary: '#dbeafe',
+        background: '#ffffff',
+        border: '#3b82f6',
+      },
+    };
 
   /** 生成单选框类名 */
   static getClassName(props: Partial<RadioProps>): string {

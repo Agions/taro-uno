@@ -65,8 +65,8 @@ export const DividerComponent = forwardRef<DividerRef, DividerProps>((props, ref
   }, [children, icon, variant]);
 
   // 处理点击事件
-  const handleClick = useCallback<CommonEventFunction<any>>(
-    (event: any) => {
+  const handleClick = useCallback<CommonEventFunction<Record<string, unknown>>>(
+    (event) => {
       if (!clickable) return;
       onClick?.(event);
     },
@@ -118,7 +118,7 @@ export const DividerComponent = forwardRef<DividerRef, DividerProps>((props, ref
       ? React.cloneElement(icon, {
           ...(icon.props || {}),
           'data-testid': 'icon-content',
-        } as any)
+        } as React.Attributes & { 'data-testid': string })
       : icon;
 
     return (
@@ -228,7 +228,7 @@ export const DividerComponent = forwardRef<DividerRef, DividerProps>((props, ref
   const baseClassName = className || '';
   const dividerClassName =
     baseClassName +
-    ` taro-uno-h5-divider` +
+    ' taro-uno-h5-divider' +
     ` taro-uno-h5-divider--${orientation}` +
     ` taro-uno-h5-divider--${type}` +
     ` taro-uno-h5-divider--${position}` +
@@ -304,15 +304,19 @@ export const DividerComponent = forwardRef<DividerRef, DividerProps>((props, ref
         // This is a mock implementation for testing
         if (dividerRef.current) {
           // Store the options for testing purposes
-          (dividerRef.current as any).scrollIntoViewOptions = options;
+          const element = dividerRef.current as HTMLDivElement & {
+            scrollIntoViewOptions?: ScrollIntoViewOptions;
+            scrollIntoView?: (opts?: ScrollIntoViewOptions) => void;
+          };
+          element.scrollIntoViewOptions = options;
           // Create and call a mock function for spy detection
-          if (!(dividerRef.current as any).scrollIntoView) {
+          if (!element.scrollIntoView) {
             const mockFn = (_opts?: ScrollIntoViewOptions) => {
               // This will be captured by spies in tests
             };
-            (dividerRef.current as any).scrollIntoView = mockFn;
+            element.scrollIntoView = mockFn;
           }
-          (dividerRef.current as any).scrollIntoView(options);
+          element.scrollIntoView(options);
         }
       },
     }),
@@ -324,6 +328,7 @@ export const DividerComponent = forwardRef<DividerRef, DividerProps>((props, ref
     if (internalVariant === 'text') {
       return (
         <View
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ref={dividerRef as any}
           className={`${dividerClassName} taro-uno-divider--text`}
           style={{ ...dividerStyle, ...textDividerStyle, ...responsiveStyle }}
@@ -335,6 +340,7 @@ export const DividerComponent = forwardRef<DividerRef, DividerProps>((props, ref
           aria-role={accessibilityRole}
           role={accessibilityRole}
           data-testid="divider"
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           {...(restProps as any)}
         >
           {icon && renderIcon()}
@@ -346,6 +352,7 @@ export const DividerComponent = forwardRef<DividerRef, DividerProps>((props, ref
     if (internalVariant === 'with-icon') {
       return (
         <View
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ref={dividerRef as any}
           className={`${dividerClassName} taro-uno-divider--with-icon`}
           style={{ ...dividerStyle, ...iconDividerStyle, ...responsiveStyle }}
@@ -357,6 +364,7 @@ export const DividerComponent = forwardRef<DividerRef, DividerProps>((props, ref
           aria-role={accessibilityRole}
           role={accessibilityRole}
           data-testid="divider"
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           {...(restProps as any)}
         >
           {renderIcon()}
@@ -366,6 +374,7 @@ export const DividerComponent = forwardRef<DividerRef, DividerProps>((props, ref
 
     return (
       <View
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ref={dividerRef as any}
         className={dividerClassName}
         style={{ ...dividerStyle, ...responsiveStyle }}
@@ -377,6 +386,7 @@ export const DividerComponent = forwardRef<DividerRef, DividerProps>((props, ref
         aria-role={accessibilityRole}
         role={accessibilityRole}
         data-testid="divider"
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         {...(restProps as any)}
       />
     );

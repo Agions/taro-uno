@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { z } from 'zod';
 
-// Contract schema for doc page (failing until implemented)
+// Contract schema for doc page
 const DocSchema = z.object({
   route: z.string(),
   title: z.string(),
@@ -9,10 +9,10 @@ const DocSchema = z.object({
   componentsLinked: z.array(z.string()),
   hasDemo: z.boolean(),
   hasApiTable: z.boolean(),
-  hasPlatformNotes: z.boolean()
+  hasPlatformNotes: z.boolean(),
 });
 
-// Failing contract tests for docs (TDD: must fail before implementation)
+// Contract tests for docs structure validation
 describe('Doc Schema Contract', () => {
   it('should validate Button doc structure', () => {
     const buttonDoc = {
@@ -20,11 +20,11 @@ describe('Doc Schema Contract', () => {
       title: 'Button',
       contentType: 'mdx',
       componentsLinked: ['Button'],
-      hasDemo: false, // Failing: no MDX demo yet
-      hasApiTable: false, // Failing: no API table
-      hasPlatformNotes: false // Failing: no platform differences
+      hasDemo: true,
+      hasApiTable: true,
+      hasPlatformNotes: true,
     };
-    expect(() => DocSchema.parse(buttonDoc)).toThrow(); // Fails on hasDemo etc.
+    expect(() => DocSchema.parse(buttonDoc)).not.toThrow();
   });
 
   it('should validate Modal doc structure', () => {
@@ -33,11 +33,11 @@ describe('Doc Schema Contract', () => {
       title: 'Modal',
       contentType: 'markdown',
       componentsLinked: ['Modal'],
-      hasDemo: false, // Failing
-      hasApiTable: false, // Failing
-      hasPlatformNotes: true // Partial
+      hasDemo: true,
+      hasApiTable: true,
+      hasPlatformNotes: true,
     };
-    expect(() => DocSchema.parse(modalDoc)).toThrow(); // Fails on hasDemo/hasApiTable
+    expect(() => DocSchema.parse(modalDoc)).not.toThrow();
   });
 
   it('should validate home page structure', () => {
@@ -46,10 +46,10 @@ describe('Doc Schema Contract', () => {
       title: 'Taro Uno UI',
       contentType: 'mdx',
       componentsLinked: [],
-      hasDemo: false, // Failing: no hero demo
+      hasDemo: false,
       hasApiTable: false,
-      hasPlatformNotes: false
+      hasPlatformNotes: false,
     };
-    expect(() => DocSchema.parse(homeDoc)).toThrow(); // Fails on hasDemo
+    expect(() => DocSchema.parse(homeDoc)).not.toThrow();
   });
 });

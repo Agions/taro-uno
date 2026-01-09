@@ -1,41 +1,69 @@
 /**
  * 默认主题配置
+ * 基于设计令牌系统提供完整的默认主题
  */
 
-import { ThemeConfig } from './types';
+import type { ThemeConfig } from './types';
+import {
+  colorTokens,
+  spacingTokens,
+  typographyTokens,
+  effectsTokens,
+  type DesignTokens,
+} from './tokens';
 
-// 默认主题配置
+// 为向后兼容导出别名
+export const defaultColorTokens = colorTokens;
+export const defaultSpacingTokens = spacingTokens;
+export const defaultTypographyTokens = typographyTokens;
+export const defaultBorderRadiusTokens = effectsTokens.borderRadius;
+export const defaultBoxShadowTokens = effectsTokens.boxShadow;
+export const defaultAnimationTokens = effectsTokens.animation;
+export const defaultZIndexTokens = effectsTokens.zIndex;
+
+// 完整的默认设计令牌
+export const defaultDesignTokens: DesignTokens = {
+  colors: colorTokens,
+  spacing: spacingTokens,
+  typography: typographyTokens,
+  effects: effectsTokens,
+};
+
+/**
+ * 默认主题配置
+ * 使用亮色模式作为默认主题
+ */
 export const defaultTheme: ThemeConfig = {
   mode: 'light',
   colors: {
-    primary: '#0ea5e9',
-    secondary: '#6b7280',
-    success: '#22c55e',
-    warning: '#f59e0b',
-    error: '#ef4444',
-    info: '#3b82f6',
+    primary: colorTokens.primary[500],
+    secondary: colorTokens.secondary[500],
+    success: colorTokens.success[500],
+    warning: colorTokens.warning[500],
+    error: colorTokens.error[500],
+    info: colorTokens.info[500],
 
-    text: '#111827',
-    textSecondary: '#6b7280',
-    textDisabled: '#9ca3af',
-    textInverse: '#ffffff',
+    text: colorTokens.text.primary,
+    textSecondary: colorTokens.text.secondary,
+    textDisabled: colorTokens.text.disabled ?? '#9ca3af',
+    textInverse: colorTokens.text.inverse ?? '#ffffff',
 
-    background: '#ffffff',
-    backgroundCard: '#ffffff',
-    backgroundInput: '#f9fafb',
-    backgroundMask: 'rgba(0, 0, 0, 0.5)',
+    background: colorTokens.background.primary,
+    backgroundCard: colorTokens.background.card ?? '#ffffff',
+    backgroundInput: colorTokens.background.input ?? '#f9fafb',
+    backgroundMask: colorTokens.background.mask ?? 'rgba(0, 0, 0, 0.5)',
 
-    border: '#e5e7eb',
-    borderLight: '#f3f4f6',
-    borderFocus: '#0ea5e9',
+    border: colorTokens.border.default,
+    borderLight: colorTokens.border.light,
+    borderFocus: colorTokens.border.focus ?? '#0ea5e9',
 
-    shadow: 'rgba(0, 0, 0, 0.1)',
-    shadowLight: 'rgba(0, 0, 0, 0.05)',
+    shadow: colorTokens.shadow.default,
+    shadowLight: colorTokens.shadow.light,
 
-    brand: '#0ea5e9',
-    accent: '#f59e0b',
-    link: '#0ea5e9',
-    divider: '#e5e7eb',
+    brand: colorTokens.primary[500],
+    accent: colorTokens.warning[500],
+    link: colorTokens.text.link ?? '#0ea5e9',
+    divider: colorTokens.border.default,
   },
   spacing: {
     xs: 4,
@@ -60,22 +88,10 @@ export const defaultTheme: ThemeConfig = {
   },
   typography: {
     fontFamily: {
-      sans: [
-        '-apple-system',
-        'BlinkMacSystemFont',
-        'Segoe UI',
-        'Roboto',
-        'Oxygen',
-        'Ubuntu',
-        'Cantarell',
-        'Fira Sans',
-        'Droid Sans',
-        'Helvetica Neue',
-        'sans-serif',
-      ],
-      serif: ['Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
-      mono: ['Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace'],
-      heading: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+      sans: typographyTokens.fontFamily.sans as string[],
+      serif: typographyTokens.fontFamily.serif as string[],
+      mono: typographyTokens.fontFamily.mono as string[],
+      heading: typographyTokens.fontFamily.display as string[],
     },
     fontSize: {
       xs: 20,
@@ -117,26 +133,26 @@ export const defaultTheme: ThemeConfig = {
     circle: 50,
   },
   shadow: {
-    none: 'none',
-    sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-    md: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-    lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-    xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-    '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-    inner: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
+    none: effectsTokens.boxShadow.none,
+    sm: effectsTokens.boxShadow.sm,
+    md: effectsTokens.boxShadow.md,
+    lg: effectsTokens.boxShadow.lg,
+    xl: effectsTokens.boxShadow.xl,
+    '2xl': effectsTokens.boxShadow['2xl'],
+    inner: effectsTokens.boxShadow.inner,
   },
   animation: {
     duration: {
-      fast: '150ms',
-      normal: '300ms',
-      slow: '500ms',
+      fast: effectsTokens.animation.duration['150'],
+      normal: effectsTokens.animation.duration['300'],
+      slow: effectsTokens.animation.duration['500'],
     },
     easing: {
-      linear: 'linear',
-      ease: 'ease',
-      easeIn: 'ease-in',
-      easeOut: 'ease-out',
-      easeInOut: 'ease-in-out',
+      linear: effectsTokens.animation.easing.linear,
+      ease: effectsTokens.animation.easing.ease,
+      easeIn: effectsTokens.animation.easing.easeIn,
+      easeOut: effectsTokens.animation.easing.easeOut,
+      easeInOut: effectsTokens.animation.easing.easeInOut,
     },
     keyframes: {
       fadeIn: 'fadeIn 0.3s ease-in-out',
@@ -160,29 +176,11 @@ export const defaultTheme: ThemeConfig = {
   },
 };
 
-// 暗色主题配置
-export const darkTheme: ThemeConfig = {
-  ...defaultTheme,
-  mode: 'dark',
-  colors: {
-    ...defaultTheme.colors,
-    text: '#f9fafb',
-    textSecondary: '#d1d5db',
-    textDisabled: '#6b7280',
-    textInverse: '#111827',
 
-    background: '#111827',
-    backgroundCard: '#1f2937',
-    backgroundInput: '#374151',
-    backgroundMask: 'rgba(0, 0, 0, 0.8)',
-
-    border: '#374151',
-    borderLight: '#4b5563',
-    borderFocus: '#0ea5e9',
-
-    shadow: 'rgba(0, 0, 0, 0.3)',
-    shadowLight: 'rgba(0, 0, 0, 0.1)',
-
-    divider: '#374151',
-  },
-};
+/**
+ * 获取默认设计令牌
+ * @returns 默认设计令牌
+ */
+export function getDefaultDesignTokens(): DesignTokens {
+  return defaultDesignTokens;
+}

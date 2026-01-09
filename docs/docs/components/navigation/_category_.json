@@ -1,0 +1,8 @@
+{
+  "label": "导航组件 Navigation",
+  "position": 3,
+  "link": {
+    "type": "generated-index",
+    "description": "导航组件包括导航栏、标签页、菜单、面包屑、分页等组件。"
+  }
+}

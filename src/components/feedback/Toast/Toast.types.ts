@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { BaseComponentProps } from '../../../types';
+import { BaseProps } from '../../../types/component';
 
 /** Toast类型 */
 export type ToastType = 'info' | 'success' | 'warning' | 'error' | 'loading';
@@ -28,7 +28,7 @@ export interface ToastRef {
 }
 
 /** Toast组件属性 */
-export interface ToastProps extends BaseComponentProps {
+export interface ToastProps extends BaseProps {
   /** 是否显示 */
   visible?: boolean;
   /** 默认是否显示 */

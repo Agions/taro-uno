@@ -35,7 +35,7 @@ const renderProvider = () =>
   render(
     <AppProvider>
       <TestHarness />
-    </AppProvider>
+    </AppProvider>,
   );
 
 describe('AppProvider', () => {

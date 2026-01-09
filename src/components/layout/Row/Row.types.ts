@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
-import { BaseComponentProps, Size, CSSUnit } from '../../../types';
+import { BaseProps } from '../../../types/component';
+import { Size, CSSUnit } from '../../../types';
 
 /** Row组件对齐方式 */
 export type RowAlign = 'top' | 'middle' | 'bottom' | 'stretch';
@@ -35,7 +36,7 @@ export interface RowRef {
 }
 
 /** Row组件属性 */
-export interface RowProps extends BaseComponentProps {
+export interface RowProps extends BaseProps {
   /** 子元素 */
   children?: ReactNode;
   /** 间距 */

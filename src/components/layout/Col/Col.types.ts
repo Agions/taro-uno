@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { BaseComponentProps } from '../../../types';
+import { BaseProps } from '../../../types/component';
 import type { RowGutter } from '../Row/Row.types';
 
 /** Col组件跨度 */
@@ -32,7 +32,7 @@ export interface ColRef {
 }
 
 /** Col组件属性 */
-export interface ColProps extends BaseComponentProps {
+export interface ColProps extends BaseProps {
   /** 子元素 */
   children?: ReactNode;
   /** 跨度 (1-24) */

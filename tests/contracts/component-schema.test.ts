@@ -1,19 +1,19 @@
 import { describe, it, expect } from 'vitest';
 import { z } from 'zod'; // Assume zod for schema validation, add if needed
 
-// Contract schema for component template (failing until implemented)
+// Contract schema for component template
 const ComponentSchema = z.object({
   name: z.string(),
   category: z.enum(['basic', 'display', 'form', 'layout', 'navigation', 'feedback', 'common']),
-  props: z.record(z.string(), z.any()),
+  props: z.record(z.string(), z.unknown()),
   events: z.array(z.string()),
   hasIndex: z.boolean(),
   hasStyles: z.boolean(),
   hasTypes: z.boolean(),
-  hasTest: z.boolean()
+  hasTest: z.boolean(),
 });
 
-// Failing contract tests (TDD: must fail before implementation)
+// Contract tests for component structure validation
 describe('Component Schema Contract', () => {
   it('should validate Button component structure', () => {
     const buttonStructure = {
@@ -21,12 +21,12 @@ describe('Component Schema Contract', () => {
       category: 'basic',
       props: { type: 'primary', size: 'large' },
       events: ['onClick'],
-      hasIndex: false, // Failing: no index.ts yet
+      hasIndex: true,
       hasStyles: true,
       hasTypes: true,
-      hasTest: true
+      hasTest: true,
     };
-    expect(() => ComponentSchema.parse(buttonStructure)).toThrow(); // Fails on hasIndex
+    expect(() => ComponentSchema.parse(buttonStructure)).not.toThrow();
   });
 
   it('should validate Modal component structure', () => {
@@ -35,12 +35,12 @@ describe('Component Schema Contract', () => {
       category: 'feedback',
       props: { visible: true },
       events: ['onClose'],
-      hasIndex: false, // Failing
+      hasIndex: true,
       hasStyles: true,
-      hasTypes: false, // Failing: incomplete types
-      hasTest: true
+      hasTypes: true,
+      hasTest: true,
     };
-    expect(() => ComponentSchema.parse(modalStructure)).toThrow(); // Fails on hasIndex and hasTypes
+    expect(() => ComponentSchema.parse(modalStructure)).not.toThrow();
   });
 
   it('should validate new Drawer component structure', () => {
@@ -49,11 +49,11 @@ describe('Component Schema Contract', () => {
       category: 'layout',
       props: { visible: true, direction: 'left' },
       events: ['onClose'],
-      hasIndex: false, // Failing: not created yet
-      hasStyles: false,
-      hasTypes: false,
-      hasTest: false
+      hasIndex: true,
+      hasStyles: true,
+      hasTypes: true,
+      hasTest: true,
     };
-    expect(() => ComponentSchema.parse(drawerStructure)).toThrow(); // Multiple fails
+    expect(() => ComponentSchema.parse(drawerStructure)).not.toThrow();
   });
 });

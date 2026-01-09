@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Size } from '../../../types';
-import { BaseComponentProps as StandardBaseComponentProps } from '../../../types/component-props';
+import { BaseProps } from '../../../types/component';
 
 /** Modal静态方法接口 */
 export interface ModalStatic {
@@ -39,7 +39,7 @@ export interface ModalButton {
 /** Modal引用 */
 export interface ModalRef {
   /** 获取元素引用 */
-  element: any | null;
+  element: HTMLElement | null;
   /** 显示Modal */
   show: () => void;
   /** 隐藏Modal */
@@ -63,7 +63,7 @@ export interface ModalRef {
 }
 
 /** Modal组件属性 */
-export interface ModalProps extends StandardBaseComponentProps {
+export interface ModalProps extends BaseProps {
   /** 是否显示 */
   visible?: boolean;
   /** 默认是否显示 */

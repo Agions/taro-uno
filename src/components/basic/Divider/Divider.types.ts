@@ -82,12 +82,12 @@ export interface DividerProps extends Omit<DividerNativeProps, 'orientation'> {
   borderRadius?: number | string | undefined;
   /** 分割线渐变 */
   gradient?:
-    | {
-        start: string;
-        end: string;
-        direction?: 'to right' | 'to left' | 'to bottom' | 'to top';
-      }
-    | undefined;
+  | {
+    start: string;
+    end: string;
+    direction?: 'to right' | 'to left' | 'to bottom' | 'to top';
+  }
+  | undefined;
   /** 分割线图标 */
   icon?: ReactNode | undefined;
   /** 图标位置 */
@@ -95,7 +95,7 @@ export interface DividerProps extends Omit<DividerNativeProps, 'orientation'> {
   /** 是否可点击 */
   clickable?: boolean | undefined;
   /** 点击事件处理函数 */
-  onClick?: CommonEventFunction<any>;
+  onClick?: CommonEventFunction<Record<string, unknown>>;
   /** 是否响应式 */
   responsive?: boolean | undefined;
   /** 响应式断点 */

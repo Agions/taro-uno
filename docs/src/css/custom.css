@@ -1,30 +1,683 @@
 /**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
+ * Taro Uno UI Documentation - Custom Styles
+ * 
+ * 专业、大气、美观的文档视觉设计系统
+ * 基于渐变蓝紫色系配色方案
  */
 
-/* You can override the default Infima variables here. */
+/* ============================================
+   CSS Variables - Light Theme
+   ============================================ */
 :root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
-  --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  /* Primary Colors - 渐变蓝紫色系 */
+  --ifm-color-primary: #6366f1;
+  --ifm-color-primary-dark: #4f46e5;
+  --ifm-color-primary-darker: #4338ca;
+  --ifm-color-primary-darkest: #3730a3;
+  --ifm-color-primary-light: #818cf8;
+  --ifm-color-primary-lighter: #a5b4fc;
+  --ifm-color-primary-lightest: #c7d2fe;
+
+  /* Accent Colors - 紫色强调 */
+  --taro-accent-color: #8b5cf6;
+  --taro-accent-light: #a78bfa;
+  --taro-accent-dark: #7c3aed;
+
+  /* Semantic Colors */
+  --taro-success: #10b981;
+  --taro-warning: #f59e0b;
+  --taro-error: #ef4444;
+  --taro-info: #3b82f6;
+
+  /* Neutral Colors */
+  --taro-gray-50: #f9fafb;
+  --taro-gray-100: #f3f4f6;
+  --taro-gray-200: #e5e7eb;
+  --taro-gray-300: #d1d5db;
+  --taro-gray-400: #9ca3af;
+  --taro-gray-500: #6b7280;
+  --taro-gray-600: #4b5563;
+  --taro-gray-700: #374151;
+  --taro-gray-800: #1f2937;
+  --taro-gray-900: #111827;
+
+  /* Gradient */
+  --taro-gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  --taro-gradient-hero: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --taro-gradient-card: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+
+  /* Typography */
+  --ifm-font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+  --ifm-heading-font-family: 'Inter', '思源黑体', -apple-system, BlinkMacSystemFont, sans-serif;
+  --ifm-font-family-monospace: 'JetBrains Mono', 'Fira Code', Consolas, Monaco, 'Andale Mono', monospace;
+  
+  --ifm-font-size-base: 16px;
+  --ifm-line-height-base: 1.65;
+  --ifm-heading-line-height: 1.35;
+
+  /* Spacing */
+  --ifm-spacing-horizontal: 1.5rem;
+  --ifm-spacing-vertical: 1rem;
+
+  /* Border Radius */
+  --ifm-border-radius: 8px;
+  --ifm-global-radius: 8px;
+  --taro-radius-sm: 4px;
+  --taro-radius-md: 8px;
+  --taro-radius-lg: 12px;
+  --taro-radius-xl: 16px;
+
+  /* Shadows */
+  --taro-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --taro-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --taro-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --taro-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  /* Code Block */
+  --ifm-code-font-size: 90%;
+  --ifm-code-border-radius: var(--taro-radius-md);
+  --ifm-code-padding-horizontal: 0.4rem;
+  --ifm-code-padding-vertical: 0.2rem;
+  --docusaurus-highlighted-code-line-bg: rgba(99, 102, 241, 0.1);
+
+  /* Navbar */
+  --ifm-navbar-height: 64px;
+  --ifm-navbar-background-color: rgba(255, 255, 255, 0.95);
+  --ifm-navbar-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+  /* Sidebar */
+  --doc-sidebar-width: 280px;
+  --ifm-menu-color: var(--taro-gray-700);
+  --ifm-menu-color-active: var(--ifm-color-primary);
+  --ifm-menu-color-background-active: rgba(99, 102, 241, 0.1);
+
+  /* TOC */
+  --ifm-toc-border-color: var(--taro-gray-200);
+  --ifm-toc-link-color: var(--taro-gray-500);
+
+  /* Footer */
+  --ifm-footer-background-color: var(--taro-gray-900);
+  --ifm-footer-color: var(--taro-gray-300);
+  --ifm-footer-link-color: var(--taro-gray-300);
+  --ifm-footer-link-hover-color: #ffffff;
+
+  /* Cards */
+  --ifm-card-background-color: #ffffff;
+  --ifm-card-border-radius: var(--taro-radius-lg);
+
+  /* Transitions */
+  --taro-transition-fast: 150ms ease;
+  --taro-transition-normal: 250ms ease;
+  --taro-transition-slow: 350ms ease;
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
+/* ============================================
+   CSS Variables - Dark Theme
+   ============================================ */
 [data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  --ifm-color-primary: #818cf8;
+  --ifm-color-primary-dark: #6366f1;
+  --ifm-color-primary-darker: #4f46e5;
+  --ifm-color-primary-darkest: #4338ca;
+  --ifm-color-primary-light: #a5b4fc;
+  --ifm-color-primary-lighter: #c7d2fe;
+  --ifm-color-primary-lightest: #e0e7ff;
+
+  --taro-accent-color: #a78bfa;
+  --taro-accent-light: #c4b5fd;
+  --taro-accent-dark: #8b5cf6;
+
+  --ifm-background-color: #0f172a;
+  --ifm-background-surface-color: #1e293b;
+  
+  --taro-gray-50: #1e293b;
+  --taro-gray-100: #334155;
+  --taro-gray-200: #475569;
+  --taro-gray-300: #64748b;
+  --taro-gray-400: #94a3b8;
+  --taro-gray-500: #cbd5e1;
+  --taro-gray-600: #e2e8f0;
+  --taro-gray-700: #f1f5f9;
+  --taro-gray-800: #f8fafc;
+  --taro-gray-900: #ffffff;
+
+  --taro-gradient-card: linear-gradient(135deg, rgba(129, 140, 248, 0.1) 0%, rgba(167, 139, 250, 0.1) 100%);
+
+  --docusaurus-highlighted-code-line-bg: rgba(129, 140, 248, 0.2);
+
+  --ifm-navbar-background-color: rgba(15, 23, 42, 0.95);
+  
+  --ifm-menu-color: var(--taro-gray-400);
+  --ifm-menu-color-active: var(--ifm-color-primary);
+  --ifm-menu-color-background-active: rgba(129, 140, 248, 0.15);
+
+  --ifm-toc-border-color: var(--taro-gray-100);
+  --ifm-toc-link-color: var(--taro-gray-400);
+
+  --ifm-card-background-color: var(--ifm-background-surface-color);
+
+  --taro-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --taro-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --taro-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================
+   Global Styles
+   ============================================ */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-feature-settings: 'kern' 1, 'liga' 1;
+}
+
+/* ============================================
+   Typography
+   ============================================ */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--ifm-heading-font-family);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: 2.5rem;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 1.875rem;
+  margin-top: 2.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--taro-gray-200);
+}
+
+[data-theme='dark'] h2 {
+  border-bottom-color: var(--taro-gray-100);
+}
+
+h3 {
+  font-size: 1.5rem;
+  margin-top: 2rem;
+}
+
+p {
+  margin-bottom: 1.25rem;
+}
+
+a {
+  transition: color var(--taro-transition-fast);
+}
+
+/* ============================================
+   Navbar Styles
+   ============================================ */
+.navbar {
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--taro-gray-200);
+  box-shadow: none;
+}
+
+[data-theme='dark'] .navbar {
+  border-bottom-color: var(--taro-gray-100);
+}
+
+.navbar__title {
+  font-weight: 700;
+  font-size: 1.25rem;
+  background: var(--taro-gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.navbar__link {
+  font-weight: 500;
+  transition: color var(--taro-transition-fast);
+}
+
+.navbar__link:hover {
+  color: var(--ifm-color-primary);
+}
+
+.navbar__link--active {
+  color: var(--ifm-color-primary);
+}
+
+/* GitHub Link Icon */
+.header-github-link::before {
+  content: '';
+  width: 24px;
+  height: 24px;
+  display: flex;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%23374151' d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E") no-repeat;
+}
+
+[data-theme='dark'] .header-github-link::before {
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%23e2e8f0' d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E") no-repeat;
+}
+
+/* ============================================
+   Sidebar Styles
+   ============================================ */
+.menu {
+  font-weight: 400;
+  padding: 1rem 0.75rem;
+}
+
+.menu__link {
+  border-radius: var(--taro-radius-md);
+  padding: 0.5rem 0.75rem;
+  transition: all var(--taro-transition-fast);
+}
+
+.menu__link:hover {
+  background: var(--ifm-menu-color-background-active);
+}
+
+.menu__link--active {
+  font-weight: 600;
+}
+
+.menu__list-item-collapsible {
+  border-radius: var(--taro-radius-md);
+}
+
+.theme-doc-sidebar-item-category > .menu__list-item-collapsible:hover {
+  background: var(--ifm-menu-color-background-active);
+}
+
+/* Category Labels */
+.menu__list-item-collapsible .menu__link {
+  font-weight: 600;
+  color: var(--taro-gray-800);
+}
+
+[data-theme='dark'] .menu__list-item-collapsible .menu__link {
+  color: var(--taro-gray-600);
+}
+
+/* ============================================
+   TOC Styles
+   ============================================ */
+.table-of-contents {
+  font-size: 0.875rem;
+}
+
+.table-of-contents__link {
+  padding: 0.25rem 0;
+  transition: color var(--taro-transition-fast);
+}
+
+.table-of-contents__link:hover,
+.table-of-contents__link--active {
+  color: var(--ifm-color-primary);
+}
+
+.table-of-contents__link--active {
+  font-weight: 600;
+}
+
+/* ============================================
+   Code Block Styles
+   ============================================ */
+.prism-code {
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+div[class*='codeBlockContainer'] {
+  border-radius: var(--taro-radius-lg);
+  box-shadow: var(--taro-shadow-md);
+  overflow: hidden;
+}
+
+div[class*='codeBlockTitle'] {
+  background: var(--taro-gray-100);
+  border-bottom: 1px solid var(--taro-gray-200);
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.75rem 1rem;
+}
+
+[data-theme='dark'] div[class*='codeBlockTitle'] {
+  background: var(--taro-gray-50);
+  border-bottom-color: var(--taro-gray-100);
+}
+
+/* Copy Button */
+button[class*='copyButton'] {
+  border-radius: var(--taro-radius-md);
+  transition: all var(--taro-transition-fast);
+}
+
+button[class*='copyButton']:hover {
+  background: var(--ifm-color-primary);
+  color: white;
+}
+
+/* Line Numbers */
+.prism-code .token-line {
+  padding-left: 1rem;
+}
+
+/* Highlighted Lines */
+.theme-code-block-highlighted-line {
+  background-color: var(--docusaurus-highlighted-code-line-bg);
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+  border-left: 3px solid var(--ifm-color-primary);
+}
+
+/* Error Line */
+.code-block-error-line {
+  background-color: rgba(239, 68, 68, 0.15);
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+  border-left: 3px solid var(--taro-error);
+}
+
+/* Success Line */
+.code-block-success-line {
+  background-color: rgba(16, 185, 129, 0.15);
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+  border-left: 3px solid var(--taro-success);
+}
+
+/* Inline Code */
+code {
+  background: var(--taro-gray-100);
+  border: 1px solid var(--taro-gray-200);
+  border-radius: var(--taro-radius-sm);
+  color: var(--ifm-color-primary-dark);
+  font-size: 0.875em;
+  padding: 0.125rem 0.375rem;
+}
+
+[data-theme='dark'] code {
+  background: var(--taro-gray-50);
+  border-color: var(--taro-gray-100);
+  color: var(--ifm-color-primary-light);
+}
+
+/* ============================================
+   Admonition Styles
+   ============================================ */
+.admonition {
+  border-radius: var(--taro-radius-lg);
+  border-left-width: 4px;
+  box-shadow: var(--taro-shadow-sm);
+}
+
+.admonition-heading {
+  font-weight: 600;
+}
+
+/* ============================================
+   Table Styles
+   ============================================ */
+table {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: var(--taro-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--taro-shadow-sm);
+}
+
+table thead {
+  background: var(--taro-gray-50);
+}
+
+[data-theme='dark'] table thead {
+  background: var(--taro-gray-100);
+}
+
+table th {
+  font-weight: 600;
+  text-align: left;
+  padding: 0.875rem 1rem;
+  border-bottom: 2px solid var(--taro-gray-200);
+}
+
+[data-theme='dark'] table th {
+  border-bottom-color: var(--taro-gray-100);
+}
+
+table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--taro-gray-200);
+}
+
+[data-theme='dark'] table td {
+  border-bottom-color: var(--taro-gray-100);
+}
+
+table tr:last-child td {
+  border-bottom: none;
+}
+
+table tr:hover {
+  background: var(--taro-gray-50);
+}
+
+[data-theme='dark'] table tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* ============================================
+   Footer Styles
+   ============================================ */
+.footer {
+  background: var(--taro-gray-900);
+  padding: 3rem 0 2rem;
+}
+
+.footer__title {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.footer__link-item {
+  font-size: 0.875rem;
+  line-height: 2;
+  transition: color var(--taro-transition-fast);
+}
+
+.footer__link-item:hover {
+  color: var(--ifm-color-primary-light);
+}
+
+.footer__copyright {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--taro-gray-700);
+  font-size: 0.875rem;
+  color: var(--taro-gray-400);
+}
+
+/* ============================================
+   Announcement Bar
+   ============================================ */
+div[class*='announcementBar'] {
+  background: var(--taro-gradient-primary);
+  font-weight: 500;
+}
+
+div[class*='announcementBar'] a {
+  color: white;
+  text-decoration: underline;
+}
+
+/* ============================================
+   Search Styles
+   ============================================ */
+.DocSearch-Button {
+  border-radius: var(--taro-radius-lg) !important;
+  padding: 0 1rem !important;
+}
+
+.DocSearch-Button-Placeholder {
+  font-size: 0.875rem !important;
+}
+
+/* ============================================
+   Pagination Styles
+   ============================================ */
+.pagination-nav__link {
+  border-radius: var(--taro-radius-lg);
+  border: 1px solid var(--taro-gray-200);
+  transition: all var(--taro-transition-fast);
+}
+
+[data-theme='dark'] .pagination-nav__link {
+  border-color: var(--taro-gray-100);
+}
+
+.pagination-nav__link:hover {
+  border-color: var(--ifm-color-primary);
+  box-shadow: var(--taro-shadow-md);
+}
+
+.pagination-nav__sublabel {
+  font-size: 0.75rem;
+  color: var(--taro-gray-500);
+}
+
+.pagination-nav__label {
+  font-weight: 600;
+  color: var(--ifm-color-primary);
+}
+
+/* ============================================
+   Breadcrumbs Styles
+   ============================================ */
+.breadcrumbs__link {
+  border-radius: var(--taro-radius-md);
+  padding: 0.25rem 0.5rem;
+  transition: background var(--taro-transition-fast);
+}
+
+.breadcrumbs__link:hover {
+  background: var(--taro-gray-100);
+}
+
+[data-theme='dark'] .breadcrumbs__link:hover {
+  background: var(--taro-gray-50);
+}
+
+/* ============================================
+   Badge Styles
+   ============================================ */
+.badge {
+  border-radius: var(--taro-radius-md);
+  font-weight: 500;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.badge--primary {
+  background: var(--taro-gradient-primary);
+  color: white;
+}
+
+.badge--secondary {
+  background: var(--taro-gray-100);
+  color: var(--taro-gray-700);
+}
+
+/* ============================================
+   Card Styles (for homepage features)
+   ============================================ */
+.card {
+  background: var(--ifm-card-background-color);
+  border-radius: var(--ifm-card-border-radius);
+  box-shadow: var(--taro-shadow-md);
+  padding: 1.5rem;
+  transition: all var(--taro-transition-normal);
+}
+
+.card:hover {
+  box-shadow: var(--taro-shadow-lg);
+  transform: translateY(-2px);
+}
+
+/* ============================================
+   Responsive Adjustments
+   ============================================ */
+@media (max-width: 996px) {
+  :root {
+    --doc-sidebar-width: 100%;
+  }
+  
+  h1 {
+    font-size: 2rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+  
+  h3 {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar__title {
+    font-size: 1.125rem;
+  }
+  
+  h1 {
+    font-size: 1.75rem;
+  }
+  
+  table {
+    display: block;
+    overflow-x: auto;
+  }
+}
+
+/* ============================================
+   Print Styles
+   ============================================ */
+@media print {
+  .navbar,
+  .footer,
+  .pagination-nav,
+  .table-of-contents {
+    display: none;
+  }
+  
+  .main-wrapper {
+    padding: 0;
+  }
+}
+
+/* ============================================
+   Accessibility
+   ============================================ */
+:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

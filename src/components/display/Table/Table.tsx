@@ -1,5 +1,5 @@
 import React, { forwardRef, useRef, useState, useEffect, useCallback, useMemo } from 'react';
-import { View, Text, ScrollView } from '@tarojs/components';
+import { View, Text, ScrollView, Checkbox, Button } from '@tarojs/components';
 import { TableStyles } from './Table.styles';
 import type { TableProps, TableRef, TableSortOrder } from './Table.types';
 
@@ -151,10 +151,10 @@ export const TableComponent = forwardRef<TableRef, TableProps>((props, ref) => {
           {/* 选择列 */}
           {rowSelection && (
             <View className="taro-uno-table__cell taro-uno-table__cell--selection">
-              <input
-                type="checkbox"
+              <Checkbox
+                value="all"
                 checked={selectedRowKeys.length > 0 && selectedRowKeys.length === data.length}
-                onChange={(e) => handleSelectAll(e.target.checked)}
+                onChange={(e) => handleSelectAll(e.detail.value.length > 0)}
                 disabled={data.length === 0}
               />
             </View>
@@ -171,18 +171,14 @@ export const TableComponent = forwardRef<TableRef, TableProps>((props, ref) => {
             return (
               <View
                 key={column.key || column.dataIndex || index}
-                className={`taro-uno-table__cell taro-uno-table__cell--header ${
-                  column.align ? `taro-uno-table__cell--${column.align}` : ''
-                }`}
+                className={`taro-uno-table__cell taro-uno-table__cell--header ${column.align ? `taro-uno-table__cell--${column.align}` : ''}`}
                 style={{ width: column.width }}
               >
                 <View className="taro-uno-table__cell-content">
                   {column.title}
                   {isSortable && (
                     <View
-                      className={`taro-uno-table__sorter ${
-                        currentSort ? `taro-uno-table__sorter--${currentSort}` : ''
-                      }`}
+                      className={`taro-uno-table__sorter ${currentSort ? `taro-uno-table__sorter--${currentSort}` : ''}`}
                       onClick={() => {
                         const newOrder = currentSort === 'ascend' ? 'descend' : 'ascend';
                         handleSort(column.dataIndex, newOrder);
@@ -212,18 +208,16 @@ export const TableComponent = forwardRef<TableRef, TableProps>((props, ref) => {
     return (
       <View key={key} className="taro-uno-table__body">
         <View
-          className={`taro-uno-table__row ${isSelected ? 'taro-uno-table__row--selected' : ''} ${
-            striped && rowIndex % 2 === 1 ? 'taro-uno-table__row--striped' : ''
-          }`}
+          className={`taro-uno-table__row ${isSelected ? 'taro-uno-table__row--selected' : ''} ${striped && rowIndex % 2 === 1 ? 'taro-uno-table__row--striped' : ''}`}
           {...rowProps}
         >
           {/* 选择列 */}
           {rowSelection && (
             <View className="taro-uno-table__cell taro-uno-table__cell--selection">
-              <input
-                type="checkbox"
+              <Checkbox
+                value={key}
                 checked={isSelected}
-                onChange={(e) => handleRowSelect(key, e.target.checked)}
+                onChange={(e) => handleRowSelect(key, e.detail.value.length > 0)}
                 disabled={rowSelection.getCheckboxProps?.(record)?.disabled}
               />
             </View>
@@ -282,23 +276,23 @@ export const TableComponent = forwardRef<TableRef, TableProps>((props, ref) => {
       <View className="taro-uno-table__pagination">
         <View className="taro-uno-table__pagination-info">共 {total} 条记录</View>
         <View className="taro-uno-table__pagination-controls">
-          <button
+          <Button
             className="taro-uno-table__pagination-btn"
             disabled={currentPage === 1}
             onClick={() => handlePageChange(currentPage - 1)}
           >
             上一页
-          </button>
+          </Button>
           <View className="taro-uno-table__pagination-current">
             {currentPage} / {totalPages}
           </View>
-          <button
+          <Button
             className="taro-uno-table__pagination-btn"
             disabled={currentPage === totalPages}
             onClick={() => handlePageChange(currentPage + 1)}
           >
             下一页
-          </button>
+          </Button>
         </View>
       </View>
     );

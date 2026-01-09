@@ -1,18 +1,18 @@
 import { defineConfig } from 'vitest/config';
-import react from '@vitejs/plugin-react'
-import path from 'path'
+import react from '@vitejs/plugin-react';
+import path from 'path';
 
 // Mock plugin for Taro components
 const taroMockPlugin = {
   name: 'taro-mock',
   resolveId(source: string) {
     if (source === '@tarojs/components' || source === '@tarojs/components/types/common') {
-      return '\0' + source
+      return '\0' + source;
     }
     if (source.includes('@tarojs/runtime')) {
-      return '\0taro-runtime-stub'
+      return '\0taro-runtime-stub';
     }
-    return null
+    return null;
   },
   load(id: string) {
     if (id === '\0@tarojs/components') {
@@ -66,19 +66,19 @@ const taroMockPlugin = {
         export const StyleSheet = {
           create: (styles) => styles
         }
-      `
+      `;
     }
     if (id === '\0@tarojs/components/types/common') {
       return `
         export const ITouchEvent = {}
-      `
+      `;
     }
     if (id === '\0taro-runtime-stub') {
-      return 'export default {}'
+      return 'export default {}';
     }
-    return null
-  }
-}
+    return null;
+  },
+};
 
 export default defineConfig({
   plugins: [react(), taroMockPlugin],
@@ -155,7 +155,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@import "@/theme/design-tokens.scss";`,
+        additionalData: '@import "@/theme/design-tokens.scss";',
       },
     },
   },
@@ -180,4 +180,4 @@ export default defineConfig({
     ENABLE_WXS_SCRIPT: false,
     ENABLE_WXS_MODULE: false,
   },
-})
+});

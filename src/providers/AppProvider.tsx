@@ -1,16 +1,16 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
-import { ThemeProvider } from '../theme/ThemeProvider';
-import type { ThemeConfig, ThemeMode } from '../theme/types';
-import { useTheme } from '../theme/ThemeProvider';
-import { defaultTheme } from '../theme/defaults';
+import { ThemeProvider, useThemeContext } from './ThemeProvider';
+import type { ThemeMode } from './ThemeProvider';
+import type { DesignTokens } from '../theme/tokens';
+import { defaultDesignTokens } from '../theme/tokens';
 import type { Platform, PlatformInfo } from '../types';
 import { resolvePlatform } from '../utils/environment';
 
 interface AppProviderProps {
   children: ReactNode;
-  /** 默认主题配置 */
-  theme?: ThemeConfig;
+  /** 默认设计令牌 */
+  defaultTokens?: DesignTokens;
   /** 默认主题模式 */
   themeMode?: ThemeMode;
   /** 持久化键名 */
@@ -32,7 +32,7 @@ interface AppPlatformState {
 
 interface AppContextValue {
   platform: AppPlatformState;
-  theme: ReturnType<typeof useTheme>;
+  theme: ReturnType<typeof useThemeContext>;
   isReady: boolean;
 }
 
@@ -70,7 +70,7 @@ interface AppContextBridgeProps {
 }
 
 const AppContextBridge: React.FC<AppContextBridgeProps> = ({ children, onReady }) => {
-  const theme = useTheme();
+  const theme = useThemeContext();
   const [platform, setPlatform] = useState<AppPlatformState>(createInitialPlatformState());
   const [isReady, setIsReady] = useState<boolean>(false);
 
@@ -82,11 +82,12 @@ const AppContextBridge: React.FC<AppContextBridgeProps> = ({ children, onReady }
         const module = await import('../platform');
         const info = module.getPlatformInfo ? module.getPlatformInfo() : undefined;
         if (info && !cancelled) {
+          const platformType = info.type || info.platform || 'unknown';
           setPlatform({
-            id: info.platform,
+            id: platformType,
             name:
               module.getPlatformName?.() ||
-              PLATFORM_NAME_MAP[info.platform] ||
+              PLATFORM_NAME_MAP[platformType] ||
               PLATFORM_NAME_MAP['unknown'] ||
               'Unknown',
             isMiniProgram: info.isMiniProgram,
@@ -126,7 +127,7 @@ const AppContextBridge: React.FC<AppContextBridgeProps> = ({ children, onReady }
 
 export const AppProvider: React.FC<AppProviderProps> = ({
   children,
-  theme,
+  defaultTokens,
   themeMode = 'light',
   themePersistKey = 'taro-uno-theme',
   followSystemTheme = true,
@@ -134,7 +135,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({
 }) => {
   return (
     <ThemeProvider
-      defaultTheme={theme || defaultTheme}
+      defaultTokens={defaultTokens || defaultDesignTokens}
       defaultMode={themeMode}
       persistKey={themePersistKey}
       followSystem={followSystemTheme}

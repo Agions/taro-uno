@@ -34,6 +34,27 @@ export { NavBar } from './NavBar';
 export type { NavBarProps, NavBarRef, NavBarPosition, NavBarTheme } from './NavBar/NavBar.types';
 export { navBarStyles } from './NavBar/NavBar.styles';
 
+// 导出 PageHeader 组件
+export { PageHeader } from './PageHeader';
+export type {
+  PageHeaderProps,
+  PageHeaderRef,
+  PageHeaderAction,
+  PageHeaderBackConfig,
+  PageHeaderBreadcrumbConfig,
+  PageHeaderConfig,
+  PageHeaderTheme,
+  PageHeaderLayout,
+  PageHeaderSize,
+} from './PageHeader/PageHeader.types';
+export {
+  BaseStyles as pageHeaderStyles,
+  getThemeStyle as getPageHeaderThemeStyle,
+  getLayoutStyle as getPageHeaderLayoutStyle,
+  getSizeStyle as getPageHeaderSizeStyle,
+  mergeStyles as mergePageHeaderStyles,
+} from './PageHeader/PageHeader.styles';
+
 // 导航组件工具函数
 export const NavigationUtils = {
   /**

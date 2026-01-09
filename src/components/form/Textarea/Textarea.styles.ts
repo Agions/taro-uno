@@ -1,4 +1,4 @@
-import { PlatformDetector } from '../../../utils';
+import { getPlatformType } from '../../../utils';
 import type {
   TextareaProps,
   TextareaSize,
@@ -11,7 +11,7 @@ import type {
 export class TextareaStyles {
   /** 获取平台前缀 */
   private static getPlatformPrefix(): string {
-    const platform = PlatformDetector.getPlatform();
+    const platform = getPlatformType();
     return `taro-uno-${platform}-textarea`;
   }
 
@@ -20,32 +20,32 @@ export class TextareaStyles {
     TextareaSize,
     { fontSize: number; padding: string; minHeight: number; borderRadius: number; lineHeight: number }
   > = {
-    sm: { fontSize: 24, padding: '8px 12px', minHeight: 80, borderRadius: 6, lineHeight: 1.4 },
-    md: { fontSize: 28, padding: '12px 16px', minHeight: 96, borderRadius: 8, lineHeight: 1.5 },
-    lg: { fontSize: 32, padding: '16px 20px', minHeight: 112, borderRadius: 10, lineHeight: 1.6 },
-  };
+      sm: { fontSize: 24, padding: '8px 12px', minHeight: 80, borderRadius: 6, lineHeight: 1.4 },
+      md: { fontSize: 28, padding: '12px 16px', minHeight: 96, borderRadius: 8, lineHeight: 1.5 },
+      lg: { fontSize: 32, padding: '16px 20px', minHeight: 112, borderRadius: 10, lineHeight: 1.6 },
+    };
 
   /** 变体样式映射 */
   static readonly VARIANT_STYLES: Record<
     TextareaVariant,
     { backgroundColor: string; borderColor: string; borderWidth: number; borderBottomWidth?: number }
   > = {
-    outlined: { backgroundColor: 'transparent', borderColor: '#e5e7eb', borderWidth: 1 },
-    filled: { backgroundColor: '#f9fafb', borderColor: '#e5e7eb', borderWidth: 1 },
-    underlined: { backgroundColor: 'transparent', borderColor: '#e5e7eb', borderWidth: 0, borderBottomWidth: 1 },
-  };
+      outlined: { backgroundColor: 'transparent', borderColor: '#e5e7eb', borderWidth: 1 },
+      filled: { backgroundColor: '#f9fafb', borderColor: '#e5e7eb', borderWidth: 1 },
+      underlined: { backgroundColor: 'transparent', borderColor: '#e5e7eb', borderWidth: 0, borderBottomWidth: 1 },
+    };
 
   /** 状态颜色映射 */
   static readonly STATUS_COLORS: Record<
     TextareaStatus,
     { color: string; backgroundColor?: string; borderColor?: string; icon?: string }
   > = {
-    normal: { color: '#111827', borderColor: '#e5e7eb' },
-    error: { color: '#ef4444', borderColor: '#ef4444', backgroundColor: '#fef2f2', icon: '❌' },
-    warning: { color: '#f59e0b', borderColor: '#f59e0b', backgroundColor: '#fffbeb', icon: '⚠️' },
-    success: { color: '#22c55e', borderColor: '#22c55e', backgroundColor: '#f0fdf4', icon: '✅' },
-    disabled: { color: '#9ca3af', borderColor: '#e5e7eb', backgroundColor: '#f9fafb' },
-  };
+      normal: { color: '#111827', borderColor: '#e5e7eb' },
+      error: { color: '#ef4444', borderColor: '#ef4444', backgroundColor: '#fef2f2', icon: '❌' },
+      warning: { color: '#f59e0b', borderColor: '#f59e0b', backgroundColor: '#fffbeb', icon: '⚠️' },
+      success: { color: '#22c55e', borderColor: '#22c55e', backgroundColor: '#f0fdf4', icon: '✅' },
+      disabled: { color: '#9ca3af', borderColor: '#e5e7eb', backgroundColor: '#f9fafb' },
+    };
 
   /** 生成文本域类名 */
   static getClassName(props: Partial<TextareaProps>): string {

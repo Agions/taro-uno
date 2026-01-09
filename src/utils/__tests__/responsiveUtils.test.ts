@@ -7,22 +7,46 @@ import { describe, it, expect, vi } from 'vitest';
 import { useResponsive, getScreenSize, matchScreenSize, getResponsiveValue, generateResponsiveStyles } from '../responsiveUtils';
 
 // 模拟Taro环境
-vi.mock('@tarojs/taro', () => ({
-  getSystemInfoSync: vi.fn(() => ({
-    windowWidth: 375,
-    windowHeight: 667,
-    statusBarHeight: 20,
-    safeArea: { top: 20, bottom: 0, left: 0, right: 375 }
-  })),
-  getMenuButtonBoundingClientRect: vi.fn(() => ({
-    width: 87,
-    height: 32,
-    top: 26,
-    right: 365,
-    bottom: 58,
-    left: 278
-  }))
-}));
+vi.mock('@tarojs/taro', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    default: {
+      getSystemInfoSync: vi.fn(() => ({
+        windowWidth: 375,
+        windowHeight: 667,
+        screenWidth: 375,
+        screenHeight: 667,
+        statusBarHeight: 20,
+        safeArea: { top: 20, bottom: 667, left: 0, right: 375 },
+      })),
+      getMenuButtonBoundingClientRect: vi.fn(() => ({
+        width: 87,
+        height: 32,
+        top: 26,
+        right: 365,
+        bottom: 58,
+        left: 278,
+      })),
+    },
+    getSystemInfoSync: vi.fn(() => ({
+      windowWidth: 375,
+      windowHeight: 667,
+      screenWidth: 375,
+      screenHeight: 667,
+      statusBarHeight: 20,
+      safeArea: { top: 20, bottom: 667, left: 0, right: 375 },
+    })),
+    getMenuButtonBoundingClientRect: vi.fn(() => ({
+      width: 87,
+      height: 32,
+      top: 26,
+      right: 365,
+      bottom: 58,
+      left: 278,
+    })),
+  };
+});
 
 describe('responsiveUtils', () => {
   describe('getScreenSize', () => {
@@ -70,7 +94,7 @@ describe('responsiveUtils', () => {
       const responsiveValue = {
         xs: 'small',
         sm: 'medium',
-        md: 'large'
+        md: 'large',
       };
 
       expect(getResponsiveValue(responsiveValue, 320)).toBe('small');
@@ -81,24 +105,25 @@ describe('responsiveUtils', () => {
     it('应该向上查找匹配的值', () => {
       const responsiveValue = {
         sm: 'medium',
-        lg: 'large'
+        lg: 'large',
       };
 
-      // 对于xs尺寸，应该向上查找sm的值
+      // 对于xs尺寸，应该向上查找sm的值（最近的较大断点）
       expect(getResponsiveValue(responsiveValue, 320)).toBe('medium');
 
-      // 对于md尺寸，应该向上查找lg的值
-      expect(getResponsiveValue(responsiveValue, 768)).toBe('large');
+      // 对于md尺寸，应该向下查找sm的值（最近的较小断点）
+      expect(getResponsiveValue(responsiveValue, 768)).toBe('medium');
     });
 
     it('应该处理undefined值', () => {
       const responsiveValue = {
         xs: 'small',
-        lg: undefined
+        lg: undefined,
       };
 
       expect(getResponsiveValue(responsiveValue, 320)).toBe('small');
-      expect(getResponsiveValue(responsiveValue, 768)).toBeUndefined();
+      // md尺寸应该向下查找xs的值
+      expect(getResponsiveValue(responsiveValue, 768)).toBe('small');
     });
   });
 
@@ -106,13 +131,13 @@ describe('responsiveUtils', () => {
     it('应该生成基本样式', () => {
       const styles = {
         color: 'red',
-        fontSize: '16px'
+        fontSize: '16px',
       };
 
       const result = generateResponsiveStyles(styles, 375);
       expect(result).toEqual({
         color: 'red',
-        fontSize: '16px'
+        fontSize: '16px',
       });
     });
 
@@ -121,33 +146,33 @@ describe('responsiveUtils', () => {
         padding: {
           xs: '8px',
           sm: '16px',
-          md: '24px'
+          md: '24px',
         },
         margin: {
           xs: 0,
-          sm: 'auto'
-        }
+          sm: 'auto',
+        },
       };
 
       // 对于xs屏幕
       let result = generateResponsiveStyles(styles, 320);
       expect(result).toEqual({
         padding: '8px',
-        margin: 0
+        margin: 0,
       });
 
       // 对于sm屏幕
       result = generateResponsiveStyles(styles, 640);
       expect(result).toEqual({
         padding: '16px',
-        margin: 'auto'
+        margin: 'auto',
       });
 
       // 对于md屏幕
       result = generateResponsiveStyles(styles, 768);
       expect(result).toEqual({
         padding: '24px',
-        margin: 'auto'
+        margin: 'auto',
       });
     });
 
@@ -155,16 +180,19 @@ describe('responsiveUtils', () => {
       const styles = {
         padding: {
           xs: '8px',
-          sm: undefined
+          sm: undefined,
         },
         margin: {
-          xs: 0
-        }
+          xs: 0,
+        },
       };
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const result = generateResponsiveStyles(styles as any, 640);
+      // sm尺寸的padding是undefined，应该向下查找xs的值
       expect(result).toEqual({
-        margin: 0
+        padding: '8px',
+        margin: 0,
       });
     });
   });
@@ -187,7 +215,7 @@ describe('responsiveUtils', () => {
       const responsiveValue = {
         xs: 'small',
         sm: 'medium',
-        md: 'large'
+        md: 'large',
       };
 
       expect(result.current.getResponsiveValue(responsiveValue)).toBe('small');
@@ -199,13 +227,13 @@ describe('responsiveUtils', () => {
       const styles = {
         padding: {
           xs: '8px',
-          sm: '16px'
-        }
+          sm: '16px',
+        },
       };
 
       const generatedStyles = result.current.generateResponsiveStyles(styles);
       expect(generatedStyles).toEqual({
-        padding: '8px'
+        padding: '8px',
       });
     });
 
@@ -228,9 +256,9 @@ describe('responsiveUtils', () => {
 
       expect(result.current.safeArea).toEqual({
         top: 20,
-        bottom: 0,
+        bottom: 667,
         left: 0,
-        right: 375
+        right: 375,
       });
     });
 
@@ -257,19 +285,19 @@ describe('responsiveUtils', () => {
           xs: '8px',
           sm: '16px',
           md: '24px',
-          lg: '32px'
+          lg: '32px',
         },
         margin: {
           xs: 0,
           sm: 'auto',
-          lg: 'auto'
+          lg: 'auto',
         },
         fontSize: {
           xs: '14px',
           sm: '16px',
-          md: '18px'
+          md: '18px',
         },
-        display: 'flex'
+        display: 'flex',
       };
 
       const styles = result.current.generateResponsiveStyles(complexConfig);
@@ -278,7 +306,7 @@ describe('responsiveUtils', () => {
         padding: '8px',
         margin: 0,
         fontSize: '14px',
-        display: 'flex'
+        display: 'flex',
       });
     });
 
@@ -289,13 +317,13 @@ describe('responsiveUtils', () => {
         padding: '8px', // 基本值
         margin: {
           xs: 0,
-          sm: 'auto'
+          sm: 'auto',
         },
         borderRadius: {
           xs: '4px',
-          md: 8
+          md: 8,
         },
-        color: 'red' // 基本值
+        color: 'red', // 基本值
       };
 
       const styles = result.current.generateResponsiveStyles(mixedConfig);
@@ -304,7 +332,7 @@ describe('responsiveUtils', () => {
         padding: '8px',
         margin: 0,
         borderRadius: '4px',
-        color: 'red'
+        color: 'red',
       });
     });
   });

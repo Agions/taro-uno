@@ -1,0 +1,8 @@
+{
+  "label": "布局组件 Layout",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "布局组件包括栅格系统、弹性布局、间距、容器等组件。"
+  }
+}

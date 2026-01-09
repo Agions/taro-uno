@@ -1,0 +1,51 @@
+.components {
+  min-height: 100vh;
+  background: #f5f7fa;
+
+  &__content {
+    height: calc(100vh - 88px);
+    padding: 24px;
+  }
+}
+
+.demo-section {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 24px;
+}
+
+.demo-title {
+  font-size: 30px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 24px;
+  display: block;
+}
+
+.demo-value {
+  font-size: 24px;
+  color: #64748b;
+  margin-top: 16px;
+  display: block;
+}
+
+.demo-box {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.demo-badge-box {
+  width: 80px;
+  height: 80px;
+  background: #e2e8f0;
+  border-radius: 12px;
+}

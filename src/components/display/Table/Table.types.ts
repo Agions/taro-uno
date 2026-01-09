@@ -1,9 +1,9 @@
 import { ReactNode } from 'react';
 import { Size } from '../../../types';
-import { BaseComponentProps as StandardBaseComponentProps } from '../../../types/component-props';
+import { BaseProps } from '../../../types/component';
 
 /** 表格尺寸 */
-export type TableSize = Size | 'small' | 'medium' | 'large';
+export type TableSize = Size | 'default' | 'small' | 'medium' | 'large';
 
 /** 表格边框 */
 export type TableBorder = 'none' | 'outer' | 'all';
@@ -177,7 +177,7 @@ export interface TableRef<T = any> {
 }
 
 /** 表格组件属性 */
-export interface TableProps<T = any> extends StandardBaseComponentProps {
+export interface TableProps<T = any> extends BaseProps {
   /** 表格数据 */
   data?: T[];
   /** 数据源（兼容属性） */

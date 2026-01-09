@@ -64,6 +64,30 @@ export { Carousel } from './Carousel';
 export type { CarouselProps, CarouselRef } from './Carousel/Carousel.types';
 export { carouselStyles } from './Carousel/Carousel.styles';
 
+// 导出 RichText 组件
+export { RichText } from './RichText';
+export type {
+  RichTextProps,
+  RichTextRef,
+  RichTextNode,
+  RichTextStyle,
+  ParagraphStyle,
+  ImageStyle,
+  ListItem,
+  TableCell,
+  TableRow,
+  RichTextTable,
+  Link,
+} from './RichText/RichText.types';
+export {
+  BaseStyles as richTextStyles,
+  getHeadingStyle,
+  getListStyle,
+  mergeStyles as mergeRichTextStyles,
+  transformTextStyle,
+  transformImageStyle,
+} from './RichText/RichText.styles';
+
 // 展示组件工具函数
 export const DisplayUtils = {
   /**
